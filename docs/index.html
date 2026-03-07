@@ -140,19 +140,85 @@
   .step p { font-size: 15px; color: #888; line-height: 1.7; }
   .step .step-note { font-size: 12px; color: #555; margin-top: 10px; }
 
-  /* MATERIALS */
+  /* MATERIALS / PRODUCT CARDS */
   .materials-section { background: var(--gray); padding: 100px 48px; }
-  .materials-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 60px; }
-  .material-card { background: var(--black); padding: 40px; border-left: 3px solid transparent; transition: border-color 0.2s, background 0.2s; }
-  .material-card:hover { border-left-color: var(--yellow); background: #111; }
-  .material-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
-  .material-card .thai-name { font-size: 14px; color: var(--yellow); margin-bottom: 16px; font-weight: 600; }
-  .material-card p { font-size: 14px; color: #777; margin-bottom: 20px; }
-  .price-tag { display: inline-flex; align-items: baseline; gap: 6px; }
-  .price-tag .thb { font-family: 'Barlow Condensed', sans-serif; font-size: 40px; font-weight: 900; color: var(--yellow); }
-  .price-tag .unit { font-size: 13px; color: #666; }
-  .price-loading { color: #555; font-size: 13px; font-style: italic; }
-  .price-updated { font-size: 11px; color: #555; margin-top: 6px; }
+  .materials-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 60px; }
+  .material-card {
+    background: var(--black);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #1e1e1e;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .material-card:hover {
+    border-color: var(--yellow);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  }
+  .card-img-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 58%;
+    overflow: hidden;
+    background: #111;
+  }
+  .card-img-wrap img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    filter: brightness(0.88) saturate(0.7);
+  }
+  .material-card:hover .card-img-wrap img { transform: scale(1.05); filter: brightness(0.95) saturate(0.85); }
+  .card-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.1) 60%, transparent 100%);
+  }
+  .card-img-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: rgba(245,195,0,0.18);
+    border: 1px solid rgba(245,195,0,0.45);
+    color: var(--yellow);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 2px;
+  }
+  .card-body { padding: 24px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+  .card-body h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3px;
+    margin-bottom: 2px;
+  }
+  .card-body .thai-name { font-size: 13px; color: var(--yellow); font-weight: 600; margin-bottom: 12px; letter-spacing: 0.3px; }
+  .card-body p { font-size: 14px; color: #777; line-height: 1.7; margin-bottom: 20px; flex: 1; }
+  .card-price-block {
+    border-top: 1px solid #1e1e1e;
+    padding-top: 18px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .price-tag { display: inline-flex; align-items: baseline; gap: 4px; }
+  .price-tag .thb { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 900; color: var(--yellow); line-height: 1; }
+  .price-tag .unit { font-size: 13px; color: #555; }
+  .price-loading { color: #444; font-size: 13px; font-style: italic; }
+  .price-updated { font-size: 11px; color: #444; margin-top: 4px; }
+  .card-cta {
+    background: rgba(245,195,0,0.1);
+    border: 1px solid rgba(245,195,0,0.25);
+    color: var(--yellow);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 8px 16px; border-radius: 3px; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .card-cta:hover { background: rgba(245,195,0,0.2); border-color: rgba(245,195,0,0.5); }
 
   /* SHIPPING SECTION */
   .shipping-section { padding: 100px 48px; background: #0f0f0f; }
@@ -216,6 +282,7 @@
     .trust-strip { padding: 20px; gap: 20px; }
     .section, .materials-section, .shipping-section, .testimonials { padding: 60px 20px; }
     .steps, .materials-grid, .shipping-grid { grid-template-columns: 1fr; }
+    .card-price-block { flex-direction: column; align-items: flex-start; gap: 12px; }
     .contact-section { padding: 60px 20px; }
     .contact-grid { grid-template-columns: 1fr; gap: 40px; }
     footer { padding: 40px 20px; }
@@ -352,46 +419,115 @@
   <div class="section-title">Materials We Buy</div>
   <div style="font-size:13px;color:#666;margin-top:-40px;margin-bottom:0;" id="price-updated-note">Fetching today's prices...</div>
   <div class="materials-grid">
+
+    <!-- CARD 1: Carbide Inserts -->
     <div class="material-card fade-in">
-      <h3>Carbide Inserts</h3>
-      <div class="thai-name">คาร์ไบด์อินเสิร์ต · Solid Hard Scrap</div>
-      <p>Used CNC inserts, solid carbide end mills, drill blanks. Highest grade — best price.</p>
-      <div class="price-tag">
-        <span class="thb" id="price-carbide_inserts"><span class="price-loading">loading...</span></span>
-        <span class="unit">/ kg</span>
+      <div class="card-img-wrap">
+        <img src="https://www.schrott24.at/wp-content/uploads/Widia.jpg"
+             alt="Carbide Inserts – Wendeschneidplatten"
+             loading="lazy"
+             onerror="this.style.display='none'">
+        <div class="card-img-overlay"></div>
+        <div class="card-img-badge">Highest Grade</div>
       </div>
-      <div class="price-updated" id="updated-carbide_inserts"></div>
+      <div class="card-body">
+        <h3>Carbide Inserts</h3>
+        <div class="thai-name">คาร์ไบด์อินเสิร์ต · Wendeschneidplatten</div>
+        <p>Used CNC indexable inserts of all shapes and grades (CNMG, TNMG, SNMG, etc.). Highest tungsten content — best price per kg.</p>
+        <div class="card-price-block">
+          <div>
+            <div class="price-tag">
+              <span class="thb" id="price-carbide_inserts"><span class="price-loading">loading…</span></span>
+              <span class="unit">/ kg</span>
+            </div>
+            <div class="price-updated" id="updated-carbide_inserts"></div>
+          </div>
+          <a class="card-cta" href="#contact">Sell Now →</a>
+        </div>
+      </div>
     </div>
+
+    <!-- CARD 2: Carbide Drills & End Mills -->
     <div class="material-card fade-in">
-      <h3>Carbide Drills & End Mills</h3>
-      <div class="thai-name">ดอกสว่าน & ดอกกัดคาร์ไบด์</div>
-      <p>Carbide drills, reamers, end mills of all sizes and grades.</p>
-      <div class="price-tag">
-        <span class="thb" id="price-carbide_drills"><span class="price-loading">loading...</span></span>
-        <span class="unit">/ kg</span>
+      <div class="card-img-wrap">
+        <img src="https://www.schrott24.at/wp-content/uploads/VHM-s-blog.jpg"
+             alt="Solid Carbide Drills and End Mills – VHM Bohrer Fräser"
+             loading="lazy"
+             onerror="this.style.display='none'">
+        <div class="card-img-overlay"></div>
+        <div class="card-img-badge">VHM / Solid</div>
       </div>
-      <div class="price-updated" id="updated-carbide_drills"></div>
+      <div class="card-body">
+        <h3>Carbide Drills & End Mills</h3>
+        <div class="thai-name">ดอกสว่าน & ดอกกัด · VHM Bohrer & Fräser</div>
+        <p>Solid carbide drills, reamers, end mills, and router bits of all diameters and lengths. All brands and grades accepted.</p>
+        <div class="card-price-block">
+          <div>
+            <div class="price-tag">
+              <span class="thb" id="price-carbide_drills"><span class="price-loading">loading…</span></span>
+              <span class="unit">/ kg</span>
+            </div>
+            <div class="price-updated" id="updated-carbide_drills"></div>
+          </div>
+          <a class="card-cta" href="#contact">Sell Now →</a>
+        </div>
+      </div>
     </div>
+
+    <!-- CARD 3: Sand Rills / Wear Parts -->
     <div class="material-card fade-in">
-      <h3>Sand Rills / Wear Parts</h3>
-      <div class="thai-name">แซนด์ริล / ชิ้นส่วนสึกหรอ</div>
-      <p>Drilling wear parts, mining bits, asphalt milling teeth, road planer picks.</p>
-      <div class="price-tag">
-        <span class="thb" id="price-sand_rills"><span class="price-loading">loading...</span></span>
-        <span class="unit">/ kg</span>
+      <div class="card-img-wrap">
+        <img src="https://www.schrott24.at/wp-content/uploads/HartmetallRecyceln.jpg"
+             alt="Sand Rills and Wear Parts – Hartmetall Verschleißteile"
+             loading="lazy"
+             onerror="this.style.display='none'">
+        <div class="card-img-overlay"></div>
+        <div class="card-img-badge">Wear Parts</div>
       </div>
-      <div class="price-updated" id="updated-sand_rills"></div>
+      <div class="card-body">
+        <h3>Sand Rills / Wear Parts</h3>
+        <div class="thai-name">แซนด์ริล / ชิ้นส่วนสึกหรอ · Verschleißteile</div>
+        <p>Drilling wear parts, mining buttons, asphalt milling teeth, road planer picks, and other carbide-tipped wear components.</p>
+        <div class="card-price-block">
+          <div>
+            <div class="price-tag">
+              <span class="thb" id="price-sand_rills"><span class="price-loading">loading…</span></span>
+              <span class="unit">/ kg</span>
+            </div>
+            <div class="price-updated" id="updated-sand_rills"></div>
+          </div>
+          <a class="card-cta" href="#contact">Sell Now →</a>
+        </div>
+      </div>
     </div>
+
+    <!-- CARD 4: Mixed Carbide -->
     <div class="material-card fade-in">
-      <h3>Mixed Carbide</h3>
-      <div class="thai-name">คาร์ไบด์ผสม · Unsorted</div>
-      <p>Mixed carbide, unsorted grades. Ideal for large quantities. Best value by volume.</p>
-      <div class="price-tag">
-        <span class="thb" id="price-mixed_carbide"><span class="price-loading">loading...</span></span>
-        <span class="unit">/ kg</span>
+      <div class="card-img-wrap">
+        <img src="https://www.schrott24.at/wp-content/uploads/HartmetallRecyceln-1024x683.jpg"
+             alt="Mixed Carbide Scrap – Gemischtes Hartmetall"
+             loading="lazy"
+             onerror="this.style.display='none'">
+        <div class="card-img-overlay"></div>
+        <div class="card-img-badge">All Quantities</div>
       </div>
-      <div class="price-updated" id="updated-mixed_carbide"></div>
+      <div class="card-body">
+        <h3>Mixed Carbide</h3>
+        <div class="thai-name">คาร์ไบด์ผสม · Gemischtes Hartmetall</div>
+        <p>Unsorted mixed carbide scrap of any type or grade. No sorting required — ideal for large factory clean-outs. Best value by volume.</p>
+        <div class="card-price-block">
+          <div>
+            <div class="price-tag">
+              <span class="thb" id="price-mixed_carbide"><span class="price-loading">loading…</span></span>
+              <span class="unit">/ kg</span>
+            </div>
+            <div class="price-updated" id="updated-mixed_carbide"></div>
+          </div>
+          <a class="card-cta" href="#contact">Sell Now →</a>
+        </div>
+      </div>
     </div>
+
   </div>
   <div style="margin-top:24px;font-size:13px;color:#555;text-align:center;">
     * Prices are estimates based on live market data. Final price confirmed after physical inspection and weighing.
