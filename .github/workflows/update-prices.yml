@@ -1,0 +1,41 @@
+name: Daily Price Update
+
+on:
+  schedule:
+    # 08:00 Bangkok time = 01:00 UTC (UTC+7)
+    - cron: '0 1 * * *'
+  workflow_dispatch:   # manual trigger from GitHub Actions UI
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit prices.json back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install playwright
+
+      - name: Install Playwright browsers (Chromium only)
+        run: playwright install --with-deps chromium
+
+      - name: Run price scraper
+        env:
+          THAILAND_MARGIN: ${{ secrets.THAILAND_MARGIN }}
+        run: python scraper/scrape_prices.py
+
+      - name: Commit updated prices.json
+        run: |
+          git config user.name "CarbideThai Bot"
+          git config user.email "bot@carbidethaii.com"
+          git add docs/prices.json
+          git diff --staged --quiet || git commit -m "chore: update prices $(date +'%Y-%m-%d')"
+          git push
