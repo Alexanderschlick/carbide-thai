@@ -45,7 +45,8 @@
     backdrop-filter: blur(10px);
     border-bottom: 1px solid #222;
   }
-  .logo { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: 1px; color: var(--white); text-decoration: none; }
+  .logo { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: 1px; color: var(--white); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+  .logo-creeper { width: 28px; height: 28px; flex-shrink: 0; image-rendering: pixelated; }
   .logo span { color: var(--yellow); }
   .nav-links { display: flex; gap: 36px; list-style: none; }
   .nav-links a { color: #aaa; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.2s; }
@@ -304,7 +305,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#">Carbide<span>Thai</span></a>
+  <a class="logo" href="#"><svg class="logo-creeper" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="8" height="8" fill="#4CAF50"/><rect x="1" y="1" width="2" height="2" fill="#1a1a1a"/><rect x="5" y="1" width="2" height="2" fill="#1a1a1a"/><rect x="2" y="4" width="4" height="2" fill="#1a1a1a"/><rect x="1" y="6" width="2" height="2" fill="#1a1a1a"/><rect x="5" y="6" width="2" height="2" fill="#1a1a1a"/></svg>Carbide<span>Thai</span></a>
   <ul class="nav-links">
     <li><a href="#how-it-works">How It Works</a></li>
     <li><a href="#shipping">Shipping</a></li>
@@ -804,7 +805,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a class="logo" href="#">Carbide<span>Thai</span></a>
+      <a class="logo" href="#"><svg class="logo-creeper" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="8" height="8" fill="#4CAF50"/><rect x="1" y="1" width="2" height="2" fill="#1a1a1a"/><rect x="5" y="1" width="2" height="2" fill="#1a1a1a"/><rect x="2" y="4" width="4" height="2" fill="#1a1a1a"/><rect x="1" y="6" width="2" height="2" fill="#1a1a1a"/><rect x="5" y="6" width="2" height="2" fill="#1a1a1a"/></svg>Carbide<span>Thai</span></a>
       <p>Thailand's first online tungsten carbide scrap buying platform. Fair daily prices, fast payment, full transparency.</p>
     </div>
     <div class="footer-col">
