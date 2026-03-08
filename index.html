@@ -149,22 +149,28 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify
 
 /* MATERIAL TILES */
 .materials-section { padding:90px 40px; background:var(--surface); }
-.tiles-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-.tile { border-radius:6px; overflow:hidden; display:block; text-decoration:none; background:var(--bg); border:1px solid var(--border); transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s; }
-.tile:hover { border-color:var(--gold); transform:translateY(-5px); box-shadow:0 24px 64px rgba(0,0,0,0.6); }
-.tile-photo-wrap { width:100%; aspect-ratio:3/2; overflow:hidden; background:#0a1a0e; }
-.tile-photo { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.45s; }
-.tile:hover .tile-photo { transform:scale(1.06); }
-.tile-content { padding:20px 22px; }
-.tile-badge { display:inline-block; background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.35); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:3px 9px; border-radius:2px; margin-bottom:10px; }
-.tile-name-th { font-family:'Barlow Condensed',sans-serif; font-size:clamp(20px,2.5vw,28px); font-weight:900; color:var(--white); display:block; line-height:1.05; }
-.tile-name-en { font-size:11px; color:var(--muted); display:block; margin-top:3px; letter-spacing:0.3px; }
-.tile-price-row { display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
-.tile-amount { font-family:'Barlow Condensed',sans-serif; font-size:clamp(26px,3.5vw,38px); font-weight:900; color:var(--gold); line-height:1; }
-.tile-unit { font-size:12px; color:var(--muted); margin-left:4px; }
-.tile-btn { display:inline-block; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:1px; padding:8px 16px; border-radius:2px; transition:background 0.2s; white-space:nowrap; }
+.tiles-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+.tile { border-radius:6px; overflow:hidden; display:block; text-decoration:none; background:var(--bg); border:1px solid var(--border); transition:border-color 0.3s,box-shadow 0.3s; }
+.tile:hover { border-color:var(--gold); box-shadow:0 16px 48px rgba(0,0,0,0.55); }
+
+/* CAROUSEL */
+.tile-carousel { position:relative; width:100%; height:220px; overflow:hidden; background:#06100a; }
+.tile-carousel .slide { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 0.9s ease; will-change:opacity; image-rendering:auto; }
+.tile-carousel .slide.active { opacity:1; }
+.carousel-dots { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); display:flex; gap:5px; z-index:2; }
+.carousel-dots .dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.35); transition:background 0.3s; cursor:pointer; }
+.carousel-dots .dot.active { background:var(--gold); }
+
+.tile-content { padding:16px 20px 18px; }
+.tile-badge { display:inline-block; background:rgba(201,162,39,0.13); border:1px solid rgba(201,162,39,0.32); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; padding:2px 8px; border-radius:2px; margin-bottom:8px; text-transform:uppercase; }
+.tile-name-th { font-family:'Barlow Condensed',sans-serif; font-size:clamp(18px,2.2vw,24px); font-weight:900; color:var(--white); display:block; line-height:1.05; }
+.tile-name-en { font-size:11px; color:var(--muted); display:block; margin-top:2px; letter-spacing:0.3px; }
+.tile-price-row { display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.tile-amount { font-family:'Barlow Condensed',sans-serif; font-size:clamp(24px,3vw,34px); font-weight:900; color:var(--gold); line-height:1; }
+.tile-unit { font-size:11px; color:var(--muted); margin-left:3px; }
+.tile-btn { display:inline-block; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1px; padding:7px 14px; border-radius:2px; transition:background 0.2s; white-space:nowrap; text-transform:uppercase; }
 .tile:hover .tile-btn { background:var(--gold-lt); }
-.price-loading { font-size:22px; color:var(--muted); }
+.price-loading { font-size:20px; color:var(--muted); }
 
 /* STEPS */
 .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
@@ -252,6 +258,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .section, .materials-section, .contact-section { padding:60px 20px; }
   .tiles-grid { grid-template-columns:1fr; }
   .reviews-grid { grid-template-columns:1fr; }
+  .tile-carousel { height:180px; }
   .steps-grid { grid-template-columns:1fr; }
   .step { border-left:none; border-top:3px solid transparent; padding:32px 20px; }
   .step:hover { border-top-color:var(--gold); border-left-color:transparent; }
@@ -346,8 +353,14 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   <div class="tiles-grid">
 
     <a class="tile fade-in" href="#contact">
-      <div class="tile-photo-wrap">
-        <img class="tile-photo" src="img/ins_4.jpg" alt="รับซื้อคาร์ไบด์อินเสิร์ท เวนเดพลัทเทน CNMG TNMG ราคาสูง | Sell carbide inserts wendeschneidplatten Thailand best price">
+      <div class="tile-carousel" data-interval="3200">
+        <img class="slide active" src="img/ins_4.jpg" alt="กองคาร์ไบด์อินเสิร์ทสีทอง รับซื้อราคาสูง | Pile of gold carbide inserts wendeschneidplatten scrap Thailand">
+        <img class="slide" src="img/ins_3.jpg" alt="คาร์ไบด์อินเสิร์ทสามเหลี่ยม CNMG TNMG รับซื้อ | Triangular carbide inserts CNMG TNMG scrap buyer Thailand">
+        <img class="slide" src="img/ins_2.jpg" alt="เศษคาร์ไบด์อินเสิร์ทผสม ขายได้ราคาดี | Mixed carbide inserts scrap sell Thailand best price">
+        <img class="slide" src="img/ins_5.jpg" alt="คาร์ไบด์อินเสิร์ทใช้แล้ว รับซื้อทุกสภาพ | Used worn carbide inserts scrap buyer Thailand">
+        <div class="carousel-dots">
+          <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
       </div>
       <div class="tile-content">
         <span class="tile-badge">HIGHEST GRADE</span>
@@ -364,8 +377,14 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <div class="tile-photo-wrap">
-        <img class="tile-photo" src="img/drl_4.jpg" alt="รับซื้อดอกสว่านคาร์ไบด์ ดอกเอ็นมิล VHM ราคาสูง | Sell carbide drills end mills VHM Thailand best price">
+      <div class="tile-carousel" data-interval="3600">
+        <img class="slide active" src="img/drl_4.jpg" alt="กองดอกสว่านคาร์ไบด์ VHM รับซื้อราคาสูง | Pile of VHM carbide drills end mills scrap Thailand">
+        <img class="slide" src="img/drl_5.jpg" alt="เศษดอกเอ็นมิลคาร์ไบด์ VHM ขายได้ราคาดี | VHM carbide end mills scrap sell Thailand best price">
+        <img class="slide" src="img/drl_3.jpg" alt="ดอกสว่านคาร์ไบด์หลายชนิด รับซื้อทุกขนาด | Various carbide drills scrap buyer Thailand">
+        <img class="slide" src="img/drl_2.jpg" alt="ดอกสว่าน ดอกเอ็นมิล VHM Hartmetall รับซื้อ | Carbide drills end mills VHM scrap Thailand">
+        <div class="carousel-dots">
+          <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
       </div>
       <div class="tile-content">
         <span class="tile-badge">VHM / SOLID</span>
@@ -382,8 +401,13 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <div class="tile-photo-wrap">
-        <img class="tile-photo" src="img/mix_3.jpg" alt="รับซื้อคาร์ไบด์ผสม เศษคาร์ไบด์ทุกชนิด ราคาสูง | Sell mixed carbide scrap tungsten carbide Thailand">
+      <div class="tile-carousel" data-interval="4000">
+        <img class="slide active" src="img/mix_3.jpg" alt="เศษคาร์ไบด์ผสมหลายชนิด รับซื้อทุกรูปแบบ | Mixed carbide scrap parts hartmetall gemischt Thailand">
+        <img class="slide" src="img/mix_5.jpg" alt="ชิ้นส่วนคาร์ไบด์สึกหรอ รับซื้อราคาสูง | Carbide wear parts scrap buyer Thailand best price">
+        <img class="slide" src="img/mix_2.jpg" alt="คาร์ไบด์ผสมทุกรูปแบบ ขายได้เลย | Mixed tungsten carbide scrap sell Thailand">
+        <div class="carousel-dots">
+          <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+        </div>
       </div>
       <div class="tile-content">
         <span class="tile-badge">ALL QUANTITIES</span>
@@ -400,8 +424,13 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <div class="tile-photo-wrap">
-        <img class="tile-photo" src="img/mix_5.jpg" alt="รับซื้อแซนด์ริล ชิ้นส่วนสึกหรอคาร์ไบด์ ราคาสูง | Sell sand rills carbide wear parts mining Thailand">
+      <div class="tile-carousel" data-interval="3800">
+        <img class="slide active" src="img/mix_5.jpg" alt="แซนด์ริล ชิ้นส่วนสึกหรอคาร์ไบด์แบนราบ รับซื้อ | Sand rills flat carbide wear parts scrap buyer Thailand">
+        <img class="slide" src="img/mix_3.jpg" alt="เศษคาร์ไบด์สึกหรอจากเหมือง รับซื้อราคาสูง | Mining carbide wear parts scrap Thailand best price">
+        <img class="slide" src="img/mix_4.jpg" alt="ชิ้นส่วนคาร์ไบด์เหมืองแร่ รับซื้อทุกชนิด | Carbide mining parts abbaumeißel scrap Thailand">
+        <div class="carousel-dots">
+          <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+        </div>
       </div>
       <div class="tile-content">
         <span class="tile-badge">WEAR PARTS</span>
@@ -747,6 +776,22 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Image carousels
+document.querySelectorAll('.tile-carousel').forEach(carousel => {
+  const slides = carousel.querySelectorAll('.slide');
+  const dots = carousel.querySelectorAll('.dot');
+  if (slides.length < 2) return;
+  const interval = parseInt(carousel.dataset.interval) || 3500;
+  let cur = 0;
+  setInterval(() => {
+    slides[cur].classList.remove('active');
+    dots[cur] && dots[cur].classList.remove('active');
+    cur = (cur + 1) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur] && dots[cur].classList.add('active');
+  }, interval);
+});
 
 loadPrices();
 </script>
