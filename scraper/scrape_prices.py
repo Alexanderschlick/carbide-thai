@@ -22,7 +22,7 @@ except ImportError:
     sys.exit(1)
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-MARGIN = float(os.environ.get("THAILAND_MARGIN", "1.0"))
+MARGIN = float(os.environ.get("THAILAND_MARGIN") or "1.0")
 
 HEADERS = {
     "User-Agent": (
