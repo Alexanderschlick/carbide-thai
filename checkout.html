@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ขายคาร์ไบด์ | ThaiCarbide.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark: #0d2b0d;
+      --green-mid: #1a3a1a;
+      --green-light: #2d5a2d;
+      --gold: #d4af37;
+      --gold-light: #f0d060;
+      --cream: #f5f0e8;
+      --white: #ffffff;
+      --gray: #888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--green-dark);
+      color: var(--cream);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: var(--green-mid);
+      border-bottom: 2px solid var(--gold);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .logo span { color: var(--white); }
+    .back-link {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-link:hover { color: var(--gold-light); }
+
+    /* Progress bar */
+    .progress-bar {
+      background: var(--green-mid);
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+    }
+    .steps {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid rgba(212,175,55,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--gray);
+      background: var(--green-dark);
+      transition: all 0.3s;
+    }
+    .step.active .step-num {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(212,175,55,0.15);
+    }
+    .step.done .step-num {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--green-dark);
+    }
+    .step-label {
+      font-size: 0.72rem;
+      color: var(--gray);
+      text-align: center;
+    }
+    .step.active .step-label { color: var(--gold); }
+    .step.done .step-label { color: var(--gold); }
+    .step-line {
+      flex: 0.5;
+      height: 2px;
+      background: rgba(212,175,55,0.2);
+      margin-bottom: 20px;
+    }
+    .step-line.done { background: var(--gold); }
+
+    /* Main content */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .section {
+      background: var(--green-mid);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .section.active { display: block; }
+
+    .section-title {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .section-sub {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+
+    /* Material selector */
+    .material-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .material-card {
+      border: 2px solid rgba(212,175,55,0.2);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--green-dark);
+    }
+    .material-card:hover {
+      border-color: rgba(212,175,55,0.6);
+    }
+    .material-card.selected {
+      border-color: var(--gold);
+      background: rgba(212,175,55,0.1);
+    }
+    .material-card input[type=radio] { display: none; }
+    .mat-name {
+      font-family: 'Prompt', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--cream);
+      margin-bottom: 2px;
+    }
+    .mat-name-en {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+    .mat-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .mat-price span { font-size: 0.75rem; font-weight: 400; color: var(--gray); }
+
+    /* Weight input */
+    .weight-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+    .weight-input-wrap { flex: 1; }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    input[type=text], input[type=number], input[type=tel], input[type=email], textarea, select {
+      width: 100%;
+      background: var(--green-dark);
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--cream);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--gold);
+    }
+    select option { background: var(--green-dark); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* Price estimate box */
+    .price-estimate {
+      background: rgba(212,175,55,0.1);
+      border: 1px solid var(--gold);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      display: none;
+    }
+    .price-estimate.show { display: block; }
+    .est-label { font-size: 0.85rem; color: var(--gray); margin-bottom: 6px; }
+    .est-amount {
+      font-family: 'Prompt', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .est-note { font-size: 0.78rem; color: var(--gray); margin-top: 6px; }
+
+    /* Photo upload */
+    .upload-zone {
+      border: 2px dashed rgba(212,175,55,0.3);
+      border-radius: 10px;
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--green-dark);
+      position: relative;
+    }
+    .upload-zone:hover { border-color: var(--gold); }
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .upload-text { font-size: 0.9rem; color: var(--gray); }
+    .upload-text strong { color: var(--cream); }
+
+    .photo-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .photo-preview {
+      width: 80px; height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid rgba(212,175,55,0.3);
+    }
+
+    /* Shipping options */
+    .shipping-options { display: flex; flex-direction: column; gap: 12px; }
+    .shipping-option {
+      border: 2px solid rgba(212,175,55,0.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--green-dark);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .shipping-option:hover { border-color: rgba(212,175,55,0.5); }
+    .shipping-option.selected { border-color: var(--gold); background: rgba(212,175,55,0.08); }
+    .shipping-option input[type=radio] { display: none; }
+    .ship-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .ship-title { font-weight: 600; color: var(--cream); margin-bottom: 3px; }
+    .ship-desc { font-size: 0.82rem; color: var(--gray); }
+
+    /* Form fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group { margin-bottom: 18px; }
+
+    /* Buttons */
+    .btn-next {
+      width: 100%;
+      background: var(--gold);
+      color: var(--green-dark);
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .btn-next:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-back {
+      width: 100%;
+      background: transparent;
+      color: var(--gray);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { color: var(--cream); border-color: rgba(255,255,255,0.3); }
+
+    /* Order summary */
+    .summary-box {
+      background: var(--green-dark);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .summary-title {
+      font-size: 0.85rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.9rem;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row .s-label { color: var(--gray); }
+    .summary-row .s-val { color: var(--cream); font-weight: 600; }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px 0 0;
+      margin-top: 8px;
+      border-top: 1px solid rgba(212,175,55,0.3);
+    }
+    .summary-total .s-label { color: var(--gold); font-weight: 600; font-size: 1rem; }
+    .summary-total .s-val { color: var(--gold); font-weight: 700; font-size: 1.3rem; }
+
+    .note-box {
+      background: rgba(212,175,55,0.08);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    /* Trust badges */
+    .trust-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .trust-badge {
+      flex: 1;
+      background: rgba(212,175,55,0.06);
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 8px;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--gray);
+    }
+    .trust-badge .tb-icon { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .material-grid { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .trust-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Thai<span>Carbide</span></a>
+  <a href="/" class="back-link">← กลับหน้าหลัก</a>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="steps">
+    <div class="step active" id="step-1">
+      <div class="step-num">1</div>
+      <div class="step-label">เลือกวัสดุ</div>
+    </div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step" id="step-2">
+      <div class="step-num">2</div>
+      <div class="step-label">ข้อมูลติดต่อ</div>
+    </div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step" id="step-3">
+      <div class="step-num">3</div>
+      <div class="step-label">ยืนยัน</div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- STEP 1: Material + Weight + Photos + Shipping -->
+  <div class="section active" id="section-1">
+    <div class="section-title">เลือกประเภทคาร์ไบด์</div>
+    <div class="section-sub">เลือกประเภทที่ตรงกับสินค้าของคุณมากที่สุด</div>
+
+    <div class="material-grid">
+      <label class="material-card" id="card-insert">
+        <input type="radio" name="material" value="insert" data-price="320" data-name="คาร์ไบด์อินเสิร์ท" data-name-en="Carbide Inserts">
+        <div class="mat-name">คาร์ไบด์อินเสิร์ท</div>
+        <div class="mat-name-en">Carbide Inserts</div>
+        <div class="mat-price">฿320 <span>/kg</span></div>
+      </label>
+      <label class="material-card" id="card-drill">
+        <input type="radio" name="material" value="drill" data-price="260" data-name="ดอกสว่านคาร์ไบด์" data-name-en="Carbide Drills">
+        <div class="mat-name">ดอกสว่านคาร์ไบด์</div>
+        <div class="mat-name-en">Carbide Drills / End Mills</div>
+        <div class="mat-price">฿260 <span>/kg</span></div>
+      </label>
+      <label class="material-card" id="card-mixed">
+        <input type="radio" name="material" value="mixed" data-price="140" data-name="คาร์ไบด์ผสม" data-name-en="Mixed Carbide">
+        <div class="mat-name">คาร์ไบด์ผสม</div>
+        <div class="mat-name-en">Mixed Carbide Scrap</div>
+        <div class="mat-price">฿140 <span>/kg</span></div>
+      </label>
+      <label class="material-card" id="card-sand">
+        <input type="radio" name="material" value="sand" data-price="180" data-name="ทรายคาร์ไบด์" data-name-en="Carbide Sand/Sludge">
+        <div class="mat-name">ทรายคาร์ไบด์</div>
+        <div class="mat-name-en">Carbide Sand / Sludge</div>
+        <div class="mat-price">฿180 <span>/kg</span></div>
+      </label>
+    </div>
+    <div class="error-msg" id="err-material">กรุณาเลือกประเภทวัสดุ</div>
+
+    <div class="weight-row">
+      <div class="weight-input-wrap">
+        <label>น้ำหนักโดยประมาณ (kg) *</label>
+        <input type="number" id="weight" placeholder="เช่น 5.5" min="0.1" step="0.1">
+        <div class="error-msg" id="err-weight">กรุณาใส่น้ำหนัก</div>
+      </div>
+    </div>
+
+    <div class="price-estimate" id="price-estimate">
+      <div class="est-label">ราคาประเมิน (สูงสุด)</div>
+      <div class="est-amount" id="est-amount">฿0</div>
+      <div class="est-note">* ราคาจริงขึ้นอยู่กับคุณภาพและการตรวจสอบจริง อัพเดทรายวัน</div>
+    </div>
+
+    <div class="form-group" style="margin-top:24px;">
+      <label>ภาพถ่ายวัสดุ (แนะนำ)</label>
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="photo-input" accept="image/*" multiple>
+        <div class="upload-icon">📷</div>
+        <div class="upload-text"><strong>คลิกเพื่ออัพโหลดรูป</strong><br>หรือลากไฟล์มาวางที่นี่<br><small style="color:#666">JPG, PNG สูงสุด 5 ไฟล์</small></div>
+      </div>
+      <div class="photo-previews" id="photo-previews"></div>
+    </div>
+
+    <div class="form-group">
+      <label>วิธีจัดส่ง *</label>
+      <div class="shipping-options">
+        <label class="shipping-option" id="ship-courier">
+          <input type="radio" name="shipping" value="courier">
+          <div class="ship-icon">🚚</div>
+          <div>
+            <div class="ship-title">ส่งทางไปรษณีย์ / Kerry / Flash</div>
+            <div class="ship-desc">จัดส่งไปยังที่อยู่ของเรา ค่าส่งหักจากยอดชำระ ทั่วประเทศ</div>
+          </div>
+        </label>
+        <label class="shipping-option" id="ship-pickup">
+          <input type="radio" name="shipping" value="pickup">
+          <div class="ship-icon">🏭</div>
+          <div>
+            <div class="ship-title">รับถึงที่ (กรุงเทพฯ / Eastern Seaboard)</div>
+            <div class="ship-desc">เราไปรับถึงโรงงาน — ฟรีสำหรับ กทม. ชลบุรี ระยอง สมุทรปราการ</div>
+          </div>
+        </label>
+      </div>
+      <div class="error-msg" id="err-shipping">กรุณาเลือกวิธีจัดส่ง</div>
+    </div>
+
+    <button class="btn-next" onclick="goToStep2()">ถัดไป: ข้อมูลติดต่อ →</button>
+  </div>
+
+  <!-- STEP 2: Contact Info -->
+  <div class="section" id="section-2">
+    <div class="section-title">ข้อมูลติดต่อ</div>
+    <div class="section-sub">เราจะติดต่อคุณเพื่อยืนยันคำสั่งและนัดรับสินค้า</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>ชื่อ-นามสกุล *</label>
+        <input type="text" id="fullname" placeholder="ชื่อของคุณ">
+        <div class="error-msg" id="err-fullname">กรุณาใส่ชื่อ</div>
+      </div>
+      <div class="form-group">
+        <label>เบอร์โทรศัพท์ *</label>
+        <input type="tel" id="phone" placeholder="08x-xxx-xxxx">
+        <div class="error-msg" id="err-phone">กรุณาใส่เบอร์โทร</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>อีเมล *</label>
+      <input type="email" id="email" placeholder="email@example.com">
+      <div class="error-msg" id="err-email">กรุณาใส่อีเมล</div>
+    </div>
+
+    <div class="form-group" id="address-group">
+      <label>ที่อยู่จัดส่ง *</label>
+      <textarea id="address" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea>
+      <div class="error-msg" id="err-address">กรุณาใส่ที่อยู่</div>
+    </div>
+
+    <div class="form-group">
+      <label>บริษัท / โรงงาน (ถ้ามี)</label>
+      <input type="text" id="company" placeholder="ชื่อบริษัทหรือโรงงาน (ไม่บังคับ)">
+    </div>
+
+    <div class="form-group">
+      <label>หมายเหตุเพิ่มเติม</label>
+      <textarea id="notes" placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับวัสดุ หรือนัดหมายพิเศษ"></textarea>
+    </div>
+
+    <button class="btn-next" onclick="goToStep3()">ถัดไป: ยืนยันคำสั่ง →</button>
+    <button class="btn-back" onclick="goToStep(1)">← ย้อนกลับ</button>
+  </div>
+
+  <!-- STEP 3: Confirm + Submit -->
+  <div class="section" id="section-3">
+    <div class="section-title">ยืนยันคำสั่งขาย</div>
+    <div class="section-sub">ตรวจสอบข้อมูลก่อนส่ง</div>
+
+    <div class="summary-box">
+      <div class="summary-title">รายละเอียดสินค้า</div>
+      <div class="summary-row"><span class="s-label">ประเภท</span><span class="s-val" id="sum-material">-</span></div>
+      <div class="summary-row"><span class="s-label">น้ำหนัก</span><span class="s-val" id="sum-weight">-</span></div>
+      <div class="summary-row"><span class="s-label">จัดส่งโดย</span><span class="s-val" id="sum-shipping">-</span></div>
+      <div class="summary-total">
+        <span class="s-label">ราคาประเมิน</span>
+        <span class="s-val" id="sum-price">฿0</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <div class="summary-title">ข้อมูลติดต่อ</div>
+      <div class="summary-row"><span class="s-label">ชื่อ</span><span class="s-val" id="sum-name">-</span></div>
+      <div class="summary-row"><span class="s-label">โทร</span><span class="s-val" id="sum-phone">-</span></div>
+      <div class="summary-row"><span class="s-label">อีเมล</span><span class="s-val" id="sum-email">-</span></div>
+      <div class="summary-row" id="sum-addr-row"><span class="s-label">ที่อยู่</span><span class="s-val" id="sum-addr">-</span></div>
+    </div>
+
+    <div class="note-box">
+      📦 <strong>ขั้นตอนถัดไป:</strong> หลังจากส่งคำสั่ง เราจะติดต่อคุณภายใน 24 ชม. เพื่อยืนยันและนัดรับสินค้า หลังรับของและตรวจสอบ เราจะโอนเงินทันทีภายใน 48 ชม.
+    </div>
+
+    <div class="trust-row">
+      <div class="trust-badge"><span class="tb-icon">💰</span>โอนเงินใน 48 ชม.</div>
+      <div class="trust-badge"><span class="tb-icon">🔒</span>ข้อมูลปลอดภัย</div>
+      <div class="trust-badge"><span class="tb-icon">📞</span>ติดต่อได้ตลอด</div>
+    </div>
+
+    <button class="btn-next" id="submit-btn" onclick="submitOrder()" style="margin-top:24px;">
+      ✅ ส่งคำสั่งขาย
+    </button>
+    <button class="btn-back" onclick="goToStep(2)">← ย้อนกลับ</button>
+  </div>
+
+</main>
+
+<script>
+  let currentStep = 1;
+  let selectedMaterial = null;
+  let selectedShipping = null;
+  let photoFiles = [];
+
+  // Material selection
+  document.querySelectorAll('.material-card').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.material-card').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+      const radio = this.querySelector('input[type=radio]');
+      radio.checked = true;
+      selectedMaterial = {
+        value: radio.value,
+        price: parseInt(radio.dataset.price),
+        name: radio.dataset.name,
+        nameEn: radio.dataset.nameEn
+      };
+      updateEstimate();
+    });
+  });
+
+  // Weight input
+  document.getElementById('weight').addEventListener('input', updateEstimate);
+
+  function updateEstimate() {
+    const weight = parseFloat(document.getElementById('weight').value) || 0;
+    const est = document.getElementById('price-estimate');
+    if (selectedMaterial && weight > 0) {
+      const amount = Math.round(selectedMaterial.price * weight);
+      document.getElementById('est-amount').textContent = '฿' + amount.toLocaleString('th-TH');
+      est.classList.add('show');
+    } else {
+      est.classList.remove('show');
+    }
+  }
+
+  // Shipping selection
+  document.querySelectorAll('.shipping-option').forEach(opt => {
+    opt.addEventListener('click', function() {
+      document.querySelectorAll('.shipping-option').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      const radio = this.querySelector('input[type=radio]');
+      radio.checked = true;
+      selectedShipping = radio.value;
+    });
+  });
+
+  // Photo upload
+  document.getElementById('photo-input').addEventListener('change', function(e) {
+    const files = Array.from(e.target.files).slice(0, 5);
+    photoFiles = files;
+    const previews = document.getElementById('photo-previews');
+    previews.innerHTML = '';
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'photo-preview';
+        previews.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  function showError(id, show) {
+    document.getElementById(id).style.display = show ? 'block' : 'none';
+  }
+
+  function goToStep2() {
+    let valid = true;
+    if (!selectedMaterial) { showError('err-material', true); valid = false; } else showError('err-material', false);
+    const weight = parseFloat(document.getElementById('weight').value);
+    if (!weight || weight <= 0) { showError('err-weight', true); valid = false; } else showError('err-weight', false);
+    if (!selectedShipping) { showError('err-shipping', true); valid = false; } else showError('err-shipping', false);
+    if (valid) goToStep(2);
+  }
+
+  function goToStep3() {
+    let valid = true;
+    if (!document.getElementById('fullname').value.trim()) { showError('err-fullname', true); valid = false; } else showError('err-fullname', false);
+    const phone = document.getElementById('phone').value.trim();
+    if (!phone) { showError('err-phone', true); valid = false; } else showError('err-phone', false);
+    const email = document.getElementById('email').value.trim();
+    if (!email || !email.includes('@')) { showError('err-email', true); valid = false; } else showError('err-email', false);
+    const needsAddress = selectedShipping === 'courier';
+    if (needsAddress && !document.getElementById('address').value.trim()) { showError('err-address', true); valid = false; } else showError('err-address', false);
+    if (valid) {
+      // Fill summary
+      const weight = parseFloat(document.getElementById('weight').value);
+      document.getElementById('sum-material').textContent = selectedMaterial.name;
+      document.getElementById('sum-weight').textContent = weight + ' kg';
+      document.getElementById('sum-shipping').textContent = selectedShipping === 'courier' ? 'ไปรษณีย์ / Kerry' : 'รับถึงที่';
+      document.getElementById('sum-price').textContent = '฿' + Math.round(selectedMaterial.price * weight).toLocaleString('th-TH');
+      document.getElementById('sum-name').textContent = document.getElementById('fullname').value;
+      document.getElementById('sum-phone').textContent = document.getElementById('phone').value;
+      document.getElementById('sum-email').textContent = document.getElementById('email').value;
+      const addrRow = document.getElementById('sum-addr-row');
+      if (selectedShipping === 'courier') {
+        document.getElementById('sum-addr').textContent = document.getElementById('address').value;
+        addrRow.style.display = 'flex';
+      } else {
+        addrRow.style.display = 'none';
+      }
+      goToStep(3);
+    }
+  }
+
+  function goToStep(n) {
+    document.getElementById('section-' + currentStep).classList.remove('active');
+    // Update progress
+    for (let i = 1; i <= 3; i++) {
+      const stepEl = document.getElementById('step-' + i);
+      stepEl.classList.remove('active', 'done');
+      if (i < n) stepEl.classList.add('done');
+      else if (i === n) stepEl.classList.add('active');
+    }
+    for (let i = 1; i <= 2; i++) {
+      const line = document.getElementById('line-' + i);
+      line.classList.toggle('done', i < n);
+    }
+    currentStep = n;
+    document.getElementById('section-' + n).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Show/hide address based on shipping
+    if (n === 2) {
+      document.getElementById('address-group').style.display = selectedShipping === 'courier' ? 'block' : 'none';
+    }
+  }
+
+  async function submitOrder() {
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'กำลังส่ง...';
+
+    const weight = parseFloat(document.getElementById('weight').value);
+    const estimatedPrice = Math.round(selectedMaterial.price * weight);
+
+    const formData = new FormData();
+    formData.append('_subject', 'คำสั่งขายคาร์ไบด์ใหม่ - ' + selectedMaterial.name);
+    formData.append('material', selectedMaterial.name + ' (' + selectedMaterial.nameEn + ')');
+    formData.append('price_per_kg', '฿' + selectedMaterial.price + '/kg');
+    formData.append('weight_kg', weight + ' kg');
+    formData.append('estimated_price', '฿' + estimatedPrice.toLocaleString('th-TH'));
+    formData.append('shipping', selectedShipping === 'courier' ? 'ไปรษณีย์ / Kerry / Flash' : 'รับถึงที่ (Bangkok/Eastern Seaboard)');
+    formData.append('fullname', document.getElementById('fullname').value);
+    formData.append('phone', document.getElementById('phone').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('company', document.getElementById('company').value || '-');
+    formData.append('address', document.getElementById('address').value || 'รับถึงที่');
+    formData.append('notes', document.getElementById('notes').value || '-');
+    formData.append('_replyto', document.getElementById('email').value);
+
+    // Attach photos if any
+    photoFiles.forEach((file, i) => {
+      formData.append('photo_' + (i+1), file);
+    });
+
+    try {
+      const response = await fetch('https://formspree.io/f/xkoqnkkk', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        window.location.href = '/thank-you.html';
+      } else {
+        throw new Error('Submit failed');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = '✅ ส่งคำสั่งขาย';
+      alert('เกิดข้อผิดพลาด กรุณาลองใหม่ หรือติดต่อเราทาง LINE: alex.schlick');
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ส่งคำสั่งสำเร็จ | ThaiCarbide.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark: #0d2b0d;
+      --green-mid: #1a3a1a;
+      --gold: #d4af37;
+      --gold-light: #f0d060;
+      --cream: #f5f0e8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--green-dark);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .checkmark {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.15);
+      border: 3px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      margin: 0 auto 28px;
+      animation: pop 0.5s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'Prompt', sans-serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .sub {
+      font-size: 1rem;
+      color: #aaa;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .steps-box {
+      background: var(--green-mid);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 460px;
+      width: 100%;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .steps-title {
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.85rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 18px;
+    }
+    .next-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .next-step:last-child { margin-bottom: 0; }
+    .ns-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.15);
+      border: 1px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .ns-text { font-size: 0.9rem; color: #ccc; line-height: 1.5; padding-top: 4px; }
+    .ns-text strong { color: var(--cream); }
+
+    .btn-home {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--green-dark);
+      border-radius: 10px;
+      padding: 14px 36px;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-bottom: 14px;
+    }
+    .btn-home:hover { background: var(--gold-light); }
+    .btn-line {
+      display: inline-block;
+      background: #06c755;
+      color: white;
+      border-radius: 10px;
+      padding: 14px 36px;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-left: 10px;
+    }
+    .btn-line:hover { background: #05a847; }
+
+    .logo {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-decoration: none;
+      margin-bottom: 40px;
+      display: block;
+    }
+    .logo span { color: var(--cream); }
+  </style>
+</head>
+<body>
+
+  <a href="/" class="logo">Thai<span>Carbide</span></a>
+
+  <div class="checkmark">✓</div>
+
+  <h1>ส่งคำสั่งสำเร็จแล้ว!</h1>
+  <p class="sub">ขอบคุณที่ไว้วางใจ ThaiCarbide<br>เราจะติดต่อคุณภายใน 24 ชั่วโมง เพื่อยืนยันและนัดรับสินค้า</p>
+
+  <div class="steps-box">
+    <div class="steps-title">ขั้นตอนถัดไป</div>
+    <div class="next-step">
+      <div class="ns-num">1</div>
+      <div class="ns-text"><strong>รอการติดต่อจากเรา</strong><br>เราจะโทรหรือ LINE ภายใน 24 ชม. เพื่อยืนยันราคาและนัดหมาย</div>
+    </div>
+    <div class="next-step">
+      <div class="ns-num">2</div>
+      <div class="ns-text"><strong>จัดส่งสินค้า</strong><br>ส่งผ่าน Kerry / Flash หรือรอให้เราไปรับถึงที่ตามที่นัด</div>
+    </div>
+    <div class="next-step">
+      <div class="ns-num">3</div>
+      <div class="ns-text"><strong>รับเงินทันที</strong><br>หลังรับและตรวจสอบของ โอนเงินภายใน 48 ชม. ทาง PromptPay / โอนธนาคาร</div>
+    </div>
+  </div>
+
+  <div>
+    <a href="/" class="btn-home">← กลับหน้าหลัก</a>
+    <a href="https://line.me/ti/p/alex.schlick" class="btn-line">💬 LINE เรา</a>
+  </div>
+
+</body>
+</html>
