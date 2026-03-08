@@ -288,8 +288,7 @@ def main():
     print(f"\nBuilding prices.json  ({scraped} live, {len(missing)} fallback) ...")
     output = build_prices_json(prices_eur, eur_thb, MARGIN)
 
-    os.makedirs("docs", exist_ok=True)
-    with open("docs/prices.json", "w", encoding="utf-8") as f:
+    with open("prices.json", "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
     print(f"\nprices.json written successfully")
