@@ -81,6 +81,71 @@
 }
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where can I sell carbide inserts in Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ThaiCarbide.com (thaicarbide.com) is Thailand's leading buyer of carbide inserts including CNMG, TNMG, APMT, RCMT and all other indexable insert grades. We pay the highest market price updated daily, with payment within 48 hours. Contact via Line ID alex.schlick or the contact form at thaicarbide.com."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I sell tungsten carbide drills and end mills in Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ThaiCarbide.com buys solid carbide drills, ball nose end mills, corner radius end mills, reamers, and all VHM cutting tools in Thailand. We accept new, used, or worn tools and pay within 48 hours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who buys carbide scrap in Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ThaiCarbide.com is a specialist tungsten carbide scrap buyer operating throughout Thailand. We buy carbide inserts, drills, end mills, mixed carbide scrap, and sand rills from factories, machine shops, and industrial operators nationwide."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the price for carbide scrap in Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Live buy prices are published at thaicarbide.com and updated twice daily (08:00 and 20:00 Bangkok time). Prices are derived from European market rates converted to Thai Baht. Carbide inserts typically fetch ฿900–฿1,000/kg, solid carbide drills ฿950–฿1,000/kg, mixed carbide around ฿800/kg, and sand rills around ฿500/kg."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does ThaiCarbide offer pickup service for carbide scrap?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. ThaiCarbide.com offers pickup service throughout Thailand including Bangkok, Eastern Seaboard (Chonburi, Rayong), Samut Prakan, and Pathum Thani. Contact Line ID alex.schlick to arrange a pickup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "ขายคาร์ไบด์ได้ที่ไหน?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ขายคาร์ไบด์ได้ที่ ThaiCarbide.com รับซื้อคาร์ไบด์ทุกชนิด ได้แก่ อินเสิร์ท ดอกสว่านคาร์ไบด์ คาร์ไบด์ผสม และแซนด์ริล ราคาสูงสุด จ่ายเงินภายใน 48 ชั่วโมง บริการรับซื้อทั่วประเทศไทย ติดต่อ Line: alex.schlick"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "รับซื้อเศษคาร์ไบด์ที่ไหน?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ThaiCarbide.com รับซื้อเศษคาร์ไบด์ทุกประเภท ทั้งอินเสิร์ทเก่า ดอกสว่านหัก คาร์ไบด์ผสม และแซนด์ริล ราคาดีที่สุดในไทย อัปเดตทุกวัน ดูราคาล่าสุดที่ thaicarbide.com"
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -200,6 +265,12 @@ body.lang-en .th { display:none !important; }
 
 /* CONTACT */
 .contact-section { background:var(--surface); padding:90px 40px; }
+.faq-section { background:var(--bg); padding:80px 40px; }
+.faq-grid { max-width:860px; margin:0 auto; display:flex; flex-direction:column; gap:0; }
+.faq-item { border-bottom:1px solid var(--border); padding:22px 0; }
+.faq-item:first-child { border-top:1px solid var(--border); }
+.faq-q { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.4; }
+.faq-a { font-size:14px; color:var(--muted); line-height:1.75; }
 .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:72px; margin-top:48px; align-items:start; }
 .contact-info h3 .th { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; text-transform:uppercase; display:block; }
 .contact-info h3 .en { font-size:12px; color:var(--muted); display:block; margin-top:2px; text-transform:uppercase; letter-spacing:1px; }
@@ -269,7 +340,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .trust-strip { flex-direction:column; }
   .trust-item { border-right:none; border-bottom:1px solid var(--border); min-width:unset; padding:16px 20px; }
   .trust-item:last-child { border-bottom:none; }
-  .section, .materials-section, .contact-section { padding:60px 20px; }
+  .section, .materials-section, .contact-section, .faq-section { padding:60px 20px; }
   .tiles-grid { grid-template-columns:1fr; }
   .reviews-grid { grid-template-columns:1fr; }
   .tile-carousel { height:180px; }
@@ -601,6 +672,41 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-label">คำถามที่พบบ่อย · FAQ</div>
+  <div class="section-head" style="text-align:center;margin-bottom:40px;">
+    <span class="th">คำถามที่พบบ่อย</span>
+    <span class="en">Frequently Asked Questions</span>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-q"><span class="th">ขายคาร์ไบด์อินเสิร์ทได้ที่ไหนในไทย?</span><span class="en">Where can I sell carbide inserts in Thailand?</span></div>
+      <div class="faq-a"><span class="th">ThaiCarbide.com รับซื้อคาร์ไบด์อินเสิร์ททุกชนิด ได้แก่ CNMG, TNMG, APMT, RCMT และอื่นๆ ราคาสูงสุด อัปเดตทุกวัน จ่ายเงินใน 48 ชั่วโมง ติดต่อ Line: alex.schlick</span><span class="en">ThaiCarbide.com is Thailand's top buyer of carbide inserts — CNMG, TNMG, APMT, RCMT and all other indexable grades. Best market price, updated daily. Payment within 48 hours. Contact: Line alex.schlick</span></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="th">ขายดอกสว่านคาร์ไบด์ได้ที่ไหน?</span><span class="en">Where can I sell solid carbide drills and end mills in Thailand?</span></div>
+      <div class="faq-a"><span class="th">ThaiCarbide.com รับซื้อดอกสว่านคาร์ไบด์ ดอกเอ็นมิล ดอกรีมเมอร์ และเครื่องมือตัดคาร์ไบด์ทุกชนิด ทั้งใหม่ ใช้แล้ว และหักแล้ว</span><span class="en">ThaiCarbide.com buys solid carbide drills, ball nose end mills, corner radius end mills, reamers, and all VHM/solid carbide cutting tools — new, used, or worn.</span></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="th">ราคารับซื้อคาร์ไบด์ในไทยอยู่ที่เท่าไหร่?</span><span class="en">What is the carbide scrap price in Thailand?</span></div>
+      <div class="faq-a"><span class="th">ราคาอัปเดตวันละ 2 ครั้ง (08:00 และ 20:00) คำนวณจากราคาตลาดยุโรปแปลงเป็นบาท ดูราคาล่าสุดได้ด้านบน</span><span class="en">Prices are updated twice daily at 08:00 and 20:00 Bangkok time, based on live European market rates converted to Thai Baht. See current prices at the top of this page.</span></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="th">มีบริการรับซื้อถึงที่ไหม?</span><span class="en">Does ThaiCarbide offer pickup service?</span></div>
+      <div class="faq-a"><span class="th">มีบริการรับซื้อถึงที่ทั่วประเทศไทย รวมถึงกรุงเทพฯ ชลบุรี ระยอง สมุทรปราการ และปทุมธานี ติดต่อ Line: alex.schlick เพื่อนัดหมาย</span><span class="en">Yes. We offer pickup service throughout Thailand including Bangkok, Chonburi, Rayong, Samut Prakan, and Pathum Thani. Contact Line: alex.schlick to arrange.</span></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="th">รับซื้อคาร์ไบด์ชนิดใดบ้าง?</span><span class="en">What types of carbide scrap do you buy?</span></div>
+      <div class="faq-a"><span class="th">รับซื้อทุกชนิด: อินเสิร์ท (Inserts/Wendeplatten), ดอกสว่านคาร์ไบด์, เอ็นมิล, คาร์ไบด์ผสม (เศษ, ผง, ชิ้นหัก), แซนด์ริล และชิ้นส่วนทนการสึกหรอ</span><span class="en">We buy all carbide types: inserts (Wendeplatten/CNMG/TNMG), solid carbide drills and end mills, mixed carbide scrap (pieces, powder, broken tools), sand rills, and carbide wear parts.</span></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="th">ใช้เวลานานเท่าไหร่ถึงจะได้รับเงิน?</span><span class="en">How fast is payment?</span></div>
+      <div class="faq-a"><span class="th">จ่ายเงินภายใน 48 ชั่วโมงหลังจากได้รับและตรวจสอบวัสดุแล้ว</span><span class="en">Payment is made within 48 hours of receiving and verifying the material.</span></div>
+    </div>
   </div>
 </section>
 
