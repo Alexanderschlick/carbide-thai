@@ -73,20 +73,20 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify
 
 /* MATERIAL TILES */
 .materials-section { padding:90px 40px; background:var(--surface); }
-.tiles-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
-.tile { position:relative; border-radius:6px; overflow:hidden; aspect-ratio:4/3; display:block; text-decoration:none; background:linear-gradient(135deg,var(--sur2),var(--bg)); border:1px solid transparent; transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s; }
+.tiles-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.tile { border-radius:6px; overflow:hidden; display:block; text-decoration:none; background:var(--bg); border:1px solid var(--border); transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s; }
 .tile:hover { border-color:var(--gold); transform:translateY(-5px); box-shadow:0 24px 64px rgba(0,0,0,0.6); }
-.tile-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 0.45s,filter 0.45s; filter:brightness(0.5) saturate(0.55); }
-.tile:hover .tile-photo { transform:scale(1.07); filter:brightness(0.62) saturate(0.7); }
-.tile-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(11,31,20,0.97) 0%, rgba(11,31,20,0.55) 45%, rgba(11,31,20,0.05) 100%); }
-.tile-content { position:absolute; bottom:0; left:0; right:0; padding:22px 24px; }
-.tile-badge { display:inline-block; background:rgba(201,162,39,0.2); border:1px solid rgba(201,162,39,0.4); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:3px 9px; border-radius:2px; margin-bottom:10px; }
-.tile-name-th { font-family:'Barlow Condensed',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:900; color:var(--white); display:block; line-height:1.05; }
-.tile-name-en { font-size:11px; color:rgba(242,237,228,0.55); display:block; margin-top:3px; letter-spacing:0.3px; }
-.tile-price-row { display:flex; align-items:flex-end; justify-content:space-between; margin-top:10px; }
-.tile-amount { font-family:'Barlow Condensed',sans-serif; font-size:clamp(26px,4vw,42px); font-weight:900; color:var(--gold); line-height:1; }
+.tile-photo-wrap { width:100%; aspect-ratio:3/2; overflow:hidden; background:#0a1a0e; }
+.tile-photo { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.45s; }
+.tile:hover .tile-photo { transform:scale(1.06); }
+.tile-content { padding:20px 22px; }
+.tile-badge { display:inline-block; background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.35); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:3px 9px; border-radius:2px; margin-bottom:10px; }
+.tile-name-th { font-family:'Barlow Condensed',sans-serif; font-size:clamp(20px,2.5vw,28px); font-weight:900; color:var(--white); display:block; line-height:1.05; }
+.tile-name-en { font-size:11px; color:var(--muted); display:block; margin-top:3px; letter-spacing:0.3px; }
+.tile-price-row { display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.tile-amount { font-family:'Barlow Condensed',sans-serif; font-size:clamp(26px,3.5vw,38px); font-weight:900; color:var(--gold); line-height:1; }
 .tile-unit { font-size:12px; color:var(--muted); margin-left:4px; }
-.tile-btn { display:inline-block; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:1px; padding:8px 18px; border-radius:2px; transition:background 0.2s; white-space:nowrap; }
+.tile-btn { display:inline-block; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:1px; padding:8px 16px; border-radius:2px; transition:background 0.2s; white-space:nowrap; }
 .tile:hover .tile-btn { background:var(--gold-lt); }
 .price-loading { font-size:22px; color:var(--muted); }
 
@@ -175,7 +175,6 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .trust-item:last-child { border-bottom:none; }
   .section, .materials-section, .contact-section { padding:60px 20px; }
   .tiles-grid { grid-template-columns:1fr; }
-  .tile { aspect-ratio:3/2; }
   .reviews-grid { grid-template-columns:1fr; }
   .steps-grid { grid-template-columns:1fr; }
   .step { border-left:none; border-top:3px solid transparent; padding:32px 20px; }
@@ -271,8 +270,9 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   <div class="tiles-grid">
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.scrap24.com/wendeschneidplatten_widia-290x192-3b6h2QjRgYeFp6PJ2.jpg" alt="Carbide inserts wendeschneidplatten" onerror="this.style.display='none'">
-      <div class="tile-overlay"></div>
+      <div class="tile-photo-wrap">
+        <img class="tile-photo" src="img/inserts.jpg" alt="Carbide inserts wendeschneidplatten">
+      </div>
       <div class="tile-content">
         <span class="tile-badge">HIGHEST GRADE</span>
         <span class="tile-name-th">คาร์ไบด์อินเสิร์ท</span>
@@ -288,8 +288,9 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.scrap24.com/vhm_werkzeuge_bohrer_fraeser-224x149-bCFs6ZQCMjhbAkTxp.jpg" alt="VHM carbide drills and end mills" onerror="this.style.display='none'">
-      <div class="tile-overlay"></div>
+      <div class="tile-photo-wrap">
+        <img class="tile-photo" src="img/drills.jpg" alt="VHM carbide drills and end mills">
+      </div>
       <div class="tile-content">
         <span class="tile-badge">VHM / SOLID</span>
         <span class="tile-name-th">ดอกสว่านคาร์ไบด์</span>
@@ -305,8 +306,9 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.scrap24.com/hartmetall_gemischt-224x149-Q4BWGT5bTcwWsLnCK.jpg" alt="Mixed carbide scrap hartmetall gemischt" onerror="this.style.display='none'">
-      <div class="tile-overlay"></div>
+      <div class="tile-photo-wrap">
+        <img class="tile-photo" src="img/mixed.jpg" alt="Mixed carbide scrap">
+      </div>
       <div class="tile-content">
         <span class="tile-badge">ALL QUANTITIES</span>
         <span class="tile-name-th">คาร์ไบด์ผสม</span>
@@ -322,8 +324,9 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.scrap24.com/img-239x149-S4kGk4xyLeG4GgTYG.jpg" alt="Sand rills mining wear parts" onerror="this.style.display='none'">
-      <div class="tile-overlay"></div>
+      <div class="tile-photo-wrap">
+        <img class="tile-photo" src="img/drills2.jpg" alt="Carbide drills and end mills">
+      </div>
       <div class="tile-content">
         <span class="tile-badge">WEAR PARTS</span>
         <span class="tile-name-th">ทรายคาร์ไบด์ / แซนด์ริล</span>
