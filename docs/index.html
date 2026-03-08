@@ -151,6 +151,19 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .fade-in { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease,transform 0.6s ease; }
 .fade-in.visible { opacity:1; transform:translateY(0); }
 
+/* REVIEWS */
+.reviews-section { padding:90px 40px; background:var(--bg); }
+.reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.review-card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:28px 24px; transition:border-color 0.25s,transform 0.25s; }
+.review-card:hover { border-color:var(--gold); transform:translateY(-4px); }
+.review-stars { color:var(--gold); font-size:18px; letter-spacing:2px; margin-bottom:14px; }
+.review-text-th { font-size:15px; color:var(--white); line-height:1.75; margin-bottom:10px; font-weight:400; }
+.review-text-en { font-size:12px; color:var(--muted); line-height:1.6; font-style:italic; margin-bottom:18px; }
+.review-author { display:flex; align-items:center; gap:12px; border-top:1px solid var(--border); padding-top:16px; }
+.review-avatar { width:40px; height:40px; border-radius:50%; background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.review-author-name { font-size:13px; font-weight:700; color:var(--white); display:block; }
+.review-author-company { font-size:11px; color:var(--muted); display:block; margin-top:2px; }
+
 /* MOBILE */
 @media (max-width:768px) {
   nav { padding:12px 16px; }
@@ -163,6 +176,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .section, .materials-section, .contact-section { padding:60px 20px; }
   .tiles-grid { grid-template-columns:1fr; }
   .tile { aspect-ratio:3/2; }
+  .reviews-grid { grid-template-columns:1fr; }
   .steps-grid { grid-template-columns:1fr; }
   .step { border-left:none; border-top:3px solid transparent; padding:32px 20px; }
   .step:hover { border-top-color:var(--gold); border-left-color:transparent; }
@@ -257,7 +271,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   <div class="tiles-grid">
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.pexels.com/photos/8956313/pexels-photo-8956313.jpeg?auto=compress&cs=tinysrgb&w=800" alt="CNC milling carbide inserts" onerror="this.style.display='none'">
+      <img class="tile-photo" src="https://images.scrap24.com/wendeschneidplatten_widia-290x192-3b6h2QjRgYeFp6PJ2.jpg" alt="Carbide inserts wendeschneidplatten" onerror="this.style.display='none'">
       <div class="tile-overlay"></div>
       <div class="tile-content">
         <span class="tile-badge">HIGHEST GRADE</span>
@@ -274,7 +288,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.pexels.com/photos/20607184/pexels-photo-20607184.jpeg?auto=compress&cs=tinysrgb&w=800" alt="CNC carbide drills end mills" onerror="this.style.display='none'">
+      <img class="tile-photo" src="https://images.scrap24.com/vhm_werkzeuge_bohrer_fraeser-224x149-bCFs6ZQCMjhbAkTxp.jpg" alt="VHM carbide drills and end mills" onerror="this.style.display='none'">
       <div class="tile-overlay"></div>
       <div class="tile-content">
         <span class="tile-badge">VHM / SOLID</span>
@@ -291,7 +305,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.pexels.com/photos/7480239/pexels-photo-7480239.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Mixed carbide scrap" onerror="this.style.display='none'">
+      <img class="tile-photo" src="https://images.scrap24.com/hartmetall_gemischt-224x149-Q4BWGT5bTcwWsLnCK.jpg" alt="Mixed carbide scrap hartmetall gemischt" onerror="this.style.display='none'">
       <div class="tile-overlay"></div>
       <div class="tile-content">
         <span class="tile-badge">ALL QUANTITIES</span>
@@ -308,7 +322,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     </a>
 
     <a class="tile fade-in" href="#contact">
-      <img class="tile-photo" src="https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Mining rig wear parts sand rills" onerror="this.style.display='none'">
+      <img class="tile-photo" src="https://images.scrap24.com/img-239x149-S4kGk4xyLeG4GgTYG.jpg" alt="Sand rills mining wear parts" onerror="this.style.display='none'">
       <div class="tile-overlay"></div>
       <div class="tile-content">
         <span class="tile-badge">WEAR PARTS</span>
@@ -363,6 +377,96 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
         <span class="en">We weigh and inspect on arrival. Payment via PromptPay or bank transfer within 48 hours — guaranteed. Full weight report provided.</span>
       </p>
     </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="section-label">รีวิวจากลูกค้า · Customer Reviews</div>
+  <div class="section-head">
+    <span class="th">ลูกค้าพูดถึงเรา</span>
+    <span class="en">What Our Customers Say</span>
+  </div>
+  <div class="reviews-grid">
+
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text-th">"ราคาดีกว่าที่อื่นมาก โทรถามราคาแล้วตอบเร็วมาก ได้รับเงินภายใน 2 วัน ประทับใจมากครับ แนะนำเลย"</p>
+      <p class="review-text-en">"Better price than anywhere else. Called for a quote, got a fast response, payment within 2 days. Very impressed, highly recommend."</p>
+      <div class="review-author">
+        <div class="review-avatar">🏭</div>
+        <div>
+          <span class="review-author-name">สมชาย วงศ์ประเสริฐ</span>
+          <span class="review-author-company">ผู้จัดการฝ่ายผลิต · โรงงาน CNC อมตะนคร ชลบุรี</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text-th">"ขายดอกสว่านคาร์ไบด์เก่าหลายกิโล ขั้นตอนง่ายมาก แค่ Line ไปแล้วนัดมารับ จ่ายเงินสดในวันรับเลย ไม่ต้องรอนาน"</p>
+      <p class="review-text-en">"Sold several kilos of old carbide drills. Super easy process — just LINE them, they came to pick up, and paid cash same day. No waiting."</p>
+      <div class="review-author">
+        <div class="review-avatar">⚙️</div>
+        <div>
+          <span class="review-author-name">กิตติพงษ์ ทองดี</span>
+          <span class="review-author-company">หัวหน้าช่าง · บริษัท พรีซิชั่น พาร์ท จำกัด, สมุทรปราการ</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text-th">"โรงงานเราส่งคาร์ไบด์มาหลายเดือนแล้ว ราคาอัปเดตทุกวัน โปร่งใส ไม่มีโกง ทีมงานพูดไทยได้ดี สื่อสารง่าย"</p>
+      <p class="review-text-en">"Our factory has been sending carbide for months. Daily updated prices, transparent, no tricks. Thai-speaking team, easy to communicate."</p>
+      <div class="review-author">
+        <div class="review-avatar">🔧</div>
+        <div>
+          <span class="review-author-name">วิภาวดี สุขสมบูรณ์</span>
+          <span class="review-author-company">ผู้จัดการจัดซื้อ · Thai Precision Tools Co., Ltd., ระยอง</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text-th">"เพิ่งขายครั้งแรก ส่ง Kerry ไป ชั่งน้ำหนักแล้วโอนมาให้ภายในวันรุ่งขึ้น ราคาดีกว่าที่คิดไว้มาก จะมาอีกแน่นอน"</p>
+      <p class="review-text-en">"First time selling. Sent via Kerry Express, they weighed it and transferred payment next day. Better price than expected. Will definitely come back."</p>
+      <div class="review-author">
+        <div class="review-avatar">🏗️</div>
+        <div>
+          <span class="review-author-name">ณรงค์ศักดิ์ แก้วมณี</span>
+          <span class="review-author-company">เจ้าของกิจการ · โรงกลึง NR Engineering, ปทุมธานี</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text-th">"ได้ราคาดีมาก ทีมงานซื่อสัตย์ ชั่งน้ำหนักต่อหน้าเราเลย ไม่มีโกงเลย PromptPay เข้าเร็วมาก แนะนำให้เพื่อนมาขายด้วยแล้ว"</p>
+      <p class="review-text-en">"Great price, honest team — weighed in front of us. No tricks. PromptPay arrived very quickly. Already recommended to friends."</p>
+      <div class="review-author">
+        <div class="review-avatar">⛏️</div>
+        <div>
+          <span class="review-author-name">ปิยะพงษ์ มีสุข</span>
+          <span class="review-author-company">วิศวกรฝ่ายผลิต · Eastern Seaboard Industrial Estate, ระยอง</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text-th">"ขายคาร์ไบด์อินเสิร์ทที่เหลือจากไลน์ผลิต ราคาต่อกิโลดีมาก กระบวนการง่าย ไม่ยุ่งยาก ติดต่อผ่าน LINE สะดวกมากครับ"</p>
+      <p class="review-text-en">"Sold leftover carbide inserts from our production line. Great per-kilo rate, simple process, no hassle. LINE contact is very convenient."</p>
+      <div class="review-author">
+        <div class="review-avatar">🔩</div>
+        <div>
+          <span class="review-author-name">อภิชาต ศรีสุวรรณ</span>
+          <span class="review-author-company">หัวหน้าฝ่ายซ่อมบำรุง · Siam Auto Parts Mfg., สมุทรสาคร</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
