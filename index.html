@@ -111,7 +111,21 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify
 .nav-cta:hover { background:var(--gold-lt) !important; color:#0b1f14 !important; }
 
 /* TICKER */
-.ticker { background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-align:center; padding:7px 16px; margin-top:61px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ticker { position:sticky; top:61px; z-index:99; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-align:center; padding:7px 0; margin-top:61px; white-space:nowrap; overflow:hidden; }
+.ticker-inner { display:inline-block; padding:0 48px; }
+@keyframes ticker-scroll { 0% { transform:translateX(105vw); } 100% { transform:translateX(-100%); } }
+
+/* LANG TOGGLE */
+.lang-toggle { display:flex; gap:3px; margin-left:10px; }
+.lang-btn { background:transparent; border:1px solid rgba(201,162,39,0.22); color:var(--muted); font-size:14px; padding:4px 8px; border-radius:3px; cursor:pointer; transition:border-color 0.2s,background 0.2s; line-height:1; font-family:inherit; }
+.lang-btn.active { border-color:var(--gold); background:rgba(201,162,39,0.15); color:var(--white); }
+.lang-btn:hover { border-color:var(--gold); }
+body { transition:opacity 0.12s ease; }
+body.lang-th .en { display:none !important; }
+body.lang-en .th { display:none !important; }
+
+/* TILE PRICE LABEL */
+.tile-price-label { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:2px; }
 
 /* HERO */
 .hero { min-height:92vh; display:flex; align-items:center; position:relative; overflow:hidden; padding:80px 40px; }
@@ -259,6 +273,8 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .tiles-grid { grid-template-columns:1fr; }
   .reviews-grid { grid-template-columns:1fr; }
   .tile-carousel { height:180px; }
+  .ticker { text-align:left; }
+  .ticker-inner { animation:ticker-scroll 26s linear infinite; }
   .steps-grid { grid-template-columns:1fr; }
   .step { border-left:none; border-top:3px solid transparent; padding:32px 20px; }
   .step:hover { border-top-color:var(--gold); border-left-color:transparent; }
@@ -283,11 +299,17 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
     <li><a href="#materials">ราคาวันนี้<small>TODAY'S PRICES</small></a></li>
     <li><a href="#contact">ติดต่อ<small>CONTACT</small></a></li>
     <li><a href="#contact" class="nav-cta">ขายเดี๋ยวนี้ →</a></li>
+    <li>
+      <div class="lang-toggle" role="group" aria-label="Language / ภาษา">
+        <button class="lang-btn active" data-lang="th" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
+      </div>
+    </li>
   </ul>
 </nav>
 
 <!-- TICKER -->
-<div class="ticker" id="ticker">📡 กำลังโหลดราคา... / Loading today's prices...</div>
+<div class="ticker" id="ticker"><span class="ticker-inner" id="ticker-inner">📡 กำลังโหลดราคา... / Loading today's prices...</span></div>
 
 <!-- HERO -->
 <section class="hero">
@@ -368,6 +390,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
         <span class="tile-name-en">Carbide Inserts · Wendeplatten · CNMG / TNMG</span>
         <div class="tile-price-row">
           <div>
+            <span class="tile-price-label"><span class="th">สูงสุด</span><span class="en">Up to</span></span>
             <span class="tile-amount" id="price-carbide_inserts"><span class="price-loading">—</span></span>
             <span class="tile-unit">/ กก.</span>
           </div>
@@ -392,6 +415,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
         <span class="tile-name-en">Carbide Drills & End Mills · VHM Bohrer</span>
         <div class="tile-price-row">
           <div>
+            <span class="tile-price-label"><span class="th">สูงสุด</span><span class="en">Up to</span></span>
             <span class="tile-amount" id="price-carbide_drills"><span class="price-loading">—</span></span>
             <span class="tile-unit">/ กก.</span>
           </div>
@@ -415,6 +439,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
         <span class="tile-name-en">Mixed Carbide Scrap · Gemischtes Hartmetall</span>
         <div class="tile-price-row">
           <div>
+            <span class="tile-price-label"><span class="th">สูงสุด</span><span class="en">Up to</span></span>
             <span class="tile-amount" id="price-mixed_carbide"><span class="price-loading">—</span></span>
             <span class="tile-unit">/ กก.</span>
           </div>
@@ -438,6 +463,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
         <span class="tile-name-en">Sand Rills · Mining Wear Parts · Abbaumeißel</span>
         <div class="tile-price-row">
           <div>
+            <span class="tile-price-label"><span class="th">สูงสุด</span><span class="en">Up to</span></span>
             <span class="tile-amount" id="price-sand_rills"><span class="price-loading">—</span></span>
             <span class="tile-unit">/ กก.</span>
           </div>
@@ -720,11 +746,16 @@ async function loadPrices() {
         const el = document.getElementById('price-' + key);
         if (el) el.innerHTML = '฿' + val.thb_per_kg.toLocaleString('th-TH');
       }
-      document.getElementById('ticker').innerHTML =
-        `📡 ราคาวันนี้ ${data.updated} &nbsp;|&nbsp; EUR/THB: ${data.eur_thb_rate} &nbsp;|&nbsp; ` +
-        `อินเสิร์ท ฿${data.prices.carbide_inserts?.thb_per_kg||'—'}/kg &nbsp;|&nbsp; ` +
-        `ดอกสว่าน ฿${data.prices.carbide_drills?.thb_per_kg||'—'}/kg &nbsp;|&nbsp; ` +
-        `คาร์ไบด์ผสม ฿${data.prices.mixed_carbide?.thb_per_kg||'—'}/kg`;
+      const ins = data.prices.carbide_inserts?.thb_per_kg||'—';
+      const drl = data.prices.carbide_drills?.thb_per_kg||'—';
+      const mix = data.prices.mixed_carbide?.thb_per_kg||'—';
+      const san = data.prices.sand_rills?.thb_per_kg||'—';
+      document.getElementById('ticker-inner').innerHTML =
+        `📡 ราคาวันนี้ ${data.updated} &nbsp;·&nbsp; ` +
+        `<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿${ins}/kg &nbsp;·&nbsp; ` +
+        `<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿${drl}/kg &nbsp;·&nbsp; ` +
+        `<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿${mix}/kg &nbsp;·&nbsp; ` +
+        `<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿${san}/kg &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate}`;
       document.getElementById('price-updated-note').textContent =
         `ราคาอัปเดต: ${data.updated} · EUR/THB: ${data.eur_thb_rate} · Last updated: ${data.updated}`;
     }
@@ -733,7 +764,12 @@ async function loadPrices() {
       const el = document.getElementById('price-' + key);
       if (el) el.innerHTML = '฿' + val.toLocaleString('th-TH');
     }
-    document.getElementById('ticker').innerHTML = '📡 CarbideThai.com · อินเสิร์ท ฿320/kg · ดอกสว่าน ฿260/kg · คาร์ไบด์ผสม ฿140/kg';
+    document.getElementById('ticker-inner').innerHTML =
+      '📡 CarbideThai.com &nbsp;·&nbsp; ' +
+      '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿320/kg &nbsp;·&nbsp; ' +
+      '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿260/kg &nbsp;·&nbsp; ' +
+      '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿140/kg &nbsp;·&nbsp; ' +
+      '<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿180/kg';
     document.getElementById('price-updated-note').textContent = 'ราคาโดยประมาณ · ติดต่อเราสำหรับราคาที่ถูกต้อง';
   }
 }
@@ -771,6 +807,24 @@ async function submitForm() {
   btn.style.background = '#06C755';
   btn.style.color = '#fff';
 }
+
+// Language toggle
+function setLang(lang) {
+  document.body.style.opacity = '0.6';
+  setTimeout(() => {
+    document.body.classList.remove('lang-th', 'lang-en');
+    document.body.classList.add('lang-' + lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    localStorage.setItem('carbide-lang', lang);
+    document.body.style.opacity = '1';
+  }, 120);
+}
+function initLang() {
+  const saved = localStorage.getItem('carbide-lang') || 'th';
+  document.body.classList.add('lang-' + saved);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === saved));
+}
+initLang();
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
