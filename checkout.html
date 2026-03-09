@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
 <meta charset="UTF-8">
 <!-- Google Analytics -->
@@ -11,387 +11,456 @@
   gtag('config', 'G-XXXXXXXXXX');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ThaiCarbide — Checkout</title>
+<title>ขายคาร์ไบด์ | Sell Carbide — ThaiCarbide.com</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:      #0b1f14;
+  --surface: #0f2a1a;
+  --sur2:    #132e1d;
+  --gold:    #c9a227;
+  --gold-lt: #e8bc30;
+  --white:   #f2ede4;
+  --muted:   #7a9480;
+  --border:  rgba(201,162,39,0.18);
+  --green-ok:#06C755;
+  --red:     #e05555;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--white); font-family:'Sarabun',sans-serif; font-size:16px; line-height:1.6; min-height:100vh; }
 
-  :root {
-    --bg: #f8f6f0;
-    --surface: #ffffff;
-    --border: #e0ddd5;
-    --accent: #c8a832;
-    --accent-dark: #8a6f1a;
-    --text: #1a1a1a;
-    --muted: #888880;
-    --mono: 'Space Mono', monospace;
-    --sans: 'DM Sans', sans-serif;
-  }
+/* NAV */
+nav { position:sticky; top:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:14px 40px; background:rgba(11,31,20,0.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+.logo { font-family:'Barlow Condensed',sans-serif; font-size:24px; font-weight:900; letter-spacing:1px; color:var(--white); text-decoration:none; }
+.logo span { color:var(--gold); }
+.nav-back { color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; transition:color 0.2s; display:flex; align-items:center; gap:6px; }
+.nav-back:hover { color:var(--gold); }
+.nav-right { display:flex; align-items:center; gap:20px; }
+.lang-toggle { display:flex; gap:3px; }
+.lang-btn { background:transparent; border:1px solid rgba(201,162,39,0.22); color:var(--muted); font-size:14px; padding:4px 8px; border-radius:3px; cursor:pointer; transition:border-color 0.2s,background 0.2s; line-height:1; font-family:inherit; }
+.lang-btn.active { border-color:var(--gold); background:rgba(201,162,39,0.15); color:var(--white); }
+.lang-btn:hover { border-color:var(--gold); }
+body { transition:opacity 0.12s ease; }
+body.lang-th .en { display:none !important; }
+body.lang-en .th { display:none !important; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* PAGE LAYOUT */
+.page-wrap { max-width:620px; margin:0 auto; padding:48px 20px 80px; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    padding: 40px 20px;
-  }
+/* PAGE HEADER */
+.page-header { margin-bottom:36px; }
+.section-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+.page-title .th { font-family:'Barlow Condensed',sans-serif; font-size:clamp(32px,6vw,48px); font-weight:900; text-transform:uppercase; line-height:1; display:block; }
+.page-title .en { font-family:'Barlow Condensed',sans-serif; font-size:clamp(14px,2.5vw,18px); font-weight:600; color:var(--muted); display:block; margin-top:6px; text-transform:uppercase; letter-spacing:1px; }
+.page-sub { margin-top:12px; font-size:14px; color:var(--muted); }
+.page-sub .th { display:block; }
+.page-sub .en { display:block; margin-top:2px; }
 
-  .container {
-    max-width: 560px;
-    margin: 0 auto;
-  }
+/* TRUST STRIP */
+.trust-row { display:flex; gap:0; border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:28px; }
+.trust-item { flex:1; display:flex; align-items:center; gap:10px; padding:14px 16px; border-right:1px solid var(--border); background:var(--surface); }
+.trust-item:last-child { border-right:none; }
+.trust-item .ti-icon { font-size:18px; flex-shrink:0; }
+.trust-item .ti-text { font-size:12px; line-height:1.3; color:var(--muted); }
+.trust-item .ti-text strong { color:var(--white); display:block; font-size:13px; }
 
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
+/* CARD */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:28px; margin-bottom:16px; }
+.card-title { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border); }
 
-  .logo {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent-dark);
-    margin-bottom: 8px;
-  }
+/* FORM FIELDS */
+.form-field { margin-bottom:18px; }
+.form-field:last-child { margin-bottom:0; }
+.form-field label { display:block; margin-bottom:6px; }
+.form-field label .th { display:block; font-size:13px; font-weight:700; color:var(--gold); }
+.form-field label .en { display:block; font-size:11px; color:var(--muted); margin-top:1px; }
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width:100%; background:var(--sur2); border:1px solid rgba(201,162,39,0.2); color:var(--white);
+  padding:12px 14px; border-radius:4px; font-size:15px; font-family:'Sarabun',sans-serif;
+  outline:none; transition:border-color 0.2s;
+}
+.form-field input::placeholder,
+.form-field textarea::placeholder { color:var(--muted); opacity:0.6; }
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color:var(--gold); background:#0f2a1a; }
+.form-field select option { background:#0f2a1a; color:var(--white); }
+.form-field textarea { height:80px; resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.field-note { font-size:12px; color:var(--muted); margin-top:5px; }
 
-  h1 {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
+/* MATERIAL OPTIONS */
+.material-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+.mat-card { border:1px solid rgba(201,162,39,0.2); border-radius:4px; padding:14px 16px; cursor:pointer; background:var(--sur2); transition:border-color 0.2s,background 0.2s; }
+.mat-card:hover { border-color:var(--gold); }
+.mat-card.selected { border-color:var(--gold); background:rgba(201,162,39,0.1); }
+.mat-card input[type=radio] { display:none; }
+.mat-name { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:800; color:var(--white); line-height:1.1; }
+.mat-name-en { font-size:11px; color:var(--muted); margin-top:2px; }
+.mat-price { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:900; color:var(--gold); margin-top:8px; }
+.mat-price span { font-size:12px; font-weight:600; color:var(--muted); }
 
-  .subtitle {
-    color: var(--muted);
-    font-size: 14px;
-  }
+/* PRICE DISPLAY */
+.price-display { background:var(--gold); color:#0b1f14; border-radius:6px; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; display:none; }
+.price-display.visible { display:flex; }
+.price-left { }
+.price-label-text { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; opacity:0.7; }
+.price-tier-label { font-size:13px; font-weight:700; margin-top:2px; opacity:0.85; }
+.price-value { font-family:'Barlow Condensed',sans-serif; font-size:32px; font-weight:900; }
+.price-unit { font-size:13px; opacity:0.7; }
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 32px;
-    margin-bottom: 20px;
-  }
+/* SHIPPING OPTIONS */
+.ship-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.ship-card { border:1px solid rgba(201,162,39,0.2); border-radius:4px; padding:16px; cursor:pointer; background:var(--sur2); transition:border-color 0.2s,background 0.2s; text-align:center; }
+.ship-card:hover { border-color:var(--gold); }
+.ship-card.selected { border-color:var(--gold); background:rgba(201,162,39,0.1); }
+.ship-icon { font-size:26px; margin-bottom:8px; }
+.ship-title { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:800; color:var(--white); }
+.ship-title .th, .ship-title .en { display:block; }
+.ship-desc { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
+.ship-desc .th, .ship-desc .en { display:block; }
 
-  .section-title {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
+/* NOTE BOX */
+.note-box { background:rgba(201,162,39,0.07); border:1px solid rgba(201,162,39,0.2); border-radius:4px; padding:14px 16px; font-size:13px; color:var(--muted); line-height:1.6; margin-top:14px; }
+.note-box strong { color:var(--white); }
 
-  .form-group {
-    margin-bottom: 18px;
-  }
+/* SUBMIT */
+.btn-submit { width:100%; background:var(--gold); color:#0b1f14; border:none; padding:17px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:background 0.2s,transform 0.15s; margin-top:8px; }
+.btn-submit:hover { background:var(--gold-lt); transform:translateY(-1px); }
+.btn-submit:disabled { background:var(--muted); cursor:not-allowed; transform:none; }
 
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
+/* ERROR */
+.error-banner { background:rgba(224,85,85,0.12); border:1px solid rgba(224,85,85,0.35); border-radius:4px; color:#e88; padding:12px 16px; font-size:14px; margin-top:12px; display:none; }
 
-  .required { color: var(--accent-dark); }
+/* SUCCESS */
+.success-screen { display:none; text-align:center; padding:60px 20px 80px; }
+.success-icon { font-size:64px; margin-bottom:20px; }
+.success-title .th { font-family:'Barlow Condensed',sans-serif; font-size:42px; font-weight:900; text-transform:uppercase; display:block; }
+.success-title .en { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--muted); display:block; margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+.success-msg { margin-top:16px; font-size:15px; color:var(--muted); line-height:1.7; }
+.success-msg .th { display:block; color:rgba(242,237,228,0.8); }
+.success-msg .en { display:block; margin-top:4px; font-size:13px; }
+.order-ref { display:inline-block; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:12px 24px; font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:900; letter-spacing:3px; color:var(--gold); margin-top:20px; }
+.shipping-address-box { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:24px; margin-top:24px; text-align:left; }
+.shipping-address-box .addr-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+.shipping-address-box .addr-name { font-size:15px; font-weight:700; color:var(--white); margin-bottom:6px; }
+.shipping-address-box .addr-lines { font-size:14px; color:var(--muted); line-height:1.9; font-family:'Barlow Condensed',sans-serif; font-size:16px; letter-spacing:0.3px; }
+.shipping-address-box .addr-note { font-size:12px; color:var(--muted); margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.pickup-confirm-box { background:var(--surface); border:1px solid rgba(6,199,85,0.3); border-radius:6px; padding:20px 24px; margin-top:24px; font-size:14px; color:var(--muted); line-height:1.7; }
+.pickup-confirm-box .th { display:block; color:rgba(242,237,228,0.8); font-size:15px; }
+.pickup-confirm-box .en { display:block; font-size:13px; margin-top:4px; }
+.btn-back-home { display:inline-block; margin-top:28px; background:transparent; border:1px solid var(--border); color:var(--muted); padding:12px 28px; border-radius:4px; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; text-transform:uppercase; transition:border-color 0.2s,color 0.2s; }
+.btn-back-home:hover { border-color:var(--gold); color:var(--gold); }
 
-  input, select, textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 14px;
-    padding: 11px 14px;
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--accent);
-    background: #fff;
-  }
-
-  textarea { resize: vertical; min-height: 80px; }
-
-  .price-display {
-    background: var(--accent);
-    color: #fff;
-    padding: 20px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .price-label {
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0.85;
-  }
-
-  .price-value {
-    font-family: var(--mono);
-    font-size: 22px;
-    font-weight: 700;
-  }
-
-  .price-note {
-    font-size: 11px;
-    opacity: 0.7;
-    margin-top: 2px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    background: var(--text);
-    color: #fff;
-    border: none;
-    padding: 16px;
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .submit-btn:hover { background: #333; }
-  .submit-btn:disabled { background: var(--muted); cursor: not-allowed; }
-
-  .note-box {
-    background: rgba(200,168,50,0.08);
-    border: 1px solid rgba(200,168,50,0.25);
-    padding: 14px 16px;
-    font-size: 13px;
-    color: var(--accent-dark);
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
-
-  /* SUCCESS */
-  .success-screen {
-    display: none;
-    text-align: center;
-    padding: 60px 20px;
-  }
-
-  .success-icon {
-    font-size: 56px;
-    margin-bottom: 20px;
-  }
-
-  .success-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .success-msg {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-
-  .order-ref {
-    display: inline-block;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 12px 20px;
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-  }
-
-  .shipping-option {
-    border: 2px solid var(--border);
-    padding: 16px;
-    text-align: center;
-    transition: all 0.2s;
-    background: var(--bg);
-  }
-  .shipping-option:hover { border-color: var(--accent); }
-  .shipping-option.selected { border-color: var(--accent); background: rgba(200,168,50,0.08); }
-
-  .error-msg {
-    color: #c0392b;
-    font-size: 13px;
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(192,57,43,0.08);
-    border: 1px solid rgba(192,57,43,0.2);
-    display: none;
-  }
+/* MOBILE */
+@media (max-width:600px) {
+  nav { padding:12px 16px; }
+  .page-wrap { padding:32px 16px 60px; }
+  .form-row { grid-template-columns:1fr; }
+  .material-grid { grid-template-columns:1fr; }
+  .ship-grid { grid-template-columns:1fr; }
+  .trust-row { flex-direction:column; }
+  .trust-item { border-right:none; border-bottom:1px solid var(--border); }
+  .trust-item:last-child { border-bottom:none; }
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="header">
-    <div class="logo">ThaiCarbide</div>
-    <h1>Submit Your Order</h1>
-    <p class="subtitle">Tungsten Carbide Scrap — Bangkok, Thailand</p>
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">Carbide<span>Thai</span></a>
+  <div class="nav-right">
+    <a class="nav-back" href="/">
+      ← <span class="th">กลับหน้าหลัก</span><span class="en">Back</span>
+    </a>
+    <div class="lang-toggle" role="group" aria-label="Language / ภาษา">
+      <button class="lang-btn active" data-lang="th" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
+    </div>
   </div>
+</nav>
 
-  <div id="formSection">
-    <div class="note-box">
-      📋 Bitte füllen Sie das Formular vollständig aus. Nach Eingang Ihrer Bestellung werden wir uns innerhalb von 24 Stunden bei Ihnen melden.
-    </div>
+<div class="page-wrap">
 
-    <!-- KONTAKT -->
-    <div class="card">
-      <div class="section-title">Kontaktdaten</div>
-
-      <div class="form-group">
-        <label>Name <span class="required">*</span></label>
-        <input type="text" id="f-name" placeholder="Ihr vollständiger Name" required />
-      </div>
-
-      <div class="form-group">
-        <label>Email <span class="required">*</span></label>
-        <input type="email" id="f-email" placeholder="ihre@email.com" required />
-      </div>
-
-      <div class="form-group">
-        <label>Telefon / WhatsApp</label>
-        <input type="tel" id="f-phone" placeholder="+66 xx xxx xxxx" />
-      </div>
-    </div>
-
-    <!-- MATERIAL -->
-    <div class="card">
-      <div class="section-title">Material & Menge</div>
-
-      <div class="form-group">
-        <label>Material-Typ <span class="required">*</span></label>
-        <select id="f-material" onchange="updatePrice()">
-          <option value="">— Bitte wählen —</option>
-          <option value="Carbide Scrap">Carbide Scrap</option>
-          <option value="Carbide Insert">Carbide Insert</option>
-          <option value="Carbide Rod">Carbide Rod</option>
-          <option value="Carbide Powder">Carbide Powder</option>
-          <option value="Mixed Carbide">Mixed Carbide</option>
-          <option value="Other">Sonstiges</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Geschätztes Gewicht (kg) <span class="required">*</span></label>
-        <input type="number" id="f-weight" min="0.1" step="0.1" placeholder="z.B. 5.5" oninput="updatePrice()" />
-      </div>
-
-      <div class="form-group">
-        <label>Notizen / Zusatzinfos</label>
-        <textarea id="f-notes" placeholder="Beschreibung des Materials, besondere Hinweise..."></textarea>
-      </div>
-    </div>
-
-    <!-- VERSAND -->
-    <div class="card">
-      <div class="section-title">Versandmethode</div>
-
-      <div class="form-group">
-        <label>Wie soll das Material zu uns kommen? <span class="required">*</span></label>
-        <div style="display:flex;gap:12px;margin-top:4px">
-          <label style="flex:1;cursor:pointer;margin:0" onclick="selectShipping('send')">
-            <div class="shipping-option" id="opt-send">
-              <div style="font-size:22px;margin-bottom:6px">📦</div>
-              <div style="font-weight:600;font-size:14px">Ich schicke selbst</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px">Kerry / Flash / J&T</div>
-            </div>
-          </label>
-          <label style="flex:1;cursor:pointer;margin:0" onclick="selectShipping('pickup')">
-            <div class="shipping-option" id="opt-pickup">
-              <div style="font-size:22px;margin-bottom:6px">🚗</div>
-              <div style="font-weight:600;font-size:14px">Abholung anfordern</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:3px">Wir kommen zu Ihnen</div>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      <div id="address-block" style="display:none">
-        <div class="form-group">
-          <label>Ihre Abholadresse <span class="required">*</span></label>
-          <textarea id="f-address" rows="3" placeholder="Strasse, Hausnummer, Stadt, Provinz, PLZ..."></textarea>
-        </div>
-        <div class="note-box" style="margin-bottom:0">
-          📍 Wir kontaktieren Sie innerhalb von 24h um den Abholtermin zu bestätigen.
-        </div>
-      </div>
-
-      <div id="send-block" style="display:none">
-        <div class="note-box" style="margin-bottom:0">
-          🚚 We will send you the shipping address via LINE after your order is confirmed.<br>
-          <span style="font-size:12px;opacity:0.8;display:block;margin-top:6px">We recommend Kerry Express or Flash Express. Shipping cost deducted from payment.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- PREIS -->
-    <div class="price-display" id="priceDisplay" style="display:none">
-      <div>
-        <div class="price-label">Estimated Amount</div>
-        <div class="price-note" id="price-note">Final price confirmed after weighing</div>
-      </div>
-      <div class="price-value" id="priceValue">0 ฿</div>
-    </div>
-
-    <button class="submit-btn" onclick="submitOrder()" id="submitBtn">
-      Submit Order →
-    </button>
-
-    <div class="error-msg" id="errorMsg"></div>
-  </div>
-
-  <!-- SUCCESS -->
+  <!-- SUCCESS SCREEN -->
   <div class="success-screen" id="successScreen">
     <div class="success-icon">✅</div>
-    <div class="success-title">Order Received!</div>
-    <div class="success-msg">
-      Thank you for your order.<br>
-      We will contact you within 24 hours to confirm.
+    <div class="success-title">
+      <span class="th">ได้รับออเดอร์แล้ว!</span>
+      <span class="en">Order Received</span>
     </div>
-    <div class="order-ref" id="orderRef">REF: ...</div>
-    <div id="shipping-confirm" style="margin-top:20px;display:none">
-      <div class="note-box" style="text-align:left">
-        📦 Ship via Kerry/Flash to this address:<br><br>
-        <strong style="font-family:var(--mono);font-size:13px;display:block;margin-bottom:4px">ThaiCarbide — Receiving Depot</strong>
-        <span style="font-size:13px;line-height:1.8">
-          Unit 92/87 · 92 Sukhumvit 61<br>
-          Khlong Tan Nuea, Watthana<br>
-          Bangkok 10110, Thailand
-        </span><br>
-        <span style="font-size:12px;opacity:0.8">📌 Please include your name and order reference on the package.</span>
+    <div class="success-msg">
+      <span class="th">ขอบคุณ! เราจะติดต่อกลับผ่าน LINE ภายใน 2 ชั่วโมง พร้อมราคายืนยัน</span>
+      <span class="en">Thank you! We'll contact you via LINE within 2 hours with your confirmed price.</span>
+    </div>
+    <div class="order-ref" id="orderRef">REF: —</div>
+
+    <!-- Courier shipping address — shown only for courier orders -->
+    <div class="shipping-address-box" id="shippingAddrBox" style="display:none">
+      <div class="addr-label">📦 <span class="th">ส่งพัสดุมายังที่อยู่นี้</span><span class="en">Ship via Kerry/Flash to this address</span></div>
+      <div class="addr-name">ThaiCarbide — Receiving Depot</div>
+      <div class="addr-lines">
+        Unit 92/87 · 92 Sukhumvit 61<br>
+        Khlong Tan Nuea, Watthana<br>
+        Bangkok 10110, Thailand
+      </div>
+      <div class="addr-note">
+        <span class="th">📌 กรุณาระบุชื่อและหมายเลขอ้างอิงออเดอร์บนพัสดุ แนะนำ Kerry Express หรือ Flash Express ค่าส่งหักจากยอดชำระ</span>
+        <span class="en">📌 Please write your name and order reference on the package. Kerry Express or Flash Express recommended. Shipping cost deducted from payment.</span>
       </div>
     </div>
+
+    <!-- Pickup confirmation -->
+    <div class="pickup-confirm-box" id="pickupConfirmBox" style="display:none">
+      <span class="th">🚗 เราจะติดต่อคุณเพื่อนัดหมายวันและเวลารับสินค้าที่โรงงานของคุณ บริการฟรีสำหรับกรุงเทพฯ และอีสเทิร์นซีบอร์ด</span>
+      <span class="en">🚗 We'll contact you to arrange a convenient pickup time at your location. Free for Bangkok & Eastern Seaboard.</span>
+    </div>
+
+    <br>
+    <a href="/" class="btn-back-home">
+      <span class="th">← กลับหน้าหลัก</span><span class="en">← Back to Home</span>
+    </a>
   </div>
-</div>
+
+  <!-- FORM SECTION -->
+  <div id="formSection">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="section-label"><span class="th">ขายคาร์ไบด์ · </span>Get Started</div>
+      <div class="page-title">
+        <span class="th">รับราคาทันที</span>
+        <span class="en">Get Your Price Now</span>
+      </div>
+      <div class="page-sub">
+        <span class="th">กรอกข้อมูลด้านล่าง เราจะยืนยันราคาผ่าน LINE ภายใน 2 ชั่วโมง</span>
+        <span class="en">Fill in your details below. We confirm your price via LINE within 2 hours.</span>
+      </div>
+    </div>
+
+    <!-- TRUST STRIP -->
+    <div class="trust-row">
+      <div class="trust-item">
+        <div class="ti-icon">💰</div>
+        <div class="ti-text"><strong><span class="th">จ่ายใน 48 ชม.</span><span class="en">Paid in 48h</span></strong><span class="th">PromptPay / โอนเงิน</span><span class="en">PromptPay / Transfer</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="ti-icon">🚗</div>
+        <div class="ti-text"><strong><span class="th">รับถึงที่ฟรี</span><span class="en">Free Pickup</span></strong><span class="th">กทม. / อีสเทิร์นซีบอร์ด</span><span class="en">BKK / Eastern Seaboard</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="ti-icon">📊</div>
+        <div class="ti-text"><strong><span class="th">ราคาอัปเดตรายวัน</span><span class="en">Daily Prices</span></strong><span class="th">ตามราคาตลาด</span><span class="en">Market rate</span></div>
+      </div>
+    </div>
+
+    <!-- MATERIAL SELECTION -->
+    <div class="card">
+      <div class="card-title"><span class="th">ประเภทคาร์ไบด์</span><span class="en"> · Material Type</span></div>
+
+      <div class="material-grid" id="materialGrid">
+
+        <label class="mat-card" id="mat-insert" onclick="selectMaterial('Carbide Insert', this)">
+          <input type="radio" name="material" value="Carbide Insert">
+          <div class="mat-name th">คาร์ไบด์อินเสิร์ท</div>
+          <div class="mat-name en">Carbide Inserts</div>
+          <div class="mat-name-en">CNMG / TNMG / APMT / all grades</div>
+          <div class="mat-price" id="price-insert">฿2,454 <span>/ kg</span></div>
+        </label>
+
+        <label class="mat-card" id="mat-scrap" onclick="selectMaterial('Carbide Scrap', this)">
+          <input type="radio" name="material" value="Carbide Scrap">
+          <div class="mat-name th">ดอกสว่าน / เอ็นมิล</div>
+          <div class="mat-name en">Drills & End Mills</div>
+          <div class="mat-name-en">Solid carbide tools (VHM)</div>
+          <div class="mat-price" id="price-scrap">฿2,454 <span>/ kg</span></div>
+        </label>
+
+        <label class="mat-card" id="mat-mixed" onclick="selectMaterial('Mixed Carbide', this)">
+          <input type="radio" name="material" value="Mixed Carbide">
+          <div class="mat-name th">คาร์ไบด์ผสม</div>
+          <div class="mat-name en">Mixed Carbide</div>
+          <div class="mat-name-en">Mixed scrap, broken pieces</div>
+          <div class="mat-price" id="price-mixed">฿1,343 <span>/ kg</span></div>
+        </label>
+
+        <label class="mat-card" id="mat-other" onclick="selectMaterial('Other', this)">
+          <input type="radio" name="material" value="Other">
+          <div class="mat-name th">อื่นๆ</div>
+          <div class="mat-name en">Other</div>
+          <div class="mat-name-en">Rods, powder, wear parts</div>
+          <div class="mat-price">— <span class="th">/ สอบถาม</span><span class="en">/ ask</span></div>
+        </label>
+
+      </div>
+
+      <!-- Weight input -->
+      <div class="form-field">
+        <label>
+          <span class="th">น้ำหนักโดยประมาณ (kg) *</span>
+          <span class="en">Estimated Weight (kg) *</span>
+        </label>
+        <input type="number" id="f-weight" min="0.1" step="0.1"
+          placeholder="เช่น 5.5"
+          data-ph-th="เช่น 5.5 kg"
+          data-ph-en="e.g. 5.5 kg"
+          oninput="updatePrice()">
+        <div class="field-note">
+          <span class="th">ราคาดีขึ้นตามปริมาณ: 100kg+ และ 350kg+</span>
+          <span class="en">Better rates at 100kg+ and 350kg+</span>
+        </div>
+      </div>
+
+      <!-- Dynamic price display -->
+      <div class="price-display" id="priceDisplay">
+        <div class="price-left">
+          <div class="price-label-text"><span class="th">ราคาประเมิน (สูงสุด)</span><span class="en">Estimated Amount (max)</span></div>
+          <div class="price-tier-label" id="priceTierLabel"></div>
+        </div>
+        <div>
+          <div class="price-value" id="priceValue">—</div>
+          <div class="price-unit"><span class="th">ราคาจริงยืนยันหลังชั่งน้ำหนัก</span><span class="en">Final price confirmed after weighing</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="card">
+      <div class="card-title"><span class="th">ข้อมูลติดต่อ</span><span class="en"> · Contact Details</span></div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>
+            <span class="th">ชื่อ-นามสกุล *</span>
+            <span class="en">Full Name *</span>
+          </label>
+          <input type="text" id="f-name"
+            placeholder="ชื่อ-นามสกุล"
+            data-ph-th="ชื่อ-นามสกุล"
+            data-ph-en="Full name">
+        </div>
+        <div class="form-field">
+          <label>
+            <span class="th">เบอร์โทร / LINE ID *</span>
+            <span class="en">Phone / LINE ID *</span>
+          </label>
+          <input type="tel" id="f-phone"
+            placeholder="08X-XXX-XXXX หรือ LINE ID"
+            data-ph-th="08X-XXX-XXXX หรือ LINE ID"
+            data-ph-en="08X-XXX-XXXX or LINE ID">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>
+          <span class="th">บริษัท / โรงงาน <small style="font-weight:400;opacity:0.6">(ไม่บังคับ)</small></span>
+          <span class="en">Company / Factory <small style="font-weight:400;opacity:0.6">(optional)</small></span>
+        </label>
+        <input type="text" id="f-company"
+          placeholder="ชื่อบริษัทหรือโรงงาน"
+          data-ph-th="ชื่อบริษัทหรือโรงงาน"
+          data-ph-en="Company or factory name">
+      </div>
+
+      <div class="form-field">
+        <label>
+          <span class="th">รายละเอียดเพิ่มเติม <small style="font-weight:400;opacity:0.6">(ไม่บังคับ)</small></span>
+          <span class="en">Additional Details <small style="font-weight:400;opacity:0.6">(optional)</small></span>
+        </label>
+        <textarea id="f-notes"
+          placeholder="แบรนด์, เกรด, สภาพวัสดุ หรือข้อมูลอื่นๆ"
+          data-ph-th="แบรนด์, เกรด, สภาพวัสดุ หรือข้อมูลอื่นๆ"
+          data-ph-en="Brand, grade, condition, other info..."></textarea>
+      </div>
+    </div>
+
+    <!-- SHIPPING METHOD -->
+    <div class="card">
+      <div class="card-title"><span class="th">วิธีจัดส่ง</span><span class="en"> · Delivery Method</span></div>
+
+      <div class="ship-grid">
+        <div class="ship-card" id="ship-courier" onclick="selectShipping('send')">
+          <div class="ship-icon">📦</div>
+          <div class="ship-title">
+            <span class="th">ส่งทางไปรษณีย์</span>
+            <span class="en">Ship by Courier</span>
+          </div>
+          <div class="ship-desc">
+            <span class="th">Kerry / Flash Express ทั่วประเทศ ค่าส่งหักจากยอดชำระ</span>
+            <span class="en">Kerry / Flash Express nationwide. Shipping cost deducted from payment.</span>
+          </div>
+        </div>
+        <div class="ship-card" id="ship-pickup" onclick="selectShipping('pickup')">
+          <div class="ship-icon">🚗</div>
+          <div class="ship-title">
+            <span class="th">นัดรับถึงที่</span>
+            <span class="en">Request Pickup</span>
+          </div>
+          <div class="ship-desc">
+            <span class="th">เราไปรับถึงโรงงาน ฟรีสำหรับ กทม. ชลบุรี ระยอง สมุทรปราการ (20kg+)</span>
+            <span class="en">We come to you. Free for Bangkok, Chonburi, Rayong, Samut Prakan (20kg+).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pickup address (shown only for pickup) -->
+      <div id="addressBlock" style="display:none; margin-top:14px;">
+        <div class="form-field" style="margin-bottom:0">
+          <label>
+            <span class="th">ที่อยู่รับสินค้า *</span>
+            <span class="en">Pickup Address *</span>
+          </label>
+          <textarea id="f-address" rows="3"
+            placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"
+            data-ph-th="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"
+            data-ph-en="Address, Sub-district, District, Province, Postal Code"></textarea>
+        </div>
+        <div class="note-box">
+          <span class="th">📍 เราจะติดต่อยืนยันวันและเวลาที่สะดวกภายใน 2 ชั่วโมง</span>
+          <span class="en">📍 We'll confirm a convenient pickup date and time within 2 hours.</span>
+        </div>
+      </div>
+
+      <!-- Courier note (shown only for send) -->
+      <div id="courierBlock" style="display:none; margin-top:14px;">
+        <div class="note-box">
+          <span class="th">🚚 ที่อยู่สำหรับส่งพัสดุจะแสดงหลังยืนยันออเดอร์</span>
+          <span class="en">🚚 The shipping address will be shown after your order is confirmed.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUBMIT -->
+    <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
+      <span class="th">ส่งออเดอร์ → รับราคายืนยัน</span>
+      <span class="en">SUBMIT ORDER → GET CONFIRMED PRICE</span>
+    </button>
+
+    <div class="error-banner" id="errorBanner"></div>
+
+  </div><!-- /formSection -->
+</div><!-- /page-wrap -->
 
 <script>
 const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
 
-// Price tiers per material: [{ min, price, label }]
+// Price tiers per material
 const PRICE_TIERS = {
-  'Carbide Insert':     [{min:1, price:2454, label:'standard'}, {min:100, price:2463, label:'100kg+'}, {min:350, price:2493, label:'350kg+ rate 🔥'}],
-  'Carbide Scrap':      [{min:1, price:2454, label:'standard'}, {min:100, price:2463, label:'100kg+'}, {min:350, price:2493, label:'350kg+ rate 🔥'}],
-  'Mixed Carbide':      [{min:1, price:1343, label:'standard'}, {min:100, price:1376, label:'100kg+'}, {min:350, price:1413, label:'350kg+ rate 🔥'}],
-  'Carbide Rod':        [{min:1, price:2454, label:'standard'}],
-  'Carbide Powder':     [{min:1, price:1343, label:'standard'}],
-  'Other':              [{min:1, price:1343, label:'standard'}],
+  'Carbide Insert':  [{min:1,price:2454,label:'standard'},{min:100,price:2463,label:'100kg+'},{min:350,price:2493,label:'350kg+ 🔥'}],
+  'Carbide Scrap':   [{min:1,price:2454,label:'standard'},{min:100,price:2463,label:'100kg+'},{min:350,price:2493,label:'350kg+ 🔥'}],
+  'Mixed Carbide':   [{min:1,price:1343,label:'standard'},{min:100,price:1376,label:'100kg+'},{min:350,price:1413,label:'350kg+ 🔥'}],
+  'Carbide Rod':     [{min:1,price:2454,label:'standard'}],
+  'Carbide Powder':  [{min:1,price:1343,label:'standard'}],
+  'Other':           [{min:1,price:1343,label:'standard'}],
 };
 
 function getTier(material, weight) {
@@ -402,11 +471,12 @@ function getTier(material, weight) {
   return tier;
 }
 
+let selectedMaterial = '';
 let shippingMethod = '';
 let abandonedId = null;
 let trackingTimer = null;
 
-// Save partial data after 3 seconds of inactivity (abandoned tracking)
+// Abandoned tracking
 function scheduleAbandoned() {
   clearTimeout(trackingTimer);
   trackingTimer = setTimeout(saveAbandoned, 3000);
@@ -414,13 +484,12 @@ function scheduleAbandoned() {
 
 async function saveAbandoned() {
   const name = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  if (!name && !email) return;
+  const phone = document.getElementById('f-phone').value.trim();
+  if (!name && !phone) return;
   const data = {
     name: name || null,
-    email: email || null,
-    phone: document.getElementById('f-phone').value || null,
-    material: document.getElementById('f-material').value || null,
+    phone: phone || null,
+    material: selectedMaterial || null,
     status: 'abandoned'
   };
   try {
@@ -442,82 +511,108 @@ async function saveAbandoned() {
   } catch(e) {}
 }
 
-// Attach abandoned tracking to inputs
 document.addEventListener('DOMContentLoaded', () => {
-  ['f-name','f-email','f-phone','f-material','f-weight'].forEach(id => {
+  ['f-name','f-phone','f-weight'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', scheduleAbandoned);
   });
+  // Init language
+  const saved = localStorage.getItem('carbide-lang') || 'th';
+  document.body.classList.add('lang-' + saved);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === saved));
+  applyLangForm(saved);
 });
+
+function selectMaterial(material, el) {
+  selectedMaterial = material;
+  document.querySelectorAll('.mat-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  updatePrice();
+  scheduleAbandoned();
+}
 
 function selectShipping(method) {
   shippingMethod = method;
-  document.getElementById('opt-send').classList.toggle('selected', method === 'send');
-  document.getElementById('opt-pickup').classList.toggle('selected', method === 'pickup');
-  document.getElementById('address-block').style.display = method === 'pickup' ? 'block' : 'none';
-  document.getElementById('send-block').style.display = method === 'send' ? 'block' : 'none';
+  document.getElementById('ship-courier').classList.toggle('selected', method === 'send');
+  document.getElementById('ship-pickup').classList.toggle('selected', method === 'pickup');
+  document.getElementById('addressBlock').style.display = method === 'pickup' ? 'block' : 'none';
+  document.getElementById('courierBlock').style.display = method === 'send' ? 'block' : 'none';
 }
 
 function updatePrice() {
-  const material = document.getElementById('f-material').value;
   const weight = parseFloat(document.getElementById('f-weight').value) || 0;
-  const tier = getTier(material, weight);
+  const tier = getTier(selectedMaterial, weight);
+  const display = document.getElementById('priceDisplay');
 
-  if (material && weight > 0 && tier) {
+  if (selectedMaterial && weight > 0 && tier) {
     const total = weight * tier.price;
-    document.getElementById('priceDisplay').style.display = 'flex';
-    document.getElementById('priceValue').textContent = total.toLocaleString('th-TH') + ' ฿';
-    document.getElementById('price-note').textContent =
-      '฿' + tier.price.toLocaleString('th-TH') + '/kg (' + tier.label + ')  ·  Final price confirmed after weighing';
+    const lang = document.body.classList.contains('lang-en') ? 'en' : 'th';
+    document.getElementById('priceValue').textContent = '฿' + total.toLocaleString('th-TH');
+    document.getElementById('priceTierLabel').textContent =
+      '฿' + tier.price.toLocaleString('th-TH') + '/kg · ' + tier.label;
+    display.classList.add('visible');
   } else {
-    document.getElementById('priceDisplay').style.display = 'none';
+    display.classList.remove('visible');
   }
 }
 
 async function submitOrder() {
   const name = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  const material = document.getElementById('f-material').value;
+  const phone = document.getElementById('f-phone').value.trim();
   const weight = parseFloat(document.getElementById('f-weight').value);
 
-  if (!name || !email || !material || !weight) {
-    showError('Please fill in all required fields.');
-    return;
+  // Validation
+  const lang = document.body.classList.contains('lang-en') ? 'en' : 'th';
+  if (!selectedMaterial) {
+    return showError(lang === 'en' ? 'Please select a material type.' : 'กรุณาเลือกประเภทคาร์ไบด์');
   }
-
+  if (!weight || weight <= 0) {
+    return showError(lang === 'en' ? 'Please enter an estimated weight.' : 'กรุณาใส่น้ำหนักโดยประมาณ');
+  }
+  if (!name) {
+    return showError(lang === 'en' ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุล');
+  }
+  if (!phone) {
+    return showError(lang === 'en' ? 'Please enter your phone number or LINE ID.' : 'กรุณาใส่เบอร์โทรหรือ LINE ID');
+  }
   if (!shippingMethod) {
-    showError('Please select a shipping method.');
-    return;
+    return showError(lang === 'en' ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่ง');
   }
-
   if (shippingMethod === 'pickup' && !document.getElementById('f-address').value.trim()) {
-    showError('Please enter your pickup address.');
-    return;
+    return showError(lang === 'en' ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่รับสินค้า');
   }
 
-  const tier = getTier(material, weight);
-  const pricePerKg = tier ? tier.price : 0;
-  const total = weight * pricePerKg;
+  const tier = getTier(selectedMaterial, weight);
+  const pricePerKg = tier ? tier.price : null;
+  const total = pricePerKg ? weight * pricePerKg : null;
+  const company = document.getElementById('f-company').value.trim();
+  const notes = document.getElementById('f-notes').value.trim();
+  const address = document.getElementById('f-address').value.trim();
+
+  const notesComposed = [
+    notes,
+    shippingMethod === 'pickup' ? '📍 PICKUP: ' + address : '📦 COURIER (Kerry/Flash)',
+    company ? '🏭 ' + company : ''
+  ].filter(Boolean).join('\n');
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Submitting...';
+  btn.querySelector('.th') && (btn.querySelector('.th').textContent = 'กำลังส่ง...');
+  btn.querySelector('.en') && (btn.querySelector('.en').textContent = 'Submitting...');
 
   try {
     const orderData = {
       name,
-      email,
-      phone: document.getElementById('f-phone').value || null,
-      material,
+      phone,
+      material: selectedMaterial,
       weight_ordered: weight,
-      price_per_kg: pricePerKg || null,
-      total_amount: total || null,
-      notes: (document.getElementById('f-notes').value || '') + (shippingMethod === 'pickup' ? '\n📍 PICKUP: ' + document.getElementById('f-address').value : '\n📦 SELF SHIP (Kerry/Flash)') || null,
+      price_per_kg: pricePerKg,
+      total_amount: total,
+      notes: notesComposed || null,
       status: 'neu'
     };
 
     let ref = '';
     if (abandonedId) {
-      // Update existing abandoned record
       await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + abandonedId, {
         method: 'PATCH',
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
@@ -535,24 +630,50 @@ async function submitOrder() {
       ref = (data[0]?.id || '').slice(0, 8).toUpperCase();
     }
 
+    // Show success screen
     document.getElementById('formSection').style.display = 'none';
-    document.getElementById('successScreen').style.display = 'block';
-    document.getElementById('orderRef').textContent = 'REF: ' + ref;
+    const ss = document.getElementById('successScreen');
+    ss.style.display = 'block';
+    document.getElementById('orderRef').textContent = 'REF: ' + (ref || '—');
     if (shippingMethod === 'send') {
-      document.getElementById('shipping-confirm').style.display = 'block';
+      document.getElementById('shippingAddrBox').style.display = 'block';
+    } else {
+      document.getElementById('pickupConfirmBox').style.display = 'block';
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch(e) {
-    showError('Fehler beim Senden: ' + e.message);
     btn.disabled = false;
-    btn.textContent = 'Submit Order →';
+    if (btn.querySelector('.th')) btn.querySelector('.th').textContent = 'ส่งออเดอร์ → รับราคายืนยัน';
+    if (btn.querySelector('.en')) btn.querySelector('.en').textContent = 'SUBMIT ORDER → GET CONFIRMED PRICE';
+    showError('Error: ' + e.message);
   }
 }
 
 function showError(msg) {
-  const el = document.getElementById('errorMsg');
+  const el = document.getElementById('errorBanner');
   el.textContent = msg;
   el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Language toggle
+function applyLangForm(lang) {
+  document.querySelectorAll('[data-ph-th][data-ph-en]').forEach(el => {
+    el.placeholder = lang === 'en' ? el.dataset.phEn : el.dataset.phTh;
+  });
+}
+function setLang(lang) {
+  document.body.style.opacity = '0.6';
+  setTimeout(() => {
+    document.body.classList.remove('lang-th','lang-en');
+    document.body.classList.add('lang-' + lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    localStorage.setItem('carbide-lang', lang);
+    applyLangForm(lang);
+    updatePrice();
+    document.body.style.opacity = '1';
+  }, 120);
 }
 </script>
 </body>
