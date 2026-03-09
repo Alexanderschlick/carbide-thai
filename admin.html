@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThaiCarbide — Admin ERP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222222;
+    --accent: #e8c84a;
+    --accent2: #4ae8a0;
+    --danger: #e84a4a;
+    --text: #f0f0f0;
+    --muted: #666666;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+  }
+
+  .logo {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: var(--mono);
+  }
+
+  nav {
+    padding: 16px 0;
+    flex: 1;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(232,200,74,0.06); }
+
+  .nav-icon { font-size: 16px; }
+
+  .sync-btn {
+    margin: 16px;
+    padding: 10px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .sync-btn:hover { opacity: 0.85; }
+
+  .connection-status {
+    margin: 0 16px 16px;
+    padding: 8px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+  .status-dot.online { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  .status-dot.offline { background: var(--danger); }
+
+  /* MAIN */
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    padding: 32px;
+    min-height: 100vh;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .page-title {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .page-title span { color: var(--accent); }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* TABLE */
+  .table-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 8px 12px;
+    width: 260px;
+    outline: none;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+
+  .filter-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  tbody tr:hover { background: var(--surface2); }
+  tbody tr:last-child { border-bottom: none; }
+
+  td {
+    padding: 13px 16px;
+    vertical-align: middle;
+  }
+
+  .mono { font-family: var(--mono); font-size: 12px; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .badge-neu { background: rgba(100,100,255,0.15); color: #8888ff; border: 1px solid rgba(100,100,255,0.3); }
+  .badge-unterwegs { background: rgba(232,200,74,0.15); color: var(--accent); border: 1px solid rgba(232,200,74,0.3); }
+  .badge-empfangen { background: rgba(74,232,160,0.15); color: var(--accent2); border: 1px solid rgba(74,232,160,0.3); }
+  .badge-bezahlt { background: rgba(100,200,100,0.15); color: #88cc88; border: 1px solid rgba(100,200,100,0.3); }
+
+  .btn {
+    padding: 6px 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.8; }
+  .btn-sm { padding: 4px 8px; font-size: 10px; }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-danger { background: var(--danger); color: #fff; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 500px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-head {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .modal-body { padding: 24px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-control:focus { border-color: var(--accent); }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* INVENTORY */
+  .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .inv-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .inv-material {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .inv-weight {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .inv-unit {
+    font-size: 14px;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  /* PRICES */
+  .prices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .price-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .price-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    padding: 8px 10px;
+    outline: none;
+    width: 100%;
+  }
+
+  .price-input:focus { border-color: var(--accent); }
+
+  .price-unit {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    padding: 12px 18px;
+    font-size: 13px;
+    font-family: var(--mono);
+    z-index: 9999;
+    transform: translateX(120%);
+    transition: transform 0.3s;
+  }
+
+  .toast.show { transform: translateX(0); }
+  .toast.error { border-left-color: var(--danger); }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-text">ThaiCarbide</div>
+    <div class="logo-sub">ERP Admin v2.0</div>
+  </div>
+  <nav>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('orders')">
+      <span class="nav-icon">📦</span> Bestellungen
+    </div>
+    <div class="nav-item" onclick="showPage('payments')">
+      <span class="nav-icon">💰</span> Zahlungen
+    </div>
+    <div class="nav-item" onclick="showPage('inventory')">
+      <span class="nav-icon">⚖️</span> Lager
+    </div>
+    <div class="nav-item" onclick="showPage('prices')">
+      <span class="nav-icon">📈</span> Preise
+    </div>
+  </nav>
+  <button class="sync-btn" onclick="loadAll()">⟳ Sync laden</button>
+  <div class="connection-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Verbinden...</span>
+  </div>
+</aside>
+
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <h1 class="page-title">Dashboard <span>// Übersicht</span></h1>
+      <span style="font-size:12px;color:var(--muted);font-family:var(--mono)" id="lastSync">—</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Bestellungen Total</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub">alle Eingänge</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Offen / Neu</div>
+        <div class="stat-value" id="stat-neu">—</div>
+        <div class="stat-sub">noch nicht verarbeitet</div>
+      </div>
+      <div class="stat-card" style="--accent:#4ae8a0">
+        <div class="stat-label">Ausstehend (THB)</div>
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-sub">noch nicht bezahlt</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Lager Total (kg)</div>
+        <div class="stat-value" id="stat-kg">—</div>
+        <div class="stat-sub">empfangene Ware</div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div class="table-header" style="justify-content:space-between">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--muted)">NEUESTE BESTELLUNGEN</span>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('orders')">Alle anzeigen →</button>
+      </div>
+      <div id="recent-orders-body">
+        <div class="loading"><span class="spinner"></span>Lade Daten...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="page" id="page-orders">
+    <div class="page-header">
+      <h1 class="page-title">Bestellungen <span>// Alle Eingänge</span></h1>
+      <button class="btn btn-primary" onclick="openNewOrder()">+ Neue Bestellung</button>
+    </div>
+    <div class="table-container">
+      <div class="table-header">
+        <input class="search-input" type="text" placeholder="Suchen nach Name, Email, Material..." oninput="filterOrders(this.value)" />
+        <select class="filter-select" onchange="filterByStatus(this.value)">
+          <option value="">Alle Status</option>
+          <option value="neu">Neu</option>
+          <option value="unterwegs">Unterwegs</option>
+          <option value="empfangen">Empfangen</option>
+          <option value="bezahlt">Bezahlt</option>
+        </select>
+      </div>
+      <div id="orders-body">
+        <div class="loading"><span class="spinner"></span>Lade Bestellungen...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENTS -->
+  <div class="page" id="page-payments">
+    <div class="page-header">
+      <h1 class="page-title">Zahlungen <span>// Tracking</span></h1>
+    </div>
+    <div class="table-container">
+      <div id="payments-body">
+        <div class="loading"><span class="spinner"></span>Lade Zahlungen...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div class="page" id="page-inventory">
+    <div class="page-header">
+      <h1 class="page-title">Lager <span>// Bestand</span></h1>
+    </div>
+    <div id="inventory-body">
+      <div class="loading"><span class="spinner"></span>Lade Lagerbestand...</div>
+    </div>
+  </div>
+
+  <!-- PRICES -->
+  <div class="page" id="page-prices">
+    <div class="page-header">
+      <h1 class="page-title">Preise <span>// Manuell anpassen</span></h1>
+      <button class="btn btn-primary" onclick="savePrices()">💾 Speichern</button>
+    </div>
+    <div class="prices-grid" id="prices-body"></div>
+  </div>
+
+</main>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">Bestellung bearbeiten</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId" />
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-control" id="f-name" type="text" placeholder="Kunde Name" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input class="form-control" id="f-email" type="email" placeholder="email@beispiel.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Telefon</label>
+          <input class="form-control" id="f-phone" type="text" placeholder="+66..." />
+        </div>
+        <div class="form-group">
+          <label>Material</label>
+          <input class="form-control" id="f-material" type="text" placeholder="z.B. Carbide Scrap" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Gewicht bestellt (kg)</label>
+          <input class="form-control" id="f-weight-ordered" type="number" step="0.01" placeholder="0.00" />
+        </div>
+        <div class="form-group">
+          <label>Gewicht empfangen (kg)</label>
+          <input class="form-control" id="f-weight-received" type="number" step="0.01" placeholder="0.00" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preis / kg (THB)</label>
+          <input class="form-control" id="f-price-per-kg" type="number" step="0.01" placeholder="0.00" />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select class="form-control" id="f-status">
+            <option value="neu">Neu</option>
+            <option value="unterwegs">Unterwegs</option>
+            <option value="empfangen">Empfangen</option>
+            <option value="bezahlt">Bezahlt</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>PromptPay Referenz</label>
+        <input class="form-control" id="f-payment-ref" type="text" placeholder="Transaktions-ID" />
+      </div>
+      <div class="form-group">
+        <label>Notizen</label>
+        <textarea class="form-control" id="f-notes" rows="3" placeholder="Interne Notizen..." style="resize:vertical"></textarea>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:12px 16px;font-family:var(--mono);font-size:13px;">
+        Betrag: <span id="calc-total" style="color:var(--accent);font-weight:700">0.00 THB</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-danger" id="deleteBtn" onclick="deleteOrder()" style="display:none">Löschen</button>
+      <button class="btn btn-primary" onclick="saveOrder()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
+
+let allOrders = [];
+let prices = JSON.parse(localStorage.getItem('tc_prices') || '{}');
+
+// Default prices
+const defaultPrices = {
+  'Carbide Scrap': 800,
+  'Carbide Insert': 650,
+  'Carbide Rod': 720,
+  'Carbide Powder': 580,
+  'Mixed Carbide': 500,
+  'Other': 450
+};
+
+if (!Object.keys(prices).length) prices = {...defaultPrices};
+
+// API
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'return=representation' : 'return=representation'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+async function loadAll() {
+  setStatus('loading');
+  try {
+    allOrders = await api('GET', 'orders?order=created_at.desc');
+    setStatus('online');
+    renderDashboard();
+    renderOrders(allOrders);
+    renderPayments();
+    renderInventory();
+    renderPrices();
+    document.getElementById('lastSync').textContent = 'Sync: ' + new Date().toLocaleTimeString('de-DE');
+    showToast('Daten geladen ✓');
+  } catch(e) {
+    setStatus('offline');
+    showToast('Fehler: ' + e.message, true);
+  }
+}
+
+function setStatus(s) {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  if (s === 'online') { dot.className = 'status-dot online'; txt.textContent = 'Verbunden'; }
+  else if (s === 'offline') { dot.className = 'status-dot offline'; txt.textContent = 'Offline'; }
+  else { dot.className = 'status-dot'; txt.textContent = 'Verbinden...'; }
+}
+
+// PAGES
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.trim().toLowerCase().includes(name === 'dashboard' ? 'dash' : name === 'orders' ? 'bestellung' : name === 'payments' ? 'zahlung' : name === 'inventory' ? 'lager' : 'preis')) {
+      n.classList.add('active');
+    }
+  });
+}
+
+// DASHBOARD
+function renderDashboard() {
+  const total = allOrders.length;
+  const neu = allOrders.filter(o => o.status === 'neu').length;
+  const pending = allOrders.filter(o => o.status !== 'bezahlt' && o.total_amount).reduce((s, o) => s + (o.total_amount || 0), 0);
+  const kg = allOrders.filter(o => o.status === 'empfangen' || o.status === 'bezahlt').reduce((s, o) => s + (o.weight_received || o.weight_ordered || 0), 0);
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-neu').textContent = neu;
+  document.getElementById('stat-pending').textContent = pending.toLocaleString('de-DE');
+  document.getElementById('stat-kg').textContent = kg.toFixed(1);
+
+  const recent = allOrders.slice(0, 5);
+  document.getElementById('recent-orders-body').innerHTML = recent.length ? buildOrderTable(recent, true) : '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Noch keine Bestellungen</div></div>';
+}
+
+// ORDERS
+function renderOrders(orders) {
+  const el = document.getElementById('orders-body');
+  if (!orders.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-text">Keine Bestellungen gefunden</div></div>';
+    return;
+  }
+  el.innerHTML = buildOrderTable(orders, false);
+}
+
+function buildOrderTable(orders, compact) {
+  const rows = orders.map(o => `
+    <tr>
+      <td class="mono">${new Date(o.created_at).toLocaleDateString('de-DE')}</td>
+      <td><strong>${o.name || '—'}</strong><br><span style="color:var(--muted);font-size:11px">${o.email || ''}</span></td>
+      <td>${o.material || '—'}</td>
+      <td class="mono">${o.weight_ordered ? o.weight_ordered + ' kg' : '—'}</td>
+      ${!compact ? `<td class="mono">${o.weight_received ? o.weight_received + ' kg' : '—'}</td>` : ''}
+      <td class="mono">${o.total_amount ? o.total_amount.toLocaleString('de-DE') + ' ฿' : '—'}</td>
+      <td><span class="badge badge-${o.status || 'neu'}">${o.status || 'neu'}</span></td>
+      <td><button class="btn btn-ghost btn-sm" onclick="editOrder('${o.id}')">✎ Edit</button></td>
+    </tr>
+  `).join('');
+
+  return `<table>
+    <thead><tr>
+      <th>Datum</th><th>Kunde</th><th>Material</th><th>Best. kg</th>
+      ${!compact ? '<th>Empf. kg</th>' : ''}
+      <th>Betrag</th><th>Status</th><th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function filterOrders(q) {
+  const filtered = allOrders.filter(o =>
+    (o.name || '').toLowerCase().includes(q.toLowerCase()) ||
+    (o.email || '').toLowerCase().includes(q.toLowerCase()) ||
+    (o.material || '').toLowerCase().includes(q.toLowerCase())
+  );
+  renderOrders(filtered);
+}
+
+function filterByStatus(s) {
+  const filtered = s ? allOrders.filter(o => o.status === s) : allOrders;
+  renderOrders(filtered);
+}
+
+// PAYMENTS
+function renderPayments() {
+  const el = document.getElementById('payments-body');
+  const unpaid = allOrders.filter(o => o.status !== 'bezahlt' && (o.weight_received || o.weight_ordered));
+  if (!unpaid.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">Alle Zahlungen abgeschlossen</div></div>';
+    return;
+  }
+  const rows = unpaid.map(o => {
+    const weight = o.weight_received || o.weight_ordered || 0;
+    const price = o.price_per_kg || 0;
+    const amount = o.total_amount || (weight * price) || 0;
+    return `<tr>
+      <td class="mono">${new Date(o.created_at).toLocaleDateString('de-DE')}</td>
+      <td><strong>${o.name || '—'}</strong></td>
+      <td>${o.material || '—'}</td>
+      <td class="mono">${weight} kg</td>
+      <td class="mono">${price} ฿/kg</td>
+      <td class="mono" style="color:var(--accent);font-weight:700">${amount.toLocaleString('de-DE')} ฿</td>
+      <td><span class="badge badge-${o.status}">${o.status}</span></td>
+      <td><button class="btn btn-primary btn-sm" onclick="markPaid('${o.id}')">Bezahlt ✓</button></td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<table>
+    <thead><tr><th>Datum</th><th>Kunde</th><th>Material</th><th>Gewicht</th><th>Preis/kg</th><th>Betrag</th><th>Status</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+async function markPaid(id) {
+  try {
+    await api('PATCH', `orders?id=eq.${id}`, { status: 'bezahlt' });
+    showToast('Als bezahlt markiert ✓');
+    loadAll();
+  } catch(e) { showToast('Fehler: ' + e.message, true); }
+}
+
+// INVENTORY
+function renderInventory() {
+  const received = allOrders.filter(o => o.status === 'empfangen' || o.status === 'bezahlt');
+  const byMaterial = {};
+  received.forEach(o => {
+    const mat = o.material || 'Unbekannt';
+    if (!byMaterial[mat]) byMaterial[mat] = 0;
+    byMaterial[mat] += o.weight_received || o.weight_ordered || 0;
+  });
+
+  const el = document.getElementById('inventory-body');
+  if (!Object.keys(byMaterial).length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">⚖️</div><div class="empty-text">Kein Lagerbestand (noch keine Bestellungen als "Empfangen" markiert)</div></div>';
+    return;
+  }
+
+  const cards = Object.entries(byMaterial).map(([mat, kg]) => `
+    <div class="inv-card">
+      <div class="inv-material">${mat}</div>
+      <div class="inv-weight">${kg.toFixed(2)}<span class="inv-unit">kg</span></div>
+    </div>
+  `).join('');
+
+  el.innerHTML = `<div class="inventory-grid">${cards}</div>`;
+}
+
+// PRICES
+function renderPrices() {
+  const el = document.getElementById('prices-body');
+  el.innerHTML = Object.entries(prices).map(([mat, price]) => `
+    <div class="price-card">
+      <div class="price-label">${mat}</div>
+      <div class="price-input-wrap">
+        <input class="price-input" type="number" value="${price}" onchange="prices['${mat}'] = parseFloat(this.value)" />
+        <span class="price-unit">฿/kg</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function savePrices() {
+  localStorage.setItem('tc_prices', JSON.stringify(prices));
+  showToast('Preise gespeichert ✓');
+}
+
+// MODAL
+function openNewOrder() {
+  document.getElementById('modalTitle').textContent = 'Neue Bestellung';
+  document.getElementById('editId').value = '';
+  document.getElementById('deleteBtn').style.display = 'none';
+  ['name','email','phone','material','weight-ordered','weight-received','price-per-kg','payment-ref','notes'].forEach(f => {
+    const el = document.getElementById('f-' + f);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-status').value = 'neu';
+  document.getElementById('calc-total').textContent = '0.00 THB';
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function editOrder(id) {
+  const o = allOrders.find(x => x.id === id);
+  if (!o) return;
+  document.getElementById('modalTitle').textContent = 'Bestellung bearbeiten';
+  document.getElementById('editId').value = id;
+  document.getElementById('deleteBtn').style.display = 'inline-block';
+  document.getElementById('f-name').value = o.name || '';
+  document.getElementById('f-email').value = o.email || '';
+  document.getElementById('f-phone').value = o.phone || '';
+  document.getElementById('f-material').value = o.material || '';
+  document.getElementById('f-weight-ordered').value = o.weight_ordered || '';
+  document.getElementById('f-weight-received').value = o.weight_received || '';
+  document.getElementById('f-price-per-kg').value = o.price_per_kg || '';
+  document.getElementById('f-status').value = o.status || 'neu';
+  document.getElementById('f-payment-ref').value = o.payment_ref || '';
+  document.getElementById('f-notes').value = o.notes || '';
+  updateCalc();
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('orderModal').classList.remove('open');
+}
+
+function updateCalc() {
+  const w = parseFloat(document.getElementById('f-weight-received').value || document.getElementById('f-weight-ordered').value) || 0;
+  const p = parseFloat(document.getElementById('f-price-per-kg').value) || 0;
+  document.getElementById('calc-total').textContent = (w * p).toLocaleString('de-DE') + ' THB';
+}
+
+['f-weight-ordered','f-weight-received','f-price-per-kg'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateCalc);
+});
+
+async function saveOrder() {
+  const id = document.getElementById('editId').value;
+  const w = parseFloat(document.getElementById('f-weight-received').value || document.getElementById('f-weight-ordered').value) || 0;
+  const p = parseFloat(document.getElementById('f-price-per-kg').value) || 0;
+  const data = {
+    name: document.getElementById('f-name').value,
+    email: document.getElementById('f-email').value,
+    phone: document.getElementById('f-phone').value,
+    material: document.getElementById('f-material').value,
+    weight_ordered: parseFloat(document.getElementById('f-weight-ordered').value) || null,
+    weight_received: parseFloat(document.getElementById('f-weight-received').value) || null,
+    price_per_kg: p || null,
+    total_amount: w * p || null,
+    status: document.getElementById('f-status').value,
+    payment_ref: document.getElementById('f-payment-ref').value || null,
+    notes: document.getElementById('f-notes').value || null
+  };
+
+  try {
+    if (id) {
+      await api('PATCH', `orders?id=eq.${id}`, data);
+    } else {
+      await api('POST', 'orders', data);
+    }
+    closeModal();
+    showToast('Gespeichert ✓');
+    loadAll();
+  } catch(e) { showToast('Fehler: ' + e.message, true); }
+}
+
+async function deleteOrder() {
+  const id = document.getElementById('editId').value;
+  if (!id || !confirm('Bestellung wirklich löschen?')) return;
+  try {
+    await api('DELETE', `orders?id=eq.${id}`, null);
+    closeModal();
+    showToast('Gelöscht ✓');
+    loadAll();
+  } catch(e) { showToast('Fehler: ' + e.message, true); }
+}
+
+// TOAST
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// INIT
+loadAll();
+</script>
+</body>
+</html>
