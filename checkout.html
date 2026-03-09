@@ -351,7 +351,7 @@
     <div class="price-display" id="priceDisplay" style="display:none">
       <div>
         <div class="price-label">Estimated Amount</div>
-        <div class="price-note">Final price confirmed after weighing</div>
+        <div class="price-note" id="price-note">Final price confirmed after weighing</div>
       </div>
       <div class="price-value" id="priceValue">0 ฿</div>
     </div>
@@ -390,14 +390,23 @@
 const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
 
-const prices = JSON.parse(localStorage.getItem('tc_prices') || 'null') || {
-  'Carbide Scrap': 800,
-  'Carbide Insert': 650,
-  'Carbide Rod': 720,
-  'Carbide Powder': 580,
-  'Mixed Carbide': 500,
-  'Other': 450
+// Price tiers per material: [{ min, price, label }]
+const PRICE_TIERS = {
+  'Carbide Insert':     [{min:1, price:2454, label:'standard'}, {min:100, price:2463, label:'100kg+'}, {min:350, price:2493, label:'350kg+ rate 🔥'}],
+  'Carbide Scrap':      [{min:1, price:2454, label:'standard'}, {min:100, price:2463, label:'100kg+'}, {min:350, price:2493, label:'350kg+ rate 🔥'}],
+  'Mixed Carbide':      [{min:1, price:1343, label:'standard'}, {min:100, price:1376, label:'100kg+'}, {min:350, price:1413, label:'350kg+ rate 🔥'}],
+  'Carbide Rod':        [{min:1, price:2454, label:'standard'}],
+  'Carbide Powder':     [{min:1, price:1343, label:'standard'}],
+  'Other':              [{min:1, price:1343, label:'standard'}],
 };
+
+function getTier(material, weight) {
+  const tiers = PRICE_TIERS[material];
+  if (!tiers) return null;
+  let tier = tiers[0];
+  for (const t of tiers) { if (weight >= t.min) tier = t; }
+  return tier;
+}
 
 let shippingMethod = '';
 let abandonedId = null;
@@ -457,12 +466,14 @@ function selectShipping(method) {
 function updatePrice() {
   const material = document.getElementById('f-material').value;
   const weight = parseFloat(document.getElementById('f-weight').value) || 0;
-  const pricePerKg = prices[material] || 0;
-  const total = weight * pricePerKg;
+  const tier = getTier(material, weight);
 
-  if (material && weight > 0 && pricePerKg > 0) {
+  if (material && weight > 0 && tier) {
+    const total = weight * tier.price;
     document.getElementById('priceDisplay').style.display = 'flex';
-    document.getElementById('priceValue').textContent = total.toLocaleString('de-DE') + ' ฿';
+    document.getElementById('priceValue').textContent = total.toLocaleString('th-TH') + ' ฿';
+    document.getElementById('price-note').textContent =
+      '฿' + tier.price.toLocaleString('th-TH') + '/kg (' + tier.label + ')  ·  Final price confirmed after weighing';
   } else {
     document.getElementById('priceDisplay').style.display = 'none';
   }
@@ -489,7 +500,8 @@ async function submitOrder() {
     return;
   }
 
-  const pricePerKg = prices[material] || 0;
+  const tier = getTier(material, weight);
+  const pricePerKg = tier ? tier.price : 0;
   const total = weight * pricePerKg;
 
   const btn = document.getElementById('submitBtn');
