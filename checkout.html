@@ -360,6 +360,17 @@ body.lang-en .th { display:none !important; }
 
       <div class="form-field">
         <label>
+          <span class="th">อีเมล *</span>
+          <span class="en">Email *</span>
+        </label>
+        <input type="email" id="f-email"
+          placeholder="your@email.com"
+          data-ph-th="your@email.com"
+          data-ph-en="your@email.com">
+      </div>
+
+      <div class="form-field">
+        <label>
           <span class="th">บริษัท / โรงงาน <small style="font-weight:400;opacity:0.6">(ไม่บังคับ)</small></span>
           <span class="en">Company / Factory <small style="font-weight:400;opacity:0.6">(optional)</small></span>
         </label>
@@ -488,6 +499,7 @@ async function saveAbandoned() {
   if (!name && !phone) return;
   const data = {
     name: name || null,
+    email: document.getElementById('f-email').value.trim() || null,
     phone: phone || null,
     material: selectedMaterial || null,
     status: 'abandoned'
@@ -558,6 +570,7 @@ function updatePrice() {
 async function submitOrder() {
   const name = document.getElementById('f-name').value.trim();
   const phone = document.getElementById('f-phone').value.trim();
+  const email = document.getElementById('f-email').value.trim();
   const weight = parseFloat(document.getElementById('f-weight').value);
 
   // Validation
@@ -573,6 +586,9 @@ async function submitOrder() {
   }
   if (!phone) {
     return showError(lang === 'en' ? 'Please enter your phone number or LINE ID.' : 'กรุณาใส่เบอร์โทรหรือ LINE ID');
+  }
+  if (!email) {
+    return showError(lang === 'en' ? 'Please enter your email address.' : 'กรุณาใส่อีเมล');
   }
   if (!shippingMethod) {
     return showError(lang === 'en' ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่ง');
@@ -602,6 +618,7 @@ async function submitOrder() {
   try {
     const orderData = {
       name,
+      email,
       phone,
       material: selectedMaterial,
       weight_ordered: weight,
