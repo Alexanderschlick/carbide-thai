@@ -1172,7 +1172,9 @@ loadPrices();
         chatHistory.push({role:'assistant', content:reply});
         saveConversation();
       } else {
-        appendMessage('bot', 'ขออภัยครับ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+        const errDetail = data.error?.message || data.error || JSON.stringify(data);
+        console.error('Chat proxy error:', errDetail);
+        appendMessage('bot', 'ขออภัยครับ เกิดข้อผิดพลาด: ' + errDetail);
       }
     } catch(e) {
       typing.remove();
