@@ -293,7 +293,9 @@ body.lang-en .th { display:none !important; }
 
 /* FORM */
 .order-form { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:36px; }
-.form-title { margin-bottom:24px; }
+.btn-sell-now { display:inline-block; background:var(--gold); color:#0b1f14; padding:20px 40px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:900; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:background 0.2s,transform 0.15s; text-align:center; }
+.btn-sell-now:hover { background:var(--gold-lt); transform:scale(1.03); }
+.btn-sell-now .th, .btn-sell-now .en { display:block; }
 .form-title .th { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; text-transform:uppercase; color:var(--gold); display:block; letter-spacing:1px; }
 .form-title .en { font-size:11px; color:var(--muted); display:block; margin-top:2px; }
 .form-field { margin-bottom:16px; }
@@ -734,8 +736,8 @@ Carbide<span>Thai</span>
         <span class="en">We Respond Within 2 Hours</span>
       </h3>
       <p>
-        <span class="th">ส่งแบบฟอร์มและเราจะติดต่อกลับผ่าน LINE พร้อมราคายืนยันและคำแนะนำการจัดส่ง ไม่มีข้อผูกมัดจนกว่าคุณพอใจกับราคา</span>
-        <span class="en">Fill in the form and we'll contact you via LINE with your confirmed price and shipping instructions. No commitment until you're happy with the price.</span>
+        <span class="th">กรอกข้อมูลสินค้าและรับราคายืนยันผ่าน LINE ภายใน 2 ชั่วโมง ไม่มีข้อผูกมัดจนกว่าคุณพอใจกับราคา</span>
+        <span class="en">Submit your details and get a confirmed price via LINE within 2 hours. No commitment until you're happy with the price.</span>
       </p>
       <div class="contact-detail">
         <div class="icon">📍</div>
@@ -763,59 +765,11 @@ Carbide<span>Thai</span>
       </a>
     </div>
 
-    <div class="order-form fade-in">
-      <div class="form-title">
-        <span class="th">📋 แบบฟอร์มขายคาร์ไบด์</span>
-        <span class="en">Order Form — Sell Your Carbide</span>
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label><span class="th">ชื่อ-นามสกุล *</span><span class="en">Full Name</span></label>
-          <input type="text" id="fname" placeholder="ชื่อ-นามสกุล / Full name" data-ph-th="ชื่อ-นามสกุล" data-ph-en="Full name">
-        </div>
-        <div class="form-field">
-          <label><span class="th">เบอร์โทร / LINE *</span><span class="en">Phone / LINE ID</span></label>
-          <input type="tel" id="fphone" placeholder="08X-XXX-XXXX หรือ LINE ID" data-ph-th="08X-XXX-XXXX หรือ LINE ID" data-ph-en="08X-XXX-XXXX or LINE ID">
-        </div>
-      </div>
-      <div class="form-field">
-        <label><span class="th">บริษัท / โรงงาน</span><span class="en">Company / Factory</span></label>
-        <input type="text" id="fcompany" placeholder="ชื่อบริษัทหรือโรงงาน / Company or factory name" data-ph-th="ชื่อบริษัทหรือโรงงาน" data-ph-en="Company or factory name">
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label><span class="th">ประเภทคาร์ไบด์ *</span><span class="en">Material Type</span></label>
-          <select id="fmaterial">
-            <option value="" data-th="เลือก..." data-en="Select...">เลือก... / Select...</option>
-            <option data-th="คาร์ไบด์อินเสิร์ท" data-en="Carbide Inserts">คาร์ไบด์อินเสิร์ท / Carbide Inserts</option>
-            <option data-th="ดอกสว่านคาร์ไบด์" data-en="Carbide Drills &amp; End Mills">ดอกสว่านคาร์ไบด์ / Carbide Drills &amp; End Mills</option>
-            <option data-th="คาร์ไบด์ผสม" data-en="Mixed Carbide">คาร์ไบด์ผสม / Mixed Carbide</option>
-            <option data-th="ทรายคาร์ไบด์" data-en="Sand Rills &amp; Wear Parts">ทรายคาร์ไบด์ / Sand Rills &amp; Wear Parts</option>
-            <option data-th="ผงคาร์ไบด์" data-en="Carbide Powder &amp; Swarf">ผงคาร์ไบด์ / Carbide Powder &amp; Swarf</option>
-            <option data-th="อื่นๆ" data-en="Other">อื่นๆ / Other</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label><span class="th">น้ำหนักโดยประมาณ</span><span class="en">Estimated Weight</span></label>
-          <input type="text" id="fweight" placeholder="เช่น 5 kg, 50 kg" data-ph-th="เช่น 5 kg, 50 kg" data-ph-en="e.g. 5 kg, 50 kg">
-        </div>
-      </div>
-      <div class="form-field">
-        <label><span class="th">วิธีจัดส่ง</span><span class="en">Delivery Preference</span></label>
-        <select id="fdelivery">
-          <option data-th="ส่งขนส่งเอง" data-en="I will ship to you (courier)">ส่งขนส่งเอง / I will ship to you (courier)</option>
-          <option data-th="ขอให้มารับ (กรุงเทพฯ/อีสเทิร์นซีบอร์ด, 20kg+)" data-en="Request pickup (Bangkok/Eastern Seaboard, 20kg+)">ขอให้มารับ (กรุงเทพฯ/อีสเทิร์นซีบอร์ด, 20kg+) / Request pickup</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label><span class="th">รายละเอียดเพิ่มเติม</span><span class="en">Additional Details</span></label>
-        <textarea id="fdetails" placeholder="แบรนด์, เกรด, สภาพ หรือข้อมูลอื่นๆ / Brand, grade, condition, other info..." data-ph-th="แบรนด์, เกรด, สภาพ หรือข้อมูลอื่นๆ" data-ph-en="Brand, grade, condition, other info..."></textarea>
-      </div>
-      <button class="btn-submit" onclick="submitForm()"><span class="th">ส่งแบบฟอร์ม → รับราคาใน 2 ชั่วโมง</span><span class="en">Submit Form → Get Price within 2 Hours</span></button>
-      <div class="success-msg" id="successMsg">
-        ✅ ได้รับแบบฟอร์มแล้ว! เราจะติดต่อกลับผ่าน LINE ภายใน 2 ชั่วโมง
-        <span class="en">Order received! We'll contact you via LINE within 2 hours with your confirmed price.</span>
-      </div>
+    <div class="order-form fade-in" style="display:flex;align-items:center;justify-content:center">
+      <a href="/checkout.html" class="btn-sell-now">
+        <span class="th">ขายเดี๋ยวนี้ → รับราคา</span>
+        <span class="en">SELL NOW → GET PRICE</span>
+      </a>
     </div>
   </div>
 </section>
@@ -893,51 +847,8 @@ async function loadPrices() {
   }
 }
 
-async function submitForm() {
-  const name = document.getElementById('fname').value.trim();
-  const phone = document.getElementById('fphone').value.trim();
-  const material = document.getElementById('fmaterial').value;
-  if (!name || !phone || !material) {
-    alert('กรุณากรอก: ชื่อ, เบอร์โทร/LINE และประเภทคาร์ไบด์\nPlease fill in: Name, Phone/LINE, and Material Type');
-    return;
-  }
-  const btn = document.querySelector('.btn-submit');
-  btn.textContent = 'กำลังส่ง... / Sending...';
-  btn.disabled = true;
-  const formData = {
-    name, phone,
-    company: document.getElementById('fcompany').value,
-    material,
-    weight: document.getElementById('fweight').value,
-    delivery: document.getElementById('fdelivery').value,
-    details: document.getElementById('fdetails').value,
-    submitted: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
-  };
-  try {
-    const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(formData)
-    });
-    if (!res.ok) throw new Error();
-  } catch(e) {}
-  document.getElementById('successMsg').style.display = 'block';
-  btn.textContent = '✅ ส่งสำเร็จ! / Submitted!';
-  btn.style.background = '#06C755';
-  btn.style.color = '#fff';
-}
-
 // Language toggle
-function applyLangForm(lang) {
-  // Swap placeholders
-  document.querySelectorAll('[data-ph-th][data-ph-en]').forEach(el => {
-    el.placeholder = lang === 'en' ? el.dataset.phEn : el.dataset.phTh;
-  });
-  // Swap select option text
-  document.querySelectorAll('select option[data-th][data-en]').forEach(opt => {
-    opt.textContent = lang === 'en' ? opt.dataset.en : opt.dataset.th;
-  });
-}
+function applyLangForm(lang) {}
 function setLang(lang) {
   document.body.style.opacity = '0.6';
   setTimeout(() => {
