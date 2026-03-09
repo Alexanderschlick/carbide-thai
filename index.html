@@ -1106,10 +1106,9 @@ loadPrices();
 
 <script>
 (function() {
-  const ANTHROPIC_KEY = 'ANTHROPIC_API_KEY_HERE';
+  const CHAT_PROXY    = 'https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/chat-proxy';
   const SUPABASE_URL  = 'https://ltupwgytuayzopnsdvpc.supabase.co';
   const SUPABASE_KEY  = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
-  const SYSTEM_PROMPT = `You are a helpful assistant for ThaiCarbide (thaicarbide.com), a carbide scrap buying company in Bangkok, Thailand. Always respond in Thai. Key info: We buy carbide inserts up to ฿2,493/kg, drills & mills up to ฿2,493/kg, mixed carbide up to ฿1,413/kg. Price tiers: standard (1kg+), 100kg+, 350kg+. Free pickup Bangkok & Eastern Seaboard for 20kg+. Payment within 48h via PromptPay/Bank Transfer. Contact via LINE: alex.schlick. Address: Unit 92/87, 92 Sukhumvit 61, Bangkok 10110.`;
 
   let chatOpen = false;
   let chatHistory = []; // {role, content}
@@ -1158,20 +1157,10 @@ loadPrices();
     const typing = appendMessage('typing', 'กำลังพิมพ์...');
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch(CHAT_PROXY, {
         method: 'POST',
-        headers: {
-          'x-api-key': ANTHROPIC_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 512,
-          system: SYSTEM_PROMPT,
-          messages: chatHistory,
-        }),
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: chatHistory }),
       });
 
       const data = await res.json();
