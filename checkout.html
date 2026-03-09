@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -233,7 +233,7 @@
 <div class="container">
   <div class="header">
     <div class="logo">ThaiCarbide</div>
-    <h1>Bestellung aufgeben</h1>
+    <h1>Submit Your Order</h1>
     <p class="subtitle">Tungsten Carbide Scrap — Bangkok, Thailand</p>
   </div>
 
@@ -326,9 +326,15 @@
 
       <div id="send-block" style="display:none">
         <div class="note-box" style="margin-bottom:0">
-          📦 Bitte senden Sie das Paket an:<br>
-          <strong style="font-family:var(--mono);font-size:13px">ThaiCarbide — Bangkok</strong><br>
-          <span style="font-size:12px">Adresse erhalten Sie per Email nach Bestätigung.</span>
+          📦 Please send your package to:<br><br>
+          <strong style="font-family:var(--mono);font-size:13px;display:block;margin-bottom:4px">ThaiCarbide — Receiving Depot</strong>
+          <span style="font-size:13px;line-height:1.8">
+            Unit 92/87<br>
+            92 Sukhumvit 61<br>
+            Khlong Tan Nuea, Watthana<br>
+            Bangkok 10110, Thailand
+          </span><br>
+          <span style="font-size:12px;opacity:0.8">📌 Please include your name and order reference on the package. We recommend Kerry Express or Flash Express.</span>
         </div>
       </div>
     </div>
@@ -336,14 +342,14 @@
     <!-- PREIS -->
     <div class="price-display" id="priceDisplay" style="display:none">
       <div>
-        <div class="price-label">Geschätzter Betrag</div>
-        <div class="price-note">Endpreis nach Wiegung bestätigt</div>
+        <div class="price-label">Estimated Amount</div>
+        <div class="price-note">Final price confirmed after weighing</div>
       </div>
       <div class="price-value" id="priceValue">0 ฿</div>
     </div>
 
     <button class="submit-btn" onclick="submitOrder()" id="submitBtn">
-      Bestellung absenden →
+      Submit Order →
     </button>
 
     <div class="error-msg" id="errorMsg"></div>
@@ -352,12 +358,23 @@
   <!-- SUCCESS -->
   <div class="success-screen" id="successScreen">
     <div class="success-icon">✅</div>
-    <div class="success-title">Bestellung eingegangen!</div>
+    <div class="success-title">Order Received!</div>
     <div class="success-msg">
-      Vielen Dank für Ihre Bestellung.<br>
-      Wir melden uns innerhalb von 24 Stunden.
+      Thank you for your order.<br>
+      We will contact you within 24 hours to confirm.
     </div>
     <div class="order-ref" id="orderRef">REF: ...</div>
+    <div id="shipping-confirm" style="margin-top:20px;display:none">
+      <div class="note-box" style="text-align:left">
+        📦 Please send your package to:<br><br>
+        <strong style="font-family:var(--mono);font-size:13px;display:block;margin-bottom:4px">ThaiCarbide — Receiving Depot</strong>
+        <span style="font-size:13px;line-height:1.8">
+          Unit 92/87 · 92 Sukhumvit 61<br>
+          Khlong Tan Nuea, Watthana<br>
+          Bangkok 10110, Thailand
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -375,6 +392,51 @@ const prices = JSON.parse(localStorage.getItem('tc_prices') || 'null') || {
 };
 
 let shippingMethod = '';
+let abandonedId = null;
+let trackingTimer = null;
+
+// Save partial data after 3 seconds of inactivity (abandoned tracking)
+function scheduleAbandoned() {
+  clearTimeout(trackingTimer);
+  trackingTimer = setTimeout(saveAbandoned, 3000);
+}
+
+async function saveAbandoned() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if (!name && !email) return;
+  const data = {
+    name: name || null,
+    email: email || null,
+    phone: document.getElementById('f-phone').value || null,
+    material: document.getElementById('f-material').value || null,
+    status: 'abandoned'
+  };
+  try {
+    if (abandonedId) {
+      await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + abandonedId, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } else {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/orders', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify(data)
+      });
+      const d = await res.json();
+      if (d[0]?.id) abandonedId = d[0].id;
+    }
+  } catch(e) {}
+}
+
+// Attach abandoned tracking to inputs
+document.addEventListener('DOMContentLoaded', () => {
+  ['f-name','f-email','f-phone','f-material','f-weight'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', scheduleAbandoned);
+  });
+});
 
 function selectShipping(method) {
   shippingMethod = method;
@@ -405,17 +467,17 @@ async function submitOrder() {
   const weight = parseFloat(document.getElementById('f-weight').value);
 
   if (!name || !email || !material || !weight) {
-    showError('Bitte alle Pflichtfelder ausfüllen.');
+    showError('Please fill in all required fields.');
     return;
   }
 
   if (!shippingMethod) {
-    showError('Bitte Versandmethode wählen.');
+    showError('Please select a shipping method.');
     return;
   }
 
   if (shippingMethod === 'pickup' && !document.getElementById('f-address').value.trim()) {
-    showError('Bitte Abholadresse eingeben.');
+    showError('Please enter your pickup address.');
     return;
   }
 
@@ -424,43 +486,52 @@ async function submitOrder() {
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Wird gespeichert...';
+  btn.textContent = 'Submitting...';
 
   try {
-    const res = await fetch(SUPABASE_URL + '/rest/v1/orders', {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        phone: document.getElementById('f-phone').value || null,
-        material,
-        weight_ordered: weight,
-        price_per_kg: pricePerKg || null,
-        total_amount: total || null,
-        notes: (document.getElementById('f-notes').value || '') + (shippingMethod === 'pickup' ? '\n📍 ABHOLUNG: ' + document.getElementById('f-address').value : '\n📦 SELBST SENDEN (Kerry/Flash)') || null,
-        status: 'neu'
-      })
-    });
+    const orderData = {
+      name,
+      email,
+      phone: document.getElementById('f-phone').value || null,
+      material,
+      weight_ordered: weight,
+      price_per_kg: pricePerKg || null,
+      total_amount: total || null,
+      notes: (document.getElementById('f-notes').value || '') + (shippingMethod === 'pickup' ? '\n📍 PICKUP: ' + document.getElementById('f-address').value : '\n📦 SELF SHIP (Kerry/Flash)') || null,
+      status: 'neu'
+    };
 
-    if (!res.ok) throw new Error(await res.text());
-
-    const data = await res.json();
-    const ref = (data[0]?.id || '').slice(0, 8).toUpperCase();
+    let ref = '';
+    if (abandonedId) {
+      // Update existing abandoned record
+      await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + abandonedId, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+      ref = abandonedId.slice(0, 8).toUpperCase();
+    } else {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/orders', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify(orderData)
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      ref = (data[0]?.id || '').slice(0, 8).toUpperCase();
+    }
 
     document.getElementById('formSection').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('orderRef').textContent = 'REF: ' + ref;
+    if (shippingMethod === 'send') {
+      document.getElementById('shipping-confirm').style.display = 'block';
+    }
 
   } catch(e) {
     showError('Fehler beim Senden: ' + e.message);
     btn.disabled = false;
-    btn.textContent = 'Bestellung absenden →';
+    btn.textContent = 'Submit Order →';
   }
 }
 
