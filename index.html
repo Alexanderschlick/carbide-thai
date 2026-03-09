@@ -749,7 +749,7 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
       </div>
       <a href="https://line.me/ti/p/alex.schlick" class="line-cta" target="_blank">
         <svg width="20" height="20" viewBox="0 0 40 40" fill="white"><path d="M20 2C10.06 2 2 9.16 2 18c0 7.97 6.55 14.62 15.3 15.82.6.13 1.41.4 1.61.91.19.47.12 1.2.06 1.67l-.26 1.55c-.08.47-.37 1.85 1.62.99 1.99-.84 10.74-6.33 14.66-10.84C37.46 24.9 38 21.56 38 18 38 9.16 29.94 2 20 2z"/></svg>
-        แชทบน LINE / Chat on LINE
+        <span class="th">แชทบน LINE</span><span class="en">Chat on LINE</span>
       </a>
     </div>
 
@@ -761,47 +761,47 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
       <div class="form-row">
         <div class="form-field">
           <label><span class="th">ชื่อ-นามสกุล *</span><span class="en">Full Name</span></label>
-          <input type="text" id="fname" placeholder="ชื่อ-นามสกุล / Full name">
+          <input type="text" id="fname" placeholder="ชื่อ-นามสกุล / Full name" data-ph-th="ชื่อ-นามสกุล" data-ph-en="Full name">
         </div>
         <div class="form-field">
           <label><span class="th">เบอร์โทร / LINE *</span><span class="en">Phone / LINE ID</span></label>
-          <input type="tel" id="fphone" placeholder="08X-XXX-XXXX หรือ LINE ID">
+          <input type="tel" id="fphone" placeholder="08X-XXX-XXXX หรือ LINE ID" data-ph-th="08X-XXX-XXXX หรือ LINE ID" data-ph-en="08X-XXX-XXXX or LINE ID">
         </div>
       </div>
       <div class="form-field">
         <label><span class="th">บริษัท / โรงงาน</span><span class="en">Company / Factory</span></label>
-        <input type="text" id="fcompany" placeholder="ชื่อบริษัทหรือโรงงาน / Company or factory name">
+        <input type="text" id="fcompany" placeholder="ชื่อบริษัทหรือโรงงาน / Company or factory name" data-ph-th="ชื่อบริษัทหรือโรงงาน" data-ph-en="Company or factory name">
       </div>
       <div class="form-row">
         <div class="form-field">
           <label><span class="th">ประเภทคาร์ไบด์ *</span><span class="en">Material Type</span></label>
           <select id="fmaterial">
-            <option value="">เลือก... / Select...</option>
-            <option>คาร์ไบด์อินเสิร์ท / Carbide Inserts</option>
-            <option>ดอกสว่านคาร์ไบด์ / Carbide Drills & End Mills</option>
-            <option>คาร์ไบด์ผสม / Mixed Carbide</option>
-            <option>ทรายคาร์ไบด์ / Sand Rills & Wear Parts</option>
-            <option>ผงคาร์ไบด์ / Carbide Powder & Swarf</option>
-            <option>อื่นๆ / Other</option>
+            <option value="" data-th="เลือก..." data-en="Select...">เลือก... / Select...</option>
+            <option data-th="คาร์ไบด์อินเสิร์ท" data-en="Carbide Inserts">คาร์ไบด์อินเสิร์ท / Carbide Inserts</option>
+            <option data-th="ดอกสว่านคาร์ไบด์" data-en="Carbide Drills &amp; End Mills">ดอกสว่านคาร์ไบด์ / Carbide Drills &amp; End Mills</option>
+            <option data-th="คาร์ไบด์ผสม" data-en="Mixed Carbide">คาร์ไบด์ผสม / Mixed Carbide</option>
+            <option data-th="ทรายคาร์ไบด์" data-en="Sand Rills &amp; Wear Parts">ทรายคาร์ไบด์ / Sand Rills &amp; Wear Parts</option>
+            <option data-th="ผงคาร์ไบด์" data-en="Carbide Powder &amp; Swarf">ผงคาร์ไบด์ / Carbide Powder &amp; Swarf</option>
+            <option data-th="อื่นๆ" data-en="Other">อื่นๆ / Other</option>
           </select>
         </div>
         <div class="form-field">
           <label><span class="th">น้ำหนักโดยประมาณ</span><span class="en">Estimated Weight</span></label>
-          <input type="text" id="fweight" placeholder="เช่น 5 kg, 50 kg">
+          <input type="text" id="fweight" placeholder="เช่น 5 kg, 50 kg" data-ph-th="เช่น 5 kg, 50 kg" data-ph-en="e.g. 5 kg, 50 kg">
         </div>
       </div>
       <div class="form-field">
         <label><span class="th">วิธีจัดส่ง</span><span class="en">Delivery Preference</span></label>
         <select id="fdelivery">
-          <option>ส่งขนส่งเอง / I will ship to you (courier)</option>
-          <option>ขอให้มารับ (กรุงเทพฯ/อีสเทิร์นซีบอร์ด, 20kg+) / Request pickup</option>
+          <option data-th="ส่งขนส่งเอง" data-en="I will ship to you (courier)">ส่งขนส่งเอง / I will ship to you (courier)</option>
+          <option data-th="ขอให้มารับ (กรุงเทพฯ/อีสเทิร์นซีบอร์ด, 20kg+)" data-en="Request pickup (Bangkok/Eastern Seaboard, 20kg+)">ขอให้มารับ (กรุงเทพฯ/อีสเทิร์นซีบอร์ด, 20kg+) / Request pickup</option>
         </select>
       </div>
       <div class="form-field">
         <label><span class="th">รายละเอียดเพิ่มเติม</span><span class="en">Additional Details</span></label>
-        <textarea id="fdetails" placeholder="แบรนด์, เกรด, สภาพ หรือข้อมูลอื่นๆ / Brand, grade, condition, other info..."></textarea>
+        <textarea id="fdetails" placeholder="แบรนด์, เกรด, สภาพ หรือข้อมูลอื่นๆ / Brand, grade, condition, other info..." data-ph-th="แบรนด์, เกรด, สภาพ หรือข้อมูลอื่นๆ" data-ph-en="Brand, grade, condition, other info..."></textarea>
       </div>
-      <button class="btn-submit" onclick="submitForm()">ส่งแบบฟอร์ม → รับราคาใน 2 ชั่วโมง</button>
+      <button class="btn-submit" onclick="submitForm()"><span class="th">ส่งแบบฟอร์ม → รับราคาใน 2 ชั่วโมง</span><span class="en">Submit Form → Get Price within 2 Hours</span></button>
       <div class="success-msg" id="successMsg">
         ✅ ได้รับแบบฟอร์มแล้ว! เราจะติดต่อกลับผ่าน LINE ภายใน 2 ชั่วโมง
         <span class="en">Order received! We'll contact you via LINE within 2 hours with your confirmed price.</span>
@@ -919,6 +919,16 @@ async function submitForm() {
 }
 
 // Language toggle
+function applyLangForm(lang) {
+  // Swap placeholders
+  document.querySelectorAll('[data-ph-th][data-ph-en]').forEach(el => {
+    el.placeholder = lang === 'en' ? el.dataset.phEn : el.dataset.phTh;
+  });
+  // Swap select option text
+  document.querySelectorAll('select option[data-th][data-en]').forEach(opt => {
+    opt.textContent = lang === 'en' ? opt.dataset.en : opt.dataset.th;
+  });
+}
 function setLang(lang) {
   document.body.style.opacity = '0.6';
   setTimeout(() => {
@@ -926,6 +936,7 @@ function setLang(lang) {
     document.body.classList.add('lang-' + lang);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
     localStorage.setItem('carbide-lang', lang);
+    applyLangForm(lang);
     document.body.style.opacity = '1';
   }, 120);
 }
@@ -933,6 +944,7 @@ function initLang() {
   const saved = localStorage.getItem('carbide-lang') || 'th';
   document.body.classList.add('lang-' + saved);
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === saved));
+  applyLangForm(saved);
 }
 initLang();
 
