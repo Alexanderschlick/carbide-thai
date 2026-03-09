@@ -976,5 +976,255 @@ document.querySelectorAll('.tile-carousel').forEach(carousel => {
 
 loadPrices();
 </script>
+
+<!-- ── AI CHATBOT ─────────────────────────────────────────────────────────── -->
+<style>
+#chat-fab {
+  position:fixed; bottom:28px; right:28px; z-index:1000;
+  width:58px; height:58px; border-radius:50%;
+  background:#06C755; border:none; cursor:pointer;
+  box-shadow:0 4px 20px rgba(6,199,85,0.45);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+#chat-fab:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(6,199,85,0.6); }
+#chat-fab svg { width:28px; height:28px; }
+#chat-fab .chat-badge {
+  position:absolute; top:-3px; right:-3px;
+  background:#e74c3c; color:#fff; font-size:10px; font-weight:700;
+  width:18px; height:18px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--bg);
+}
+
+#chat-window {
+  position:fixed; bottom:100px; right:28px; z-index:999;
+  width:360px; max-height:520px;
+  background:#0f2a1a; border:1px solid rgba(201,162,39,0.25);
+  border-radius:16px; box-shadow:0 16px 60px rgba(0,0,0,0.6);
+  display:none; flex-direction:column; overflow:hidden;
+  font-family:'Sarabun',sans-serif;
+}
+#chat-window.open { display:flex; }
+
+.chat-header {
+  background:linear-gradient(135deg,#06C755,#04a344);
+  padding:14px 18px; display:flex; align-items:center; gap:12px;
+  flex-shrink:0;
+}
+.chat-header-avatar {
+  width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.2);
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+}
+.chat-header-info { flex:1; }
+.chat-header-name { font-weight:700; font-size:15px; color:#fff; line-height:1.2; }
+.chat-header-status { font-size:11px; color:rgba(255,255,255,0.8); }
+.chat-close { background:none; border:none; color:#fff; font-size:20px; cursor:pointer; padding:0 4px; opacity:0.8; }
+.chat-close:hover { opacity:1; }
+
+#chat-messages {
+  flex:1; overflow-y:auto; padding:16px; display:flex;
+  flex-direction:column; gap:10px; min-height:200px;
+  scrollbar-width:thin; scrollbar-color:rgba(201,162,39,0.2) transparent;
+}
+.chat-msg { max-width:85%; padding:10px 14px; border-radius:14px; font-size:14px; line-height:1.6; }
+.chat-msg.bot { background:#132e1d; color:#f2ede4; border-bottom-left-radius:4px; align-self:flex-start; }
+.chat-msg.user { background:#06C755; color:#fff; border-bottom-right-radius:4px; align-self:flex-end; }
+.chat-msg.typing { background:#132e1d; color:#7a9480; font-style:italic; align-self:flex-start; }
+
+.chat-suggestions {
+  padding:0 16px 8px; display:flex; flex-wrap:wrap; gap:6px; flex-shrink:0;
+}
+.chat-suggestion {
+  background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.3);
+  color:#c9a227; font-size:12px; padding:5px 10px; border-radius:20px;
+  cursor:pointer; font-family:'Sarabun',sans-serif; transition:background 0.2s;
+  white-space:nowrap;
+}
+.chat-suggestion:hover { background:rgba(201,162,39,0.2); }
+
+.chat-input-row {
+  padding:12px 14px; border-top:1px solid rgba(201,162,39,0.15);
+  display:flex; gap:8px; flex-shrink:0;
+}
+#chat-input {
+  flex:1; background:#0b1f14; border:1px solid rgba(201,162,39,0.25);
+  border-radius:22px; padding:9px 16px; color:#f2ede4;
+  font-family:'Sarabun',sans-serif; font-size:14px; outline:none;
+  transition:border-color 0.2s;
+}
+#chat-input:focus { border-color:rgba(201,162,39,0.6); }
+#chat-send {
+  width:38px; height:38px; border-radius:50%; background:#06C755;
+  border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:background 0.2s;
+}
+#chat-send:hover { background:#04a344; }
+#chat-send:disabled { background:#2a4a35; cursor:default; }
+
+@media (max-width:420px) {
+  #chat-window { width:calc(100vw - 32px); right:16px; bottom:88px; }
+  #chat-fab { bottom:20px; right:16px; }
+}
+</style>
+
+<!-- FAB button -->
+<button id="chat-fab" onclick="toggleChat()" aria-label="Chat with us">
+  <svg viewBox="0 0 40 40" fill="white"><path d="M20 2C10.06 2 2 9.16 2 18c0 7.97 6.55 14.62 15.3 15.82.6.13 1.41.4 1.61.91.19.47.12 1.2.06 1.67l-.26 1.55c-.08.47-.37 1.85 1.62.99 1.99-.84 10.74-6.33 14.66-10.84C37.46 24.9 38 21.56 38 18 38 9.16 29.94 2 20 2z"/></svg>
+  <div class="chat-badge" id="chat-badge">1</div>
+</button>
+
+<!-- Chat window -->
+<div id="chat-window">
+  <div class="chat-header">
+    <div class="chat-header-avatar">⚙️</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">ThaiCarbide Assistant</div>
+      <div class="chat-header-status">🟢 ออนไลน์ · ตอบใน Thai</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+
+  <div id="chat-messages">
+    <div class="chat-msg bot">สวัสดีครับ! 👋 ผมคือผู้ช่วย ThaiCarbide พร้อมตอบทุกคำถามเกี่ยวกับการรับซื้อคาร์ไบด์ครับ มีอะไรให้ช่วยไหมครับ?</div>
+  </div>
+
+  <div class="chat-suggestions" id="chat-suggestions">
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">ราคาคาร์ไบด์วันนี้</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">วิธีขายคาร์ไบด์</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">บริการรับถึงที่</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">รับเงินเมื่อไหร่?</button>
+  </div>
+
+  <div class="chat-input-row">
+    <input id="chat-input" type="text" placeholder="พิมพ์คำถามที่นี่..." onkeydown="if(event.key==='Enter')sendMessage()">
+    <button id="chat-send" onclick="sendMessage()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const ANTHROPIC_KEY = 'ANTHROPIC_API_KEY_HERE';
+  const SUPABASE_URL  = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+  const SUPABASE_KEY  = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
+  const SYSTEM_PROMPT = `You are a helpful assistant for ThaiCarbide (thaicarbide.com), a carbide scrap buying company in Bangkok, Thailand. Always respond in Thai. Key info: We buy carbide inserts up to ฿2,493/kg, drills & mills up to ฿2,493/kg, mixed carbide up to ฿1,413/kg. Price tiers: standard (1kg+), 100kg+, 350kg+. Free pickup Bangkok & Eastern Seaboard for 20kg+. Payment within 48h via PromptPay/Bank Transfer. Contact via LINE: alex.schlick. Address: Unit 92/87, 92 Sukhumvit 61, Bangkok 10110.`;
+
+  let chatOpen = false;
+  let chatHistory = []; // {role, content}
+  let sessionId = null;
+
+  window.toggleChat = function() {
+    chatOpen = !chatOpen;
+    document.getElementById('chat-window').classList.toggle('open', chatOpen);
+    document.getElementById('chat-badge').style.display = 'none';
+    if (chatOpen) document.getElementById('chat-input').focus();
+  };
+
+  window.sendSuggestion = function(btn) {
+    const text = btn.textContent;
+    document.getElementById('chat-suggestions').style.display = 'none';
+    appendMessage('user', text);
+    chatHistory.push({role:'user', content:text});
+    callAI();
+  };
+
+  window.sendMessage = function() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    document.getElementById('chat-suggestions').style.display = 'none';
+    appendMessage('user', text);
+    chatHistory.push({role:'user', content:text});
+    callAI();
+  };
+
+  function appendMessage(role, text) {
+    const msgs = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  async function callAI() {
+    const sendBtn = document.getElementById('chat-send');
+    sendBtn.disabled = true;
+
+    const typing = appendMessage('typing', 'กำลังพิมพ์...');
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': ANTHROPIC_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 512,
+          system: SYSTEM_PROMPT,
+          messages: chatHistory,
+        }),
+      });
+
+      const data = await res.json();
+      typing.remove();
+
+      if (data.content?.[0]?.text) {
+        const reply = data.content[0].text;
+        appendMessage('bot', reply);
+        chatHistory.push({role:'assistant', content:reply});
+        saveConversation();
+      } else {
+        appendMessage('bot', 'ขออภัยครับ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      }
+    } catch(e) {
+      typing.remove();
+      appendMessage('bot', 'ขออภัยครับ ไม่สามารถเชื่อมต่อได้ในขณะนี้ กรุณาติดต่อเราผ่าน LINE: alex.schlick');
+    }
+
+    sendBtn.disabled = false;
+    document.getElementById('chat-input').focus();
+  }
+
+  async function saveConversation() {
+    if (chatHistory.length < 2) return;
+    const notes = chatHistory.map(m => (m.role === 'user' ? '👤: ' : '🤖: ') + m.content).join('\n');
+    try {
+      if (!sessionId) {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/orders', {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation',
+          },
+          body: JSON.stringify({ status: 'chat', notes }),
+        });
+        const data = await res.json();
+        if (data[0]?.id) sessionId = data[0].id;
+      } else {
+        await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + sessionId, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ notes }),
+        });
+      }
+    } catch(e) { /* silent fail */ }
+  }
+})();
+</script>
 </body>
 </html>
