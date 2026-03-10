@@ -436,6 +436,16 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .brand-badge:hover { border-color:var(--gold); background:rgba(201,162,39,0.12); }
 .brand-badge.more { color:#4a6454; border-color:rgba(74,100,84,0.35); background:transparent; font-style:italic; font-weight:400; letter-spacing:0; font-size:12px; }
 
+/* LOGO STRIPS (real logos) */
+.logo-strip-section { background:#f5f5f5; padding:28px 40px; border-top:1px solid #e0e0e0; border-bottom:1px solid #e0e0e0; text-align:center; }
+.logo-strip-section.alt { background:#fff; }
+.logo-strip-title { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#999; margin-bottom:20px; }
+.trust-logos-strip { display:flex; align-items:center; justify-content:center; gap:32px; flex-wrap:wrap; }
+.trust-logos-strip img { height:40px; width:auto; max-width:120px; object-fit:contain; filter:grayscale(100%) opacity(0.55); transition:filter 0.3s; }
+.trust-logos-strip img:hover { filter:grayscale(0%) opacity(1); }
+.logo-strip-note { font-size:13px; color:#888; margin-top:18px; line-height:1.7; }
+.logo-strip-note strong { color:#555; }
+
 /* TRUST BADGES SECTION */
 .trust-badges-section { padding:56px 40px; background:#070f0a; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
 .trust-badges-section .section-label { text-align:center; margin-bottom:28px; }
@@ -486,6 +496,9 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .plogo { padding:8px 14px; gap:7px; min-height:46px; }
   .plogo-label-main { font-size:13px; }
   .brands-bar { padding:28px 16px; }
+  .logo-strip-section { padding:20px 16px; }
+  .trust-logos-strip { gap:20px; }
+  .trust-logos-strip img { height:32px; max-width:90px; }
   .trust-badges-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
   .trust-badges-section { padding:40px 16px; }
 }
@@ -554,128 +567,6 @@ Carbide<span>Thai</span>
     </div>
   </div>
 </section>
-
-<!-- PAYMENT METHODS BAR -->
-<div class="partner-bar fade-in">
-  <div class="partner-bar-title">
-    <span class="th">ชำระเงินผ่าน · Payment Methods</span>
-    <span class="en">Payment Methods · ชำระเงินผ่าน</span>
-  </div>
-  <div class="partner-logos-row">
-    <div class="plogo plogo-promptpay">
-      <div class="plogo-circle">⚡</div>
-      <div>
-        <div class="plogo-label-top">THAI</div>
-        <div class="plogo-label-main">PromptPay</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-kbank">
-      <div class="plogo-circle" style="font-size:15px;font-weight:900;">K</div>
-      <div>
-        <div class="plogo-label-top">KASIKORN</div>
-        <div class="plogo-label-main">BANK</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-scb">
-      <div class="plogo-circle" style="font-size:11px;font-weight:900;">SCB</div>
-      <div>
-        <div class="plogo-label-top">THE</div>
-        <div class="plogo-label-main">SCB</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-bbl">
-      <div class="plogo-circle" style="font-size:11px;font-weight:900;">BBL</div>
-      <div>
-        <div class="plogo-label-top">BANGKOK</div>
-        <div class="plogo-label-main">BANK</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-krungsri">
-      <div class="plogo-circle dark" style="font-size:11px;font-weight:900;color:#1a1a1a;">BAY</div>
-      <div>
-        <div class="plogo-label-top" style="color:#6a4400;">BANK OF</div>
-        <div class="plogo-label-main" style="color:#1a1a1a;">KRUNGSRI</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SHIPPING PARTNERS BAR -->
-<div class="partner-bar partner-bar-alt fade-in">
-  <div class="partner-bar-title">
-    <span class="th">พาร์ทเนอร์จัดส่ง · Shipping Partners</span>
-    <span class="en">Shipping Partners · พาร์ทเนอร์จัดส่ง</span>
-  </div>
-  <div class="partner-logos-row">
-    <div class="plogo plogo-kerry">
-      <div class="plogo-circle" style="font-size:12px;font-weight:900;">K</div>
-      <div>
-        <div class="plogo-label-top">EXPRESS</div>
-        <div class="plogo-label-main">KERRY</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-jt">
-      <div class="plogo-circle" style="font-size:14px;font-weight:900;">J</div>
-      <div>
-        <div class="plogo-label-top">EXPRESS</div>
-        <div class="plogo-label-main">J&amp;T</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-flash">
-      <div class="plogo-circle dark" style="font-size:13px;color:#111;">⚡</div>
-      <div>
-        <div class="plogo-label-top" style="color:#555;">EXPRESS</div>
-        <div class="plogo-label-main" style="color:#111;">FLASH</div>
-      </div>
-    </div>
-    <div class="psep"></div>
-    <div class="plogo plogo-thpost">
-      <div class="plogo-circle" style="font-size:12px;font-weight:900;">TP</div>
-      <div>
-        <div class="plogo-label-top">THAILAND</div>
-        <div class="plogo-label-main">POST</div>
-      </div>
-    </div>
-  </div>
-  <p class="partner-note">
-    <span class="th">หรือ <strong>รับฟรีที่กรุงเทพฯ &amp; อีสเทิร์นซีบอร์ด</strong> สำหรับ 20 กก.ขึ้นไป</span>
-    <span class="en">Or <strong>free pickup Bangkok &amp; Eastern Seaboard</strong> for 20 kg+</span>
-  </p>
-</div>
-
-<!-- BRANDS WE BUY BAR -->
-<div class="brands-bar fade-in">
-  <div class="partner-bar-title">
-    <span class="th">ยี่ห้อที่เรารับซื้อ · Brands We Accept</span>
-    <span class="en">Brands We Accept · ยี่ห้อที่เรารับซื้อ</span>
-  </div>
-  <p class="brands-bar-sub">
-    <span class="th">รับซื้อทุกยี่ห้อ ทุกเกรด ทุกสภาพ</span>
-    <span class="en">All brands and grades accepted — new, worn, broken</span>
-  </p>
-  <div class="brand-badges">
-    <span class="brand-badge">SANDVIK</span>
-    <span class="brand-badge">BOEHLERIT</span>
-    <span class="brand-badge">KENNAMETAL</span>
-    <span class="brand-badge">SUMITOMO</span>
-    <span class="brand-badge">MITSUBISHI</span>
-    <span class="brand-badge">ISCAR</span>
-    <span class="brand-badge">SECO</span>
-    <span class="brand-badge">WALTER</span>
-    <span class="brand-badge">TUNGALOY</span>
-    <span class="brand-badge">KYOCERA</span>
-    <span class="brand-badge more">
-      <span class="th">+ และอื่นๆ อีกมาก</span>
-      <span class="en">+ and many more...</span>
-    </span>
-  </div>
-</div>
 
 <!-- TRUST -->
 <div class="trust-strip">
@@ -1193,6 +1084,67 @@ Carbide<span>Thai</span>
     </div>
   </div>
 </section>
+
+<!-- BRANDS WE ACCEPT -->
+<div class="brands-bar fade-in">
+  <div class="partner-bar-title">
+    <span class="th">ยี่ห้อที่เรารับซื้อ · Brands We Accept</span>
+    <span class="en">Brands We Accept · ยี่ห้อที่เรารับซื้อ</span>
+  </div>
+  <p class="brands-bar-sub">
+    <span class="th">รับซื้อทุกยี่ห้อ ทุกเกรด ทุกสภาพ</span>
+    <span class="en">All brands and grades accepted — new, worn, broken</span>
+  </p>
+  <div class="brand-badges">
+    <span class="brand-badge">SANDVIK</span>
+    <span class="brand-badge">BOEHLERIT</span>
+    <span class="brand-badge">KENNAMETAL</span>
+    <span class="brand-badge">SUMITOMO</span>
+    <span class="brand-badge">MITSUBISHI</span>
+    <span class="brand-badge">ISCAR</span>
+    <span class="brand-badge">SECO</span>
+    <span class="brand-badge">WALTER</span>
+    <span class="brand-badge">TUNGALOY</span>
+    <span class="brand-badge">KYOCERA</span>
+    <span class="brand-badge more">
+      <span class="th">+ และอื่นๆ อีกมาก</span>
+      <span class="en">+ and many more...</span>
+    </span>
+  </div>
+</div>
+
+<!-- PAYMENT LOGOS STRIP -->
+<div class="logo-strip-section fade-in">
+  <div class="logo-strip-title">
+    <span class="th">ชำระเงินผ่าน · Payment Methods</span>
+    <span class="en">Payment Methods · ชำระเงินผ่าน</span>
+  </div>
+  <div class="trust-logos-strip">
+    <img src="images/logos/promptpay.png" alt="PromptPay" height="40">
+    <img src="images/logos/kbank.svg" alt="KBank Kasikorn" height="40">
+    <img src="images/logos/scb.png" alt="SCB" height="40">
+    <img src="images/logos/bbl.svg" alt="Bangkok Bank" height="40">
+    <img src="images/logos/krungsri.svg" alt="Krungsri" height="40">
+  </div>
+</div>
+
+<!-- SHIPPING LOGOS STRIP -->
+<div class="logo-strip-section alt fade-in">
+  <div class="logo-strip-title">
+    <span class="th">พาร์ทเนอร์จัดส่ง · Shipping Partners</span>
+    <span class="en">Shipping Partners · พาร์ทเนอร์จัดส่ง</span>
+  </div>
+  <div class="trust-logos-strip">
+    <img src="images/logos/kerry.svg" alt="Kerry Express" height="40">
+    <img src="images/logos/jt.svg" alt="J&amp;T Express" height="40">
+    <img src="images/logos/flash.svg" alt="Flash Express" height="40">
+    <img src="images/logos/thailandpost.svg" alt="Thailand Post" height="40">
+  </div>
+  <p class="logo-strip-note">
+    <span class="th">หรือ <strong>รับฟรีที่กรุงเทพฯ &amp; อีสเทิร์นซีบอร์ด</strong> สำหรับ 20 กก.ขึ้นไป</span>
+    <span class="en">Or <strong>free pickup Bangkok &amp; Eastern Seaboard</strong> for 20 kg+</span>
+  </p>
+</div>
 
 <!-- FOOTER -->
 <footer>
