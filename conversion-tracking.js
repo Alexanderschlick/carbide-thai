@@ -1,65 +1,55 @@
 // ThaiCarbide — Google Ads Conversion Tracking
-// Replace AW-XXXXXXXXX and CONV_LABEL_HERE with real values from Google Ads
+// Google Ads ID: AW-18001691387
+// Update the labels below when you get them from Google Ads
 
-const AW_ID    = 'AW-XXXXXXXXX';
-const AW_LABEL = 'CONV_LABEL_HERE';
+const AW_ID = 'AW-18001691387';
 
-function fireConversion(value, label) {
+const LABELS = {
+  LINE_CLICK:  'LINE_CLICK',   // replace with real label from Google Ads
+  FORM_SUBMIT: 'FORM_SUBMIT',  // replace with real label from Google Ads
+  PHONE_CLICK: 'PHONE_CLICK',  // replace with real label from Google Ads
+};
+
+function fireConversion(label, value) {
   if (typeof gtag === 'undefined') {
-    console.warn('[ConvTracking] gtag not loaded — conversion not fired');
+    console.warn('[ConvTracking] gtag not available — skipping:', label);
     return;
   }
   gtag('event', 'conversion', {
-    send_to: AW_ID + '/' + (label || AW_LABEL),
+    send_to: AW_ID + '/' + label,
     value: value,
     currency: 'THB',
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+// ── Event delegation on document — works for dynamic elements ──
 
-  // ── LINE clicks ──────────────────────────────────────────────
-  document.querySelectorAll('a[href*="line.me"]').forEach(function (el) {
-    el.addEventListener('click', function () {
-      console.log('[ConvTracking] LINE click fired — value: 10 THB', el.href);
-      fireConversion(10, AW_LABEL);
-    });
-  });
+document.addEventListener('click', function (e) {
+  var target = e.target.closest('a');
+  if (!target) return;
 
-  // ── Phone (tel:) clicks ──────────────────────────────────────
-  document.querySelectorAll('a[href^="tel:"]').forEach(function (el) {
-    el.addEventListener('click', function () {
-      console.log('[ConvTracking] Phone click fired — value: 5 THB', el.href);
-      fireConversion(5, AW_LABEL);
-    });
-  });
+  var href = target.href || '';
 
-  // ── Form submissions ─────────────────────────────────────────
-  document.querySelectorAll('form').forEach(function (form) {
-    form.addEventListener('submit', function () {
-      console.log('[ConvTracking] Form submit fired — value: 8 THB', form.id || form.action || '(unnamed form)');
-      fireConversion(8, AW_LABEL);
-    });
-  });
-
-  // ── Checkout submit button (not a <form>, uses onclick) ──────
-  // Watches for the Supabase order success screen appearing
-  var successScreen = document.getElementById('successScreen');
-  if (successScreen) {
-    var observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) {
-        if (m.type === 'attributes' && m.attributeName === 'style') {
-          var visible = successScreen.style.display !== 'none' && successScreen.style.display !== '';
-          if (visible) {
-            console.log('[ConvTracking] Checkout order submitted — value: 8 THB');
-            fireConversion(8, AW_LABEL);
-            observer.disconnect(); // fire once per page load
-          }
-        }
-      });
-    });
-    observer.observe(successScreen, { attributes: true });
+  // 1. LINE click
+  if (href.indexOf('line.me') !== -1 || href.indexOf('line://') !== -1) {
+    console.log('[ConvTracking] LINE click — value: 10 THB | href:', href);
+    fireConversion(LABELS.LINE_CLICK, 10);
+    return;
   }
 
-  console.log('[ConvTracking] Conversion tracking initialised on', window.location.pathname);
+  // 3. Phone click
+  if (href.indexOf('tel:') === 0) {
+    console.log('[ConvTracking] Phone click — value: 5 THB | href:', href);
+    fireConversion(LABELS.PHONE_CLICK, 5);
+    return;
+  }
 });
+
+// 2. Form submit (event delegation)
+document.addEventListener('submit', function (e) {
+  var form = e.target;
+  console.log('[ConvTracking] Form submit — value: 8 THB | form:', form.id || form.action || '(unnamed)');
+  fireConversion(LABELS.FORM_SUBMIT, 8);
+});
+
+console.log('[ConvTracking] Loaded on', window.location.pathname, '| ID:', AW_ID);
