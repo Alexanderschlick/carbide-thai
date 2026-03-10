@@ -128,7 +128,7 @@
       "name": "What is the price for carbide scrap in Thailand?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Live buy prices are published at thaicarbide.com and updated twice daily (08:00 and 20:00 Bangkok time). Prices are derived from European market rates converted to Thai Baht. Carbide inserts typically fetch ฿900–฿1,000/kg, solid carbide drills ฿950–฿1,000/kg, mixed carbide around ฿800/kg, and sand rills around ฿500/kg."
+        "text": "Live buy prices are published at thaicarbide.com and updated twice daily (08:00 and 20:00 Bangkok time). Carbide inserts typically fetch ฿900–฿1,000/kg, solid carbide drills ฿950–฿1,000/kg, mixed carbide around ฿800/kg, and sand rills around ฿500/kg."
       }
     },
     {
@@ -974,7 +974,7 @@ Carbide<span>Thai</span>
     </div>
     <div class="faq-item">
       <div class="faq-q"><span class="th">ราคารับซื้อคาร์ไบด์ในไทยอยู่ที่เท่าไหร่?</span><span class="en">What is the carbide scrap price in Thailand?</span></div>
-      <div class="faq-a"><span class="th">ราคาอัปเดตวันละ 2 ครั้ง (08:00 และ 20:00) คำนวณจากราคาตลาดยุโรปแปลงเป็นบาท ดูราคาล่าสุดได้ด้านบน</span><span class="en">Prices are updated twice daily at 08:00 and 20:00 Bangkok time, based on live European market rates converted to Thai Baht. See current prices at the top of this page.</span></div>
+      <div class="faq-a"><span class="th">ราคาอัปเดตวันละ 2 ครั้ง (08:00 และ 20:00) ดูราคาล่าสุดได้ด้านบน</span><span class="en">Prices are updated twice daily at 08:00 and 20:00 Bangkok time. See current prices at the top of this page.</span></div>
     </div>
     <div class="faq-item">
       <div class="faq-q"><span class="th">มีบริการรับซื้อถึงที่ไหม?</span><span class="en">Does ThaiCarbide offer pickup service?</span></div>
@@ -1268,9 +1268,9 @@ async function loadPrices() {
         `<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿${ins}/kg &nbsp;·&nbsp; ` +
         `<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿${drl}/kg &nbsp;·&nbsp; ` +
         `<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿${mix}/kg &nbsp;·&nbsp; ` +
-        `<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿${san}/kg &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate}`;
+        `<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿${san}/kg`;
       document.getElementById('price-updated-note').innerHTML =
-        `<span class="th">📡 อัปเดตล่าสุด: ${data.updated} &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate} &nbsp;·&nbsp; ราคาโดยประมาณ</span><span class="en">📡 Last updated: ${data.updated} &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate} &nbsp;·&nbsp; Estimated prices</span>`;
+        `<span class="th">📡 อัปเดตล่าสุด: ${data.updated} &nbsp;·&nbsp; ราคาโดยประมาณ</span><span class="en">📡 Last updated: ${data.updated} &nbsp;·&nbsp; Estimated prices</span>`;
     }
   } catch(e) {
     for (const [key, val] of Object.entries(FALLBACK)) {
