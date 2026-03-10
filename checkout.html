@@ -659,6 +659,16 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLangForm(saved);
   // Load live prices from prices.json
   loadPricesIntoTiers();
+
+  // Pre-select material from ?material= URL param
+  const paramMap = { inserts: ['Carbide Insert','mat-insert'], drills: ['Carbide Scrap','mat-scrap'], mixed: ['Mixed Carbide','mat-mixed'], other: ['Other','mat-other'] };
+  const param = new URLSearchParams(location.search).get('material');
+  if (param && paramMap[param]) {
+    const [mat, elId] = paramMap[param];
+    const el = document.getElementById(elId);
+    if (el) selectMaterial(mat, el);
+    document.getElementById('materialGrid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 });
 
 function selectMaterial(material, el) {
