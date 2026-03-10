@@ -439,14 +439,36 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 /* CHANGE 4: WHAT WE BUY QUICK CARDS */
 .what-we-buy-section { padding:80px 40px; background:var(--surface); border-top:1px solid var(--border); }
 .what-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:40px; }
-.what-card { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:28px 18px; text-align:center; transition:border-color 0.25s,transform 0.2s; }
-.what-card:hover { border-color:rgba(201,162,39,0.45); transform:translateY(-3px); }
-.what-icon { font-size:38px; margin-bottom:14px; display:block; }
-.what-name-th { font-size:15px; font-weight:700; color:var(--white); display:block; margin-bottom:2px; }
-.what-name-en { font-size:10px; color:var(--muted); display:block; margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase; }
-.what-desc { font-size:12px; color:#4a6454; margin-bottom:14px; line-height:1.5; }
-.what-price-badge { display:inline-flex; align-items:center; padding:5px 14px; background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.35); border-radius:20px; font-size:13px; font-weight:700; color:var(--gold-lt); }
+.what-card { position:relative; border-radius:6px; overflow:hidden; height:260px; cursor:default; transition:transform 0.25s; border:1px solid var(--border); }
+.what-card:hover { transform:translateY(-3px); }
+.what-card:hover .wc-photo { transform:scale(1.06); }
+.wc-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 0.4s ease; display:block; }
+.wc-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(5,15,8,0.93) 0%,rgba(5,15,8,0.45) 55%,rgba(5,15,8,0.05) 100%); }
+.wc-content { position:absolute; bottom:0; left:0; right:0; padding:18px; }
+.wc-name-th { font-size:16px; font-weight:700; color:var(--white); display:block; margin-bottom:2px; }
+.wc-name-en { font-size:10px; color:rgba(242,237,228,0.5); display:block; margin-bottom:10px; letter-spacing:0.5px; text-transform:uppercase; }
+.wc-desc { font-size:12px; color:rgba(242,237,228,0.55); margin-bottom:12px; line-height:1.4; }
+.what-price-badge { display:inline-flex; align-items:center; padding:5px 14px; background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.45); border-radius:20px; font-size:13px; font-weight:700; color:var(--gold-lt); backdrop-filter:blur(4px); }
 .what-note { text-align:center; margin-top:20px; font-size:11px; color:#3a5444; font-style:italic; }
+
+/* GALLERY */
+.gallery-section { padding:80px 40px; background:var(--bg); border-top:1px solid var(--border); }
+.gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:40px; }
+.gallery-item { position:relative; border-radius:6px; overflow:hidden; aspect-ratio:4/3; cursor:zoom-in; }
+.gallery-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.35s ease; display:block; }
+.gallery-item:hover img { transform:scale(1.06); }
+.gallery-caption { position:absolute; bottom:0; left:0; right:0; padding:14px 16px 12px; background:linear-gradient(to top,rgba(5,15,8,0.88) 0%,transparent 100%); transform:translateY(4px); opacity:0; transition:opacity 0.25s,transform 0.25s; }
+.gallery-item:hover .gallery-caption { opacity:1; transform:translateY(0); }
+.gallery-caption .th { display:block; font-weight:700; font-size:13px; color:var(--white); }
+.gallery-caption .en { display:block; font-size:11px; color:var(--muted); margin-top:1px; }
+
+/* LIGHTBOX */
+.lightbox { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; padding:20px; }
+.lightbox.open { display:flex; }
+.lightbox-inner { position:relative; max-width:90vw; max-height:90vh; }
+.lightbox-close { position:absolute; top:-14px; right:-14px; width:32px; height:32px; border-radius:50%; background:var(--gold); border:none; color:#0b1f14; font-size:15px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:1; line-height:1; }
+.lightbox-img { max-width:90vw; max-height:80vh; border-radius:6px; object-fit:contain; display:block; }
+.lightbox-caption { color:var(--muted); font-size:13px; text-align:center; margin-top:10px; }
 
 /* PRICE TIERS IN TILES */
 .tile-tiers { display:flex; gap:4px; margin-top:10px; padding-top:10px; border-top:1px solid rgba(201,162,39,0.12); }
@@ -560,7 +582,10 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .edu-section, .what-we-buy-section { padding:56px 16px; }
   .edu-cards { grid-template-columns:1fr; gap:14px; }
   .what-cards { grid-template-columns:repeat(2,1fr); gap:12px; }
-  .what-card { padding:20px 12px; }
+  .what-card { height:220px; }
+  .gallery-section { padding:56px 16px; }
+  .gallery-grid { grid-template-columns:repeat(2,1fr); }
+  .gallery-caption { opacity:1; transform:translateY(0); }
   .steps-flow { flex-direction:column; }
   .step-v2 { border-left:none; border-top:2px solid var(--border); padding:22px 0; }
   .step-v2:first-child { border-top:none; padding-top:0; }
@@ -760,44 +785,56 @@ Carbide<span>Thai</span>
   </div>
   <div class="what-cards">
     <div class="what-card fade-in">
-      <span class="what-icon">🔩</span>
-      <span class="what-name-th">อินเสิร์ทคาร์ไบด์</span>
-      <span class="what-name-en">Carbide Inserts</span>
-      <p class="what-desc">
-        <span class="th">CNMG, TNMG, APMT, RCMT — ทุกเกรด ใหม่หรือเก่า</span>
-        <span class="en">CNMG, TNMG, APMT, RCMT — all grades, new or worn</span>
-      </p>
-      <span class="what-price-badge" id="badge-inserts">สูงสุด ฿—/กก.</span>
+      <img class="wc-photo" src="images/inserts-pile.jpg" alt="Carbide inserts scrap pile Thailand" loading="lazy">
+      <div class="wc-overlay"></div>
+      <div class="wc-content">
+        <span class="wc-name-th th">อินเสิร์ทคาร์ไบด์</span>
+        <span class="wc-name-en en">Carbide Inserts</span>
+        <p class="wc-desc">
+          <span class="th">CNMG, TNMG, APMT, RCMT — ทุกเกรด ใหม่หรือเก่า</span>
+          <span class="en">CNMG, TNMG, APMT, RCMT — all grades, new or worn</span>
+        </p>
+        <span class="what-price-badge" id="badge-inserts">สูงสุด ฿—/กก.</span>
+      </div>
     </div>
     <div class="what-card fade-in">
-      <span class="what-icon">🔧</span>
-      <span class="what-name-th">ดอกสว่าน / เอ็นมิล</span>
-      <span class="what-name-en">Drills & End Mills</span>
-      <p class="what-desc">
-        <span class="th">VHM Solid Carbide — สึกหรอหรือชำรุดก็รับ</span>
-        <span class="en">VHM solid carbide — worn, broken, all conditions</span>
-      </p>
-      <span class="what-price-badge" id="badge-drills">สูงสุด ฿—/กก.</span>
+      <img class="wc-photo" src="images/drills-plate.jpg" alt="Carbide drills endmills scrap Thailand" loading="lazy">
+      <div class="wc-overlay"></div>
+      <div class="wc-content">
+        <span class="wc-name-th th">ดอกสว่าน / เอ็นมิล</span>
+        <span class="wc-name-en en">Drills & End Mills</span>
+        <p class="wc-desc">
+          <span class="th">VHM Solid Carbide — สึกหรอหรือชำรุดก็รับ</span>
+          <span class="en">VHM solid carbide — worn, broken, all conditions</span>
+        </p>
+        <span class="what-price-badge" id="badge-drills">สูงสุด ฿—/กก.</span>
+      </div>
     </div>
     <div class="what-card fade-in">
-      <span class="what-icon">🧩</span>
-      <span class="what-name-th">คาร์ไบด์ผสม</span>
-      <span class="what-name-en">Mixed Carbide</span>
-      <p class="what-desc">
-        <span class="th">เศษผสม ชิ้นแตก ผงคาร์ไบด์ — รับทุกสภาพ</span>
-        <span class="en">Mixed scrap, broken pieces, carbide powder — all accepted</span>
-      </p>
-      <span class="what-price-badge" id="badge-mixed">สูงสุด ฿—/กก.</span>
+      <img class="wc-photo" src="images/inserts-fine.jpg" alt="Mixed carbide scrap fragments Thailand" loading="lazy">
+      <div class="wc-overlay"></div>
+      <div class="wc-content">
+        <span class="wc-name-th th">คาร์ไบด์ผสม</span>
+        <span class="wc-name-en en">Mixed Carbide</span>
+        <p class="wc-desc">
+          <span class="th">เศษผสม ชิ้นแตก ผงคาร์ไบด์ — รับทุกสภาพ</span>
+          <span class="en">Mixed scrap, broken pieces, carbide powder — all accepted</span>
+        </p>
+        <span class="what-price-badge" id="badge-mixed">สูงสุด ฿—/กก.</span>
+      </div>
     </div>
     <div class="what-card fade-in">
-      <span class="what-icon">⛏️</span>
-      <span class="what-name-th">แซนด์ริล / ชิ้นส่วนสึกหรอ</span>
-      <span class="what-name-en">Sand Rills / Wear Parts</span>
-      <p class="what-desc">
-        <span class="th">ชิ้นส่วนเหมืองแร่ อุปกรณ์สึกหรอคาร์ไบด์</span>
-        <span class="en">Mining wear parts, carbide drilling components</span>
-      </p>
-      <span class="what-price-badge" id="badge-sandrills">สูงสุด ฿—/กก.</span>
+      <img class="wc-photo" src="images/drills-barrel.jpg" alt="Carbide wear parts barrel Thailand" loading="lazy">
+      <div class="wc-overlay"></div>
+      <div class="wc-content">
+        <span class="wc-name-th th">แซนด์ริล / ชิ้นส่วนสึกหรอ</span>
+        <span class="wc-name-en en">Sand Rills / Wear Parts</span>
+        <p class="wc-desc">
+          <span class="th">ชิ้นส่วนเหมืองแร่ อุปกรณ์สึกหรอคาร์ไบด์</span>
+          <span class="en">Mining wear parts, carbide drilling components</span>
+        </p>
+        <span class="what-price-badge" id="badge-sandrills">สูงสุด ฿—/กก.</span>
+      </div>
     </div>
   </div>
   <p class="what-note">
@@ -805,6 +842,67 @@ Carbide<span>Thai</span>
     <span class="en">* Estimated prices, updated daily · Final price confirmed after physical weighing</span>
   </p>
 </section>
+
+<!-- PHOTO GALLERY -->
+<section class="gallery-section">
+  <div class="section-label"><span class="th">ตัวอย่างวัสดุ · </span>Real Stock Photos</div>
+  <div class="section-head">
+    <span class="th">วัสดุที่เราซื้อจริง</span>
+    <span class="en">What Our Customers Sell</span>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item" onclick="openLightbox('images/inserts-bulk.jpg')">
+      <img src="images/inserts-bulk.jpg" alt="Bulk carbide inserts Thailand recycling" loading="lazy">
+      <div class="gallery-caption">
+        <span class="th">อินเสิร์ทคาร์ไบด์ปริมาณมาก</span>
+        <span class="en">Carbide Inserts — Bulk</span>
+      </div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('images/drills-bucket.jpg')">
+      <img src="images/drills-bucket.jpg" alt="Bucket of carbide drills endmills scrap" loading="lazy">
+      <div class="gallery-caption">
+        <span class="th">ดอกสว่าน VHM กระสอบ</span>
+        <span class="en">VHM Drills & Endmills — Bucket</span>
+      </div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('images/inserts-pile.jpg')">
+      <img src="images/inserts-pile.jpg" alt="Mixed carbide inserts pile scrap Thailand" loading="lazy">
+      <div class="gallery-caption">
+        <span class="th">อินเสิร์ทหลายเกรด</span>
+        <span class="en">Mixed Grade Inserts</span>
+      </div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('images/drills-mixed.jpg')">
+      <img src="images/drills-mixed.jpg" alt="Assorted carbide drills endmills scrap" loading="lazy">
+      <div class="gallery-caption">
+        <span class="th">ดอกสว่านและเอ็นมิลผสม</span>
+        <span class="en">Mixed Drills & Endmills</span>
+      </div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('images/inserts-fine.jpg')">
+      <img src="images/inserts-fine.jpg" alt="Fine carbide insert fragments scrap" loading="lazy">
+      <div class="gallery-caption">
+        <span class="th">เศษอินเสิร์ทขนาดเล็ก</span>
+        <span class="en">Fine Carbide Fragments</span>
+      </div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('images/drills-barrel.jpg')">
+      <img src="images/drills-barrel.jpg" alt="High volume carbide drills barrel scrap Thailand" loading="lazy">
+      <div class="gallery-caption">
+        <span class="th">ดอกสว่านปริมาณมาก</span>
+        <span class="en">High Volume Drill Scrap</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Carbide scrap photo">
+  </div>
+</div>
 
 <!-- MATERIAL TILES -->
 <section class="materials-section" id="materials">
@@ -1597,6 +1695,17 @@ document.querySelectorAll('.tile-carousel').forEach(carousel => {
 });
 
 loadPrices();
+
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 </script>
 
 <!-- ── AI CHATBOT ─────────────────────────────────────────────────────────── -->

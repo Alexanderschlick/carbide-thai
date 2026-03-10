@@ -110,9 +110,25 @@ body.lang-en .th { display:none !important; }
 .mat-price { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:900; color:var(--gold); margin-top:8px; }
 .mat-price span { font-size:12px; font-weight:600; color:var(--muted); }
 
+/* EMAIL GATE */
+.email-gate { background:var(--surface); border:1px solid rgba(201,162,39,0.4); border-radius:6px; padding:24px; margin-bottom:16px; display:none; }
+.email-gate.visible { display:block; animation:fadeGate 0.28s ease; }
+@keyframes fadeGate { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+.gate-header { font-size:17px; font-weight:700; color:var(--white); margin-bottom:4px; }
+.gate-sub { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+.gate-input { width:100%; background:var(--sur2); border:1px solid rgba(201,162,39,0.25); color:var(--white); padding:13px 14px; border-radius:4px; font-size:15px; font-family:'Sarabun',sans-serif; outline:none; transition:border-color 0.2s; margin-bottom:10px; }
+.gate-input:focus { border-color:var(--gold); background:#0f2a1a; }
+.gate-btn { width:100%; background:var(--gold); color:#0b1f14; border:none; border-radius:4px; padding:14px; font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:900; cursor:pointer; letter-spacing:0.5px; transition:background 0.15s,transform 0.1s; }
+.gate-btn:hover { background:var(--gold-lt); transform:translateY(-1px); }
+.gate-btn:active { transform:translateY(0); }
+.gate-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+.gate-error { font-size:12px; color:#e05555; margin-top:4px; display:none; }
+.gate-trust { font-size:11px; color:#4a6454; text-align:center; margin-top:10px; }
+
 /* PRICE DISPLAY */
 .price-display { background:var(--gold); color:#0b1f14; border-radius:6px; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; display:none; }
-.price-display.visible { display:flex; }
+.price-display.visible { display:flex; animation:priceReveal 0.38s ease; }
+@keyframes priceReveal { from { opacity:0; transform:scale(0.97); } to { opacity:1; transform:scale(1); } }
 .price-left { }
 .price-label-text { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; opacity:0.7; }
 .price-tier-label { font-size:13px; font-weight:700; margin-top:2px; opacity:0.85; }
@@ -322,6 +338,24 @@ body.lang-en .th { display:none !important; }
         </div>
       </div>
 
+      <!-- EMAIL GATE — appears when material + weight are set, before price reveals -->
+      <div class="email-gate" id="emailGate">
+        <div class="gate-header">📧 <span class="th">เกือบถึงแล้ว!</span><span class="en">Almost there!</span></div>
+        <div class="gate-sub">
+          <span class="th">ใส่อีเมลเพื่อดูราคาประเมินของคุณ</span>
+          <span class="en">Enter your email to see your estimated price</span>
+        </div>
+        <input type="email" id="gate-email" class="gate-input"
+          placeholder="email@example.com"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();submitEmailGate();}">
+        <div class="gate-error" id="gate-error"></div>
+        <button class="gate-btn" id="gateBtnEl" onclick="submitEmailGate()">
+          <span class="th">ดูราคาเลย →</span>
+          <span class="en">See My Price →</span>
+        </button>
+        <p class="gate-trust">🔒 <span class="th">ไม่มี spam · ไม่ขายข้อมูล · ยกเลิกได้ทุกเวลา</span><span class="en">No spam · No data selling · Unsubscribe anytime</span></p>
+      </div>
+
       <!-- Dynamic price display -->
       <div class="price-display" id="priceDisplay">
         <div class="price-left">
@@ -526,6 +560,9 @@ let selectedMaterial = '';
 let shippingMethod = '';
 let abandonedId = null;
 let trackingTimer = null;
+let emailGateSubmitted = false;
+let leadId = null;
+let gateEmailValue = '';
 
 // Abandoned tracking
 function scheduleAbandoned() {
@@ -595,18 +632,82 @@ function selectShipping(method) {
 function updatePrice() {
   const weight = parseFloat(document.getElementById('f-weight').value) || 0;
   const tier = getTier(selectedMaterial, weight);
+  const gate = document.getElementById('emailGate');
   const display = document.getElementById('priceDisplay');
 
   if (selectedMaterial && weight > 0 && tier) {
-    const total = weight * tier.price;
-    const lang = document.body.classList.contains('lang-en') ? 'en' : 'th';
-    document.getElementById('priceValue').textContent = '฿' + total.toLocaleString('th-TH');
-    document.getElementById('priceTierLabel').textContent =
-      '฿' + tier.price.toLocaleString('th-TH') + '/kg · ' + tier.label;
-    display.classList.add('visible');
+    if (emailGateSubmitted) {
+      gate.classList.remove('visible');
+      revealPrice(weight, tier);
+    } else {
+      gate.classList.add('visible');
+      display.classList.remove('visible');
+    }
   } else {
+    gate.classList.remove('visible');
     display.classList.remove('visible');
   }
+}
+
+function revealPrice(weight, tier) {
+  weight = weight || parseFloat(document.getElementById('f-weight').value) || 0;
+  tier = tier || getTier(selectedMaterial, weight);
+  if (!tier || !weight) return;
+  const total = weight * tier.price;
+  document.getElementById('priceValue').textContent = '฿' + total.toLocaleString('th-TH');
+  document.getElementById('priceTierLabel').textContent =
+    '฿' + tier.price.toLocaleString('th-TH') + '/kg · ' + tier.label;
+  document.getElementById('priceDisplay').classList.add('visible');
+}
+
+async function submitEmailGate() {
+  const email = document.getElementById('gate-email').value.trim();
+  const errEl = document.getElementById('gate-error');
+  const btn = document.getElementById('gateBtnEl');
+  errEl.style.display = 'none';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = document.body.classList.contains('lang-en')
+      ? 'Please enter a valid email address.'
+      : 'กรุณาใส่อีเมลที่ถูกต้อง';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  gateEmailValue = email;
+
+  // Pre-fill contact form email
+  const emailField = document.getElementById('f-email');
+  if (emailField && !emailField.value) emailField.value = email;
+
+  // Save lead to Supabase (non-blocking)
+  const weight = parseFloat(document.getElementById('f-weight').value) || null;
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        email,
+        material: selectedMaterial || null,
+        weight_kg: weight,
+        status: 'email_captured'
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      leadId = data[0]?.id || null;
+    }
+  } catch(e) { /* non-critical */ }
+
+  emailGateSubmitted = true;
+  document.getElementById('emailGate').classList.remove('visible');
+  revealPrice();
 }
 
 async function submitOrder() {
@@ -687,6 +788,15 @@ async function submitOrder() {
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
       ref = (data[0]?.id || '').slice(0, 8).toUpperCase();
+    }
+
+    // Update lead to form_completed
+    if (leadId) {
+      fetch(SUPABASE_URL + '/rest/v1/leads?id=eq.' + leadId, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'form_completed' })
+      }).catch(() => {});
     }
 
     // Show success screen
