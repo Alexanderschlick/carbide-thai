@@ -654,10 +654,24 @@
   <!-- PRICES -->
   <div class="page" id="page-prices">
     <div class="page-header">
-      <h1 class="page-title">Preise <span>// Manuell anpassen</span></h1>
-      <button class="btn btn-primary" onclick="savePrices()">💾 Speichern</button>
+      <h1 class="page-title">Prices <span>// Live Control</span></h1>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span id="prices-status" style="font-size:12px;color:var(--muted);">Loading...</span>
+        <button class="btn btn-primary" onclick="savePrices()">💾 Save &amp; Publish</button>
+      </div>
     </div>
-    <div class="prices-grid" id="prices-body"></div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.6;">
+      <strong style="color:var(--accent);">How prices work:</strong><br>
+      <strong style="color:var(--text);">Teaser price</strong> = shown on homepage tiles ("Up to ฿X/kg") — set this to your best rate to attract sellers.<br>
+      <strong style="color:var(--text);">Checkout tiers</strong> = shown in checkout AFTER seller enters their LINE ID. Three tiers by weight: &lt;20kg / 20–50kg / &gt;50kg.
+    </div>
+
+    <div id="prices-body"></div>
+
+    <div style="margin-top:24px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--muted);">
+      💡 Changes publish instantly to the live site. The daily price scraper will overwrite tiers (but not teaser) at 07:00 BKK each day.
+    </div>
   </div>
 
 </main>
@@ -815,6 +829,7 @@ function showPage(name) {
       n.classList.add('active');
     }
   });
+  if (name === 'prices') loadPricesFromDB();
 }
 
 // DASHBOARD
@@ -945,23 +960,125 @@ function renderInventory() {
   el.innerHTML = `<div class="inventory-grid">${cards}</div>`;
 }
 
-// PRICES
-function renderPrices() {
-  const el = document.getElementById('prices-body');
-  el.innerHTML = Object.entries(prices).map(([mat, price]) => `
-    <div class="price-card">
-      <div class="price-label">${mat}</div>
-      <div class="price-input-wrap">
-        <input class="price-input" type="number" value="${price}" onchange="prices['${mat}'] = parseFloat(this.value)" />
-        <span class="price-unit">฿/kg</span>
-      </div>
-    </div>
-  `).join('');
+// PRICES — Supabase-backed live price control
+let liveDbPrices = {};
+
+const PRICE_LABELS = {
+  carbide_inserts: { en: 'Carbide Inserts', th: 'คาร์ไบด์อินเสิร์ท', icon: '🔶' },
+  carbide_drills:  { en: 'Carbide Drills & Endmills', th: 'ดอกสว่าน / เอ็นมิล VHM', icon: '🔩' },
+  mixed_carbide:   { en: 'Mixed Carbide', th: 'คาร์ไบด์ผสม', icon: '♻️' },
+  sand_rills:      { en: 'Sand Rills / Wear Parts', th: 'แซนด์ริล', icon: '⛏️' },
+};
+
+async function loadPricesFromDB() {
+  document.getElementById('prices-status').textContent = 'Loading...';
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/prices?select=*&order=key', {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    const rows = await res.json();
+    liveDbPrices = {};
+    rows.forEach(r => { liveDbPrices[r.key] = r; });
+    renderPrices();
+    const updated = rows[0]?.updated_at ? new Date(rows[0].updated_at).toLocaleString('en-GB') : '—';
+    document.getElementById('prices-status').textContent = 'Last saved: ' + updated;
+  } catch(e) {
+    document.getElementById('prices-status').textContent = 'Load failed';
+  }
 }
 
-function savePrices() {
-  localStorage.setItem('tc_prices', JSON.stringify(prices));
-  showToast('Preise gespeichert ✓');
+function renderPrices() {
+  const el = document.getElementById('prices-body');
+  const order = ['carbide_inserts', 'carbide_drills', 'mixed_carbide', 'sand_rills'];
+  el.innerHTML = order.map(key => {
+    const p = liveDbPrices[key] || {};
+    const label = PRICE_LABELS[key] || { en: key, th: '', icon: '📦' };
+    return `
+    <div class="price-card" style="margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+        <span style="font-size:20px;">${label.icon}</span>
+        <div>
+          <div style="font-weight:600;font-size:15px;color:var(--text);">${label.en}</div>
+          <div style="font-size:12px;color:var(--muted);">${label.th}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">🏠 HOMEPAGE<br>TEASER PRICE</div>
+          <div class="price-input-wrap">
+            <input class="price-input" type="number" id="p-${key}-teaser" value="${p.teaser_thb ?? ''}" placeholder="฿/kg" style="border-color:rgba(232,200,74,0.4);" />
+            <span class="price-unit">฿</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Shown on tiles<br>"Up to ฿X/kg"</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📦 TIER 1<br>&lt; 20 kg</div>
+          <div class="price-input-wrap">
+            <input class="price-input" type="number" id="p-${key}-under20" value="${p.tier_under20 ?? ''}" placeholder="฿/kg" />
+            <span class="price-unit">฿</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Checkout<br>small qty</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📦 TIER 2<br>20 – 50 kg</div>
+          <div class="price-input-wrap">
+            <input class="price-input" type="number" id="p-${key}-mid" value="${p.tier_mid ?? ''}" placeholder="฿/kg" />
+            <span class="price-unit">฿</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Checkout<br>medium qty</div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">🔥 TIER 3<br>&gt; 50 kg</div>
+          <div class="price-input-wrap">
+            <input class="price-input" type="number" id="p-${key}-over50" value="${p.tier_over50 ?? ''}" placeholder="฿/kg" />
+            <span class="price-unit">฿</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Checkout<br>bulk rate</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function savePrices() {
+  const btn = document.querySelector('#page-prices .btn-primary');
+  btn.disabled = true;
+  btn.textContent = '⏳ Saving...';
+  const order = ['carbide_inserts', 'carbide_drills', 'mixed_carbide', 'sand_rills'];
+  const rows = order.map(key => ({
+    key,
+    name_en: PRICE_LABELS[key]?.en,
+    name_th: PRICE_LABELS[key]?.th,
+    teaser_thb: parseFloat(document.getElementById('p-' + key + '-teaser')?.value) || null,
+    tier_under20: parseFloat(document.getElementById('p-' + key + '-under20')?.value) || null,
+    tier_mid: parseFloat(document.getElementById('p-' + key + '-mid')?.value) || null,
+    tier_over50: parseFloat(document.getElementById('p-' + key + '-over50')?.value) || null,
+    updated_at: new Date().toISOString()
+  }));
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/prices', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=representation'
+      },
+      body: JSON.stringify(rows)
+    });
+    if (res.ok) {
+      showToast('✅ Prices saved & published to site');
+      document.getElementById('prices-status').textContent = 'Last saved: ' + new Date().toLocaleString('en-GB');
+      rows.forEach(r => { liveDbPrices[r.key] = r; });
+    } else {
+      const err = await res.text();
+      showToast('❌ Save failed: ' + err);
+    }
+  } catch(e) {
+    showToast('❌ Error: ' + e.message);
+  }
+  btn.disabled = false;
+  btn.textContent = '💾 Save & Publish';
 }
 
 // MODAL

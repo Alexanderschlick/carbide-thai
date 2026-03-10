@@ -1553,12 +1553,36 @@ function applyTiers(key, tiers) {
 
 async function loadPrices() {
   try {
-    const res  = await fetch('prices.json?v=' + Date.now());
-    const data = await res.json();
-    if (!data.prices) throw new Error('no prices key');
+    // Try Supabase first for live admin-controlled prices
+    let P = null, TP = {}, data = null;
+    try {
+      const sbRes = await fetch('https://ltupwgytuayzopnsdvpc.supabase.co/rest/v1/prices?select=*', {
+        headers: { 'apikey': 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL', 'Authorization': 'Bearer sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL' }
+      });
+      if (sbRes.ok) {
+        const rows = await sbRes.json();
+        if (rows && rows.length) {
+          P = {};
+          rows.forEach(r => {
+            P[r.key] = {
+              thb_per_kg: r.tier_over50,
+              name_en: r.name_en,
+              name_th: r.name_th,
+              tiers: { under20: r.tier_under20, mid: r.tier_mid, over50: r.tier_over50 }
+            };
+            TP[r.key] = { thb_per_kg: r.teaser_thb, name_en: r.name_en, name_th: r.name_th };
+          });
+        }
+      }
+    } catch(sbErr) { /* fall through to prices.json */ }
 
-    const P  = data.prices;
-    const TP = data.teaser_prices || {};
+    if (!P) {
+      const res  = await fetch('prices.json?v=' + Date.now());
+      data = await res.json();
+      if (!data.prices) throw new Error('no prices key');
+      P  = data.prices;
+      TP = data.teaser_prices || {};
+    }
     // Teaser prices for display (fixed EUR base × live rate); fall back to tier max
     const ins = (TP.carbide_inserts?.thb_per_kg) ?? P.carbide_inserts?.thb_per_kg;
     const drl = (TP.carbide_drills?.thb_per_kg)  ?? P.carbide_drills?.thb_per_kg;
@@ -1573,7 +1597,7 @@ async function loadPrices() {
     const el_san = document.getElementById('price-sand_rills');      if (el_san) el_san.innerHTML = fmt(san);
 
     // Hero hook — show teaser_price (highest across all materials)
-    const teaser = data.teaser_price;
+    const teaser = data?.teaser_price ?? (ins != null ? Math.max(...[ins, drl, mix].filter(v => v != null)) : null);
     if (teaser) {
       const tp = Number(teaser).toLocaleString('th-TH');
       const hookTh   = document.getElementById('hook-price-th');
@@ -1594,7 +1618,7 @@ async function loadPrices() {
     const bs = document.getElementById('badge-sandrills'); if (bs) bs.textContent = b(san);
 
     // Ticker
-    const ud = data.updated_display || data.updated?.slice(0,10) || '';
+    const ud = data?.updated_display || data?.updated?.slice(0,10) || '';
     document.getElementById('ticker-inner').innerHTML =
       `<span class="th">ราคาวันนี้</span><span class="en">Today's Prices</span> ${ud} &nbsp;·&nbsp; ` +
       `<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ${fmt(ins)}/kg &nbsp;·&nbsp; ` +

@@ -652,17 +652,44 @@ function tiersFromPrices(p) {
 
 async function loadPricesIntoTiers() {
   try {
-    const res  = await fetch('/prices.json?v=' + Date.now());
-    const data = await res.json();
-    const P    = data.prices;
-    if (!P) return;
+    // Try Supabase first for live admin-controlled tier prices
+    let loaded = false;
+    try {
+      const sbRes = await fetch(SUPABASE_URL + '/rest/v1/prices?select=*', {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+      });
+      if (sbRes.ok) {
+        const rows = await sbRes.json();
+        if (rows && rows.length) {
+          rows.forEach(r => {
+            const tiers = [
+              { min: 1,  price: r.tier_under20, label: '< 20 kg' },
+              { min: 20, price: r.tier_mid,     label: '20–50 kg' },
+              { min: 50, price: r.tier_over50,  label: '> 50 kg 🔥' },
+            ].filter(t => t.price != null);
+            if (!tiers.length) return;
+            if (r.key === 'carbide_inserts') { PRICE_TIERS['Carbide Insert'] = tiers; PRICE_TIERS['Carbide Rod'] = tiers; }
+            if (r.key === 'carbide_drills')    PRICE_TIERS['Carbide Scrap'] = tiers;
+            if (r.key === 'mixed_carbide')   { PRICE_TIERS['Mixed Carbide'] = tiers; PRICE_TIERS['Carbide Powder'] = tiers; }
+          });
+          loaded = true;
+        }
+      }
+    } catch(sbErr) { /* fall through to prices.json */ }
 
-    const ins = tiersFromPrices(P.carbide_inserts);
-    const drl = tiersFromPrices(P.carbide_drills);
-    const mix = tiersFromPrices(P.mixed_carbide);
-    if (ins) { PRICE_TIERS['Carbide Insert'] = ins; PRICE_TIERS['Carbide Rod'] = ins; }
-    if (drl)   PRICE_TIERS['Carbide Scrap'] = drl;
-    if (mix) { PRICE_TIERS['Mixed Carbide'] = mix; PRICE_TIERS['Carbide Powder'] = mix; }
+    if (!loaded) {
+      const res  = await fetch('/prices.json?v=' + Date.now());
+      const data = await res.json();
+      const P    = data.prices;
+      if (!P) return;
+
+      const ins = tiersFromPrices(P.carbide_inserts);
+      const drl = tiersFromPrices(P.carbide_drills);
+      const mix = tiersFromPrices(P.mixed_carbide);
+      if (ins) { PRICE_TIERS['Carbide Insert'] = ins; PRICE_TIERS['Carbide Rod'] = ins; }
+      if (drl)   PRICE_TIERS['Carbide Scrap'] = drl;
+      if (mix) { PRICE_TIERS['Mixed Carbide'] = mix; PRICE_TIERS['Carbide Powder'] = mix; }
+    }
 
     // Prices hidden from cards — revealed only after LINE gate
   } catch(e) { /* keep static fallback */ }
