@@ -110,20 +110,40 @@ body.lang-en .th { display:none !important; }
 .mat-price { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:900; color:var(--gold); margin-top:8px; }
 .mat-price span { font-size:12px; font-weight:600; color:var(--muted); }
 
-/* EMAIL GATE */
-.email-gate { background:var(--surface); border:1px solid rgba(201,162,39,0.4); border-radius:6px; padding:24px; margin-bottom:16px; display:none; }
-.email-gate.visible { display:block; animation:fadeGate 0.28s ease; }
+/* LINE GATE */
+.line-gate { background:var(--surface); border:1px solid rgba(6,199,85,0.4); border-radius:6px; padding:24px; margin-bottom:16px; display:none; }
+.line-gate.visible { display:block; animation:fadeGate 0.28s ease; }
 @keyframes fadeGate { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
 .gate-header { font-size:17px; font-weight:700; color:var(--white); margin-bottom:4px; }
 .gate-sub { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
-.gate-input { width:100%; background:var(--sur2); border:1px solid rgba(201,162,39,0.25); color:var(--white); padding:13px 14px; border-radius:4px; font-size:15px; font-family:'Sarabun',sans-serif; outline:none; transition:border-color 0.2s; margin-bottom:10px; }
-.gate-input:focus { border-color:var(--gold); background:#0f2a1a; }
-.gate-btn { width:100%; background:var(--gold); color:#0b1f14; border:none; border-radius:4px; padding:14px; font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:900; cursor:pointer; letter-spacing:0.5px; transition:background 0.15s,transform 0.1s; }
-.gate-btn:hover { background:var(--gold-lt); transform:translateY(-1px); }
+.gate-input { width:100%; background:var(--sur2); border:1px solid rgba(6,199,85,0.25); color:var(--white); padding:13px 14px; border-radius:4px; font-size:15px; font-family:'Sarabun',sans-serif; outline:none; transition:border-color 0.2s; margin-bottom:10px; }
+.gate-input:focus { border-color:#06C755; background:#0f2a1a; }
+.gate-input::placeholder { color:var(--muted); opacity:0.5; }
+.gate-btn { width:100%; background:#06C755; color:#fff; border:none; border-radius:4px; padding:14px; font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:900; cursor:pointer; letter-spacing:0.5px; transition:background 0.15s,transform 0.1s; }
+.gate-btn:hover { background:#08e060; transform:translateY(-1px); }
 .gate-btn:active { transform:translateY(0); }
 .gate-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
 .gate-error { font-size:12px; color:#e05555; margin-top:4px; display:none; }
 .gate-trust { font-size:11px; color:#4a6454; text-align:center; margin-top:10px; }
+
+/* TIER REVEAL (shown after LINE gate) */
+.tier-reveal { background:rgba(201,162,39,0.05); border:1px solid rgba(201,162,39,0.18); border-radius:6px; padding:16px 20px; margin-bottom:10px; display:none; }
+.tier-reveal.visible { display:block; animation:fadeGate 0.3s ease; }
+.tier-reveal-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(201,162,39,0.08); }
+.tier-reveal-row:last-of-type { border-bottom:none; }
+.tier-reveal-row.total { padding-top:10px; }
+.tier-reveal-label { font-size:12px; color:var(--muted); }
+.tier-reveal-val { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; color:var(--white); }
+.tier-reveal-row.total .tier-reveal-val { font-size:20px; color:var(--gold); }
+.upsell-hint { font-size:12px; color:#4a9464; margin-top:10px; padding-top:10px; border-top:1px solid rgba(201,162,39,0.08); display:none; }
+
+/* OPTIONAL EMAIL (shown after price reveal) */
+.email-opt-section { display:none; margin-bottom:10px; }
+.email-opt-section.visible { display:block; animation:fadeGate 0.25s ease; }
+.email-opt-label { font-size:13px; color:var(--muted); display:block; margin-bottom:8px; }
+.email-opt-input { width:100%; background:var(--sur2); border:1px solid rgba(201,162,39,0.15); color:var(--white); padding:10px 14px; border-radius:4px; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; transition:border-color 0.2s; }
+.email-opt-input:focus { border-color:var(--gold); }
+.email-opt-input::placeholder { color:var(--muted); opacity:0.45; }
 
 /* PRICE DISPLAY */
 .price-display { background:var(--gold); color:#0b1f14; border-radius:6px; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; display:none; }
@@ -338,34 +358,62 @@ body.lang-en .th { display:none !important; }
         </div>
       </div>
 
-      <!-- EMAIL GATE — appears when material + weight are set, before price reveals -->
-      <div class="email-gate" id="emailGate">
-        <div class="gate-header">📧 <span class="th">เกือบถึงแล้ว!</span><span class="en">Almost there!</span></div>
+      <!-- LINE GATE — appears when material + weight are set, before price reveals -->
+      <div class="line-gate" id="lineGate">
+        <div class="gate-header">💚 <span class="th">เกือบถึงแล้ว!</span><span class="en">Almost there!</span></div>
         <div class="gate-sub">
-          <span class="th">ใส่อีเมลเพื่อดูราคาประเมินของคุณ</span>
-          <span class="en">Enter your email to see your estimated price</span>
+          <span class="th">ใส่ LINE ID เพื่อดูราคาของคุณ</span>
+          <span class="en">Enter your LINE ID to see your price</span>
         </div>
-        <input type="email" id="gate-email" class="gate-input"
-          placeholder="email@example.com"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();submitEmailGate();}">
+        <input type="text" id="gate-line" class="gate-input"
+          placeholder="@your-line-id"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();submitLineGate();}">
         <div class="gate-error" id="gate-error"></div>
-        <button class="gate-btn" id="gateBtnEl" onclick="submitEmailGate()">
+        <button class="gate-btn" id="gateBtnEl" onclick="submitLineGate()">
           <span class="th">ดูราคาเลย →</span>
           <span class="en">See My Price →</span>
         </button>
-        <p class="gate-trust">🔒 <span class="th">ไม่มี spam · ไม่ขายข้อมูล · ยกเลิกได้ทุกเวลา</span><span class="en">No spam · No data selling · Unsubscribe anytime</span></p>
+        <p class="gate-trust">🔒 <span class="th">ใช้เพื่อส่งผลการประเมินเท่านั้น · ไม่มี spam</span><span class="en">Only used to send your quote · No spam</span></p>
       </div>
 
       <!-- Dynamic price display -->
       <div class="price-display" id="priceDisplay">
         <div class="price-left">
-          <div class="price-label-text"><span class="th">ราคาประเมิน (สูงสุด)</span><span class="en">Estimated Amount (max)</span></div>
+          <div class="price-label-text"><span class="th">ราคาประเมิน</span><span class="en">Estimated Amount</span></div>
           <div class="price-tier-label" id="priceTierLabel"></div>
         </div>
         <div>
           <div class="price-value" id="priceValue">—</div>
           <div class="price-unit"><span class="th">ราคาจริงยืนยันหลังชั่งน้ำหนัก</span><span class="en">Final price confirmed after weighing</span></div>
         </div>
+      </div>
+
+      <!-- Tier breakdown (visible after LINE gate) -->
+      <div class="tier-reveal" id="tierReveal">
+        <div class="tier-reveal-row">
+          <span class="tier-reveal-label"><span class="th">น้ำหนักของคุณ</span><span class="en">Your weight</span></span>
+          <span class="tier-reveal-val" id="revealWeight">—</span>
+        </div>
+        <div class="tier-reveal-row">
+          <span class="tier-reveal-label"><span class="th">ราคา / กก.</span><span class="en">Rate / kg</span></span>
+          <span class="tier-reveal-val" id="revealRate">—</span>
+        </div>
+        <div class="tier-reveal-row total">
+          <span class="tier-reveal-label"><span class="th">ประมาณรวม</span><span class="en">Total estimate</span></span>
+          <span class="tier-reveal-val" id="revealTotal">—</span>
+        </div>
+        <div class="upsell-hint" id="upsellHint"></div>
+      </div>
+
+      <!-- Optional email after price reveal -->
+      <div class="email-opt-section" id="emailOptSection">
+        <span class="email-opt-label">
+          <span class="th">📧 ต้องการรับราคาทางอีเมลด้วยไหม? (ไม่บังคับ)</span>
+          <span class="en">📧 Want your price quote by email too? (optional)</span>
+        </span>
+        <input type="email" id="f-email-opt" class="email-opt-input"
+          placeholder="email@example.com"
+          onblur="saveOptionalEmail()">
       </div>
 
     </div>
@@ -399,8 +447,8 @@ body.lang-en .th { display:none !important; }
 
       <div class="form-field">
         <label>
-          <span class="th">อีเมล *</span>
-          <span class="en">Email *</span>
+          <span class="th">อีเมล <small style="font-weight:400;opacity:0.6">(ไม่บังคับ)</small></span>
+          <span class="en">Email <small style="font-weight:400;opacity:0.6">(optional)</small></span>
         </label>
         <input type="email" id="f-email"
           placeholder="your@email.com"
@@ -560,9 +608,9 @@ let selectedMaterial = '';
 let shippingMethod = '';
 let abandonedId = null;
 let trackingTimer = null;
-let emailGateSubmitted = false;
+let lineGateSubmitted = false;
 let leadId = null;
-let gateEmailValue = '';
+let lineIdValue = '';
 
 // Abandoned tracking
 function scheduleAbandoned() {
@@ -632,11 +680,11 @@ function selectShipping(method) {
 function updatePrice() {
   const weight = parseFloat(document.getElementById('f-weight').value) || 0;
   const tier = getTier(selectedMaterial, weight);
-  const gate = document.getElementById('emailGate');
+  const gate = document.getElementById('lineGate');
   const display = document.getElementById('priceDisplay');
 
   if (selectedMaterial && weight > 0 && tier) {
-    if (emailGateSubmitted) {
+    if (lineGateSubmitted) {
       gate.classList.remove('visible');
       revealPrice(weight, tier);
     } else {
@@ -654,35 +702,61 @@ function revealPrice(weight, tier) {
   tier = tier || getTier(selectedMaterial, weight);
   if (!tier || !weight) return;
   const total = weight * tier.price;
+  const isEn = document.body.classList.contains('lang-en');
+
   document.getElementById('priceValue').textContent = '฿' + total.toLocaleString('th-TH');
   document.getElementById('priceTierLabel').textContent =
     '฿' + tier.price.toLocaleString('th-TH') + '/kg · ' + tier.label;
   document.getElementById('priceDisplay').classList.add('visible');
+
+  // Tier breakdown
+  document.getElementById('revealWeight').textContent = weight + ' kg → ' + tier.label;
+  document.getElementById('revealRate').textContent = '฿' + tier.price.toLocaleString('th-TH') + '/kg';
+  document.getElementById('revealTotal').textContent = '฿' + total.toLocaleString('th-TH');
+
+  // Upsell: find next tier with better rate
+  const tiers = PRICE_TIERS[selectedMaterial] || [];
+  const nextTier = tiers.find(t => t.min > weight && t.price > tier.price);
+  const hintEl = document.getElementById('upsellHint');
+  if (nextTier && hintEl) {
+    const diff = nextTier.price - tier.price;
+    hintEl.textContent = isEn
+      ? `💡 Send ${nextTier.min}kg+ and earn ฿${diff.toLocaleString('th-TH')}/kg more`
+      : `💡 ส่ง ${nextTier.min}kg+ รับราคาดีขึ้น ฿${diff.toLocaleString('th-TH')}/kg`;
+    hintEl.style.display = 'block';
+  } else if (hintEl) {
+    hintEl.style.display = 'none';
+  }
+
+  document.getElementById('tierReveal').classList.add('visible');
+  document.getElementById('emailOptSection').classList.add('visible');
 }
 
-async function submitEmailGate() {
-  const email = document.getElementById('gate-email').value.trim();
+async function submitLineGate() {
+  const lineId = document.getElementById('gate-line').value.trim();
   const errEl = document.getElementById('gate-error');
   const btn = document.getElementById('gateBtnEl');
   errEl.style.display = 'none';
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!lineId || lineId.length < 2) {
     errEl.textContent = document.body.classList.contains('lang-en')
-      ? 'Please enter a valid email address.'
-      : 'กรุณาใส่อีเมลที่ถูกต้อง';
+      ? 'Please enter your LINE ID.'
+      : 'กรุณาใส่ LINE ID ของคุณ';
     errEl.style.display = 'block';
     return;
   }
 
   btn.disabled = true;
-  gateEmailValue = email;
+  lineIdValue = lineId;
 
-  // Pre-fill contact form email
-  const emailField = document.getElementById('f-email');
-  if (emailField && !emailField.value) emailField.value = email;
+  // Pre-fill phone field with LINE ID
+  const phoneField = document.getElementById('f-phone');
+  if (phoneField && !phoneField.value) phoneField.value = lineId;
 
   // Save lead to Supabase (non-blocking)
   const weight = parseFloat(document.getElementById('f-weight').value) || null;
+  const tier = getTier(selectedMaterial, weight);
+  const priceShown = (tier && weight) ? weight * tier.price : null;
   try {
     const res = await fetch(SUPABASE_URL + '/rest/v1/leads', {
       method: 'POST',
@@ -693,10 +767,11 @@ async function submitEmailGate() {
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
-        email,
-        material: selectedMaterial || null,
+        line_id: lineId,
+        material_type: selectedMaterial || null,
         weight_kg: weight,
-        status: 'email_captured'
+        price_shown: priceShown,
+        status: 'price_viewed'
       })
     });
     if (res.ok) {
@@ -705,9 +780,25 @@ async function submitEmailGate() {
     }
   } catch(e) { /* non-critical */ }
 
-  emailGateSubmitted = true;
-  document.getElementById('emailGate').classList.remove('visible');
+  lineGateSubmitted = true;
+  document.getElementById('lineGate').classList.remove('visible');
   revealPrice();
+}
+
+async function saveOptionalEmail() {
+  const email = document.getElementById('f-email-opt').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+  // Mirror into main form email field
+  const mainEmail = document.getElementById('f-email');
+  if (mainEmail && !mainEmail.value) mainEmail.value = email;
+  if (!leadId) return;
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/leads?id=eq.' + leadId, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+  } catch(e) {}
 }
 
 async function submitOrder() {
@@ -727,11 +818,8 @@ async function submitOrder() {
   if (!name) {
     return showError(lang === 'en' ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุล');
   }
-  if (!phone) {
+  if (!phone && !lineIdValue) {
     return showError(lang === 'en' ? 'Please enter your phone number or LINE ID.' : 'กรุณาใส่เบอร์โทรหรือ LINE ID');
-  }
-  if (!email) {
-    return showError(lang === 'en' ? 'Please enter your email address.' : 'กรุณาใส่อีเมล');
   }
   if (!shippingMethod) {
     return showError(lang === 'en' ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่ง');
@@ -759,10 +847,14 @@ async function submitOrder() {
   btn.querySelector('.en') && (btn.querySelector('.en').textContent = 'Submitting...');
 
   try {
+    const email = document.getElementById('f-email-opt').value.trim()
+                || document.getElementById('f-email').value.trim()
+                || null;
     const orderData = {
       name,
       email,
-      phone,
+      phone: phone || lineIdValue || null,
+      line_id: lineIdValue || null,
       material: selectedMaterial,
       weight_ordered: weight,
       price_per_kg: pricePerKg,
@@ -790,12 +882,15 @@ async function submitOrder() {
       ref = (data[0]?.id || '').slice(0, 8).toUpperCase();
     }
 
-    // Update lead to form_completed
+    // Update lead to form_completed + attach final email if provided
     if (leadId) {
+      const finalEmail = document.getElementById('f-email-opt').value.trim()
+                       || document.getElementById('f-email').value.trim()
+                       || null;
       fetch(SUPABASE_URL + '/rest/v1/leads?id=eq.' + leadId, {
         method: 'PATCH',
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'form_completed' })
+        body: JSON.stringify({ status: 'form_completed', ...(finalEmail && { email: finalEmail }) })
       }).catch(() => {});
     }
 
