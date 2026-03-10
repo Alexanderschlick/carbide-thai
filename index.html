@@ -1692,19 +1692,25 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 #chat-fab {
   position:fixed; bottom:28px; right:28px; z-index:1000;
   width:58px; height:58px; border-radius:50%;
-  background:#06C755; border:none; cursor:pointer;
-  box-shadow:0 4px 20px rgba(6,199,85,0.45);
+  background:#1a2e1a; border:2px solid #C9A84C; cursor:pointer;
+  box-shadow:0 4px 20px rgba(201,168,76,0.35);
   display:flex; align-items:center; justify-content:center;
   transition:transform 0.2s, box-shadow 0.2s;
+  overflow:hidden; padding:0;
 }
-#chat-fab:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(6,199,85,0.6); }
-#chat-fab svg { width:28px; height:28px; }
+#chat-fab:hover { transform:scale(1.08); box-shadow:0 0 0 4px rgba(201,168,76,0.25), 0 6px 28px rgba(201,168,76,0.5); }
+#chat-fab svg { width:58px; height:58px; display:block; }
 #chat-fab .chat-badge {
   position:absolute; top:-3px; right:-3px;
   background:#e74c3c; color:#fff; font-size:10px; font-weight:700;
   width:18px; height:18px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  border:2px solid var(--bg);
+  border:2px solid var(--bg); z-index:1;
+}
+.chat-online-dot {
+  position:absolute; bottom:3px; right:3px;
+  width:10px; height:10px; border-radius:50%;
+  background:#06C755; border:2px solid #0b1f14; z-index:1;
 }
 
 #chat-window {
@@ -1723,9 +1729,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
   flex-shrink:0;
 }
 .chat-header-avatar {
-  width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.2);
-  display:flex; align-items:center; justify-content:center; font-size:20px;
+  width:40px; height:40px; border-radius:50%; overflow:hidden;
+  border:1.5px solid #C9A84C; flex-shrink:0;
 }
+.chat-header-avatar svg { display:block; width:40px; height:40px; }
 .chat-header-info { flex:1; }
 .chat-header-name { font-weight:700; font-size:15px; color:#fff; line-height:1.2; }
 .chat-header-status { font-size:11px; color:rgba(255,255,255,0.8); }
@@ -1791,31 +1798,101 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 #chat-send:hover { background:#04a344; }
 #chat-send:disabled { background:#2a4a35; cursor:default; }
 
+/* LINE capture card in chat */
+.chat-line-card { background:rgba(6,199,85,0.08); border:1px solid rgba(6,199,85,0.38); border-radius:12px; padding:14px; align-self:stretch; }
+.clc-header { font-size:13px; font-weight:700; color:#f2ede4; margin-bottom:10px; line-height:1.5; }
+.clc-input { width:100%; background:#0b1f14; border:1px solid rgba(6,199,85,0.35); color:#f2ede4; padding:9px 12px; border-radius:8px; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; margin-bottom:8px; display:block; box-sizing:border-box; transition:border-color 0.2s; }
+.clc-input:focus { border-color:#06C755; }
+.clc-input::placeholder { color:#7a9480; opacity:0.7; }
+.clc-btn { width:100%; background:#06C755; color:#fff; border:none; border-radius:8px; padding:10px; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:900; cursor:pointer; letter-spacing:0.5px; transition:background 0.15s; }
+.clc-btn:hover { background:#08e060; }
+.clc-btn:disabled { opacity:0.6; cursor:not-allowed; }
+.clc-trust { font-size:11px; color:#4a6454; text-align:center; margin-top:8px; }
+
 @media (max-width:420px) {
   #chat-window { width:calc(100vw - 32px); right:16px; bottom:88px; }
   #chat-fab { bottom:20px; right:16px; }
 }
 </style>
 
-<!-- FAB button -->
-<button id="chat-fab" onclick="toggleChat()" aria-label="Chat with us">
-  <svg viewBox="0 0 40 40" fill="white"><path d="M20 2C10.06 2 2 9.16 2 18c0 7.97 6.55 14.62 15.3 15.82.6.13 1.41.4 1.61.91.19.47.12 1.2.06 1.67l-.26 1.55c-.08.47-.37 1.85 1.62.99 1.99-.84 10.74-6.33 14.66-10.84C37.46 24.9 38 21.56 38 18 38 9.16 29.94 2 20 2z"/></svg>
+<!-- FAB button — Nong avatar -->
+<button id="chat-fab" onclick="toggleChat()" aria-label="Chat with Nong">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56">
+    <defs><clipPath id="nong-c1"><circle cx="28" cy="28" r="27.5"/></clipPath></defs>
+    <circle cx="28" cy="28" r="28" fill="#1a2e1a"/>
+    <g clip-path="url(#nong-c1)">
+      <path d="M5 62 Q12 44 28 41 Q44 44 51 62Z" fill="#2a4a3a"/>
+      <rect x="23.5" y="36" width="9" height="10" fill="#cc8855"/>
+      <ellipse cx="28" cy="15" rx="13.5" ry="9" fill="#1c0f07"/>
+      <path d="M14.5 22 Q11 31 13.5 42 Q16.5 33 17 26Z" fill="#1c0f07"/>
+      <path d="M41.5 22 Q45 31 42.5 42 Q39.5 33 39 26Z" fill="#1c0f07"/>
+      <ellipse cx="28" cy="12" rx="7.5" ry="5.5" fill="#1c0f07"/>
+      <ellipse cx="28" cy="29" rx="12.5" ry="14" fill="#cc8855"/>
+      <ellipse cx="15.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
+      <ellipse cx="40.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
+      <circle cx="15.5" cy="33.5" r="2.2" fill="#C9A84C"/>
+      <path d="M16.5 22 Q28 11 39.5 22" stroke="#4a4866" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <rect x="12.5" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
+      <rect x="36" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
+      <path d="M13.5 30.5 Q9 37 11.5 42" stroke="#4a4866" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="11.5" cy="42" r="3" fill="#3d3b5c"/>
+      <path d="M22 24 Q24.5 22.3 27.5 23.7" stroke="#1c0f07" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      <path d="M28.5 23.7 Q31.5 22.3 34 24" stroke="#1c0f07" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      <ellipse cx="24" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
+      <ellipse cx="32" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
+      <circle cx="25" cy="27" r="1" fill="white" opacity="0.85"/>
+      <circle cx="33" cy="27" r="1" fill="white" opacity="0.85"/>
+      <path d="M27 31.5 Q28 33 29 31.5" stroke="#aa6633" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M23 36 Q28 40.5 33 36" stroke="#aa6633" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M23.5 36.3 Q28 41 32.5 36.3 Q28 42 23.5 36.3Z" fill="#d4866a" opacity="0.4"/>
+      <ellipse cx="20.5" cy="32" rx="3.5" ry="2" fill="#dd7755" opacity="0.28"/>
+      <ellipse cx="35.5" cy="32" rx="3.5" ry="2" fill="#dd7755" opacity="0.28"/>
+    </g>
+  </svg>
   <div class="chat-badge" id="chat-badge">1</div>
+  <div class="chat-online-dot"></div>
 </button>
 
 <!-- Chat window -->
 <div id="chat-window">
   <div class="chat-header">
-    <div class="chat-header-avatar">⚙️</div>
+    <div class="chat-header-avatar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="40" height="40">
+        <defs><clipPath id="nong-c2"><circle cx="28" cy="28" r="27.5"/></clipPath></defs>
+        <circle cx="28" cy="28" r="28" fill="#1a2e1a"/>
+        <g clip-path="url(#nong-c2)">
+          <path d="M5 62 Q12 44 28 41 Q44 44 51 62Z" fill="#2a4a3a"/>
+          <rect x="23.5" y="36" width="9" height="10" fill="#cc8855"/>
+          <ellipse cx="28" cy="15" rx="13.5" ry="9" fill="#1c0f07"/>
+          <path d="M14.5 22 Q11 31 13.5 42 Q16.5 33 17 26Z" fill="#1c0f07"/>
+          <path d="M41.5 22 Q45 31 42.5 42 Q39.5 33 39 26Z" fill="#1c0f07"/>
+          <ellipse cx="28" cy="12" rx="7.5" ry="5.5" fill="#1c0f07"/>
+          <ellipse cx="28" cy="29" rx="12.5" ry="14" fill="#cc8855"/>
+          <ellipse cx="15.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
+          <ellipse cx="40.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
+          <circle cx="15.5" cy="33.5" r="2.2" fill="#C9A84C"/>
+          <path d="M16.5 22 Q28 11 39.5 22" stroke="#4a4866" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <rect x="12.5" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
+          <rect x="36" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
+          <ellipse cx="24" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
+          <ellipse cx="32" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
+          <circle cx="25" cy="27" r="1" fill="white" opacity="0.85"/>
+          <circle cx="33" cy="27" r="1" fill="white" opacity="0.85"/>
+          <path d="M23 36 Q28 40.5 33 36" stroke="#aa6633" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
     <div class="chat-header-info">
-      <div class="chat-header-name">ThaiCarbide Assistant</div>
-      <div class="chat-header-status">🟢 ออนไลน์ · ตอบใน Thai</div>
+      <div class="chat-header-name">น้อง · Nong</div>
+      <div class="chat-header-status">🟢 ออนไลน์ · ThaiCarbide Sales</div>
     </div>
     <button class="chat-close" onclick="toggleChat()">✕</button>
   </div>
 
   <div id="chat-messages">
-    <div class="chat-msg bot">สวัสดีครับ! 👋 ผมคือผู้ช่วย ThaiCarbide พร้อมตอบทุกคำถามเกี่ยวกับการรับซื้อคาร์ไบด์ครับ มีอะไรให้ช่วยไหมครับ?</div>
+    <div class="chat-msg bot">สวัสดีครับ ผม Nong จาก ThaiCarbide 😊
+มีเศษคาร์ไบด์อยากขายไหมครับ? ราคาวันนี้ดีมากเลย
+Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are great!</div>
   </div>
 
   <div class="chat-suggestions" id="chat-suggestions">
@@ -1909,26 +1986,53 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
     return div;
   }
 
-  // ── CHANGE 1: LINE CTA button after 2nd user message ─────────────────────
+  // ── LINE capture card after 2nd user message ─────────────────────────────
   function maybeShowLineCTA() {
     if (lineCTAShown || userMsgCount < 2) return;
     lineCTAShown = true;
     const msgs = document.getElementById('chat-messages');
-    const a = document.createElement('a');
-    a.href = LINE_URL;
-    a.target = '_blank';
-    a.className = 'chat-line-cta';
-    a.textContent = isEn()
-      ? '💚 Contact via LINE @280uqpab'
-      : '💚 ติดต่อผ่าน LINE / Contact via LINE @280uqpab';
-    a.addEventListener('click', function() {
-      console.log('[Chat] LINE CTA clicked (after msg 2)');
-      fireLineConversion();
-    });
-    msgs.appendChild(a);
+    const en = isEn();
+    const card = document.createElement('div');
+    card.className = 'chat-line-card';
+    card.innerHTML =
+      '<div class="clc-header">💚 ' +
+        '<span>' + (en ? 'Get your quote &amp; updates via LINE' : 'รับราคาและติดตามผลทาง LINE<br>Get your quote &amp; updates via LINE') + '</span>' +
+      '</div>' +
+      '<input type="text" class="clc-input" placeholder="@your-line-id">' +
+      '<button class="clc-btn" onclick="submitChatLineId(this)">' + (en ? 'Save LINE ID' : 'บันทึก LINE ID / Save LINE ID') + '</button>' +
+      '<p class="clc-trust">🔒 ' + (en ? 'Only used to send your quote' : 'ใช้เพื่อส่งผลการประเมินเท่านั้น') + '</p>';
+    msgs.appendChild(card);
     msgs.scrollTop = msgs.scrollHeight;
-    console.log('[Chat] LINE CTA injected after message', userMsgCount);
   }
+
+  window.submitChatLineId = async function(btn) {
+    const card = btn.closest('.chat-line-card');
+    const input = card.querySelector('.clc-input');
+    const lineId = input.value.trim();
+    if (!lineId || lineId.length < 2) { input.focus(); return; }
+    btn.disabled = true;
+    input.disabled = true;
+    try {
+      await fetch(SUPABASE_URL + '/rest/v1/leads', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ line_id: lineId, source: 'chat', status: 'chat_lead' }),
+      });
+    } catch(e) { /* non-critical */ }
+    const confirm = document.createElement('div');
+    confirm.className = 'chat-msg bot';
+    confirm.textContent = isEn()
+      ? '✅ Saved! Our team will contact you via LINE soon 💚'
+      : '✅ บันทึกแล้วครับ! ทีมเราจะติดต่อทาง LINE เร็วๆ นี้ครับ 💚';
+    card.parentNode.replaceChild(confirm, card);
+    msgs.scrollTop = msgs.scrollHeight;
+    fireLineConversion();
+  };
 
   // ── CHANGE 2: Closing CTA appended to bot reply ───────────────────────────
   function appendBotReply(reply) {
