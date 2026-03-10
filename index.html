@@ -1809,9 +1809,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 .clc-btn:disabled { opacity:0.6; cursor:not-allowed; }
 .clc-trust { font-size:11px; color:#4a6454; text-align:center; margin-top:8px; }
 
+@media (max-width:768px) {
+  #chat-fab { bottom:68px; }
+  #chat-window { bottom:136px; }
+}
 @media (max-width:420px) {
-  #chat-window { width:calc(100vw - 32px); right:16px; bottom:88px; }
-  #chat-fab { bottom:20px; right:16px; }
+  #chat-window { width:calc(100vw - 32px); right:16px; }
+  #chat-fab { right:16px; }
 }
 </style>
 
