@@ -448,6 +448,15 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .what-price-badge { display:inline-flex; align-items:center; padding:5px 14px; background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.35); border-radius:20px; font-size:13px; font-weight:700; color:var(--gold-lt); }
 .what-note { text-align:center; margin-top:20px; font-size:11px; color:#3a5444; font-style:italic; }
 
+/* PRICE TIERS IN TILES */
+.tile-tiers { display:flex; gap:4px; margin-top:10px; padding-top:10px; border-top:1px solid rgba(201,162,39,0.12); }
+.tile-tier-item { flex:1; text-align:center; padding:6px 4px; border-radius:3px; background:rgba(255,255,255,0.03); }
+.tile-tier-item.best { background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.25); }
+.tier-range { display:block; font-size:9px; font-weight:700; letter-spacing:0.5px; color:var(--muted); text-transform:uppercase; margin-bottom:3px; }
+.tier-price { display:block; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:900; color:var(--white); }
+.tile-tier-item.best .tier-price { color:var(--gold); }
+.tile-last-updated { font-size:11px; color:#3a5444; text-align:center; margin-top:20px; font-style:italic; }
+
 /* PARTNER BARS */
 .partner-bar { padding:24px 40px; background:#070f0a; border-bottom:1px solid var(--border); text-align:center; }
 .partner-bar-alt { background:var(--surface); }
@@ -617,14 +626,14 @@ Carbide<span>Thai</span>
     </h1>
     <div class="hero-price-hook">
       <div class="hook-number-line">
-        <span class="hook-price-big th">2,493 ฿</span>
-        <span class="hook-price-big en">2,493 ฿</span>
+        <span class="hook-price-big th" id="hook-price-th">— ฿</span>
+        <span class="hook-price-big en" id="hook-price-en">— ฿</span>
         <span class="hook-price-unit th">/กก.</span>
         <span class="hook-price-unit en">/kg</span>
       </div>
       <p class="hook-text">
-        <span class="th">เศษคาร์ไบด์อินเสิร์ทของคุณ อาจมีมูลค่าสูงถึง 2,493 ฿/กก.</span>
-        <span class="en">Your used carbide inserts could be worth up to 2,493 THB/kg</span>
+        <span class="th" id="hook-text-th">เศษคาร์ไบด์ของคุณ อาจมีมูลค่าสูงถึง — ฿/กก.</span>
+        <span class="en" id="hook-text-en">Your carbide scrap could be worth up to — THB/kg</span>
       </p>
       <p class="hook-compare th">เทียบราคาโลหะอื่น: <strong>ทองแดง ~300 ฿/กก.</strong> · <strong>อะลูมิเนียม ~60 ฿/กก.</strong> — คาร์ไบด์มีค่ากว่ามาก</p>
       <p class="hook-compare en">vs other metals: <strong>Copper ~300 ฿/kg</strong> · <strong>Aluminium ~60 ฿/kg</strong> — carbide is worth far more</p>
@@ -758,7 +767,7 @@ Carbide<span>Thai</span>
         <span class="th">CNMG, TNMG, APMT, RCMT — ทุกเกรด ใหม่หรือเก่า</span>
         <span class="en">CNMG, TNMG, APMT, RCMT — all grades, new or worn</span>
       </p>
-      <span class="what-price-badge">สูงสุด ฿2,493/กก.</span>
+      <span class="what-price-badge" id="badge-inserts">สูงสุด ฿—/กก.</span>
     </div>
     <div class="what-card fade-in">
       <span class="what-icon">🔧</span>
@@ -768,7 +777,7 @@ Carbide<span>Thai</span>
         <span class="th">VHM Solid Carbide — สึกหรอหรือชำรุดก็รับ</span>
         <span class="en">VHM solid carbide — worn, broken, all conditions</span>
       </p>
-      <span class="what-price-badge">สูงสุด ฿2,493/กก.</span>
+      <span class="what-price-badge" id="badge-drills">สูงสุด ฿—/กก.</span>
     </div>
     <div class="what-card fade-in">
       <span class="what-icon">🧩</span>
@@ -778,7 +787,7 @@ Carbide<span>Thai</span>
         <span class="th">เศษผสม ชิ้นแตก ผงคาร์ไบด์ — รับทุกสภาพ</span>
         <span class="en">Mixed scrap, broken pieces, carbide powder — all accepted</span>
       </p>
-      <span class="what-price-badge">สูงสุด ฿1,413/กก.</span>
+      <span class="what-price-badge" id="badge-mixed">สูงสุด ฿—/กก.</span>
     </div>
     <div class="what-card fade-in">
       <span class="what-icon">⛏️</span>
@@ -788,7 +797,7 @@ Carbide<span>Thai</span>
         <span class="th">ชิ้นส่วนเหมืองแร่ อุปกรณ์สึกหรอคาร์ไบด์</span>
         <span class="en">Mining wear parts, carbide drilling components</span>
       </p>
-      <span class="what-price-badge">สูงสุด ฿520/กก.</span>
+      <span class="what-price-badge" id="badge-sandrills">สูงสุด ฿—/กก.</span>
     </div>
   </div>
   <p class="what-note">
@@ -819,7 +828,6 @@ Carbide<span>Thai</span>
       </div>
       <div class="tile-content">
         <span class="tile-badge">HIGHEST GRADE</span>
-<p style="font-size:14px;color:#c9a227;font-weight:700;margin-top:4px;">ราคาสูงสุดถึง 2,772 บาท/กก. (เทียบเท่า 72 ยูโร/กก.)</p>
         <span class="tile-name-th th">คาร์ไบด์อินเสิร์ท</span>
         <span class="tile-name-en">Carbide Inserts · Wendeplatten · CNMG / TNMG</span>
         <div class="tile-price-row">
@@ -829,6 +837,11 @@ Carbide<span>Thai</span>
             <span class="tile-unit"><span class="th">/ กก.</span><span class="en">/ kg</span></span>
           </div>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
+        </div>
+        <div class="tile-tiers" id="tiers-carbide_inserts">
+          <div class="tile-tier-item"><span class="tier-range">&lt;20 kg</span><span class="tier-price" id="tier-carbide_inserts-u20">—</span></div>
+          <div class="tile-tier-item"><span class="tier-range">20–50 kg</span><span class="tier-price" id="tier-carbide_inserts-mid">—</span></div>
+          <div class="tile-tier-item best"><span class="tier-range">&gt;50 kg</span><span class="tier-price" id="tier-carbide_inserts-over">—</span></div>
         </div>
       </div>
     </a>
@@ -855,6 +868,11 @@ Carbide<span>Thai</span>
           </div>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
         </div>
+        <div class="tile-tiers" id="tiers-carbide_drills">
+          <div class="tile-tier-item"><span class="tier-range">&lt;20 kg</span><span class="tier-price" id="tier-carbide_drills-u20">—</span></div>
+          <div class="tile-tier-item"><span class="tier-range">20–50 kg</span><span class="tier-price" id="tier-carbide_drills-mid">—</span></div>
+          <div class="tile-tier-item best"><span class="tier-range">&gt;50 kg</span><span class="tier-price" id="tier-carbide_drills-over">—</span></div>
+        </div>
       </div>
     </a>
 
@@ -878,6 +896,11 @@ Carbide<span>Thai</span>
             <span class="tile-unit"><span class="th">/ กก.</span><span class="en">/ kg</span></span>
           </div>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
+        </div>
+        <div class="tile-tiers" id="tiers-mixed_carbide">
+          <div class="tile-tier-item"><span class="tier-range">&lt;20 kg</span><span class="tier-price" id="tier-mixed_carbide-u20">—</span></div>
+          <div class="tile-tier-item"><span class="tier-range">20–50 kg</span><span class="tier-price" id="tier-mixed_carbide-mid">—</span></div>
+          <div class="tile-tier-item best"><span class="tier-range">&gt;50 kg</span><span class="tier-price" id="tier-mixed_carbide-over">—</span></div>
         </div>
       </div>
     </a>
@@ -904,10 +927,14 @@ Carbide<span>Thai</span>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
         </div>
       </div>
+
     </a>
 
   </div>
-  <p style="margin-top:20px;font-size:12px;color:var(--muted);text-align:center;">* ราคาโดยประมาณ ราคาจริงยืนยันหลังการตรวจสอบ · Estimated prices. Final price confirmed after physical inspection.</p>
+  <div class="tile-last-updated" id="tile-updated-note">
+    <span class="th">📡 กำลังโหลดราคา... · ราคาโดยประมาณ อัปเดตทุกวัน · ราคาจริงยืนยันหลังชั่งน้ำหนัก</span>
+    <span class="en">📡 Loading prices... · Estimated prices updated daily · Final price confirmed after weighing</span>
+  </div>
 </section>
 
 <!-- CUSTOMER INDUSTRIES -->
@@ -1427,42 +1454,101 @@ Carbide<span>Thai</span>
 </footer>
 
 <script>
-const FALLBACK = { carbide_inserts:2493, carbide_drills:2493, sand_rills:520, mixed_carbide:1413 };
+const FALLBACK = { carbide_inserts:1650, carbide_drills:1700, sand_rills:520, mixed_carbide:1550 };
+
+function fmt(n) { return n != null ? '฿' + Number(n).toLocaleString('th-TH') : '—'; }
+
+function applyTiers(key, tiers) {
+  if (!tiers) return;
+  const u20  = document.getElementById('tier-' + key + '-u20');
+  const mid  = document.getElementById('tier-' + key + '-mid');
+  const over = document.getElementById('tier-' + key + '-over');
+  if (u20)  u20.textContent  = tiers.under20 != null ? '฿' + tiers.under20.toLocaleString('th-TH') : '—';
+  if (mid)  mid.textContent  = tiers.mid     != null ? '฿' + tiers.mid.toLocaleString('th-TH')     : '—';
+  if (over) over.textContent = tiers.over50  != null ? '฿' + tiers.over50.toLocaleString('th-TH')  : '—';
+}
 
 async function loadPrices() {
   try {
-    const res = await fetch('prices.json?v=' + Date.now());
+    const res  = await fetch('prices.json?v=' + Date.now());
     const data = await res.json();
-    if (data.prices) {
-      for (const [key, val] of Object.entries(data.prices)) {
-        const el = document.getElementById('price-' + key);
-        if (el) el.innerHTML = '฿' + val.thb_per_kg.toLocaleString('th-TH');
-      }
-      const ins = data.prices.carbide_inserts?.thb_per_kg||'—';
-      const drl = data.prices.carbide_drills?.thb_per_kg||'—';
-      const mix = data.prices.mixed_carbide?.thb_per_kg||'—';
-      const san = data.prices.sand_rills?.thb_per_kg||'—';
-      document.getElementById('ticker-inner').innerHTML =
-        `📡 <span class="th">ราคาวันนี้</span><span class="en">Today's Prices</span> ${data.updated} &nbsp;·&nbsp; ` +
-        `<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿${ins}/kg &nbsp;·&nbsp; ` +
-        `<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿${drl}/kg &nbsp;·&nbsp; ` +
-        `<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿${mix}/kg &nbsp;·&nbsp; ` +
-        `<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿${san}/kg`;
-      document.getElementById('price-updated-note').innerHTML =
-        `<span class="th">📡 อัปเดตล่าสุด: ${data.updated} &nbsp;·&nbsp; ราคาโดยประมาณ</span><span class="en">📡 Last updated: ${data.updated} &nbsp;·&nbsp; Estimated prices</span>`;
+    if (!data.prices) throw new Error('no prices key');
+
+    const P = data.prices;
+    const ins = P.carbide_inserts?.thb_per_kg;
+    const drl = P.carbide_drills?.thb_per_kg;
+    const mix = P.mixed_carbide?.thb_per_kg;
+    const san = P.sand_rills?.thb_per_kg;
+    const saw = P.saw_blades?.thb_per_kg;
+
+    // Tile amounts (shows max / >50kg price)
+    for (const [key, val] of Object.entries(P)) {
+      const el = document.getElementById('price-' + key);
+      if (el && val.thb_per_kg) el.innerHTML = fmt(val.thb_per_kg);
     }
+
+    // Tier rows per tile
+    applyTiers('carbide_inserts', P.carbide_inserts?.tiers);
+    applyTiers('carbide_drills',  P.carbide_drills?.tiers);
+    applyTiers('mixed_carbide',   P.mixed_carbide?.tiers);
+    applyTiers('saw_blades',      P.saw_blades?.tiers);
+
+    // Hero hook — show teaser_price (highest across all materials)
+    const teaser = data.teaser_price;
+    if (teaser) {
+      const tp = Number(teaser).toLocaleString('th-TH');
+      const hookTh   = document.getElementById('hook-price-th');
+      const hookEn   = document.getElementById('hook-price-en');
+      const hookTxtTh = document.getElementById('hook-text-th');
+      const hookTxtEn = document.getElementById('hook-text-en');
+      if (hookTh)    hookTh.textContent    = tp + ' ฿';
+      if (hookEn)    hookEn.textContent    = tp + ' ฿';
+      if (hookTxtTh) hookTxtTh.textContent = 'เศษคาร์ไบด์ของคุณ อาจมีมูลค่าสูงถึง ' + tp + ' ฿/กก.';
+      if (hookTxtEn) hookTxtEn.textContent = 'Your carbide scrap could be worth up to ' + tp + ' THB/kg';
+    }
+
+    // What-we-buy badges
+    const b = (n) => n != null ? 'สูงสุด ฿' + Number(n).toLocaleString('th-TH') + '/กก.' : 'สูงสุด —';
+    const bi = document.getElementById('badge-inserts');   if (bi) bi.textContent = b(ins);
+    const bd = document.getElementById('badge-drills');    if (bd) bd.textContent = b(drl);
+    const bm = document.getElementById('badge-mixed');     if (bm) bm.textContent = b(mix);
+    const bs = document.getElementById('badge-sandrills'); if (bs) bs.textContent = b(san);
+
+    // Ticker
+    const ud = data.updated_display || data.updated?.slice(0,10) || '';
+    document.getElementById('ticker-inner').innerHTML =
+      `📡 <span class="th">ราคาวันนี้</span><span class="en">Today's Prices</span> ${ud} &nbsp;·&nbsp; ` +
+      `<span class="th">อินเสิร์ท: สูงสุด</span><span class="en">Inserts: up to</span> ${fmt(ins)}/kg &nbsp;·&nbsp; ` +
+      `<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ${fmt(drl)}/kg &nbsp;·&nbsp; ` +
+      `<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ${fmt(mix)}/kg &nbsp;·&nbsp; ` +
+      `<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ${fmt(san)}/kg`;
+
+    // Updated note
+    document.getElementById('price-updated-note').innerHTML =
+      `<span class="th">📡 อัปเดตล่าสุด: ${ud} &nbsp;·&nbsp; ราคาโดยประมาณ อัปเดตทุกวัน</span>` +
+      `<span class="en">📡 Last updated: ${ud} &nbsp;·&nbsp; Estimated prices, updated daily</span>`;
+
+    // Bottom tiles updated note
+    const tun = document.getElementById('tile-updated-note');
+    if (tun) tun.innerHTML =
+      `<span class="th">📡 อัปเดตล่าสุด: ${ud} &nbsp;·&nbsp; ราคาโดยประมาณ · ราคาจริงยืนยันหลังชั่งน้ำหนัก</span>` +
+      `<span class="en">📡 Last updated: ${ud} &nbsp;·&nbsp; Estimated prices · Final price confirmed after weighing</span>`;
+
   } catch(e) {
+    // Fallback: show static prices
     for (const [key, val] of Object.entries(FALLBACK)) {
       const el = document.getElementById('price-' + key);
-      if (el) el.innerHTML = '฿' + val.toLocaleString('th-TH');
+      if (el) el.innerHTML = fmt(val);
     }
     document.getElementById('ticker-inner').innerHTML =
       '📡 CarbideThai.com &nbsp;·&nbsp; ' +
-      '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿2,493/kg &nbsp;·&nbsp; ' +
-      '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿2,493/kg &nbsp;·&nbsp; ' +
-      '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿1,413/kg &nbsp;·&nbsp; ' +
+      '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿1,650/kg &nbsp;·&nbsp; ' +
+      '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿1,700/kg &nbsp;·&nbsp; ' +
+      '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿1,550/kg &nbsp;·&nbsp; ' +
       '<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿520/kg';
-    document.getElementById('price-updated-note').innerHTML = '<span class="th">ราคาโดยประมาณ · ติดต่อเราสำหรับราคาที่ถูกต้อง</span><span class="en">Estimated prices · Contact us for exact quote</span>';
+    document.getElementById('price-updated-note').innerHTML =
+      '<span class="th">ราคาโดยประมาณ · ติดต่อเราสำหรับราคาที่ถูกต้อง</span>' +
+      '<span class="en">Estimated prices · Contact us for exact quote</span>';
   }
 }
 

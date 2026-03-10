@@ -469,15 +469,50 @@ body.lang-en .th { display:none !important; }
 const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
 
-// Price tiers per material
-const PRICE_TIERS = {
-  'Carbide Insert':  [{min:1,price:2454,label:'standard'},{min:100,price:2463,label:'100kg+'},{min:350,price:2493,label:'350kg+ 🔥'}],
-  'Carbide Scrap':   [{min:1,price:2454,label:'standard'},{min:100,price:2463,label:'100kg+'},{min:350,price:2493,label:'350kg+ 🔥'}],
-  'Mixed Carbide':   [{min:1,price:1343,label:'standard'},{min:100,price:1376,label:'100kg+'},{min:350,price:1413,label:'350kg+ 🔥'}],
-  'Carbide Rod':     [{min:1,price:2454,label:'standard'}],
-  'Carbide Powder':  [{min:1,price:1343,label:'standard'}],
-  'Other':           [{min:1,price:1343,label:'standard'}],
+// Price tiers — loaded from prices.json, fallback to static values
+let PRICE_TIERS = {
+  'Carbide Insert': [{min:1,price:1550,label:'< 20 kg'},{min:20,price:1600,label:'20–50 kg'},{min:50,price:1650,label:'> 50 kg 🔥'}],
+  'Carbide Scrap':  [{min:1,price:1550,label:'< 20 kg'},{min:20,price:1700,label:'20–50 kg'},{min:50,price:1700,label:'> 50 kg 🔥'}],
+  'Mixed Carbide':  [{min:1,price:1500,label:'< 20 kg'},{min:20,price:1550,label:'20–50 kg'},{min:50,price:1550,label:'> 50 kg 🔥'}],
+  'Carbide Rod':    [{min:1,price:1550,label:'< 20 kg'},{min:20,price:1600,label:'20–50 kg'},{min:50,price:1650,label:'> 50 kg 🔥'}],
+  'Carbide Powder': [{min:1,price:1500,label:'< 20 kg'},{min:20,price:1550,label:'20–50 kg'},{min:50,price:1550,label:'> 50 kg 🔥'}],
+  'Other':          [{min:1,price:1500,label:'< 20 kg'}],
 };
+
+function tiersFromPrices(p) {
+  // Build tiers [{min, price, label}] from a prices.json material object
+  if (!p?.tiers) return null;
+  return [
+    { min: 1,  price: p.tiers.under20 ?? p.thb_per_kg, label: '< 20 kg' },
+    { min: 20, price: p.tiers.mid     ?? p.thb_per_kg, label: '20–50 kg' },
+    { min: 50, price: p.tiers.over50  ?? p.thb_per_kg, label: '> 50 kg 🔥' },
+  ].filter(t => t.price != null);
+}
+
+async function loadPricesIntoTiers() {
+  try {
+    const res  = await fetch('/prices.json?v=' + Date.now());
+    const data = await res.json();
+    const P    = data.prices;
+    if (!P) return;
+
+    const ins = tiersFromPrices(P.carbide_inserts);
+    const drl = tiersFromPrices(P.carbide_drills);
+    const mix = tiersFromPrices(P.mixed_carbide);
+    if (ins) { PRICE_TIERS['Carbide Insert'] = ins; PRICE_TIERS['Carbide Rod'] = ins; }
+    if (drl)   PRICE_TIERS['Carbide Scrap'] = drl;
+    if (mix) { PRICE_TIERS['Mixed Carbide'] = mix; PRICE_TIERS['Carbide Powder'] = mix; }
+
+    // Update mat-price display labels (under 20 kg = standard rate shown on card)
+    const showPrice = (id, tiers) => {
+      const el = document.getElementById(id);
+      if (el && tiers?.length) el.innerHTML = '฿' + tiers[0].price.toLocaleString('th-TH') + ' <span>/ kg</span>';
+    };
+    showPrice('price-insert', ins);
+    showPrice('price-scrap',  drl);
+    showPrice('price-mixed',  mix);
+  } catch(e) { /* keep static fallback */ }
+}
 
 function getTier(material, weight) {
   const tiers = PRICE_TIERS[material];
@@ -537,6 +572,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('lang-' + saved);
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === saved));
   applyLangForm(saved);
+  // Load live prices from prices.json
+  loadPricesIntoTiers();
 });
 
 function selectMaterial(material, el) {
