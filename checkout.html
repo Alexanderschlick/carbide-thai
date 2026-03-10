@@ -530,6 +530,91 @@ body.lang-en .th { display:none !important; }
 
     </div>
 
+    <!-- PAYMENT DETAILS -->
+    <div class="card">
+      <div class="card-title"><span class="th">ข้อมูลรับเงิน</span><span class="en"> · Payment Details</span></div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
+        <span class="th">เราโอนเงินให้ภายใน 48 ชม.หลังรับวัสดุ ผ่าน PromptPay หรือโอนธนาคาร</span>
+        <span class="en">We pay within 48hrs of receiving — via PromptPay or bank transfer.</span>
+      </p>
+
+      <div class="ship-grid">
+        <div class="ship-card" id="pay-promptpay" onclick="selectPayMethod('promptpay')">
+          <div class="ship-icon">📱</div>
+          <div class="ship-title">PromptPay</div>
+          <div class="ship-desc"><span class="th">เบอร์โทร หรือ เลขบัตรประชาชน</span><span class="en">Mobile or National ID</span></div>
+        </div>
+        <div class="ship-card" id="pay-bank" onclick="selectPayMethod('bank')">
+          <div class="ship-icon">🏦</div>
+          <div class="ship-title"><span class="th">โอนธนาคาร</span><span class="en">Bank Transfer</span></div>
+          <div class="ship-desc"><span class="th">เลขบัญชีธนาคาร</span><span class="en">Bank account number</span></div>
+        </div>
+      </div>
+
+      <div id="promptpay-block" style="display:none;margin-top:16px;">
+        <div class="form-field">
+          <label>
+            <span class="th">หมายเลข PromptPay *</span>
+            <span class="en">PromptPay ID *</span>
+          </label>
+          <input type="text" id="f-promptpay"
+            placeholder="เบอร์โทรศัพท์ หรือ เลขบัตรประชาชน"
+            data-ph-th="เบอร์โทรศัพท์ หรือ เลขบัตรประชาชน"
+            data-ph-en="Mobile number or National ID">
+        </div>
+        <div class="form-field">
+          <label>
+            <span class="th">ชื่อบัญชี *</span>
+            <span class="en">Account Name *</span>
+          </label>
+          <input type="text" id="f-pp-name"
+            placeholder="ชื่อ-นามสกุล ตามบัญชี"
+            data-ph-th="ชื่อ-นามสกุล ตามบัญชี"
+            data-ph-en="Full name as on account">
+        </div>
+      </div>
+
+      <div id="bank-block" style="display:none;margin-top:16px;">
+        <div class="form-field">
+          <label>
+            <span class="th">ธนาคาร *</span>
+            <span class="en">Bank *</span>
+          </label>
+          <select id="f-bank">
+            <option value="">— เลือกธนาคาร / Select bank —</option>
+            <option value="KBank">กสิกรไทย / KBank</option>
+            <option value="SCB">ไทยพาณิชย์ / SCB</option>
+            <option value="BBL">กรุงเทพ / Bangkok Bank</option>
+            <option value="KTB">กรุงไทย / Krungthai</option>
+            <option value="BAY">กรุงศรี / Krungsri (BAY)</option>
+            <option value="TTB">ทหารไทยธนชาต / TTB</option>
+            <option value="UOB">UOB Thailand</option>
+            <option value="Other">อื่นๆ / Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>
+            <span class="th">เลขบัญชี *</span>
+            <span class="en">Account Number *</span>
+          </label>
+          <input type="text" id="f-account-no"
+            placeholder="xxx-x-xxxxx-x"
+            data-ph-th="xxx-x-xxxxx-x"
+            data-ph-en="Account number">
+        </div>
+        <div class="form-field">
+          <label>
+            <span class="th">ชื่อบัญชี *</span>
+            <span class="en">Account Name *</span>
+          </label>
+          <input type="text" id="f-account-name"
+            placeholder="ชื่อ-นามสกุล ตามบัญชี"
+            data-ph-th="ชื่อ-นามสกุล ตามบัญชี"
+            data-ph-en="Full name as on account">
+        </div>
+      </div>
+    </div>
+
     <!-- SUBMIT -->
     <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
       <span class="th">ส่งข้อมูล → รับเงินใน 48 ชม.</span>
@@ -664,6 +749,16 @@ function selectMaterial(material, el) {
   el.classList.add('selected');
   updatePrice();
   scheduleAbandoned();
+}
+
+let payMethod = '';
+
+function selectPayMethod(method) {
+  payMethod = method;
+  document.getElementById('pay-promptpay').classList.toggle('selected', method === 'promptpay');
+  document.getElementById('pay-bank').classList.toggle('selected', method === 'bank');
+  document.getElementById('promptpay-block').style.display = method === 'promptpay' ? 'block' : 'none';
+  document.getElementById('bank-block').style.display = method === 'bank' ? 'block' : 'none';
 }
 
 function selectShipping(method) {
@@ -824,6 +919,18 @@ async function submitOrder() {
   if (shippingMethod === 'pickup' && !document.getElementById('f-address').value.trim()) {
     return showError(lang === 'en' ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่รับสินค้า');
   }
+  if (!payMethod) {
+    return showError(lang === 'en' ? 'Please select a payment method.' : 'กรุณาเลือกวิธีรับเงิน');
+  }
+  if (payMethod === 'promptpay') {
+    if (!document.getElementById('f-promptpay').value.trim()) return showError(lang === 'en' ? 'Please enter your PromptPay ID.' : 'กรุณาใส่หมายเลข PromptPay');
+    if (!document.getElementById('f-pp-name').value.trim()) return showError(lang === 'en' ? 'Please enter the account name.' : 'กรุณาใส่ชื่อบัญชี');
+  }
+  if (payMethod === 'bank') {
+    if (!document.getElementById('f-bank').value) return showError(lang === 'en' ? 'Please select your bank.' : 'กรุณาเลือกธนาคาร');
+    if (!document.getElementById('f-account-no').value.trim()) return showError(lang === 'en' ? 'Please enter your account number.' : 'กรุณาใส่เลขบัญชี');
+    if (!document.getElementById('f-account-name').value.trim()) return showError(lang === 'en' ? 'Please enter the account name.' : 'กรุณาใส่ชื่อบัญชี');
+  }
 
   const tier = getTier(selectedMaterial, weight);
   const pricePerKg = tier ? tier.price : null;
@@ -832,10 +939,18 @@ async function submitOrder() {
   const notes = document.getElementById('f-notes').value.trim();
   const address = document.getElementById('f-address').value.trim();
 
+  let paymentDetails = '';
+  if (payMethod === 'promptpay') {
+    paymentDetails = '📱 PromptPay: ' + document.getElementById('f-promptpay').value.trim() + ' · ' + document.getElementById('f-pp-name').value.trim();
+  } else if (payMethod === 'bank') {
+    paymentDetails = '🏦 ' + document.getElementById('f-bank').value + ' · ' + document.getElementById('f-account-no').value.trim() + ' · ' + document.getElementById('f-account-name').value.trim();
+  }
+
   const notesComposed = [
     notes,
     shippingMethod === 'pickup' ? '📍 PICKUP: ' + address : '📦 COURIER (Kerry/Flash)',
-    company ? '🏭 ' + company : ''
+    company ? '🏭 ' + company : '',
+    paymentDetails ? '💳 PAYMENT: ' + paymentDetails : ''
   ].filter(Boolean).join('\n');
 
   const btn = document.getElementById('submitBtn');
@@ -857,6 +972,7 @@ async function submitOrder() {
       price_per_kg: pricePerKg,
       total_amount: total,
       notes: notesComposed || null,
+      payment_details: paymentDetails || null,
       status: 'neu'
     };
 
