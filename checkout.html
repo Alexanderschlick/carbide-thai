@@ -201,8 +201,8 @@ body.lang-en .th { display:none !important; }
       <span class="en">Order Received</span>
     </div>
     <div class="success-msg">
-      <span class="th">ขอบคุณ! เราจะติดต่อกลับผ่าน LINE ภายใน 2 ชั่วโมง พร้อมราคายืนยัน</span>
-      <span class="en">Thank you! We'll contact you via LINE within 2 hours with your confirmed price.</span>
+      <span class="th">ขอบคุณ! เราจะติดต่อนัดรับหรือแนะนำวิธีจัดส่ง ราคาจริงยืนยันหลังชั่งน้ำหนัก จ่ายเงินภายใน 48 ชม.หลังรับวัสดุ</span>
+      <span class="en">Thank you! We'll contact you to arrange pickup or shipping. Final price confirmed after weighing. Payment within 48 hours of receiving.</span>
     </div>
     <div class="order-ref" id="orderRef">REF: —</div>
 
@@ -244,8 +244,8 @@ body.lang-en .th { display:none !important; }
         <span class="en">Get Your Price Now</span>
       </div>
       <div class="page-sub">
-        <span class="th">กรอกข้อมูลด้านล่าง เราจะยืนยันราคาผ่าน LINE ภายใน 2 ชั่วโมง</span>
-        <span class="en">Fill in your details below. We confirm your price via LINE within 2 hours.</span>
+        <span class="th">กรอกข้อมูลด้านล่าง — ดูราคาโดยประมาณทันที ราคาจริงยืนยันหลังชั่งน้ำหนัก</span>
+        <span class="en">Fill in your details below — see estimated price instantly. Final price confirmed after weighing.</span>
       </div>
     </div>
 
@@ -439,8 +439,8 @@ body.lang-en .th { display:none !important; }
             data-ph-en="Address, Sub-district, District, Province, Postal Code"></textarea>
         </div>
         <div class="note-box">
-          <span class="th">📍 เราจะติดต่อยืนยันวันและเวลาที่สะดวกภายใน 2 ชั่วโมง</span>
-          <span class="en">📍 We'll confirm a convenient pickup date and time within 2 hours.</span>
+          <span class="th">📍 เราจะติดต่อกลับเพื่อนัดวันและเวลาที่สะดวก</span>
+          <span class="en">📍 We'll contact you to arrange a convenient pickup date and time.</span>
         </div>
       </div>
 
@@ -456,8 +456,8 @@ body.lang-en .th { display:none !important; }
 
     <!-- SUBMIT -->
     <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
-      <span class="th">ส่งออเดอร์ → รับราคายืนยัน</span>
-      <span class="en">SUBMIT ORDER → GET CONFIRMED PRICE</span>
+      <span class="th">ส่งข้อมูล → รับเงินใน 48 ชม.</span>
+      <span class="en">SUBMIT DETAILS → GET PAID IN 48HRS</span>
     </button>
 
     <div class="error-banner" id="errorBanner"></div>
@@ -672,8 +672,8 @@ async function submitOrder() {
 
   } catch(e) {
     btn.disabled = false;
-    if (btn.querySelector('.th')) btn.querySelector('.th').textContent = 'ส่งออเดอร์ → รับราคายืนยัน';
-    if (btn.querySelector('.en')) btn.querySelector('.en').textContent = 'SUBMIT ORDER → GET CONFIRMED PRICE';
+    if (btn.querySelector('.th')) btn.querySelector('.th').textContent = 'ส่งข้อมูล → รับเงินใน 48 ชม.';
+    if (btn.querySelector('.en')) btn.querySelector('.en').textContent = 'SUBMIT DETAILS → GET PAID IN 48HRS';
     showError('Error: ' + e.message);
   }
 }
