@@ -951,6 +951,25 @@ loadPrices();
 .chat-msg.bot { background:#132e1d; color:#f2ede4; border-bottom-left-radius:4px; align-self:flex-start; }
 .chat-msg.user { background:#06C755; color:#fff; border-bottom-right-radius:4px; align-self:flex-end; }
 .chat-msg.typing { background:#132e1d; color:#7a9480; font-style:italic; align-self:flex-start; }
+.chat-line-cta {
+  display:flex; align-items:center; justify-content:center;
+  background:#06C755; color:#fff; text-decoration:none;
+  border-radius:10px; height:48px; font-size:14px; font-weight:700;
+  padding:0 16px; margin:4px 0; align-self:stretch; text-align:center;
+  transition:background 0.2s;
+}
+.chat-line-cta:hover { background:#04a344; }
+.chat-nudge {
+  background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.35);
+  border-radius:10px; padding:12px 14px; font-size:13px; color:#f2ede4;
+  align-self:stretch; line-height:1.5;
+}
+.chat-nudge a { display:flex; align-items:center; justify-content:center;
+  background:#06C755; color:#fff; text-decoration:none; border-radius:8px;
+  height:44px; font-weight:700; font-size:13px; margin-top:10px;
+  transition:background 0.2s;
+}
+.chat-nudge a:hover { background:#04a344; }
 
 .chat-suggestions {
   padding:0 16px 8px; display:flex; flex-wrap:wrap; gap:6px; flex-shrink:0;
@@ -1026,27 +1045,51 @@ loadPrices();
 
 <script>
 (function() {
-  const CHAT_PROXY    = 'https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/chat-proxy';
-  const SUPABASE_URL  = 'https://ltupwgytuayzopnsdvpc.supabase.co';
-  const SUPABASE_KEY  = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
+  const CHAT_PROXY   = 'https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/chat-proxy';
+  const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
+  const LINE_URL     = 'https://line.me/R/ti/p/@280uqpab';
+  const AW_ID        = 'AW-18001691387';
 
-  let chatOpen = false;
-  let chatHistory = []; // {role, content}
-  let sessionId = null;
+  let chatOpen    = false;
+  let chatHistory = [];
+  let sessionId   = null;
+  let userMsgCount = 0;       // counts user messages sent
+  let lineCTAShown = false;   // show LINE CTA only once
+  let idleTimer    = null;    // 30s idle nudge
 
+  // ── CTA text (rotates per bot reply) ──────────────────────────────────────
+  const CTA_TH = [
+    'สนใจขาย? กรอกแบบฟอร์มได้เลย → thaicarbide.com/checkout.html',
+    'พร้อมขายแล้วใช่ไหม? แค่กรอกฟอร์มนี้ → thaicarbide.com/checkout.html',
+    'รับราคาภายใน 2 ชั่วโมง → thaicarbide.com/checkout.html',
+  ];
+  const CTA_EN = [
+    'Ready to sell? Fill in our quick form → thaicarbide.com/checkout.html',
+    'Get a confirmed price in 2 hours → thaicarbide.com/checkout.html',
+    'Start here → thaicarbide.com/checkout.html',
+  ];
+  let ctaIndex = 0;
+
+  function isEn() { return document.body.classList.contains('lang-en'); }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
   window.toggleChat = function() {
     chatOpen = !chatOpen;
     document.getElementById('chat-window').classList.toggle('open', chatOpen);
     document.getElementById('chat-badge').style.display = 'none';
-    if (chatOpen) document.getElementById('chat-input').focus();
+    if (chatOpen) {
+      document.getElementById('chat-input').focus();
+      resetIdleTimer();
+    } else {
+      clearTimeout(idleTimer);
+    }
   };
 
   window.sendSuggestion = function(btn) {
     const text = btn.textContent;
     document.getElementById('chat-suggestions').style.display = 'none';
-    appendMessage('user', text);
-    chatHistory.push({role:'user', content:text});
-    callAI();
+    _sendMessage(text);
   };
 
   window.sendMessage = function() {
@@ -1055,10 +1098,16 @@ loadPrices();
     if (!text) return;
     input.value = '';
     document.getElementById('chat-suggestions').style.display = 'none';
+    _sendMessage(text);
+  };
+
+  function _sendMessage(text) {
     appendMessage('user', text);
     chatHistory.push({role:'user', content:text});
+    userMsgCount++;
+    resetIdleTimer();
     callAI();
-  };
+  }
 
   function appendMessage(role, text) {
     const msgs = document.getElementById('chat-messages');
@@ -1070,27 +1119,95 @@ loadPrices();
     return div;
   }
 
+  // ── CHANGE 1: LINE CTA button after 2nd user message ─────────────────────
+  function maybeShowLineCTA() {
+    if (lineCTAShown || userMsgCount < 2) return;
+    lineCTAShown = true;
+    const msgs = document.getElementById('chat-messages');
+    const a = document.createElement('a');
+    a.href = LINE_URL;
+    a.target = '_blank';
+    a.className = 'chat-line-cta';
+    a.textContent = isEn()
+      ? '💚 Contact via LINE @280uqpab'
+      : '💚 ติดต่อผ่าน LINE / Contact via LINE @280uqpab';
+    a.addEventListener('click', function() {
+      console.log('[Chat] LINE CTA clicked (after msg 2)');
+      fireLineConversion();
+    });
+    msgs.appendChild(a);
+    msgs.scrollTop = msgs.scrollHeight;
+    console.log('[Chat] LINE CTA injected after message', userMsgCount);
+  }
+
+  // ── CHANGE 2: Closing CTA appended to bot reply ───────────────────────────
+  function appendBotReply(reply) {
+    const ctaList = isEn() ? CTA_EN : CTA_TH;
+    const cta = ctaList[ctaIndex % ctaList.length];
+    ctaIndex++;
+    const fullText = reply + '\n\n' + cta;
+    appendMessage('bot', fullText);
+  }
+
+  // ── CHANGE 3: Idle nudge after 30s ───────────────────────────────────────
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(showIdleNudge, 30000);
+  }
+
+  function showIdleNudge() {
+    if (!chatOpen) return;
+    const msgs = document.getElementById('chat-messages');
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-nudge';
+    const msg = document.createElement('div');
+    msg.textContent = isEn()
+      ? "Still there? 💚 Reach us directly on LINE"
+      : "ยังอยู่ไหมคะ? 💚 ติดต่อเราผ่าน LINE ได้เลย";
+    const a = document.createElement('a');
+    a.href = LINE_URL;
+    a.target = '_blank';
+    a.textContent = isEn() ? '💚 LINE @280uqpab' : '💚 LINE @280uqpab';
+    a.addEventListener('click', function() {
+      console.log('[Chat] Idle nudge LINE button clicked');
+      fireLineConversion();
+    });
+    wrap.appendChild(msg);
+    wrap.appendChild(a);
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    console.log('[Chat] Idle nudge shown after 30s');
+  }
+
+  // ── CHANGE 5: LINE conversion tracking ───────────────────────────────────
+  function fireLineConversion() {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'conversion', { send_to: AW_ID + '/LINE_CLICK', value: 10, currency: 'THB' });
+      console.log('[ConvTracking] LINE click conversion fired — 10 THB');
+    }
+  }
+
+  // ── AI call ───────────────────────────────────────────────────────────────
   async function callAI() {
     const sendBtn = document.getElementById('chat-send');
     sendBtn.disabled = true;
-
     const typing = appendMessage('typing', 'กำลังพิมพ์...');
 
     try {
       const res = await fetch(CHAT_PROXY, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: chatHistory, lang: document.body.classList.contains('lang-en') ? 'en' : 'th' }),
+        body: JSON.stringify({ messages: chatHistory, lang: isEn() ? 'en' : 'th' }),
       });
-
       const data = await res.json();
       typing.remove();
 
       if (data.content?.[0]?.text) {
         const reply = data.content[0].text;
-        appendMessage('bot', reply);
+        appendBotReply(reply);                // CHANGE 2: adds closing CTA
         chatHistory.push({role:'assistant', content:reply});
         saveConversation();
+        maybeShowLineCTA();                   // CHANGE 1: LINE button after msg 2
       } else {
         const errDetail = data.error?.message || data.error || JSON.stringify(data);
         console.error('Chat proxy error:', errDetail);
@@ -1120,8 +1237,8 @@ loadPrices();
           },
           body: JSON.stringify({ status: 'chat', notes }),
         });
-        const data = await res.json();
-        if (data[0]?.id) sessionId = data[0].id;
+        const d = await res.json();
+        if (d[0]?.id) sessionId = d[0].id;
       } else {
         await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + sessionId, {
           method: 'PATCH',

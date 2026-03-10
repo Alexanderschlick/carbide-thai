@@ -657,6 +657,12 @@ async function submitOrder() {
     const ss = document.getElementById('successScreen');
     ss.style.display = 'block';
     document.getElementById('orderRef').textContent = 'REF: ' + (ref || '—');
+
+    // CHANGE 4: Google Ads conversion on successful order
+    console.log('[ConvTracking] Checkout order submitted — firing conversion 8 THB');
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'conversion', { send_to: 'AW-18001691387/FORM_SUBMIT', value: 8, currency: 'THB' });
+    }
     if (shippingMethod === 'send') {
       document.getElementById('shippingAddrBox').style.display = 'block';
     } else {
