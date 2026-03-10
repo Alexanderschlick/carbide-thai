@@ -936,11 +936,6 @@ Carbide<span>Thai</span>
           </div>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
         </div>
-        <div class="tile-tiers" id="tiers-carbide_inserts">
-          <div class="tile-tier-item"><span class="tier-range">&lt;20 kg</span><span class="tier-price" id="tier-carbide_inserts-u20">—</span></div>
-          <div class="tile-tier-item"><span class="tier-range">20–50 kg</span><span class="tier-price" id="tier-carbide_inserts-mid">—</span></div>
-          <div class="tile-tier-item best"><span class="tier-range">&gt;50 kg</span><span class="tier-price" id="tier-carbide_inserts-over">—</span></div>
-        </div>
       </div>
     </a>
 
@@ -966,11 +961,6 @@ Carbide<span>Thai</span>
           </div>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
         </div>
-        <div class="tile-tiers" id="tiers-carbide_drills">
-          <div class="tile-tier-item"><span class="tier-range">&lt;20 kg</span><span class="tier-price" id="tier-carbide_drills-u20">—</span></div>
-          <div class="tile-tier-item"><span class="tier-range">20–50 kg</span><span class="tier-price" id="tier-carbide_drills-mid">—</span></div>
-          <div class="tile-tier-item best"><span class="tier-range">&gt;50 kg</span><span class="tier-price" id="tier-carbide_drills-over">—</span></div>
-        </div>
       </div>
     </a>
 
@@ -994,11 +984,6 @@ Carbide<span>Thai</span>
             <span class="tile-unit"><span class="th">/ กก.</span><span class="en">/ kg</span></span>
           </div>
           <span class="tile-btn"><span class="th">ขาย →</span><span class="en">Sell →</span></span>
-        </div>
-        <div class="tile-tiers" id="tiers-mixed_carbide">
-          <div class="tile-tier-item"><span class="tier-range">&lt;20 kg</span><span class="tier-price" id="tier-mixed_carbide-u20">—</span></div>
-          <div class="tile-tier-item"><span class="tier-range">20–50 kg</span><span class="tier-price" id="tier-mixed_carbide-mid">—</span></div>
-          <div class="tile-tier-item best"><span class="tier-range">&gt;50 kg</span><span class="tier-price" id="tier-mixed_carbide-over">—</span></div>
         </div>
       </div>
     </a>
@@ -1552,7 +1537,7 @@ Carbide<span>Thai</span>
 </footer>
 
 <script>
-const FALLBACK = { carbide_inserts:1650, carbide_drills:1700, sand_rills:520, mixed_carbide:1550 };
+const FALLBACK = { carbide_inserts:2650, carbide_drills:2650, sand_rills:520, mixed_carbide:2600 };
 
 function fmt(n) { return n != null ? '฿' + Number(n).toLocaleString('th-TH') : '—'; }
 
@@ -1581,17 +1566,11 @@ async function loadPrices() {
     const saw = (TP.saw_blades?.thb_per_kg)       ?? P.saw_blades?.thb_per_kg;
     const san = P.sand_rills?.thb_per_kg;
 
-    // Tile amounts (shows max / >50kg price)
-    for (const [key, val] of Object.entries(P)) {
-      const el = document.getElementById('price-' + key);
-      if (el && val.thb_per_kg) el.innerHTML = fmt(val.thb_per_kg);
-    }
-
-    // Tier rows per tile
-    applyTiers('carbide_inserts', P.carbide_inserts?.tiers);
-    applyTiers('carbide_drills',  P.carbide_drills?.tiers);
-    applyTiers('mixed_carbide',   P.mixed_carbide?.tiers);
-    applyTiers('saw_blades',      P.saw_blades?.tiers);
+    // Tile amounts — show teaser prices (fixed EUR base × live rate, ~฿2,650)
+    const el_ins = document.getElementById('price-carbide_inserts'); if (el_ins) el_ins.innerHTML = fmt(ins);
+    const el_drl = document.getElementById('price-carbide_drills');  if (el_drl) el_drl.innerHTML = fmt(drl);
+    const el_mix = document.getElementById('price-mixed_carbide');   if (el_mix) el_mix.innerHTML = fmt(mix);
+    const el_san = document.getElementById('price-sand_rills');      if (el_san) el_san.innerHTML = fmt(san);
 
     // Hero hook — show teaser_price (highest across all materials)
     const teaser = data.teaser_price;
