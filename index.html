@@ -193,8 +193,8 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify
 @keyframes ticker-scroll { 0% { transform:translateX(105vw); } 100% { transform:translateX(-100%); } }
 
 /* LANG TOGGLE */
-.lang-toggle { display:flex; gap:3px; margin-left:10px; }
-.lang-btn { background:transparent; border:1px solid rgba(201,162,39,0.22); color:var(--muted); font-size:14px; padding:4px 8px; border-radius:3px; cursor:pointer; transition:border-color 0.2s,background 0.2s; line-height:1; font-family:inherit; }
+.lang-toggle { display:flex; gap:4px; margin-left:10px; flex-shrink:0; }
+.lang-btn { background:transparent; border:1px solid rgba(201,162,39,0.22); color:var(--muted); font-size:14px; padding:4px 8px; border-radius:3px; cursor:pointer; transition:border-color 0.2s,background 0.2s; line-height:1; font-family:inherit; min-width:36px; min-height:36px; display:flex; align-items:center; justify-content:center; }
 .lang-btn.active { border-color:var(--gold); background:rgba(201,162,39,0.15); color:var(--white); }
 .lang-btn:hover { border-color:var(--gold); }
 body { transition:opacity 0.12s ease; }
@@ -408,6 +408,8 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 @media (max-width:768px) {
   nav { padding:12px 16px; }
   .nav-links { display:none; }
+  .lang-toggle { margin-left:auto; gap:6px; }
+  .lang-btn { min-width:44px; min-height:44px; font-size:18px; }
   .hero { padding:70px 20px 60px; min-height:88vh; }
   .hero-cta { flex-direction:column; align-items:flex-start; }
   .hero-trust-badges { gap:6px; }
@@ -450,13 +452,11 @@ Carbide<span>Thai</span>
     <li><a href="#materials"><span class="th">ราคาวันนี้</span><span class="en">Prices</span><small>TODAY'S PRICES</small></a></li>
     <li><a href="#contact"><span class="th">ติดต่อ</span><span class="en">Contact</span><small>CONTACT</small></a></li>
     <li><a href="#contact" class="nav-cta"><span class="th">ขายเดี๋ยวนี้ →</span><span class="en">Sell Now →</span></a></li>
-    <li>
-      <div class="lang-toggle" role="group" aria-label="Language / ภาษา">
-        <button class="lang-btn active" data-lang="th" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
-        <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
-      </div>
-    </li>
   </ul>
+  <div class="lang-toggle" role="group" aria-label="Language / ภาษา">
+    <button class="lang-btn active" data-lang="th" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
+  </div>
 </nav>
 
 <!-- TICKER -->
