@@ -1075,7 +1075,7 @@ loadPrices();
       const res = await fetch(CHAT_PROXY, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: chatHistory }),
+        body: JSON.stringify({ messages: chatHistory, lang: document.body.classList.contains('lang-en') ? 'en' : 'th' }),
       });
 
       const data = await res.json();
