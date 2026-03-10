@@ -1715,15 +1715,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 <style>
 #chat-fab {
   position:fixed; bottom:28px; right:28px; z-index:1000;
-  width:58px; height:58px; border-radius:50%;
-  background:#1a2e1a; border:2px solid #C9A84C; cursor:pointer;
+  width:52px; height:52px; border-radius:50%;
+  background:#059669; border:2px solid #C9A84C; cursor:pointer;
   box-shadow:0 4px 20px rgba(201,168,76,0.35);
   display:flex; align-items:center; justify-content:center;
   transition:transform 0.2s, box-shadow 0.2s;
-  overflow:hidden; padding:0;
+  overflow:hidden; padding:0; flex-shrink:0;
 }
 #chat-fab:hover { transform:scale(1.08); box-shadow:0 0 0 4px rgba(201,168,76,0.25), 0 6px 28px rgba(201,168,76,0.5); }
-#chat-fab img { width:58px; height:58px; display:block; border-radius:50%; }
+#chat-fab img { width:100%; height:100%; display:block; border-radius:50%; object-fit:cover; }
 #chat-fab .chat-badge {
   position:absolute; top:-3px; right:-3px;
   background:#e74c3c; color:#fff; font-size:10px; font-weight:700;
@@ -1753,10 +1753,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
   flex-shrink:0;
 }
 .chat-header-avatar {
-  width:40px; height:40px; border-radius:50%; overflow:hidden;
-  border:1.5px solid #C9A84C; flex-shrink:0;
+  width:52px; height:52px; border-radius:50%; overflow:hidden;
+  border:2px solid #C9A84C; flex-shrink:0; background:#059669;
 }
-.chat-header-avatar svg { display:block; width:40px; height:40px; }
+.chat-header-avatar img { display:block; width:100%; height:100%; border-radius:50%; object-fit:cover; }
 .chat-header-info { flex:1; }
 .chat-header-name { font-weight:700; font-size:15px; color:#fff; line-height:1.2; }
 .chat-header-status { font-size:11px; color:rgba(255,255,255,0.8); }
@@ -1845,7 +1845,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 
 <!-- FAB button — Nong avatar -->
 <button id="chat-fab" onclick="toggleChat()" aria-label="Chat with Nong">
-  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NongTC&backgroundColor=1a2e1a&top=longHairStraight&hairColor=2c1b18&skinColor=ae5d29&eyes=happy&eyebrows=raisedExcited&mouth=smile&accessories=prescription02&accessoriesColor=C9A84C&clothe=blazerShirt&clotheColor=1a2e1a" width="56" height="56" alt="Nong" style="display:block;border-radius:50%;">
+  <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=NongThai&backgroundColor=059669&topType=LongHairStraight&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Happy&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Brown" alt="Nong" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
   <div class="chat-badge" id="chat-badge">1</div>
   <div class="chat-online-dot"></div>
 </button>
@@ -1854,7 +1854,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 <div id="chat-window">
   <div class="chat-header">
     <div class="chat-header-avatar">
-      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NongTC&backgroundColor=1a2e1a&top=longHairStraight&hairColor=2c1b18&skinColor=ae5d29&eyes=happy&eyebrows=raisedExcited&mouth=smile&accessories=prescription02&accessoriesColor=C9A84C&clothe=blazerShirt&clotheColor=1a2e1a" width="40" height="40" alt="Nong" style="display:block;width:40px;height:40px;border-radius:50%;">
+      <img src="https://api.dicebear.com/8.x/avataaars/svg?seed=NongThai&backgroundColor=059669&topType=LongHairStraight&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Happy&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Brown" alt="Nong" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
     </div>
     <div class="chat-header-info">
       <div class="chat-header-name">น้อง · Nong</div>
