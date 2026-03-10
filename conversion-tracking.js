@@ -1,13 +1,12 @@
 // ThaiCarbide — Google Ads Conversion Tracking
 // Google Ads ID: AW-18001691387
-// Update the labels below when you get them from Google Ads
 
 const AW_ID = 'AW-18001691387';
 
 const LABELS = {
-  LINE_CLICK:  'LINE_CLICK',   // replace with real label from Google Ads
-  FORM_SUBMIT: 'FORM_SUBMIT',  // replace with real label from Google Ads
-  PHONE_CLICK: 'PHONE_CLICK',  // replace with real label from Google Ads
+  LINE_CLICK:  '0P2DCJnA04UcEPuF8IdD',
+  FORM_SUBMIT: 'hrp0CKb63oUcEPuF8IdD',
+  PHONE_CLICK: '0P2DCJnA04UcEPuF8IdD', // using LINE_CLICK label as fallback
 };
 
 function fireConversion(label, value) {
