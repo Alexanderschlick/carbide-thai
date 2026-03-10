@@ -1699,7 +1699,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
   overflow:hidden; padding:0;
 }
 #chat-fab:hover { transform:scale(1.08); box-shadow:0 0 0 4px rgba(201,168,76,0.25), 0 6px 28px rgba(201,168,76,0.5); }
-#chat-fab svg { width:58px; height:58px; display:block; }
+#chat-fab img { width:58px; height:58px; display:block; border-radius:50%; }
 #chat-fab .chat-badge {
   position:absolute; top:-3px; right:-3px;
   background:#e74c3c; color:#fff; font-size:10px; font-weight:700;
@@ -1817,38 +1817,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 
 <!-- FAB button — Nong avatar -->
 <button id="chat-fab" onclick="toggleChat()" aria-label="Chat with Nong">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56">
-    <defs><clipPath id="nong-c1"><circle cx="28" cy="28" r="27.5"/></clipPath></defs>
-    <circle cx="28" cy="28" r="28" fill="#1a2e1a"/>
-    <g clip-path="url(#nong-c1)">
-      <path d="M5 62 Q12 44 28 41 Q44 44 51 62Z" fill="#2a4a3a"/>
-      <rect x="23.5" y="36" width="9" height="10" fill="#cc8855"/>
-      <ellipse cx="28" cy="15" rx="13.5" ry="9" fill="#1c0f07"/>
-      <path d="M14.5 22 Q11 31 13.5 42 Q16.5 33 17 26Z" fill="#1c0f07"/>
-      <path d="M41.5 22 Q45 31 42.5 42 Q39.5 33 39 26Z" fill="#1c0f07"/>
-      <ellipse cx="28" cy="12" rx="7.5" ry="5.5" fill="#1c0f07"/>
-      <ellipse cx="28" cy="29" rx="12.5" ry="14" fill="#cc8855"/>
-      <ellipse cx="15.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
-      <ellipse cx="40.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
-      <circle cx="15.5" cy="33.5" r="2.2" fill="#C9A84C"/>
-      <path d="M16.5 22 Q28 11 39.5 22" stroke="#4a4866" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <rect x="12.5" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
-      <rect x="36" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
-      <path d="M13.5 30.5 Q9 37 11.5 42" stroke="#4a4866" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <circle cx="11.5" cy="42" r="3" fill="#3d3b5c"/>
-      <path d="M22 24 Q24.5 22.3 27.5 23.7" stroke="#1c0f07" stroke-width="1.9" fill="none" stroke-linecap="round"/>
-      <path d="M28.5 23.7 Q31.5 22.3 34 24" stroke="#1c0f07" stroke-width="1.9" fill="none" stroke-linecap="round"/>
-      <ellipse cx="24" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
-      <ellipse cx="32" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
-      <circle cx="25" cy="27" r="1" fill="white" opacity="0.85"/>
-      <circle cx="33" cy="27" r="1" fill="white" opacity="0.85"/>
-      <path d="M27 31.5 Q28 33 29 31.5" stroke="#aa6633" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-      <path d="M23 36 Q28 40.5 33 36" stroke="#aa6633" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M23.5 36.3 Q28 41 32.5 36.3 Q28 42 23.5 36.3Z" fill="#d4866a" opacity="0.4"/>
-      <ellipse cx="20.5" cy="32" rx="3.5" ry="2" fill="#dd7755" opacity="0.28"/>
-      <ellipse cx="35.5" cy="32" rx="3.5" ry="2" fill="#dd7755" opacity="0.28"/>
-    </g>
-  </svg>
+  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NongTC&backgroundColor=1a2e1a&top=longHairStraight&hairColor=2c1b18&skinColor=ae5d29&eyes=happy&eyebrows=raisedExcited&mouth=smile&accessories=prescription02&accessoriesColor=C9A84C&clothe=blazerShirt&clotheColor=1a2e1a" width="56" height="56" alt="Nong" style="display:block;border-radius:50%;">
   <div class="chat-badge" id="chat-badge">1</div>
   <div class="chat-online-dot"></div>
 </button>
@@ -1857,30 +1826,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 <div id="chat-window">
   <div class="chat-header">
     <div class="chat-header-avatar">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="40" height="40">
-        <defs><clipPath id="nong-c2"><circle cx="28" cy="28" r="27.5"/></clipPath></defs>
-        <circle cx="28" cy="28" r="28" fill="#1a2e1a"/>
-        <g clip-path="url(#nong-c2)">
-          <path d="M5 62 Q12 44 28 41 Q44 44 51 62Z" fill="#2a4a3a"/>
-          <rect x="23.5" y="36" width="9" height="10" fill="#cc8855"/>
-          <ellipse cx="28" cy="15" rx="13.5" ry="9" fill="#1c0f07"/>
-          <path d="M14.5 22 Q11 31 13.5 42 Q16.5 33 17 26Z" fill="#1c0f07"/>
-          <path d="M41.5 22 Q45 31 42.5 42 Q39.5 33 39 26Z" fill="#1c0f07"/>
-          <ellipse cx="28" cy="12" rx="7.5" ry="5.5" fill="#1c0f07"/>
-          <ellipse cx="28" cy="29" rx="12.5" ry="14" fill="#cc8855"/>
-          <ellipse cx="15.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
-          <ellipse cx="40.5" cy="29.5" rx="2.5" ry="3" fill="#bb7744"/>
-          <circle cx="15.5" cy="33.5" r="2.2" fill="#C9A84C"/>
-          <path d="M16.5 22 Q28 11 39.5 22" stroke="#4a4866" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <rect x="12.5" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
-          <rect x="36" y="24" width="7.5" height="10" rx="3.7" fill="#3d3b5c"/>
-          <ellipse cx="24" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
-          <ellipse cx="32" cy="28" rx="3" ry="2.5" fill="#1c0f07"/>
-          <circle cx="25" cy="27" r="1" fill="white" opacity="0.85"/>
-          <circle cx="33" cy="27" r="1" fill="white" opacity="0.85"/>
-          <path d="M23 36 Q28 40.5 33 36" stroke="#aa6633" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </g>
-      </svg>
+      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NongTC&backgroundColor=1a2e1a&top=longHairStraight&hairColor=2c1b18&skinColor=ae5d29&eyes=happy&eyebrows=raisedExcited&mouth=smile&accessories=prescription02&accessoriesColor=C9A84C&clothe=blazerShirt&clotheColor=1a2e1a" width="40" height="40" alt="Nong" style="display:block;width:40px;height:40px;border-radius:50%;">
     </div>
     <div class="chat-header-info">
       <div class="chat-header-name">น้อง · Nong</div>

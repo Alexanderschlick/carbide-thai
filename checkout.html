@@ -107,8 +107,7 @@ body.lang-en .th { display:none !important; }
 .mat-card input[type=radio] { display:none; }
 .mat-name { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:800; color:var(--white); line-height:1.1; }
 .mat-name-en { font-size:11px; color:var(--muted); margin-top:2px; }
-.mat-price { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:900; color:var(--gold); margin-top:8px; }
-.mat-price span { font-size:12px; font-weight:600; color:var(--muted); }
+.mat-price { display:none; }
 
 /* LINE GATE */
 .line-gate { background:var(--surface); border:1px solid rgba(6,199,85,0.4); border-radius:6px; padding:24px; margin-bottom:16px; display:none; }
@@ -585,14 +584,7 @@ async function loadPricesIntoTiers() {
     if (drl)   PRICE_TIERS['Carbide Scrap'] = drl;
     if (mix) { PRICE_TIERS['Mixed Carbide'] = mix; PRICE_TIERS['Carbide Powder'] = mix; }
 
-    // Update mat-price display labels (under 20 kg = standard rate shown on card)
-    const showPrice = (id, tiers) => {
-      const el = document.getElementById(id);
-      if (el && tiers?.length) el.innerHTML = '฿' + tiers[0].price.toLocaleString('th-TH') + ' <span>/ kg</span>';
-    };
-    showPrice('price-insert', ins);
-    showPrice('price-scrap',  drl);
-    showPrice('price-mixed',  mix);
+    // Prices hidden from cards — revealed only after LINE gate
   } catch(e) { /* keep static fallback */ }
 }
 
