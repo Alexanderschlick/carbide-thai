@@ -404,6 +404,51 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .review-author-name { font-size:13px; font-weight:700; color:var(--white); display:block; }
 .review-author-company { font-size:11px; color:var(--muted); display:block; margin-top:2px; }
 
+/* PARTNER BARS */
+.partner-bar { padding:24px 40px; background:#070f0a; border-bottom:1px solid var(--border); text-align:center; }
+.partner-bar-alt { background:var(--surface); }
+.partner-bar-title { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#3a5444; margin-bottom:18px; }
+.partner-logos-row { display:flex; align-items:center; justify-content:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; gap:0; padding:0 4px; }
+.partner-logos-row::-webkit-scrollbar { display:none; }
+.psep { width:1px; height:32px; background:var(--border); flex-shrink:0; margin:0 2px; }
+.plogo { display:inline-flex; align-items:center; gap:9px; padding:10px 22px; border-radius:5px; font-weight:800; flex-shrink:0; min-height:52px; cursor:default; }
+.plogo-promptpay { background:linear-gradient(135deg,#5B2C8D 0%,#7B3FBE 100%); color:#fff; }
+.plogo-kbank     { background:#1BA526; color:#fff; }
+.plogo-scb       { background:#4A0E8F; color:#fff; }
+.plogo-bbl       { background:#003087; color:#fff; }
+.plogo-krungsri  { background:#FFD100; color:#1a1a1a; }
+.plogo-kerry     { background:#D92027; color:#fff; }
+.plogo-jt        { background:#CC0000; color:#fff; }
+.plogo-flash     { background:#FFD100; color:#111; }
+.plogo-thpost    { background:#B80C0C; color:#fff; }
+.plogo-circle { width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; flex-shrink:0; }
+.plogo-circle.dark { background:rgba(0,0,0,0.15); }
+.plogo-label-top  { font-size:9px; letter-spacing:2px; opacity:0.7; text-transform:uppercase; }
+.plogo-label-main { font-size:15px; font-weight:900; letter-spacing:0.5px; line-height:1.1; }
+.partner-note { font-size:13px; color:var(--muted); margin-top:18px; line-height:1.7; }
+.partner-note strong { color:var(--gold-lt); }
+
+/* BRANDS BAR */
+.brands-bar { padding:40px 40px; background:var(--bg); border-bottom:1px solid var(--border); text-align:center; }
+.brands-bar-sub { font-size:13px; color:var(--muted); margin-top:6px; margin-bottom:22px; }
+.brand-badges { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; max-width:840px; margin:0 auto; }
+.brand-badge { display:inline-flex; align-items:center; padding:7px 16px; border:1px solid rgba(201,162,39,0.35); border-radius:20px; font-size:12px; font-weight:700; color:var(--gold-lt); letter-spacing:1.5px; background:rgba(201,162,39,0.05); white-space:nowrap; transition:border-color 0.2s,background 0.2s; cursor:default; }
+.brand-badge:hover { border-color:var(--gold); background:rgba(201,162,39,0.12); }
+.brand-badge.more { color:#4a6454; border-color:rgba(74,100,84,0.35); background:transparent; font-style:italic; font-weight:400; letter-spacing:0; font-size:12px; }
+
+/* TRUST BADGES SECTION */
+.trust-badges-section { padding:56px 40px; background:#070f0a; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.trust-badges-section .section-label { text-align:center; margin-bottom:28px; }
+.trust-badges-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; max-width:960px; margin:0 auto; }
+.tbadge { display:flex; flex-direction:column; align-items:center; text-align:center; padding:22px 12px 18px; background:var(--surface); border:1px solid rgba(201,162,39,0.18); border-radius:4px; transition:border-color 0.25s,transform 0.2s; }
+.tbadge:hover { border-color:rgba(201,162,39,0.45); transform:translateY(-2px); }
+.tbadge-icon { font-size:28px; margin-bottom:10px; line-height:1; }
+.tbadge-icon-dbd { width:38px; height:38px; border-radius:6px; background:linear-gradient(135deg,#003087,#1a5fc8); display:flex; align-items:center; justify-content:center; color:#FFD700; font-size:12px; font-weight:900; margin-bottom:10px; letter-spacing:-0.5px; border:1px solid rgba(255,215,0,0.3); }
+.tbadge-icon-line { width:38px; height:38px; border-radius:9px; background:#06C755; display:flex; align-items:center; justify-content:center; color:#fff; font-size:19px; margin-bottom:10px; }
+.tbadge-title { font-size:13px; font-weight:700; color:var(--white); margin-bottom:3px; line-height:1.3; }
+.tbadge-sub { font-size:11px; color:var(--gold-lt); letter-spacing:0.2px; line-height:1.4; }
+.tbadge-reg { font-size:10px; color:#3a5444; margin-top:4px; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.5px; }
+
 /* MOBILE */
 @media (max-width:768px) {
   nav { padding:12px 16px; }
@@ -437,6 +482,15 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .customers-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
   .price-guarantee-banner { padding:12px 20px; }
   .btn-primary, .btn-line { min-height:48px; font-size:16px; padding:14px 28px; }
+  .partner-bar { padding:18px 16px; }
+  .plogo { padding:8px 14px; gap:7px; min-height:46px; }
+  .plogo-label-main { font-size:13px; }
+  .brands-bar { padding:28px 16px; }
+  .trust-badges-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
+  .trust-badges-section { padding:40px 16px; }
+}
+@media (max-width:480px) {
+  .trust-badges-grid { grid-template-columns:repeat(2,1fr); }
 }
 </style>
 </head>
@@ -500,6 +554,128 @@ Carbide<span>Thai</span>
     </div>
   </div>
 </section>
+
+<!-- PAYMENT METHODS BAR -->
+<div class="partner-bar fade-in">
+  <div class="partner-bar-title">
+    <span class="th">ชำระเงินผ่าน · Payment Methods</span>
+    <span class="en">Payment Methods · ชำระเงินผ่าน</span>
+  </div>
+  <div class="partner-logos-row">
+    <div class="plogo plogo-promptpay">
+      <div class="plogo-circle">⚡</div>
+      <div>
+        <div class="plogo-label-top">THAI</div>
+        <div class="plogo-label-main">PromptPay</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-kbank">
+      <div class="plogo-circle" style="font-size:15px;font-weight:900;">K</div>
+      <div>
+        <div class="plogo-label-top">KASIKORN</div>
+        <div class="plogo-label-main">BANK</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-scb">
+      <div class="plogo-circle" style="font-size:11px;font-weight:900;">SCB</div>
+      <div>
+        <div class="plogo-label-top">THE</div>
+        <div class="plogo-label-main">SCB</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-bbl">
+      <div class="plogo-circle" style="font-size:11px;font-weight:900;">BBL</div>
+      <div>
+        <div class="plogo-label-top">BANGKOK</div>
+        <div class="plogo-label-main">BANK</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-krungsri">
+      <div class="plogo-circle dark" style="font-size:11px;font-weight:900;color:#1a1a1a;">BAY</div>
+      <div>
+        <div class="plogo-label-top" style="color:#6a4400;">BANK OF</div>
+        <div class="plogo-label-main" style="color:#1a1a1a;">KRUNGSRI</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHIPPING PARTNERS BAR -->
+<div class="partner-bar partner-bar-alt fade-in">
+  <div class="partner-bar-title">
+    <span class="th">พาร์ทเนอร์จัดส่ง · Shipping Partners</span>
+    <span class="en">Shipping Partners · พาร์ทเนอร์จัดส่ง</span>
+  </div>
+  <div class="partner-logos-row">
+    <div class="plogo plogo-kerry">
+      <div class="plogo-circle" style="font-size:12px;font-weight:900;">K</div>
+      <div>
+        <div class="plogo-label-top">EXPRESS</div>
+        <div class="plogo-label-main">KERRY</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-jt">
+      <div class="plogo-circle" style="font-size:14px;font-weight:900;">J</div>
+      <div>
+        <div class="plogo-label-top">EXPRESS</div>
+        <div class="plogo-label-main">J&amp;T</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-flash">
+      <div class="plogo-circle dark" style="font-size:13px;color:#111;">⚡</div>
+      <div>
+        <div class="plogo-label-top" style="color:#555;">EXPRESS</div>
+        <div class="plogo-label-main" style="color:#111;">FLASH</div>
+      </div>
+    </div>
+    <div class="psep"></div>
+    <div class="plogo plogo-thpost">
+      <div class="plogo-circle" style="font-size:12px;font-weight:900;">TP</div>
+      <div>
+        <div class="plogo-label-top">THAILAND</div>
+        <div class="plogo-label-main">POST</div>
+      </div>
+    </div>
+  </div>
+  <p class="partner-note">
+    <span class="th">หรือ <strong>รับฟรีที่กรุงเทพฯ &amp; อีสเทิร์นซีบอร์ด</strong> สำหรับ 20 กก.ขึ้นไป</span>
+    <span class="en">Or <strong>free pickup Bangkok &amp; Eastern Seaboard</strong> for 20 kg+</span>
+  </p>
+</div>
+
+<!-- BRANDS WE BUY BAR -->
+<div class="brands-bar fade-in">
+  <div class="partner-bar-title">
+    <span class="th">ยี่ห้อที่เรารับซื้อ · Brands We Accept</span>
+    <span class="en">Brands We Accept · ยี่ห้อที่เรารับซื้อ</span>
+  </div>
+  <p class="brands-bar-sub">
+    <span class="th">รับซื้อทุกยี่ห้อ ทุกเกรด ทุกสภาพ</span>
+    <span class="en">All brands and grades accepted — new, worn, broken</span>
+  </p>
+  <div class="brand-badges">
+    <span class="brand-badge">SANDVIK</span>
+    <span class="brand-badge">BOEHLERIT</span>
+    <span class="brand-badge">KENNAMETAL</span>
+    <span class="brand-badge">SUMITOMO</span>
+    <span class="brand-badge">MITSUBISHI</span>
+    <span class="brand-badge">ISCAR</span>
+    <span class="brand-badge">SECO</span>
+    <span class="brand-badge">WALTER</span>
+    <span class="brand-badge">TUNGALOY</span>
+    <span class="brand-badge">KYOCERA</span>
+    <span class="brand-badge more">
+      <span class="th">+ และอื่นๆ อีกมาก</span>
+      <span class="en">+ and many more...</span>
+    </span>
+  </div>
+</div>
 
 <!-- TRUST -->
 <div class="trust-strip">
@@ -962,6 +1138,65 @@ Carbide<span>Thai</span>
         <span class="th">ขายคาร์ไบด์ของคุณ → กรอกแบบฟอร์มเลย</span>
         <span class="en">SELL YOUR CARBIDE → SUBMIT DETAILS</span>
       </a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BADGES SECTION -->
+<section class="trust-badges-section fade-in">
+  <div class="section-label">
+    <span class="th">ทำไมต้องเลือก ThaiCarbide</span>
+    <span class="en">Why Choose ThaiCarbide</span>
+  </div>
+  <div class="trust-badges-grid">
+    <!-- DBD Registered -->
+    <div class="tbadge">
+      <div class="tbadge-icon-dbd">DBD</div>
+      <div class="tbadge-title">
+        <span class="th">จดทะเบียนถูกต้อง</span>
+        <span class="en">DBD Registered</span>
+      </div>
+      <div class="tbadge-sub">
+        <span class="th">กรมพัฒนาธุรกิจการค้า</span>
+        <span class="en">Dept. of Business Dev.</span>
+      </div>
+      <div class="tbadge-reg">0105560103771</div>
+    </div>
+    <!-- SSL Secure -->
+    <div class="tbadge">
+      <div class="tbadge-icon">🔒</div>
+      <div class="tbadge-title">Secure Website</div>
+      <div class="tbadge-sub">SSL Encrypted</div>
+    </div>
+    <!-- LINE Official -->
+    <div class="tbadge">
+      <div class="tbadge-icon-line">💬</div>
+      <div class="tbadge-title">LINE Official</div>
+      <div class="tbadge-sub">@280uqpab</div>
+    </div>
+    <!-- Fast Payment -->
+    <div class="tbadge">
+      <div class="tbadge-icon">⚡</div>
+      <div class="tbadge-title">
+        <span class="th">จ่ายใน 48 ชม.</span>
+        <span class="en">Paid in 48hrs</span>
+      </div>
+      <div class="tbadge-sub">
+        <span class="th">หลังรับวัสดุ</span>
+        <span class="en">After receiving</span>
+      </div>
+    </div>
+    <!-- Free Pickup -->
+    <div class="tbadge">
+      <div class="tbadge-icon">🚚</div>
+      <div class="tbadge-title">
+        <span class="th">รับฟรี 20 กก.+</span>
+        <span class="en">Free Pickup 20kg+</span>
+      </div>
+      <div class="tbadge-sub">
+        <span class="th">กรุงเทพฯ &amp; อีสเทิร์นซีบอร์ด</span>
+        <span class="en">Bangkok &amp; E.Seaboard</span>
+      </div>
     </div>
   </div>
 </section>
