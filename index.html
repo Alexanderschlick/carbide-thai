@@ -436,6 +436,18 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .brand-badge:hover { border-color:var(--gold); background:rgba(201,162,39,0.12); }
 .brand-badge.more { color:#4a6454; border-color:rgba(74,100,84,0.35); background:transparent; font-style:italic; font-weight:400; letter-spacing:0; font-size:12px; }
 
+/* BRANDS SECTION (real logos) */
+.brands-section { padding:56px 40px; background:var(--bg); border-bottom:1px solid var(--border); text-align:center; }
+.brands-section .section-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.brands-section .section-sublabel { font-size:13px; color:#4a6454; margin-bottom:28px; }
+.brands-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; max-width:900px; margin:0 auto 20px; }
+.brand-logo-card { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:6px; padding:18px 14px; height:70px; border:1px solid transparent; transition:border-color 0.25s,box-shadow 0.25s; }
+.brand-logo-card:hover { border-color:rgba(201,162,39,0.5); box-shadow:0 0 0 3px rgba(201,162,39,0.1); }
+.brand-logo-card img { max-height:34px; max-width:110px; width:auto; height:auto; object-fit:contain; }
+.brand-text-badge { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:6px; padding:18px 14px; height:70px; border:1px solid transparent; transition:border-color 0.25s; font-size:12px; font-weight:800; letter-spacing:1.5px; color:#333; }
+.brand-text-badge:hover { border-color:rgba(201,162,39,0.5); }
+.brands-disclaimer { font-size:11px; color:#3a5444; font-style:italic; max-width:700px; margin:0 auto; line-height:1.7; }
+
 /* LOGO STRIPS (real logos) */
 .logo-strip-section { background:#f5f5f5; padding:28px 40px; border-top:1px solid #e0e0e0; border-bottom:1px solid #e0e0e0; text-align:center; }
 .logo-strip-section.alt { background:#fff; }
@@ -499,11 +511,16 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .logo-strip-section { padding:20px 16px; }
   .trust-logos-strip { gap:20px; }
   .trust-logos-strip img { height:32px; max-width:90px; }
+  .brands-section { padding:40px 16px; }
+  .brands-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
+  .brand-logo-card, .brand-text-badge { height:60px; padding:12px 10px; }
+  .brand-logo-card img { max-height:28px; max-width:90px; }
   .trust-badges-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
   .trust-badges-section { padding:40px 16px; }
 }
 @media (max-width:480px) {
   .trust-badges-grid { grid-template-columns:repeat(2,1fr); }
+  .brands-grid { grid-template-columns:repeat(2,1fr); }
 }
 </style>
 </head>
@@ -1086,32 +1103,51 @@ Carbide<span>Thai</span>
 </section>
 
 <!-- BRANDS WE ACCEPT -->
-<div class="brands-bar fade-in">
-  <div class="partner-bar-title">
-    <span class="th">ยี่ห้อที่เรารับซื้อ · Brands We Accept</span>
-    <span class="en">Brands We Accept · ยี่ห้อที่เรารับซื้อ</span>
-  </div>
-  <p class="brands-bar-sub">
-    <span class="th">รับซื้อทุกยี่ห้อ ทุกเกรด ทุกสภาพ</span>
-    <span class="en">All brands and grades accepted — new, worn, broken</span>
+<section class="brands-section fade-in">
+  <p class="section-label">
+    <span class="th">ยี่ห้อที่เรารับซื้อ · Brands We Accept As Scrap</span>
+    <span class="en">Brands We Accept As Scrap · ยี่ห้อที่เรารับซื้อ</span>
   </p>
-  <div class="brand-badges">
-    <span class="brand-badge">SANDVIK</span>
-    <span class="brand-badge">BOEHLERIT</span>
-    <span class="brand-badge">KENNAMETAL</span>
-    <span class="brand-badge">SUMITOMO</span>
-    <span class="brand-badge">MITSUBISHI</span>
-    <span class="brand-badge">ISCAR</span>
-    <span class="brand-badge">SECO</span>
-    <span class="brand-badge">WALTER</span>
-    <span class="brand-badge">TUNGALOY</span>
-    <span class="brand-badge">KYOCERA</span>
-    <span class="brand-badge more">
-      <span class="th">+ และอื่นๆ อีกมาก</span>
-      <span class="en">+ and many more...</span>
-    </span>
+  <p class="section-sublabel">
+    <span class="th">รับซื้อทุกยี่ห้อ ทุกเกรด — ราคาตามคุณภาพจริง</span>
+    <span class="en">All brands accepted — price based on actual grade</span>
+  </p>
+  <div class="brands-grid">
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/sandvik.svg" alt="Sandvik Coromant" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/kennametal.svg" alt="Kennametal" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/iscar.svg" alt="ISCAR" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/seco.svg" alt="Seco Tools" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/mitsubishi.svg" alt="Mitsubishi Materials" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/kyocera.svg" alt="Kyocera" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/walter.svg" alt="Walter Tools" loading="lazy">
+    </div>
+    <div class="brand-logo-card">
+      <img src="images/logos/brands/sumitomo.svg" alt="Sumitomo Electric" loading="lazy">
+    </div>
+    <div class="brand-text-badge" style="color:#c0392b;font-size:11px;">TUNGALOY</div>
+    <div class="brand-text-badge" style="color:#2c3e50;font-size:10px;">BOEHLERIT</div>
+    <div class="brand-logo-card" style="background:#f0f0f0;border:1px dashed #ccc;font-size:11px;color:#999;font-style:italic;">
+      + <span class="th">อื่นๆ อีกมาก</span><span class="en">many more</span>
+    </div>
   </div>
-</div>
+  <p class="brands-disclaimer">
+    <span class="th">* เราไม่ใช่ตัวแทนจำหน่ายของแบรนด์เหล่านี้ เราเป็นผู้รับซื้อเศษคาร์ไบด์เท่านั้น</span><br>
+    <span class="en">* We are not affiliated with these brands. We are a carbide scrap buyer only.</span>
+  </p>
+</section>
 
 <!-- PAYMENT LOGOS STRIP -->
 <div class="logo-strip-section fade-in">
