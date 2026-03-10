@@ -368,6 +368,16 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .footer-contact-info a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
 .footer-contact-info a:hover { color:var(--gold); }
 
+/* FOOTER LEGAL */
+.footer-legal { border-top:1px solid var(--border); padding-top:22px; margin-top:8px; margin-bottom:22px; }
+.footer-legal-inner { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:24px; }
+.footer-legal-text { font-size:11px; color:#3a5444; line-height:1.9; }
+.footer-legal-text strong { color:#4a6454; }
+.footer-payment { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.footer-payment-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#3a5444; white-space:nowrap; }
+.pay-badge { display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border:1px solid rgba(201,162,39,0.18); border-radius:3px; font-size:11px; color:#4a6454; font-weight:600; background:rgba(255,255,255,0.02); white-space:nowrap; }
+.pay-badge.promptpay { border-color:rgba(106,16,193,0.35); color:#9b5fe0; }
+
 /* MOBILE STICKY BAR */
 .mobile-cta-bar { display:none; position:fixed; bottom:0; left:0; right:0; z-index:200; height:56px; display:flex; animation:slideUp 0.4s ease; }
 .mobile-cta-line { flex:1; background:#06C755; display:flex; align-items:center; justify-content:center; gap:8px; color:#fff; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; text-decoration:none; border:none; cursor:pointer; }
@@ -418,6 +428,8 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   footer { padding:40px 20px 28px; }
   .footer-grid { grid-template-columns:1fr; gap:28px; }
   .footer-bottom { flex-direction:column; }
+  .footer-legal-inner { flex-direction:column; gap:16px; }
+  .footer-payment { gap:6px; }
   .form-row { grid-template-columns:1fr; }
   .customers-section { padding:44px 20px; }
   .customers-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
@@ -972,6 +984,29 @@ Carbide<span>Thai</span>
         <li><span class="check">✅</span><span class="th">บริการมาตั้งแต่ปี 2024</span><span class="en">Serving since 2024</span></li>
         <li><span class="check">✅</span><span class="th">รับซื้อทั่วประเทศไทย</span><span class="en">Nationwide service</span></li>
       </ul>
+    </div>
+  </div>
+  <!-- COMPANY LEGAL + PAYMENT METHODS -->
+  <div class="footer-legal">
+    <div class="footer-legal-inner">
+      <div class="footer-legal-text">
+        <span class="th">
+          <strong>เลขทะเบียนบริษัท:</strong> 0105560103771<br>
+          <strong>ที่อยู่:</strong> 725 ถ.สุขุมวิท แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพฯ 10110<br>
+          จดทะเบียนถูกต้องตามกฎหมายไทย ✅
+        </span>
+        <span class="en">
+          <strong>Company Registration:</strong> 0105560103771<br>
+          <strong>Address:</strong> 725 Sukhumvit Rd, Khlong Tan Nuea, Watthana, Bangkok 10110<br>
+          Legally registered in Thailand ✅
+        </span>
+      </div>
+      <div class="footer-payment">
+        <span class="footer-payment-label"><span class="th">ชำระโดย</span><span class="en">Pay via</span>:</span>
+        <div class="pay-badge promptpay">⚡ PromptPay</div>
+        <div class="pay-badge">🏦 <span class="th">โอนธนาคาร</span><span class="en">Bank Transfer</span></div>
+        <div class="pay-badge">กสิกรไทย · SCB · กรุงไทย · BBL</div>
+      </div>
     </div>
   </div>
   <div class="footer-bottom">
