@@ -160,7 +160,7 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:      #0b1f14;
@@ -331,6 +331,55 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 .fade-in { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease,transform 0.6s ease; }
 .fade-in.visible { opacity:1; transform:translateY(0); }
+@keyframes pulse-gold { 0%,100% { box-shadow:0 0 0 0 rgba(201,162,39,0.4); } 50% { box-shadow:0 0 0 8px rgba(201,162,39,0); } }
+@keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+@keyframes countUp { from { opacity:0; } to { opacity:1; } }
+
+/* HERO TRUST BADGES */
+.hero-trust-badges { display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; animation:fadeUp 0.6s 0.35s ease both; }
+.hero-trust-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(11,31,20,0.75); border:1px solid rgba(201,162,39,0.35); color:var(--white); font-size:12px; font-weight:600; padding:7px 12px; border-radius:2px; backdrop-filter:blur(4px); white-space:nowrap; }
+.hero-trust-badge .badge-icon { font-size:14px; }
+
+/* PRICE GUARANTEE BANNER */
+.price-guarantee-banner { background:linear-gradient(90deg,#1a3a0a,#0f2a1a,#1a3a0a); border-top:1px solid rgba(201,162,39,0.3); border-bottom:1px solid rgba(201,162,39,0.3); padding:14px 40px; text-align:center; }
+.price-guarantee-banner p { font-size:14px; color:var(--gold-lt); font-weight:700; letter-spacing:0.3px; }
+.price-guarantee-banner p .en { display:block; font-size:12px; color:var(--muted); margin-top:2px; font-weight:400; }
+
+/* CUSTOMER LOGOS / INDUSTRIES */
+.customers-section { padding:64px 40px; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.customers-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:28px; }
+.customers-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; max-width:900px; margin:0 auto; }
+.customer-card { display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px 10px; background:var(--bg); border:1px solid var(--border); border-radius:4px; transition:border-color 0.25s,transform 0.2s; }
+.customer-card:hover { border-color:rgba(201,162,39,0.5); transform:translateY(-3px); }
+.customer-card .cust-icon { font-size:26px; opacity:0.75; }
+.customer-card .cust-name { font-size:10px; color:var(--muted); text-align:center; line-height:1.3; font-weight:600; letter-spacing:0.3px; }
+.customers-sub { text-align:center; margin-top:22px; font-size:13px; color:var(--muted); }
+.customers-sub strong { color:var(--gold); }
+
+/* STEP PAYMENT LABEL */
+.step-payment { display:inline-flex; align-items:center; gap:6px; background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.25); color:#06C755; font-size:11px; font-weight:700; padding:4px 10px; border-radius:2px; margin-top:10px; letter-spacing:0.3px; }
+
+/* FOOTER UPGRADE */
+.footer-trust-list { list-style:none; margin-top:12px; }
+.footer-trust-list li { font-size:13px; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.footer-trust-list li .check { color:#06C755; font-size:14px; flex-shrink:0; }
+.footer-contact-info { margin-top:16px; }
+.footer-contact-info p { font-size:13px; color:var(--muted); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.footer-contact-info a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.footer-contact-info a:hover { color:var(--gold); }
+
+/* MOBILE STICKY BAR */
+.mobile-cta-bar { display:none; position:fixed; bottom:0; left:0; right:0; z-index:200; height:56px; display:flex; animation:slideUp 0.4s ease; }
+.mobile-cta-line { flex:1; background:#06C755; display:flex; align-items:center; justify-content:center; gap:8px; color:#fff; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; text-decoration:none; border:none; cursor:pointer; }
+.mobile-cta-sell { flex:1; background:var(--gold); display:flex; align-items:center; justify-content:center; color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:900; letter-spacing:1px; text-decoration:none; text-transform:uppercase; animation:pulse-gold 2.5s infinite; }
+.mobile-cta-sell:hover { background:var(--gold-lt); }
+@media (max-width:768px) {
+  .mobile-cta-bar { display:flex; }
+  body { padding-bottom:56px; }
+}
+@media (min-width:769px) {
+  .mobile-cta-bar { display:none; }
+}
 
 /* REVIEWS */
 .reviews-section { padding:90px 40px; background:var(--bg); }
@@ -351,6 +400,8 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .nav-links { display:none; }
   .hero { padding:70px 20px 60px; min-height:88vh; }
   .hero-cta { flex-direction:column; align-items:flex-start; }
+  .hero-trust-badges { gap:6px; }
+  .hero-trust-badge { font-size:11px; padding:6px 10px; }
   .trust-strip { flex-direction:column; }
   .trust-item { border-right:none; border-bottom:1px solid var(--border); min-width:unset; padding:16px 20px; }
   .trust-item:last-child { border-bottom:none; }
@@ -368,6 +419,10 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .footer-grid { grid-template-columns:1fr; gap:28px; }
   .footer-bottom { flex-direction:column; }
   .form-row { grid-template-columns:1fr; }
+  .customers-section { padding:44px 20px; }
+  .customers-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
+  .price-guarantee-banner { padding:12px 20px; }
+  .btn-primary, .btn-line { min-height:48px; font-size:16px; padding:14px 28px; }
 }
 </style>
 </head>
@@ -400,6 +455,7 @@ Carbide<span>Thai</span>
   <div class="hero-photo">
     <img src="https://images.pexels.com/photos/28806603/pexels-photo-28806603.jpeg?auto=compress&cs=tinysrgb&w=1600"
          alt="โรงงานอุตสาหกรรม รับซื้อเศษคาร์ไบด์ทั่วประเทศไทย | Industrial carbide scrap buyer Thailand"
+         loading="eager"
          onerror="this.parentElement.style.background='linear-gradient(135deg,#0b2d18,#0b1f14)'">
   </div>
   <div class="hero-overlay"></div>
@@ -415,7 +471,7 @@ Carbide<span>Thai</span>
       <span class="en">Estimated daily prices · Paid within 48 hours of receiving material · Free pickup Bangkok & Eastern Seaboard</span>
     </div>
     <div class="hero-cta">
-      <a class="btn-primary" href="/checkout.html">
+      <a class="btn-primary" href="/checkout.html" style="animation:pulse-gold 2.8s infinite;">
         <span class="th">ขายเลย →</span>
         <span class="en">Sell Now →</span>
       </a>
@@ -423,6 +479,12 @@ Carbide<span>Thai</span>
         <svg width="18" height="18" viewBox="0 0 40 40" fill="white"><path d="M20 2C10.06 2 2 9.16 2 18c0 7.97 6.55 14.62 15.3 15.82.6.13 1.41.4 1.61.91.19.47.12 1.2.06 1.67l-.26 1.55c-.08.47-.37 1.85 1.62.99 1.99-.84 10.74-6.33 14.66-10.84C37.46 24.9 38 21.56 38 18 38 9.16 29.94 2 20 2z"/></svg>
         LINE
       </a>
+    </div>
+    <div class="hero-trust-badges">
+      <span class="hero-trust-badge"><span class="badge-icon">🏭</span><span class="th">บริษัทจดทะเบียนในไทย</span><span class="en">Thai Registered Co.</span></span>
+      <span class="hero-trust-badge"><span class="badge-icon">✅</span><span class="th">จ่ายครบ 100%</span><span class="en">Full Payment Guaranteed</span></span>
+      <span class="hero-trust-badge"><span class="badge-icon">⚡</span><span class="th">รับเงินภายใน 48 ชม.</span><span class="en">Paid in 48hrs</span></span>
+      <span class="hero-trust-badge"><span class="badge-icon">🚚</span><span class="th">รับฟรีกรุงเทพฯ</span><span class="en">Free Pickup BKK</span></span>
     </div>
   </div>
 </section>
@@ -452,6 +514,14 @@ Carbide<span>Thai</span>
   </div>
 </div>
 
+<!-- PRICE GUARANTEE BANNER -->
+<div class="price-guarantee-banner">
+  <p>
+    <span class="th">💯 รับประกันราคาสูงสุด — หากที่อื่นให้ราคาสูงกว่า เราจะจ่ายให้สูงกว่านั้น</span>
+    <span class="en">Best Price Guaranteed — if you find a higher price elsewhere, we'll beat it</span>
+  </p>
+</div>
+
 <!-- MATERIAL TILES -->
 <section class="materials-section" id="materials">
   <div class="section-label"><span class="th">ราคาโดยประมาณวันนี้ · </span>Estimated Buy Prices · Updated Daily</div>
@@ -465,9 +535,9 @@ Carbide<span>Thai</span>
     <a class="tile fade-in" href="#contact">
       <div class="tile-carousel" data-interval="3200">
         <img class="slide active" src="img/ins_4.jpg" alt="กองคาร์ไบด์อินเสิร์ทสีทอง รับซื้อราคาสูง | Pile of gold carbide inserts wendeschneidplatten scrap Thailand">
-        <img class="slide" src="img/ins_3.jpg" alt="คาร์ไบด์อินเสิร์ทสามเหลี่ยม CNMG TNMG รับซื้อ | Triangular carbide inserts CNMG TNMG scrap buyer Thailand">
-        <img class="slide" src="img/ins_2.jpg" alt="เศษคาร์ไบด์อินเสิร์ทผสม ขายได้ราคาดี | Mixed carbide inserts scrap sell Thailand best price">
-        <img class="slide" src="img/ins_5.jpg" alt="คาร์ไบด์อินเสิร์ทใช้แล้ว รับซื้อทุกสภาพ | Used worn carbide inserts scrap buyer Thailand">
+        <img class="slide" loading="lazy" src="img/ins_3.jpg" alt="คาร์ไบด์อินเสิร์ทสามเหลี่ยม CNMG TNMG รับซื้อ | Triangular carbide inserts CNMG TNMG scrap buyer Thailand">
+        <img class="slide" loading="lazy" src="img/ins_2.jpg" alt="เศษคาร์ไบด์อินเสิร์ทผสม ขายได้ราคาดี | Mixed carbide inserts scrap sell Thailand best price">
+        <img class="slide" loading="lazy" src="img/ins_5.jpg" alt="คาร์ไบด์อินเสิร์ทใช้แล้ว รับซื้อทุกสภาพ | Used worn carbide inserts scrap buyer Thailand">
         <div class="carousel-dots">
           <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </div>
@@ -490,9 +560,9 @@ Carbide<span>Thai</span>
     <a class="tile fade-in" href="#contact">
       <div class="tile-carousel" data-interval="3600">
         <img class="slide active" src="img/drl_4.jpg" alt="กองดอกสว่านคาร์ไบด์ VHM รับซื้อราคาสูง | Pile of VHM carbide drills end mills scrap Thailand">
-        <img class="slide" src="img/drl_5.jpg" alt="เศษดอกเอ็นมิลคาร์ไบด์ VHM ขายได้ราคาดี | VHM carbide end mills scrap sell Thailand best price">
-        <img class="slide" src="img/drl_3.jpg" alt="ดอกสว่านคาร์ไบด์หลายชนิด รับซื้อทุกขนาด | Various carbide drills scrap buyer Thailand">
-        <img class="slide" src="img/drl_2.jpg" alt="ดอกสว่าน ดอกเอ็นมิล VHM Hartmetall รับซื้อ | Carbide drills end mills VHM scrap Thailand">
+        <img class="slide" loading="lazy" src="img/drl_5.jpg" alt="เศษดอกเอ็นมิลคาร์ไบด์ VHM ขายได้ราคาดี | VHM carbide end mills scrap sell Thailand best price">
+        <img class="slide" loading="lazy" src="img/drl_3.jpg" alt="ดอกสว่านคาร์ไบด์หลายชนิด รับซื้อทุกขนาด | Various carbide drills scrap buyer Thailand">
+        <img class="slide" loading="lazy" src="img/drl_2.jpg" alt="ดอกสว่าน ดอกเอ็นมิล VHM Hartmetall รับซื้อ | Carbide drills end mills VHM scrap Thailand">
         <div class="carousel-dots">
           <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </div>
@@ -515,8 +585,8 @@ Carbide<span>Thai</span>
     <a class="tile fade-in" href="#contact">
       <div class="tile-carousel" data-interval="4000">
         <img class="slide active" src="img/mix_3.jpg" alt="เศษคาร์ไบด์ผสมหลายชนิด รับซื้อทุกรูปแบบ | Mixed carbide scrap parts hartmetall gemischt Thailand">
-        <img class="slide" src="img/mix_5.jpg" alt="ชิ้นส่วนคาร์ไบด์สึกหรอ รับซื้อราคาสูง | Carbide wear parts scrap buyer Thailand best price">
-        <img class="slide" src="img/mix_2.jpg" alt="คาร์ไบด์ผสมทุกรูปแบบ ขายได้เลย | Mixed tungsten carbide scrap sell Thailand">
+        <img class="slide" loading="lazy" src="img/mix_5.jpg" alt="ชิ้นส่วนคาร์ไบด์สึกหรอ รับซื้อราคาสูง | Carbide wear parts scrap buyer Thailand best price">
+        <img class="slide" loading="lazy" src="img/mix_2.jpg" alt="คาร์ไบด์ผสมทุกรูปแบบ ขายได้เลย | Mixed tungsten carbide scrap sell Thailand">
         <div class="carousel-dots">
           <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
         </div>
@@ -539,8 +609,8 @@ Carbide<span>Thai</span>
     <a class="tile fade-in" href="#contact">
       <div class="tile-carousel" data-interval="3800">
         <img class="slide active" src="img/mix_5.jpg" alt="แซนด์ริล ชิ้นส่วนสึกหรอคาร์ไบด์แบนราบ รับซื้อ | Sand rills flat carbide wear parts scrap buyer Thailand">
-        <img class="slide" src="img/mix_3.jpg" alt="เศษคาร์ไบด์สึกหรอจากเหมือง รับซื้อราคาสูง | Mining carbide wear parts scrap Thailand best price">
-        <img class="slide" src="img/mix_4.jpg" alt="ชิ้นส่วนคาร์ไบด์เหมืองแร่ รับซื้อทุกชนิด | Carbide mining parts abbaumeißel scrap Thailand">
+        <img class="slide" loading="lazy" src="img/mix_3.jpg" alt="เศษคาร์ไบด์สึกหรอจากเหมือง รับซื้อราคาสูง | Mining carbide wear parts scrap Thailand best price">
+        <img class="slide" loading="lazy" src="img/mix_4.jpg" alt="ชิ้นส่วนคาร์ไบด์เหมืองแร่ รับซื้อทุกชนิด | Carbide mining parts abbaumeißel scrap Thailand">
         <div class="carousel-dots">
           <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
         </div>
@@ -564,6 +634,49 @@ Carbide<span>Thai</span>
   <p style="margin-top:20px;font-size:12px;color:var(--muted);text-align:center;">* ราคาโดยประมาณ ราคาจริงยืนยันหลังการตรวจสอบ · Estimated prices. Final price confirmed after physical inspection.</p>
 </section>
 
+<!-- CUSTOMER INDUSTRIES -->
+<div class="customers-section fade-in">
+  <div class="customers-label">
+    <span class="th">ลูกค้าของเรา · Our Customers</span><span class="en">Our Customers · Industries We Serve</span>
+  </div>
+  <div class="customers-grid">
+    <div class="customer-card fade-in">
+      <span class="cust-icon">🏭</span>
+      <span class="cust-name th">โรงงาน CNC</span>
+      <span class="cust-name en">CNC Machining</span>
+    </div>
+    <div class="customer-card fade-in">
+      <span class="cust-icon">⚙️</span>
+      <span class="cust-name th">อุตสาหกรรมยานยนต์</span>
+      <span class="cust-name en">Automotive</span>
+    </div>
+    <div class="customer-card fade-in">
+      <span class="cust-icon">🔧</span>
+      <span class="cust-name th">อิเล็กทรอนิกส์</span>
+      <span class="cust-name en">Electronics Mfg.</span>
+    </div>
+    <div class="customer-card fade-in">
+      <span class="cust-icon">🏗️</span>
+      <span class="cust-name th">โลหะการ</span>
+      <span class="cust-name en">Metal Fabrication</span>
+    </div>
+    <div class="customer-card fade-in">
+      <span class="cust-icon">⚡</span>
+      <span class="cust-name th">ชิ้นส่วนเครื่องจักร</span>
+      <span class="cust-name en">Machinery Parts</span>
+    </div>
+    <div class="customer-card fade-in">
+      <span class="cust-icon">🔩</span>
+      <span class="cust-name th">แม่พิมพ์</span>
+      <span class="cust-name en">Mould & Die</span>
+    </div>
+  </div>
+  <p class="customers-sub">
+    <span class="th">โรงงานกว่า <strong>50+ แห่ง</strong>ทั่วอีสเทิร์นซีบอร์ดและกรุงเทพฯ ไว้วางใจ ThaiCarbide</span>
+    <span class="en">Trusted by <strong>50+ factories</strong> across Eastern Seaboard and Bangkok</span>
+  </p>
+</div>
+
 <!-- HOW IT WORKS -->
 <section class="section" id="how-it-works">
   <div class="section-label"><span class="th">กระบวนการ · </span>Process</div>
@@ -577,8 +690,8 @@ Carbide<span>Thai</span>
       <div class="step-icon">📋</div>
       <h3><span class="th">กรอกแบบฟอร์ม</span><span class="en">Submit Your Details</span></h3>
       <p>
-        <span class="th">กรอกแบบฟอร์มออนไลน์ที่ thaicarbide.com/checkout.html ระบุประเภทวัสดุและน้ำหนักโดยประมาณ เราจะติดต่อนัดรับหรือแนะนำวิธีจัดส่ง</span>
-        <span class="en">Fill out the form at thaicarbide.com/checkout.html with your material type and estimated weight. We'll contact you to arrange pickup or shipping.</span>
+        <span class="th">ระบุประเภทวัสดุและน้ำหนักโดยประมาณ ดูราคาโดยประมาณทันที เราจะติดต่อกลับเพื่อนัดรับหรือแนะนำวิธีจัดส่ง</span>
+        <span class="en">Enter material type and estimated weight. See estimated price instantly. We'll contact you to arrange pickup or shipping.</span>
       </p>
     </div>
     <div class="step fade-in">
@@ -586,18 +699,22 @@ Carbide<span>Thai</span>
       <div class="step-icon">🚚</div>
       <h3><span class="th">จัดส่งหรือนัดรับ</span><span class="en">Ship or Schedule Pickup</span></h3>
       <p>
-        <span class="th">ส่งผ่านขนส่ง Kerry, J&T หรือบริการอื่น หรือขอให้เรารับฟรีในกรุงเทพฯ และอีสเทิร์นซีบอร์ด (20 กก.+)</span>
-        <span class="en">Ship via Kerry Express, J&T, or any courier — or request free pickup in Bangkok & Eastern Seaboard (20 kg+).</span>
+        <span class="th">ส่ง Kerry / J&T หรือนัดรับฟรีกรุงเทพฯ-อีสเทิร์นซีบอร์ด (20 กก.+)</span>
+        <span class="en">Ship via courier or free pickup Bangkok & Eastern Seaboard (20 kg+).</span>
       </p>
+      <span class="step-payment th">🚚 รับฟรี กทม. & อีสเทิร์นซีบอร์ด 20 กก.+</span>
+      <span class="step-payment en">🚚 Free pickup BKK & Eastern Seaboard 20kg+</span>
     </div>
     <div class="step fade-in">
       <div class="step-num">03</div>
       <div class="step-icon">💰</div>
-      <h3><span class="th">รับเงินภายใน 48 ชั่วโมง</span><span class="en">Get Paid in 48 Hours</span></h3>
+      <h3><span class="th">รับเงินใน 48 ชม.</span><span class="en">Get Paid in 48 Hours</span></h3>
       <p>
-        <span class="th">เมื่อได้รับวัสดุ เราชั่งและตรวจสอบ จ่ายเงินผ่าน PromptPay หรือโอนธนาคารภายใน 48 ชั่วโมง พร้อมรายงานการชั่งน้ำหนัก</span>
-        <span class="en">We weigh and inspect on arrival. Payment via PromptPay or bank transfer within 48 hours — guaranteed. Full weight report provided.</span>
+        <span class="th">เราชั่งน้ำหนัก ตรวจสอบ และโอนเงินภายใน 48 ชั่วโมง พร้อมรายงานการชั่งน้ำหนัก</span>
+        <span class="en">We weigh, inspect, and transfer payment within 48 hours. Full weight report provided.</span>
       </p>
+      <span class="step-payment th">💳 PromptPay / โอนธนาคาร</span>
+      <span class="step-payment en">💳 PromptPay or bank transfer</span>
     </div>
   </div>
 </section>
@@ -612,79 +729,121 @@ Carbide<span>Thai</span>
   <div class="reviews-grid">
 
     <div class="review-card fade-in">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text-th">"ราคาดีกว่าที่อื่นมาก โทรถามราคาแล้วตอบเร็วมาก ได้รับเงินภายใน 2 วัน ประทับใจมากครับ แนะนำเลย"</p>
-      <p class="review-text-en">"Better price than anywhere else. Called for a quote, got a fast response, payment within 2 days. Very impressed, highly recommend."</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="review-stars">★★★★★</div>
+        <span style="font-size:10px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.3);color:#06C755;padding:3px 8px;border-radius:2px;font-weight:700;">✅ <span class="th">ยืนยันแล้ว</span><span class="en">Verified</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span>🏭 <span class="th">โรงงาน CNC · อมตะนคร ชลบุรี</span><span class="en">CNC Factory · Amata Nakorn, Chonburi</span></span>
+        <span>📦 <span class="th">ขาย: คาร์ไบด์อินเสิร์ท 22 กก.</span><span class="en">Sold: Carbide Inserts 22 kg</span></span>
+      </div>
+      <p class="review-text-th">"ราคาดีกว่าที่อื่นมาก กรอกฟอร์มแล้วทีมโทรมานัดรับ ได้รับเงินโอนภายใน 2 วัน ประทับใจมากครับ"</p>
+      <p class="review-text-en">"Better price than anywhere else. Filled the form, team called to arrange pickup, payment transferred within 2 days. Very impressed."</p>
       <div class="review-author">
         <div class="review-avatar">🏭</div>
         <div>
           <span class="review-author-name">สมชาย วงศ์ประเสริฐ</span>
-          <span class="review-author-company">ผู้จัดการฝ่ายผลิต · โรงงาน CNC อมตะนคร ชลบุรี</span>
+          <span class="review-author-company">ผู้จัดการฝ่ายผลิต · โรงงาน CNC อมตะนคร</span>
         </div>
       </div>
     </div>
 
     <div class="review-card fade-in">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text-th">"ขายดอกสว่านคาร์ไบด์เก่าหลายกิโล กรอกฟอร์มง่ายมาก ทีมงานโทรมานัดรับภายในวันเดียว ได้รับเงินโอนภายใน 2 วันหลังรับของ"</p>
-      <p class="review-text-en">"Sold several kilos of old carbide drills. Easy form to fill out, team called to arrange pickup the same day, received bank transfer within 2 days of pickup. Very smooth."</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="review-stars">★★★★★</div>
+        <span style="font-size:10px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.3);color:#06C755;padding:3px 8px;border-radius:2px;font-weight:700;">✅ <span class="th">ยืนยันแล้ว</span><span class="en">Verified</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span>⚙️ <span class="th">พรีซิชั่น พาร์ท · สมุทรปราการ</span><span class="en">Precision Parts · Samut Prakan</span></span>
+        <span>📦 <span class="th">ขาย: ดอกสว่านคาร์ไบด์ 18 กก.</span><span class="en">Sold: Carbide Drills 18 kg</span></span>
+      </div>
+      <p class="review-text-th">"ขายดอกสว่านคาร์ไบด์เก่าหลายกิโล กรอกฟอร์มง่ายมาก ทีมงานโทรมานัดรับภายในวันเดียว ได้รับเงินโอนภายใน 2 วัน"</p>
+      <p class="review-text-en">"Sold several kilos of old carbide drills. Easy form, team called same day to arrange pickup, bank transfer within 2 days. Very smooth."</p>
       <div class="review-author">
         <div class="review-avatar">⚙️</div>
         <div>
           <span class="review-author-name">กิตติพงษ์ ทองดี</span>
-          <span class="review-author-company">หัวหน้าช่าง · บริษัท พรีซิชั่น พาร์ท จำกัด, สมุทรปราการ</span>
+          <span class="review-author-company">หัวหน้าช่าง · บริษัท พรีซิชั่น พาร์ท จำกัด</span>
         </div>
       </div>
     </div>
 
     <div class="review-card fade-in">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text-th">"โรงงานเราส่งคาร์ไบด์มาหลายเดือนแล้ว ราคาอัปเดตทุกวัน โปร่งใส ไม่มีโกง ทีมงานพูดไทยได้ดี สื่อสารง่าย"</p>
-      <p class="review-text-en">"Our factory has been sending carbide for months. Daily updated prices, transparent, no tricks. Thai-speaking team, easy to communicate."</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="review-stars">★★★★★</div>
+        <span style="font-size:10px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.3);color:#06C755;padding:3px 8px;border-radius:2px;font-weight:700;">✅ <span class="th">ยืนยันแล้ว</span><span class="en">Verified</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span>🔧 <span class="th">Thai Precision Tools · ระยอง</span><span class="en">Thai Precision Tools · Rayong</span></span>
+        <span>📦 <span class="th">ขาย: คาร์ไบด์ผสม 45 กก.</span><span class="en">Sold: Mixed Carbide 45 kg</span></span>
+      </div>
+      <p class="review-text-th">"โรงงานเราส่งคาร์ไบด์มาหลายเดือนแล้ว ราคาอัปเดตทุกวัน โปร่งใส ไม่มีโกง ทีมงานพูดไทยได้ดี"</p>
+      <p class="review-text-en">"Our factory has been sending carbide for months. Daily updated prices, transparent, no tricks. Great Thai-speaking team."</p>
       <div class="review-author">
         <div class="review-avatar">🔧</div>
         <div>
           <span class="review-author-name">วิภาวดี สุขสมบูรณ์</span>
-          <span class="review-author-company">ผู้จัดการจัดซื้อ · Thai Precision Tools Co., Ltd., ระยอง</span>
+          <span class="review-author-company">ผู้จัดการจัดซื้อ · Thai Precision Tools Co., Ltd.</span>
         </div>
       </div>
     </div>
 
     <div class="review-card fade-in">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text-th">"เพิ่งขายครั้งแรก ส่ง Kerry ไป ชั่งน้ำหนักแล้วโอนมาให้ภายในวันรุ่งขึ้น ราคาดีกว่าที่คิดไว้มาก จะมาอีกแน่นอน"</p>
-      <p class="review-text-en">"First time selling. Sent via Kerry Express, they weighed it and transferred payment next day. Better price than expected. Will definitely come back."</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="review-stars">★★★★★</div>
+        <span style="font-size:10px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.3);color:#06C755;padding:3px 8px;border-radius:2px;font-weight:700;">✅ <span class="th">ยืนยันแล้ว</span><span class="en">Verified</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span>🏗️ <span class="th">NR Engineering · ปทุมธานี</span><span class="en">NR Engineering · Pathum Thani</span></span>
+        <span>📦 <span class="th">ขาย: คาร์ไบด์อินเสิร์ท 12 กก.</span><span class="en">Sold: Carbide Inserts 12 kg</span></span>
+      </div>
+      <p class="review-text-th">"ส่ง Kerry ไป ชั่งน้ำหนักแล้วโอนมาให้ภายในวันรุ่งขึ้น ราคาดีกว่าที่คิดไว้มาก จะมาอีกแน่นอน"</p>
+      <p class="review-text-en">"Sent via Kerry, they weighed it and transferred payment next day. Better price than expected. Will definitely return."</p>
       <div class="review-author">
         <div class="review-avatar">🏗️</div>
         <div>
           <span class="review-author-name">ณรงค์ศักดิ์ แก้วมณี</span>
-          <span class="review-author-company">เจ้าของกิจการ · โรงกลึง NR Engineering, ปทุมธานี</span>
+          <span class="review-author-company">เจ้าของกิจการ · โรงกลึง NR Engineering</span>
         </div>
       </div>
     </div>
 
     <div class="review-card fade-in">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text-th">"ได้ราคาดีมาก ทีมงานซื่อสัตย์ ชั่งน้ำหนักต่อหน้าเราเลย ไม่มีโกงเลย PromptPay เข้าเร็วมาก แนะนำให้เพื่อนมาขายด้วยแล้ว"</p>
-      <p class="review-text-en">"Great price, honest team — weighed in front of us. No tricks. PromptPay arrived very quickly. Already recommended to friends."</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="review-stars">★★★★★</div>
+        <span style="font-size:10px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.3);color:#06C755;padding:3px 8px;border-radius:2px;font-weight:700;">✅ <span class="th">ยืนยันแล้ว</span><span class="en">Verified</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span>⛏️ <span class="th">Eastern Seaboard Industrial · ระยอง</span><span class="en">ESB Industrial Estate · Rayong</span></span>
+        <span>📦 <span class="th">ขาย: คาร์ไบด์ผสม 78 กก.</span><span class="en">Sold: Mixed Carbide 78 kg</span></span>
+      </div>
+      <p class="review-text-th">"ได้ราคาดีมาก ทีมงานซื่อสัตย์ ชั่งน้ำหนักแล้วรายงานมาให้ PromptPay เข้าเร็วมาก แนะนำให้เพื่อนมาขายด้วยแล้ว"</p>
+      <p class="review-text-en">"Great price, honest team — full weight report provided. PromptPay transferred quickly. Already recommended to colleagues."</p>
       <div class="review-author">
         <div class="review-avatar">⛏️</div>
         <div>
           <span class="review-author-name">ปิยะพงษ์ มีสุข</span>
-          <span class="review-author-company">วิศวกรฝ่ายผลิต · Eastern Seaboard Industrial Estate, ระยอง</span>
+          <span class="review-author-company">วิศวกรฝ่ายผลิต · Eastern Seaboard Industrial</span>
         </div>
       </div>
     </div>
 
     <div class="review-card fade-in">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text-th">"ขายคาร์ไบด์อินเสิร์ทที่เหลือจากไลน์ผลิต ราคาต่อกิโลดีมาก กระบวนการง่าย ไม่ยุ่งยาก ติดต่อผ่าน LINE สะดวกมากครับ"</p>
-      <p class="review-text-en">"Sold leftover carbide inserts from our production line. Great per-kilo rate, simple process, no hassle. LINE contact is very convenient."</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="review-stars">★★★★★</div>
+        <span style="font-size:10px;background:rgba(6,199,85,0.12);border:1px solid rgba(6,199,85,0.3);color:#06C755;padding:3px 8px;border-radius:2px;font-weight:700;">✅ <span class="th">ยืนยันแล้ว</span><span class="en">Verified</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span>🔩 <span class="th">Siam Auto Parts · สมุทรสาคร</span><span class="en">Siam Auto Parts · Samut Sakhon</span></span>
+        <span>📦 <span class="th">ขาย: คาร์ไบด์อินเสิร์ท 31 กก.</span><span class="en">Sold: Carbide Inserts 31 kg</span></span>
+      </div>
+      <p class="review-text-th">"ขายคาร์ไบด์อินเสิร์ทที่เหลือจากไลน์ผลิต ราคาต่อกิโลดีมาก กระบวนการง่าย ไม่ยุ่งยาก"</p>
+      <p class="review-text-en">"Sold leftover carbide inserts from our production line. Great per-kilo rate, simple process, no hassle."</p>
       <div class="review-author">
         <div class="review-avatar">🔩</div>
         <div>
           <span class="review-author-name">อภิชาต ศรีสุวรรณ</span>
-          <span class="review-author-company">หัวหน้าฝ่ายซ่อมบำรุง · Siam Auto Parts Mfg., สมุทรสาคร</span>
+          <span class="review-author-company">หัวหน้าฝ่ายซ่อมบำรุง · Siam Auto Parts Mfg.</span>
         </div>
       </div>
     </div>
@@ -786,7 +945,15 @@ Carbide<span>Thai</span>
       <a class="logo" href="#">
         Carbide<span>Thai</span>
       </a>
-      <p>แพลตฟอร์มรับซื้อคาร์ไบด์สแครปออนไลน์อันดับ 1 ของไทย ราคายุติธรรม จ่ายเร็ว โปร่งใส<br>Thailand's premier online carbide scrap buying platform.</p>
+      <p style="margin-top:6px;font-size:13px;color:var(--muted);">
+        <span class="th">รับซื้อเศษคาร์ไบด์ | Carbide Scrap Buyer</span>
+        <span class="en">Carbide Scrap Buyer | รับซื้อเศษคาร์ไบด์</span>
+      </p>
+      <div class="footer-contact-info">
+        <p>📍 <span class="th">กรุงเทพมหานคร ประเทศไทย</span><span class="en">Bangkok, Thailand</span></p>
+        <p>💬 LINE: <a href="https://line.me/R/ti/p/@280uqpab" target="_blank">@280uqpab</a> <span style="font-size:11px;opacity:0.5;">(<span class="th">สอบถามเท่านั้น</span><span class="en">support only</span>)</span></p>
+        <p>📋 <a href="/checkout.html"><span class="th">ขายผ่านแบบฟอร์มออนไลน์</span><span class="en">Sell via online form</span></a></p>
+      </div>
     </div>
     <div class="footer-col">
       <h4>บริการ / Services</h4>
@@ -794,15 +961,16 @@ Carbide<span>Thai</span>
         <li><a href="#materials">ราคาวันนี้ / Today's Prices</a></li>
         <li><a href="#how-it-works">วิธีขาย / How to Sell</a></li>
         <li><a href="#contact">ติดต่อ / Contact Us</a></li>
+        <li><a href="/checkout.html">ขายเลย / Sell Now</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h4>วัสดุ / Materials</h4>
-      <ul>
-        <li><a href="#contact">คาร์ไบด์อินเสิร์ท / Carbide Inserts</a></li>
-        <li><a href="#contact">ดอกสว่านคาร์ไบด์ / Carbide Drills</a></li>
-        <li><a href="#contact">คาร์ไบด์ผสม / Mixed Carbide</a></li>
-        <li><a href="#contact">ทรายคาร์ไบด์ / Sand Rills</a></li>
+      <h4>ความน่าเชื่อถือ / Trust</h4>
+      <ul class="footer-trust-list">
+        <li><span class="check">✅</span><span class="th">ดำเนินการโดยบริษัทจดทะเบียนในไทย</span><span class="en">Thai registered company</span></li>
+        <li><span class="check">✅</span><span class="th">จ่ายผ่าน PromptPay / โอนธนาคาร</span><span class="en">PromptPay / bank transfer</span></li>
+        <li><span class="check">✅</span><span class="th">บริการมาตั้งแต่ปี 2024</span><span class="en">Serving since 2024</span></li>
+        <li><span class="check">✅</span><span class="th">รับซื้อทั่วประเทศไทย</span><span class="en">Nationwide service</span></li>
       </ul>
     </div>
   </div>
@@ -835,7 +1003,7 @@ async function loadPrices() {
         `<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿${mix}/kg &nbsp;·&nbsp; ` +
         `<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿${san}/kg &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate}`;
       document.getElementById('price-updated-note').innerHTML =
-        `<span class="th">ราคาอัปเดต:</span><span class="en">Updated:</span> ${data.updated} &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate}`;
+        `<span class="th">📡 อัปเดตล่าสุด: ${data.updated} &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate} &nbsp;·&nbsp; ราคาโดยประมาณ</span><span class="en">📡 Last updated: ${data.updated} &nbsp;·&nbsp; EUR/THB: ${data.eur_thb_rate} &nbsp;·&nbsp; Estimated prices</span>`;
     }
   } catch(e) {
     for (const [key, val] of Object.entries(FALLBACK)) {
@@ -1255,5 +1423,60 @@ loadPrices();
 })();
 </script>
 <script src="conversion-tracking.js"></script>
+
+<!-- MOBILE STICKY CTA BAR -->
+<div class="mobile-cta-bar" id="mobileCTABar">
+  <a class="mobile-cta-line" href="https://line.me/R/ti/p/@280uqpab" target="_blank">
+    <svg width="18" height="18" viewBox="0 0 40 40" fill="white"><path d="M20 2C10.06 2 2 9.16 2 18c0 7.97 6.55 14.62 15.3 15.82.6.13 1.41.4 1.61.91.19.47.12 1.2.06 1.67l-.26 1.55c-.08.47-.37 1.85 1.62.99 1.99-.84 10.74-6.33 14.66-10.84C37.46 24.9 38 21.56 38 18 38 9.16 29.94 2 20 2z"/></svg>
+    LINE @280uqpab
+  </a>
+  <a class="mobile-cta-sell" href="/checkout.html">
+    <span class="th">ขายเลย →</span>
+    <span class="en">Sell Now →</span>
+  </a>
+</div>
+
+<script>
+// Live price timestamp
+(function() {
+  const now = new Date();
+  const d = now.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
+  const h = now.getHours();
+  const timeSlot = h < 20 ? '08:00 น.' : '20:00 น.';
+  const el = document.getElementById('price-updated-note');
+  if (el && el.textContent.includes('Loading')) {
+    el.innerHTML = `<span class="th">อัปเดตล่าสุด: ${d} ${timeSlot} · ราคาโดยประมาณ</span><span class="en">Last updated: ${d} ${timeSlot} · Estimated prices</span>`;
+  }
+})();
+
+// Stagger fade-in for trust badges
+document.querySelectorAll('.hero-trust-badge').forEach((el, i) => {
+  el.style.animationDelay = (0.35 + i * 0.08) + 's';
+});
+
+// Count-up animation for price numbers
+function countUp(el, target, duration) {
+  const start = performance.now();
+  const run = (ts) => {
+    const p = Math.min((ts - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = '฿' + Math.floor(target * eased).toLocaleString('th-TH');
+    if (p < 1) requestAnimationFrame(run);
+    else el.textContent = '฿' + target.toLocaleString('th-TH');
+  };
+  requestAnimationFrame(run);
+}
+const priceObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const raw = e.target.textContent.replace(/[฿,]/g,'');
+      const val = parseInt(raw);
+      if (!isNaN(val) && val > 100) { countUp(e.target, val, 900); }
+      priceObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.tile-amount').forEach(el => priceObs.observe(el));
+</script>
 </body>
 </html>
