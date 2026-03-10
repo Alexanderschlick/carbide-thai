@@ -606,7 +606,7 @@ Carbide<span>Thai</span>
 </nav>
 
 <!-- TICKER -->
-<div class="ticker" id="ticker"><span class="ticker-inner" id="ticker-inner">📡 <span class="th">กำลังโหลดราคา...</span><span class="en">Loading today's prices...</span></span></div>
+<div class="ticker" id="ticker"><span class="ticker-inner" id="ticker-inner"><span class="th">กำลังโหลดราคา...</span><span class="en">Loading today's prices...</span></span></div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1519,7 +1519,7 @@ async function loadPrices() {
     // Ticker
     const ud = data.updated_display || data.updated?.slice(0,10) || '';
     document.getElementById('ticker-inner').innerHTML =
-      `📡 <span class="th">ราคาวันนี้</span><span class="en">Today's Prices</span> ${ud} &nbsp;·&nbsp; ` +
+      `<span class="th">ราคาวันนี้</span><span class="en">Today's Prices</span> ${ud} &nbsp;·&nbsp; ` +
       `<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ${fmt(ins)}/kg &nbsp;·&nbsp; ` +
       `<span class="th">ดอกสว่านและเอ็นมิล: สูงสุด</span><span class="en">Drills &amp; Endmills: up to</span> ${fmt(drl)}/kg &nbsp;·&nbsp; ` +
       `<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed Carbide: up to</span> ${fmt(mix)}/kg &nbsp;·&nbsp; ` +
@@ -1543,7 +1543,7 @@ async function loadPrices() {
       if (el) el.innerHTML = fmt(val);
     }
     document.getElementById('ticker-inner').innerHTML =
-      '📡 CarbideThai.com &nbsp;·&nbsp; ' +
+      'CarbideThai.com &nbsp;·&nbsp; ' +
       '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿1,650/kg &nbsp;·&nbsp; ' +
       '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿1,700/kg &nbsp;·&nbsp; ' +
       '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿1,550/kg &nbsp;·&nbsp; ' +
