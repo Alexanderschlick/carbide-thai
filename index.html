@@ -404,6 +404,50 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
 .review-author-name { font-size:13px; font-weight:700; color:var(--white); display:block; }
 .review-author-company { font-size:11px; color:var(--muted); display:block; margin-top:2px; }
 
+/* CHANGE 1: HERO PRICE HOOK */
+.hero-price-hook { margin:20px 0 26px; animation:fadeUp 0.6s 0.12s ease both; }
+.hook-number-line { display:flex; align-items:baseline; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+.hook-price-big { font-family:'Bebas Neue','Barlow Condensed',sans-serif; font-size:clamp(56px,9vw,92px); color:var(--gold); line-height:1; letter-spacing:-1px; }
+.hook-price-unit { font-size:clamp(16px,2.5vw,22px); color:var(--gold); font-weight:700; opacity:0.85; }
+.hook-text { font-size:16px; color:#c8deca; font-weight:500; line-height:1.5; margin:0; }
+.hook-compare { font-size:12px; color:#4a6454; margin-top:5px; }
+.hook-compare strong { color:#6a8a70; }
+
+/* CHANGE 2: EDUCATIONAL SECTION */
+.edu-section { padding:80px 40px; background:var(--bg); border-top:1px solid var(--border); }
+.edu-subtitle { font-size:13px; color:#4a6454; margin-top:4px; margin-bottom:36px; font-style:italic; }
+.edu-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.edu-card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:32px 24px; transition:border-color 0.25s,transform 0.2s; }
+.edu-card:hover { border-color:rgba(201,162,39,0.4); transform:translateY(-2px); }
+.edu-icon { font-size:36px; margin-bottom:16px; display:block; }
+.edu-title { font-family:'Barlow Condensed',sans-serif; font-size:21px; font-weight:700; color:var(--white); margin-bottom:10px; text-transform:uppercase; line-height:1.1; }
+.edu-text { font-size:13px; color:var(--muted); line-height:1.75; }
+
+/* CHANGE 3: 4-STEP VISUAL FLOW */
+.steps-flow { display:flex; align-items:flex-start; margin-top:16px; }
+.step-v2 { flex:1; padding:28px 22px; border-left:2px solid var(--border); min-width:0; transition:border-color 0.2s; }
+.step-v2:first-child { border-left:none; padding-left:0; }
+.step-v2:hover { border-left-color:var(--gold); }
+.step-v2-num { font-family:'Bebas Neue','Barlow Condensed',sans-serif; font-size:56px; color:rgba(201,162,39,0.12); line-height:1; display:block; margin-bottom:2px; }
+.step-v2-icon { font-size:28px; display:block; margin-bottom:10px; }
+.step-v2 h3 { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; color:var(--white); margin-bottom:8px; text-transform:uppercase; line-height:1.2; }
+.step-v2 p { font-size:13px; color:var(--muted); line-height:1.65; }
+.step-v2-tag { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:4px 10px; border-radius:2px; margin-top:10px; }
+.step-v2-tag.green { background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.25); color:#06C755; }
+.step-v2-tag.gold { background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.3); color:var(--gold); }
+
+/* CHANGE 4: WHAT WE BUY QUICK CARDS */
+.what-we-buy-section { padding:80px 40px; background:var(--surface); border-top:1px solid var(--border); }
+.what-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:40px; }
+.what-card { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:28px 18px; text-align:center; transition:border-color 0.25s,transform 0.2s; }
+.what-card:hover { border-color:rgba(201,162,39,0.45); transform:translateY(-3px); }
+.what-icon { font-size:38px; margin-bottom:14px; display:block; }
+.what-name-th { font-size:15px; font-weight:700; color:var(--white); display:block; margin-bottom:2px; }
+.what-name-en { font-size:10px; color:var(--muted); display:block; margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase; }
+.what-desc { font-size:12px; color:#4a6454; margin-bottom:14px; line-height:1.5; }
+.what-price-badge { display:inline-flex; align-items:center; padding:5px 14px; background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.35); border-radius:20px; font-size:13px; font-weight:700; color:var(--gold-lt); }
+.what-note { text-align:center; margin-top:20px; font-size:11px; color:#3a5444; font-style:italic; }
+
 /* PARTNER BARS */
 .partner-bar { padding:24px 40px; background:#070f0a; border-bottom:1px solid var(--border); text-align:center; }
 .partner-bar-alt { background:var(--surface); }
@@ -504,6 +548,15 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .customers-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
   .price-guarantee-banner { padding:12px 20px; }
   .btn-primary, .btn-line { min-height:48px; font-size:16px; padding:14px 28px; }
+  .edu-section, .what-we-buy-section { padding:56px 16px; }
+  .edu-cards { grid-template-columns:1fr; gap:14px; }
+  .what-cards { grid-template-columns:repeat(2,1fr); gap:12px; }
+  .what-card { padding:20px 12px; }
+  .steps-flow { flex-direction:column; }
+  .step-v2 { border-left:none; border-top:2px solid var(--border); padding:22px 0; }
+  .step-v2:first-child { border-top:none; padding-top:0; }
+  .step-v2:hover { border-top-color:var(--gold); border-left-color:transparent; }
+  .hook-price-big { font-size:clamp(48px,14vw,72px); }
   .partner-bar { padding:18px 16px; }
   .plogo { padding:8px 14px; gap:7px; min-height:46px; }
   .plogo-label-main { font-size:13px; }
@@ -562,6 +615,20 @@ Carbide<span>Thai</span>
       <span class="hero-th en">We Buy<br>Carbide Scrap</span>
       <span class="hero-en">Thailand's #1 Carbide Scrap Buyer</span>
     </h1>
+    <div class="hero-price-hook">
+      <div class="hook-number-line">
+        <span class="hook-price-big th">2,493 ฿</span>
+        <span class="hook-price-big en">2,493 ฿</span>
+        <span class="hook-price-unit th">/กก.</span>
+        <span class="hook-price-unit en">/kg</span>
+      </div>
+      <p class="hook-text">
+        <span class="th">เศษคาร์ไบด์อินเสิร์ทของคุณ อาจมีมูลค่าสูงถึง 2,493 ฿/กก.</span>
+        <span class="en">Your used carbide inserts could be worth up to 2,493 THB/kg</span>
+      </p>
+      <p class="hook-compare th">เทียบราคาโลหะอื่น: <strong>ทองแดง ~300 ฿/กก.</strong> · <strong>อะลูมิเนียม ~60 ฿/กก.</strong> — คาร์ไบด์มีค่ากว่ามาก</p>
+      <p class="hook-compare en">vs other metals: <strong>Copper ~300 ฿/kg</strong> · <strong>Aluminium ~60 ฿/kg</strong> — carbide is worth far more</p>
+    </div>
     <div class="hero-sub">
       <span class="th">ราคาโดยประมาณ อัปเดตทุกวัน · จ่ายเงินภายใน 48 ชม.หลังรับวัสดุ · รับฟรีกรุงเทพฯ และอีสเทิร์นซีบอร์ด</span>
       <span class="en">Estimated daily prices · Paid within 48 hours of receiving material · Free pickup Bangkok & Eastern Seaboard</span>
@@ -581,6 +648,54 @@ Carbide<span>Thai</span>
       <span class="hero-trust-badge"><span class="badge-icon">✅</span><span class="th">จ่ายครบ 100%</span><span class="en">Full Payment Guaranteed</span></span>
       <span class="hero-trust-badge"><span class="badge-icon">⚡</span><span class="th">รับเงินภายใน 48 ชม.</span><span class="en">Paid in 48hrs</span></span>
       <span class="hero-trust-badge"><span class="badge-icon">🚚</span><span class="th">รับฟรีกรุงเทพฯ</span><span class="en">Free Pickup BKK</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATIONAL SECTION -->
+<section class="edu-section">
+  <div class="section-label"><span class="th">ความรู้ · </span>Did You Know?</div>
+  <div class="section-head">
+    <span class="th">คุณรู้หรือไม่?</span>
+    <span class="en">Did You Know?</span>
+  </div>
+  <p class="edu-subtitle">
+    <span class="th">ทำไมคาร์ไบด์จึงมีค่ามากกว่าโลหะรีไซเคิลทั่วไป</span>
+    <span class="en">Why carbide scrap is worth far more than ordinary recycled metal</span>
+  </p>
+  <div class="edu-cards">
+    <div class="edu-card fade-in">
+      <span class="edu-icon">⚙️</span>
+      <div class="edu-title">
+        <span class="th">ทังสเตนหายาก</span>
+        <span class="en">Tungsten Is Rare</span>
+      </div>
+      <p class="edu-text">
+        <span class="th">คาร์ไบด์ประกอบด้วยทังสเตนคาร์ไบด์ (WC) ถึง 85–95% ทังสเตนเป็นโลหะหายากที่ใช้ในอุตสาหกรรมการบินและยานยนต์ ราคาจึงสูงกว่าเหล็กธรรมดา 40–80 เท่า</span>
+        <span class="en">Carbide tooling is 85–95% tungsten carbide (WC). Tungsten is a critical rare metal used in aerospace and defence — it trades 40–80× higher than ordinary steel scrap.</span>
+      </p>
+    </div>
+    <div class="edu-card fade-in">
+      <span class="edu-icon">♻️</span>
+      <div class="edu-title">
+        <span class="th">รีไซเคิลได้ 100%</span>
+        <span class="en">100% Recyclable</span>
+      </div>
+      <p class="edu-text">
+        <span class="th">อินเสิร์ทที่สึกหรอหรือดอกสว่านที่ชำรุดยังคงมีทังสเตนบริสุทธิ์ครบถ้วน โรงงานรีไซเคิลสามารถแปรรูปเป็นผงคาร์ไบด์ใหม่ได้ 100% ไม่มีการสูญเสีย</span>
+        <span class="en">A worn insert or broken end mill still contains 100% of its original tungsten. Recyclers recover it completely — nothing is lost. That's why we pay top rates for even damaged tooling.</span>
+      </p>
+    </div>
+    <div class="edu-card fade-in">
+      <span class="edu-icon">📈</span>
+      <div class="edu-title">
+        <span class="th">ราคาตามตลาดโลก</span>
+        <span class="en">Priced on Global Markets</span>
+      </div>
+      <p class="edu-text">
+        <span class="th">ราคาคาร์ไบด์ของเราอิงตามอัตราตลาดทังสเตนยุโรป (APT) อัปเดตทุกวัน ราคาเปลี่ยนแปลงตามตลาดโลก ขายวันนี้ได้ราคาดีที่สุดของวัน</span>
+        <span class="en">Our prices are tied to the European APT (ammonium paratungstate) market, updated daily. Prices move with global supply — selling today locks in today's rate.</span>
+      </p>
     </div>
   </div>
 </section>
@@ -626,6 +741,61 @@ Carbide<span>Thai</span>
     <span class="en">Best Price Guaranteed — if you find a higher price elsewhere, we'll beat it</span>
   </p>
 </div>
+
+<!-- WHAT WE BUY QUICK CARDS -->
+<section class="what-we-buy-section">
+  <div class="section-label"><span class="th">วัสดุที่รับซื้อ · </span>We Buy</div>
+  <div class="section-head">
+    <span class="th">เราซื้ออะไรบ้าง?</span>
+    <span class="en">What We Buy</span>
+  </div>
+  <div class="what-cards">
+    <div class="what-card fade-in">
+      <span class="what-icon">🔩</span>
+      <span class="what-name-th">อินเสิร์ทคาร์ไบด์</span>
+      <span class="what-name-en">Carbide Inserts</span>
+      <p class="what-desc">
+        <span class="th">CNMG, TNMG, APMT, RCMT — ทุกเกรด ใหม่หรือเก่า</span>
+        <span class="en">CNMG, TNMG, APMT, RCMT — all grades, new or worn</span>
+      </p>
+      <span class="what-price-badge">สูงสุด ฿2,493/กก.</span>
+    </div>
+    <div class="what-card fade-in">
+      <span class="what-icon">🔧</span>
+      <span class="what-name-th">ดอกสว่าน / เอ็นมิล</span>
+      <span class="what-name-en">Drills & End Mills</span>
+      <p class="what-desc">
+        <span class="th">VHM Solid Carbide — สึกหรอหรือชำรุดก็รับ</span>
+        <span class="en">VHM solid carbide — worn, broken, all conditions</span>
+      </p>
+      <span class="what-price-badge">สูงสุด ฿2,493/กก.</span>
+    </div>
+    <div class="what-card fade-in">
+      <span class="what-icon">🧩</span>
+      <span class="what-name-th">คาร์ไบด์ผสม</span>
+      <span class="what-name-en">Mixed Carbide</span>
+      <p class="what-desc">
+        <span class="th">เศษผสม ชิ้นแตก ผงคาร์ไบด์ — รับทุกสภาพ</span>
+        <span class="en">Mixed scrap, broken pieces, carbide powder — all accepted</span>
+      </p>
+      <span class="what-price-badge">สูงสุด ฿1,413/กก.</span>
+    </div>
+    <div class="what-card fade-in">
+      <span class="what-icon">⛏️</span>
+      <span class="what-name-th">แซนด์ริล / ชิ้นส่วนสึกหรอ</span>
+      <span class="what-name-en">Sand Rills / Wear Parts</span>
+      <p class="what-desc">
+        <span class="th">ชิ้นส่วนเหมืองแร่ อุปกรณ์สึกหรอคาร์ไบด์</span>
+        <span class="en">Mining wear parts, carbide drilling components</span>
+      </p>
+      <span class="what-price-badge">สูงสุด ฿520/กก.</span>
+    </div>
+  </div>
+  <p class="what-note">
+    <span class="th">* ราคาโดยประมาณ อัปเดตทุกวัน · ราคาจริงยืนยันหลังชั่งน้ำหนัก</span>
+    <span class="en">* Estimated prices, updated daily · Final price confirmed after physical weighing</span>
+  </p>
+</section>
 
 <!-- MATERIAL TILES -->
 <section class="materials-section" id="materials">
@@ -786,40 +956,48 @@ Carbide<span>Thai</span>
 <section class="section" id="how-it-works">
   <div class="section-label"><span class="th">กระบวนการ · </span>Process</div>
   <div class="section-head">
-    <span class="th">3 ขั้นตอนง่ายๆ</span>
-    <span class="en">3 Simple Steps</span>
+    <span class="th">4 ขั้นตอน ง่ายมาก</span>
+    <span class="en">4 Easy Steps</span>
   </div>
-  <div class="steps-grid">
-    <div class="step fade-in">
-      <div class="step-num">01</div>
-      <div class="step-icon">📋</div>
-      <h3><span class="th">กรอกแบบฟอร์ม</span><span class="en">Submit Your Details</span></h3>
+  <div class="steps-flow">
+    <div class="step-v2 fade-in">
+      <span class="step-v2-num">01</span>
+      <span class="step-v2-icon">📸</span>
+      <h3><span class="th">ถ่ายรูปวัสดุ</span><span class="en">Photo Your Material</span></h3>
       <p>
-        <span class="th">ระบุประเภทวัสดุและน้ำหนักโดยประมาณ ดูราคาโดยประมาณทันที เราจะติดต่อกลับเพื่อนัดรับหรือแนะนำวิธีจัดส่ง</span>
-        <span class="en">Enter material type and estimated weight. See estimated price instantly. We'll contact you to arrange pickup or shipping.</span>
+        <span class="th">ถ่ายรูปเศษคาร์ไบด์ของคุณ — ไม่ต้องแยกประเภท เราประเมินเองได้</span>
+        <span class="en">Snap a photo of your carbide scrap — no sorting needed, we'll assess it.</span>
       </p>
     </div>
-    <div class="step fade-in">
-      <div class="step-num">02</div>
-      <div class="step-icon">🚚</div>
-      <h3><span class="th">จัดส่งหรือนัดรับ</span><span class="en">Ship or Schedule Pickup</span></h3>
+    <div class="step-v2 fade-in">
+      <span class="step-v2-num">02</span>
+      <span class="step-v2-icon">📋</span>
+      <h3><span class="th">กรอกแบบฟอร์ม</span><span class="en">Fill the Form</span></h3>
       <p>
-        <span class="th">ส่ง Kerry / J&T หรือนัดรับฟรีกรุงเทพฯ-อีสเทิร์นซีบอร์ด (20 กก.+)</span>
-        <span class="en">Ship via courier or free pickup Bangkok & Eastern Seaboard (20 kg+).</span>
+        <span class="th">ระบุประเภทวัสดุ น้ำหนักโดยประมาณ และข้อมูลติดต่อ ใช้เวลาไม่ถึง 2 นาที</span>
+        <span class="en">Enter material type, estimated weight, and contact info. Takes under 2 minutes.</span>
       </p>
-      <span class="step-payment th">🚚 รับฟรี กทม. & อีสเทิร์นซีบอร์ด 20 กก.+</span>
-      <span class="step-payment en">🚚 Free pickup BKK & Eastern Seaboard 20kg+</span>
+      <span class="step-v2-tag gold">thaicarbide.com/checkout.html</span>
     </div>
-    <div class="step fade-in">
-      <div class="step-num">03</div>
-      <div class="step-icon">💰</div>
-      <h3><span class="th">รับเงินใน 48 ชม.</span><span class="en">Get Paid in 48 Hours</span></h3>
+    <div class="step-v2 fade-in">
+      <span class="step-v2-num">03</span>
+      <span class="step-v2-icon">🚚</span>
+      <h3><span class="th">จัดส่งหรือนัดรับ</span><span class="en">Ship or Pickup</span></h3>
+      <p>
+        <span class="th">เราโทรนัดหมาย รับฟรีกรุงเทพฯ & อีสเทิร์นซีบอร์ด (20 กก.+) หรือส่ง Kerry / J&T</span>
+        <span class="en">We call to arrange. Free pickup BKK & Eastern Seaboard (20 kg+) or ship via Kerry / J&T.</span>
+      </p>
+      <span class="step-v2-tag green">🚚 <span class="th">รับฟรี กทม. & อีสเทิร์น 20 กก.+</span><span class="en">Free pickup BKK 20kg+</span></span>
+    </div>
+    <div class="step-v2 fade-in">
+      <span class="step-v2-num">04</span>
+      <span class="step-v2-icon">💰</span>
+      <h3><span class="th">รับเงินใน 48 ชม.</span><span class="en">Get Paid in 48hrs</span></h3>
       <p>
         <span class="th">เราชั่งน้ำหนัก ตรวจสอบ และโอนเงินภายใน 48 ชั่วโมง พร้อมรายงานการชั่งน้ำหนัก</span>
-        <span class="en">We weigh, inspect, and transfer payment within 48 hours. Full weight report provided.</span>
+        <span class="en">We weigh, inspect, and transfer payment within 48 hours. Full weight report included.</span>
       </p>
-      <span class="step-payment th">💳 PromptPay / โอนธนาคาร</span>
-      <span class="step-payment en">💳 PromptPay or bank transfer</span>
+      <span class="step-v2-tag gold">💳 <span class="th">PromptPay / โอนธนาคาร</span><span class="en">PromptPay / Bank Transfer</span></span>
     </div>
   </div>
 </section>
