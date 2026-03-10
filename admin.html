@@ -661,10 +661,16 @@
       </div>
     </div>
 
-    <div style="background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.6;">
+    <div style="background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.6;">
       <strong style="color:var(--accent);">How prices work:</strong><br>
       <strong style="color:var(--text);">Teaser price</strong> = shown on homepage tiles ("Up to ฿X/kg") — set this to your best rate to attract sellers.<br>
       <strong style="color:var(--text);">Checkout tiers</strong> = shown in checkout AFTER seller enters their LINE ID. Three tiers by weight: &lt;20kg / 20–50kg / &gt;50kg.
+    </div>
+
+    <div style="background:rgba(232,200,74,0.07);border:1px solid rgba(232,200,74,0.25);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent);">💱 EUR/THB Rate</div>
+      <div id="eur-rate-display" style="font-family:var(--mono);font-size:14px;color:var(--text);">Loading...</div>
+      <div style="font-size:12px;color:var(--muted);">Enter prices in EUR/kg below → auto-converts to ฿/kg</div>
     </div>
 
     <div id="prices-body"></div>
@@ -962,6 +968,40 @@ function renderInventory() {
 
 // PRICES — Supabase-backed live price control
 let liveDbPrices = {};
+let eurThbRate = null;
+
+async function fetchEurThb() {
+  try {
+    const r = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
+    const d = await r.json();
+    eurThbRate = Math.round(d.rates.THB * 100) / 100;
+    const el = document.getElementById('eur-rate-display');
+    if (el) el.textContent = '1 EUR = ฿' + eurThbRate.toFixed(2);
+  } catch(e) {
+    // try prices.json as fallback
+    try {
+      const r2 = await fetch('/prices.json?v=' + Date.now());
+      const d2 = await r2.json();
+      if (d2.eur_thb_rate) {
+        eurThbRate = d2.eur_thb_rate;
+        const el = document.getElementById('eur-rate-display');
+        if (el) el.textContent = '1 EUR = ฿' + eurThbRate.toFixed(2) + ' (cached)';
+      }
+    } catch(e2) {}
+  }
+}
+
+function eurToThb(eurPerKg) {
+  if (!eurPerKg || !eurThbRate) return '';
+  return Math.round(eurPerKg * eurThbRate / 50) * 50; // round to nearest 50 THB
+}
+
+function onEurInput(key, field) {
+  const eur = parseFloat(document.getElementById('p-' + key + '-' + field + '-eur')?.value);
+  if (!eur) return;
+  const thb = eurToThb(eur);
+  if (thb) document.getElementById('p-' + key + '-' + field).value = thb;
+}
 
 const PRICE_LABELS = {
   carbide_inserts: { en: 'Carbide Inserts', th: 'คาร์ไบด์อินเสิร์ท', icon: '🔶' },
@@ -972,6 +1012,7 @@ const PRICE_LABELS = {
 
 async function loadPricesFromDB() {
   document.getElementById('prices-status').textContent = 'Loading...';
+  await fetchEurThb();
   try {
     const res = await fetch(SUPABASE_URL + '/rest/v1/prices?select=*&order=key', {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
@@ -985,6 +1026,30 @@ async function loadPricesFromDB() {
   } catch(e) {
     document.getElementById('prices-status').textContent = 'Load failed';
   }
+}
+
+function priceCol(key, field, label, color, hint, thbVal) {
+  const eurVal = (eurThbRate && thbVal) ? (thbVal / eurThbRate).toFixed(2) : '';
+  const borderStyle = color === 'accent' ? 'border-color:rgba(232,200,74,0.4);' : '';
+  const labelColor = color === 'accent' ? 'color:var(--accent)' : 'color:var(--muted)';
+  return `
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;${labelColor};margin-bottom:8px;">${label}</div>
+      <div class="price-input-wrap" style="margin-bottom:5px;">
+        <input class="price-input" type="number" id="p-${key}-${field}"
+          value="${thbVal ?? ''}" placeholder="฿/kg" style="${borderStyle}"
+          oninput="document.getElementById('p-${key}-${field}-eur').value=''" />
+        <span class="price-unit">฿</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input type="number" id="p-${key}-${field}-eur"
+          value="${eurVal}" placeholder="€/kg" step="0.5"
+          style="flex:1;background:rgba(255,255,255,0.04);border:1px dashed rgba(232,200,74,0.2);color:var(--muted);padding:5px 8px;font-size:11px;border-radius:2px;width:100%;font-family:var(--mono);"
+          oninput="onEurInput('${key}','${field}')" />
+        <span style="font-size:11px;color:var(--muted);">€</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px;">${hint}</div>
+    </div>`;
 }
 
 function renderPrices() {
@@ -1003,38 +1068,13 @@ function renderPrices() {
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
-        <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">🏠 HOMEPAGE<br>TEASER PRICE</div>
-          <div class="price-input-wrap">
-            <input class="price-input" type="number" id="p-${key}-teaser" value="${p.teaser_thb ?? ''}" placeholder="฿/kg" style="border-color:rgba(232,200,74,0.4);" />
-            <span class="price-unit">฿</span>
-          </div>
-          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Shown on tiles<br>"Up to ฿X/kg"</div>
-        </div>
-        <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📦 TIER 1<br>&lt; 20 kg</div>
-          <div class="price-input-wrap">
-            <input class="price-input" type="number" id="p-${key}-under20" value="${p.tier_under20 ?? ''}" placeholder="฿/kg" />
-            <span class="price-unit">฿</span>
-          </div>
-          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Checkout<br>small qty</div>
-        </div>
-        <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📦 TIER 2<br>20 – 50 kg</div>
-          <div class="price-input-wrap">
-            <input class="price-input" type="number" id="p-${key}-mid" value="${p.tier_mid ?? ''}" placeholder="฿/kg" />
-            <span class="price-unit">฿</span>
-          </div>
-          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Checkout<br>medium qty</div>
-        </div>
-        <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">🔥 TIER 3<br>&gt; 50 kg</div>
-          <div class="price-input-wrap">
-            <input class="price-input" type="number" id="p-${key}-over50" value="${p.tier_over50 ?? ''}" placeholder="฿/kg" />
-            <span class="price-unit">฿</span>
-          </div>
-          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Checkout<br>bulk rate</div>
-        </div>
+        ${priceCol(key,'teaser','🏠 HOMEPAGE<br>TEASER PRICE','accent','Homepage tile<br>"Up to ฿X/kg"', p.teaser_thb)}
+        ${priceCol(key,'under20','📦 TIER 1<br>&lt; 20 kg','muted','Checkout<br>small qty', p.tier_under20)}
+        ${priceCol(key,'mid','📦 TIER 2<br>20 – 50 kg','muted','Checkout<br>medium qty', p.tier_mid)}
+        ${priceCol(key,'over50','🔥 TIER 3<br>&gt; 50 kg','muted','Checkout<br>bulk rate', p.tier_over50)}
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        💡 Type in the <strong style="color:var(--text);">€ field</strong> → auto-fills ฿ using live rate (${eurThbRate ? '฿' + eurThbRate + '/€' : 'rate loading...'})
       </div>
     </div>`;
   }).join('');
