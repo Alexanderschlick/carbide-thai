@@ -1,89 +1,31 @@
 {
-  "updated": "2026-03-11T01:55:15.782Z",
-  "updated_display": "11 Mar 2026, 08:55",
-  "eur_thb_rate": 36.75,
+  "updated": "11 Mar 2026",
+  "eur_thb_rate": 36.7453,
+  "margin_applied": 1.0,
   "prices": {
-    "carbide_drills": {
-      "thb_per_kg": 1700,
-      "name_en": "Carbide Drills & Endmills",
-      "name_th": "ดอกสว่านและเอ็นมิล VHM",
-      "tiers": {
-        "under20": 1550,
-        "mid": 1600,
-        "over50": 1700
-      }
-    },
     "carbide_inserts": {
-      "thb_per_kg": 1650,
-      "name_en": "Carbide Inserts",
-      "name_th": "คาร์ไบด์อินเสิร์ท",
-      "tiers": {
-        "under20": 1500,
-        "mid": 1550,
-        "over50": 1650
-      }
+      "thb_per_kg": 920,
+      "eur_per_kg": 25.0,
+      "updated": "11 Mar 2026",
+      "source": "live"
     },
-    "saw_blades": {
-      "thb_per_kg": 1550,
-      "name_en": "Carbide Saw Blades",
-      "name_th": "VHM ใบเลื่อยคาร์ไบด์",
-      "tiers": {
-        "under20": 1500,
-        "mid": 1500,
-        "over50": 1550
-      }
+    "carbide_drills": {
+      "thb_per_kg": 960,
+      "eur_per_kg": 26.0,
+      "updated": "11 Mar 2026",
+      "source": "live"
     },
     "mixed_carbide": {
-      "thb_per_kg": 1550,
-      "name_en": "Mixed Carbide",
-      "name_th": "คาร์ไบด์ผสม",
-      "tiers": {
-        "under20": 1500,
-        "mid": 1500,
-        "over50": 1550
-      }
+      "thb_per_kg": 810,
+      "eur_per_kg": 22.0,
+      "updated": "11 Mar 2026",
+      "source": "live"
     },
     "sand_rills": {
-      "thb_per_kg": 520,
-      "name_en": "Sand Rills / Wear Parts",
-      "name_th": "แซนด์ริล / ชิ้นส่วนสึกหรอ",
-      "tiers": null,
-      "display": "Anfrage"
-    },
-    "carbide_sludge": {
-      "thb_per_kg": null,
-      "name_en": "Carbide Sludge",
-      "name_th": "Hartmetallschlamm",
-      "tiers": null,
-      "display": "Anfrage"
+      "thb_per_kg": 510,
+      "eur_per_kg": 14.0,
+      "updated": "11 Mar 2026",
+      "source": "fallback"
     }
-  },
-  "teaser_prices": {
-    "carbide_drills": {
-      "thb_per_kg": 2600,
-      "eur_per_kg": 71,
-      "name_en": "Carbide Drills & Endmills",
-      "name_th": "ดอกสว่านและเอ็นมิล VHM"
-    },
-    "carbide_inserts": {
-      "thb_per_kg": 2650,
-      "eur_per_kg": 71.5,
-      "name_en": "Carbide Inserts",
-      "name_th": "คาร์ไบด์อินเสิร์ท"
-    },
-    "saw_blades": {
-      "thb_per_kg": 2550,
-      "eur_per_kg": 70,
-      "name_en": "Carbide Saw Blades",
-      "name_th": "VHM ใบเลื่อยคาร์ไบด์"
-    },
-    "mixed_carbide": {
-      "thb_per_kg": 2550,
-      "eur_per_kg": 70,
-      "name_en": "Mixed Carbide",
-      "name_th": "คาร์ไบด์ผสม"
-    }
-  },
-  "teaser_price": 2650,
-  "teaser_material": "Carbide Inserts"
+  }
 }
