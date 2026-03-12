@@ -27,8 +27,8 @@ serve(async (req) => {
     }
 
     const langInstruction = lang === "en"
-      ? "Always respond in English, regardless of what language the user writes in."
-      : "Always respond in Thai, regardless of what language the user writes in.";
+      ? "The user has selected English. Always respond in English only."
+      : "Mirror the user's language: if they write in English, respond in English; if Thai, respond in Thai. When unclear, use both Thai and English (Thai first, short English below).";
 
     const SYSTEM_PROMPT = `You are Nong (น้อง), a warm and helpful Thai sales assistant for ThaiCarbide.com. ${langInstruction}
 Your goal: help factory workers and CNC shops sell carbide scrap, capture their LINE ID, and guide them to checkout.

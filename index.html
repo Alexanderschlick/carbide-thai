@@ -1910,6 +1910,7 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
   let chatHistory = [];
   let sessionId   = null;
   let userMsgCount = 0;       // counts user messages sent
+  let aiCalling    = false;   // guard: prevent concurrent AI calls
   let lineCTAShown = false;   // show LINE CTA only once
   let idleTimer    = null;    // 30s idle nudge
 
@@ -1957,6 +1958,7 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
   };
 
   function _sendMessage(text) {
+    if (aiCalling) return;
     appendMessage('user', text);
     chatHistory.push({role:'user', content:text});
     userMsgCount++;
@@ -2071,6 +2073,7 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
 
   // ── AI call ───────────────────────────────────────────────────────────────
   async function callAI() {
+    aiCalling = true;
     const sendBtn = document.getElementById('chat-send');
     sendBtn.disabled = true;
     const typing = appendMessage('typing', 'กำลังพิมพ์...');
@@ -2104,6 +2107,7 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
       appendMessage('bot', 'ขออภัยครับ ไม่สามารถเชื่อมต่อได้ในขณะนี้ กรุณาติดต่อเราผ่าน LINE: @280uqpab');
     }
 
+    aiCalling = false;
     sendBtn.disabled = false;
     document.getElementById('chat-input').focus();
   }
