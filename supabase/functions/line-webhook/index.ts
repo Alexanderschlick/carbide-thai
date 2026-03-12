@@ -1,29 +1,50 @@
-// LINE Webhook — ThaiCarbide
-// Receives LINE OA messages, saves to Supabase, alerts Telegram, auto-replies.
+// LINE Webhook — ThaiCarbide / Nong AI
+// Receives LINE messages → Claude AI reply → saves to Supabase → Telegram summary
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const LINE_CHANNEL_SECRET = Deno.env.get("LINE_CHANNEL_SECRET") || "";
-const LINE_CHANNEL_TOKEN  = Deno.env.get("LINE_CHANNEL_TOKEN")  || "";
-const TELEGRAM_BOT_TOKEN  = Deno.env.get("TELEGRAM_BOT_TOKEN")  || "";
-const TELEGRAM_CHAT_ID    = Deno.env.get("TELEGRAM_CHAT_ID")    || "";
-const SUPABASE_URL        = Deno.env.get("SUPABASE_URL")        || "";
+const LINE_CHANNEL_SECRET  = Deno.env.get("LINE_CHANNEL_SECRET")      || "";
+const LINE_CHANNEL_TOKEN   = Deno.env.get("LINE_CHANNEL_TOKEN")        || "";
+const OPENAI_API_KEY       = Deno.env.get("OPENAI_API_KEY")            || "";
+const TELEGRAM_BOT_TOKEN   = Deno.env.get("TELEGRAM_BOT_TOKEN")        || "";
+const TELEGRAM_CHAT_ID     = Deno.env.get("TELEGRAM_CHAT_ID")          || "";
+const SUPABASE_URL         = Deno.env.get("SUPABASE_URL")              || "";
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
 
-const AUTO_REPLY = `สวัสดีครับ! 😊 ThaiCarbide รับซื้อเศษคาร์ไบด์ทุกชนิด
-✅ ดอกเอ็นมิล / ดอกสว่าน / อินเสิร์ท / คาร์ไบด์ผสม
-✅ รับซื้อขั้นต่ำ 1 กิโลกรัม
-✅ จ่ายเงินภายใน 48 ชม.
+// ── Nong system prompt ─────────────────────────────────────────────────────
 
-📋 กรอกแบบฟอร์มเพื่อรับราคาที่แน่นอน:
-thaicarbide.com/checkout.html
-หรือส่งรูปวัสดุมาได้เลยครับ 📸`;
+const NONG_SYSTEM = `คุณคือ Nong (น้อง) ผู้ช่วยฝ่ายขายของ ThaiCarbide.com — บริษัทรับซื้อเศษคาร์ไบด์ในประเทศไทย
+
+ภารกิจของคุณ: ช่วยลูกค้าที่ส่งข้อความมาทาง LINE และนำทางพวกเขาไปสู่การกรอกแบบฟอร์ม
+
+กฎเหล็ก:
+- ตอบเป็นภาษาไทยเสมอ (ถ้าลูกค้าเขียนอังกฤษ ตอบไทยก็ได้แต่ให้มีภาษาอังกฤษสั้นๆ ด้วย)
+- ห้ามบอกราคาที่แน่นอน — บอกว่าราคาขึ้นกับชนิดและน้ำหนัก และให้กรอกฟอร์ม
+- ข้อความสั้น กระชับ เหมาะกับมือถือ ไม่เกิน 4-5 บรรทัด
+- อย่าใช้ markdown หรือ ** ตัวหนา — เป็นข้อความธรรมดาเท่านั้น
+
+ข้อมูลที่ตอบได้:
+- รับซื้อ: อินเสิร์ท, ดอกสว่าน, เอ็นมิล, คาร์ไบด์ผสม ทุกชนิด
+- ขั้นต่ำ: 1 กิโลกรัม ไม่มีขั้นต่ำ
+- รับฟรีถึงที่: กรุงเทพฯ และ Eastern Seaboard 20 กก.ขึ้นไป (ต่ำกว่านั้นส่ง Kerry/J&T)
+- จ่ายเงิน: ภายใน 48 ชั่วโมงหลังรับวัสดุ PromptPay หรือโอนธนาคาร
+- ราคา: อัปเดตทุกวันตามตลาดโลก — กรอกฟอร์มเพื่อรับราคาที่แน่นอน
+
+ลิงก์ฟอร์ม: thaicarbide.com/checkout.html
+
+ขั้นตอนการขาย:
+1. ถามว่ามีคาร์ไบด์ประเภทไหน
+2. ถามน้ำหนักโดยประมาณ
+3. ขอ LINE ID หรือเบอร์โทร
+4. ส่งลิงก์ฟอร์มให้กรอก
+
+ถ้าลูกค้าสนใจขายให้จบด้วย: "กรอกได้เลยครับ: thaicarbide.com/checkout.html"`;
 
 // ── Signature verification ─────────────────────────────────────────────────
 
 async function verifySignature(body: string, signature: string): Promise<boolean> {
-  if (!LINE_CHANNEL_SECRET) return true; // skip if secret not set
+  if (!LINE_CHANNEL_SECRET) return true;
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw", enc.encode(LINE_CHANNEL_SECRET),
@@ -34,22 +55,80 @@ async function verifySignature(body: string, signature: string): Promise<boolean
   return expected === signature;
 }
 
+// ── Conversation history ───────────────────────────────────────────────────
+
+interface ChatMessage { role: "user" | "assistant"; content: string; }
+
+async function getHistory(supabase: ReturnType<typeof createClient>, userId: string): Promise<ChatMessage[]> {
+  const { data } = await supabase
+    .from("line_chats")
+    .select("message, bot_reply, created_at")
+    .eq("line_user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(6); // last 6 exchanges = 12 turns max
+
+  if (!data || data.length === 0) return [];
+
+  const msgs: ChatMessage[] = [];
+  // Reverse so oldest first
+  for (const row of [...data].reverse()) {
+    if (row.message) msgs.push({ role: "user",      content: row.message });
+    if (row.bot_reply) msgs.push({ role: "assistant", content: row.bot_reply });
+  }
+  return msgs;
+}
+
+// ── Claude AI ─────────────────────────────────────────────────────────────
+
+async function askNong(history: ChatMessage[], userMessage: string): Promise<string> {
+  if (!OPENAI_API_KEY) return "ขออภัยครับ ระบบขัดข้องชั่วคราว กรุณาติดต่อ @280uqpab";
+
+  const messages = [
+    { role: "system", content: NONG_SYSTEM },
+    ...history,
+    { role: "user", content: userMessage },
+  ];
+
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-4.1-mini",
+      max_tokens: 300,
+      messages,
+    }),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    console.error("[line-webhook] OpenAI error:", JSON.stringify(data));
+    return "ขออภัยครับ กรุณาลองใหม่อีกครั้ง";
+  }
+  return data.choices?.[0]?.message?.content || "ขออภัยครับ กรุณาลองใหม่อีกครั้ง";
+}
+
 // ── LINE helpers ───────────────────────────────────────────────────────────
 
 async function getDisplayName(userId: string): Promise<string> {
-  if (!LINE_CHANNEL_TOKEN) return userId;
+  if (!LINE_CHANNEL_TOKEN) return userId.slice(-6);
   try {
     const res = await fetch(`https://api.line.me/v2/bot/profile/${userId}`, {
       headers: { "Authorization": `Bearer ${LINE_CHANNEL_TOKEN}` },
     });
     const d = await res.json();
-    return d.displayName || userId;
-  } catch { return userId; }
+    return d.displayName || userId.slice(-6);
+  } catch { return userId.slice(-6); }
 }
 
-async function replyLine(replyToken: string, text: string) {
-  if (!LINE_CHANNEL_TOKEN) return;
-  await fetch("https://api.line.me/v2/bot/message/reply", {
+async function replyLine(replyToken: string, text: string): Promise<boolean> {
+  if (!LINE_CHANNEL_TOKEN) {
+    console.warn("[line-webhook] LINE_CHANNEL_TOKEN not set — cannot reply");
+    return false;
+  }
+  const res = await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -57,25 +136,27 @@ async function replyLine(replyToken: string, text: string) {
     },
     body: JSON.stringify({ replyToken, messages: [{ type: "text", text }] }),
   });
+  if (!res.ok) console.error("[line-webhook] LINE reply failed:", res.status, await res.text());
+  return res.ok;
 }
 
 // ── Telegram helper ────────────────────────────────────────────────────────
 
-async function alertTelegram(text: string) {
+async function alertTelegram(user: string, question: string, reply: string) {
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+  const text = `💬 LINE: ${user} ถาม:\n"${question.slice(0, 120)}"\n\n✅ Nong ตอบ:\n"${reply.slice(0, 200)}"`;
   await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
-  });
+  }).catch(() => {});
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────
+// ── Main handler ───────────────────────────────────────────────────────────
 
 serve(async (req) => {
-  // LINE health check
   if (req.method === "GET") {
-    return new Response(JSON.stringify({ ok: true, service: "line-webhook" }), {
+    return new Response(JSON.stringify({ ok: true, service: "line-webhook-ai", model: "gpt-4.1-mini" }), {
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -88,7 +169,7 @@ serve(async (req) => {
   const signature = req.headers.get("x-line-signature") || "";
 
   if (!(await verifySignature(body, signature))) {
-    console.error("[line-webhook] Invalid signature");
+    console.error("[line-webhook] Invalid signature — rejected");
     return new Response("Forbidden", { status: 403 });
   }
 
@@ -96,57 +177,70 @@ serve(async (req) => {
   try { payload = JSON.parse(body); }
   catch { return new Response("Bad JSON", { status: 400 }); }
 
+  // Return 200 immediately — LINE requires fast response
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  for (const event of (payload.events || [])) {
-    if (event.type !== "message") continue;
-    const msg = event.message as Record<string, unknown>;
-    const source = event.source as Record<string, unknown>;
-    const userId = (source?.userId as string) || "unknown";
-    const replyToken = event.replyToken as string;
-    const ts = new Date(event.timestamp as number).toISOString();
+  // Process events in background
+  (async () => {
+    for (const event of (payload.events || [])) {
+      if (event.type !== "message") continue;
 
-    // Text messages
-    if (msg?.type === "text") {
-      const text = msg.text as string;
-      const displayName = await getDisplayName(userId);
+      const msg     = event.message as Record<string, unknown>;
+      const source  = event.source as Record<string, unknown>;
+      const userId  = (source?.userId as string) || "unknown";
+      const replyToken = event.replyToken as string;
+      const ts      = new Date(event.timestamp as number).toISOString();
 
-      // 1. Save to Supabase
-      const { error } = await supabase.from("line_chats").insert({
-        line_user_id: userId,
-        display_name: displayName,
-        message: text,
-        reply_token: replyToken,
-        created_at: ts,
-      });
-      if (error) console.error("[line-webhook] DB insert error:", error.message);
+      // Text messages only
+      if (msg?.type !== "text") {
+        // Image: save + alert, no AI reply
+        if (msg?.type === "image") {
+          const name = await getDisplayName(userId);
+          await supabase.from("line_chats").insert({ line_user_id: userId, display_name: name, message: "[รูปภาพ]", created_at: ts });
+          await alertTelegram(name, "[ส่งรูปภาพ]", "— (ไม่มีการตอบกลับอัตโนมัติสำหรับรูปภาพ)");
+        }
+        continue;
+      }
 
-      // 2. Auto-reply
-      await replyLine(replyToken, AUTO_REPLY);
+      const userMessage = msg.text as string;
+      const msgId = msg.id as string;
 
-      // 3. Telegram alert
-      await alertTelegram(
-        `💬 LINE จาก ${displayName}:\n"${text}"\n→ ตอบที่ manager.line.biz`
-      );
+      try {
+        // 1. Get display name + conversation history in parallel
+        const [displayName, history] = await Promise.all([
+          getDisplayName(userId),
+          getHistory(supabase, userId),
+        ]);
 
-      console.log(`[line-webhook] Message from ${displayName}: ${text.slice(0, 60)}`);
+        // 2. Ask Claude
+        const nongReply = await askNong(history, userMessage);
+
+        // 3. Save to Supabase (user message + bot reply together)
+        await supabase.from("line_chats").insert({
+          line_user_id: userId,
+          display_name: displayName,
+          message: userMessage,
+          bot_reply: nongReply,
+          reply_token: replyToken,
+          msg_id: msgId,
+          created_at: ts,
+        });
+
+        // 4. Reply via LINE
+        await replyLine(replyToken, nongReply);
+
+        // 5. Telegram summary
+        await alertTelegram(displayName, userMessage, nongReply);
+
+        console.log(`[line-webhook] ${displayName}: "${userMessage.slice(0,50)}" → replied ${nongReply.length} chars`);
+
+      } catch (e) {
+        console.error("[line-webhook] Error processing message:", e);
+        // Best-effort fallback reply
+        await replyLine(replyToken, "ขออภัยครับ เกิดข้อผิดพลาดชั่วคราว กรุณาลองใหม่หรือ LINE: @280uqpab").catch(() => {});
+      }
     }
-
-    // Image messages — alert only, no auto-reply text
-    if (msg?.type === "image") {
-      const displayName = await getDisplayName(userId);
-      await supabase.from("line_chats").insert({
-        line_user_id: userId,
-        display_name: displayName,
-        message: "[รูปภาพ]",
-        reply_token: replyToken,
-        created_at: ts,
-      });
-      await alertTelegram(
-        `📸 LINE รูปภาพจาก ${displayName}\n→ ดูที่ manager.line.biz`
-      );
-    }
-  }
+  })();
 
   return new Response(JSON.stringify({ ok: true }), {
     headers: { "Content-Type": "application/json" },
