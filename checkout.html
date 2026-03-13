@@ -15,6 +15,19 @@
 <script>
   gtag('config', 'AW-18001691387');
 </script>
+<!-- Facebook Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'FB_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=FB_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+<!-- End Facebook Pixel -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ขายคาร์ไบด์ | Sell Carbide — ThaiCarbide.com</title>
 <meta name="robots" content="noindex">
@@ -1045,6 +1058,8 @@ async function submitOrder() {
     if (typeof gtag !== 'undefined') {
       gtag('event', 'conversion', { send_to: 'AW-18001691387/hrp0CKb63oUcEPuF8IdD', value: 8.0, currency: 'THB' });
     }
+    // Facebook Pixel: Lead event on form submit
+    if (typeof fbq !== 'undefined') { fbq('track', 'Lead'); }
     if (shippingMethod === 'send') {
       document.getElementById('shippingAddrBox').style.display = 'block';
     } else {
@@ -1087,5 +1102,13 @@ function setLang(lang) {
 }
 </script>
 <script src="conversion-tracking.js"></script>
+<script>
+// Facebook Pixel: Contact event on LINE button clicks
+document.querySelectorAll('a[href*="line.me"]').forEach(function(el){
+  el.addEventListener('click', function(){
+    if (typeof fbq !== 'undefined') { fbq('track', 'Contact'); }
+  });
+});
+</script>
 </body>
 </html>

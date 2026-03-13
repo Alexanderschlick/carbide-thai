@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const LINE_CHANNEL_SECRET  = Deno.env.get("LINE_CHANNEL_SECRET")      || "";
 const LINE_CHANNEL_TOKEN   = Deno.env.get("LINE_CHANNEL_TOKEN")        || "";
-const OPENAI_API_KEY       = Deno.env.get("OPENAI_API_KEY")            || "";
+const ANTHROPIC_API_KEY    = Deno.env.get("ANTHROPIC_API_KEY")         || "";
 const TELEGRAM_BOT_TOKEN   = Deno.env.get("TELEGRAM_BOT_TOKEN")        || "";
 const TELEGRAM_CHAT_ID     = Deno.env.get("TELEGRAM_CHAT_ID")          || "";
 const SUPABASE_URL         = Deno.env.get("SUPABASE_URL")              || "";
@@ -81,33 +81,32 @@ async function getHistory(supabase: ReturnType<typeof createClient>, userId: str
 // ── Claude AI ─────────────────────────────────────────────────────────────
 
 async function askNong(history: ChatMessage[], userMessage: string): Promise<string> {
-  if (!OPENAI_API_KEY) return "ขออภัยครับ ระบบขัดข้องชั่วคราว กรุณาติดต่อ @280uqpab";
+  if (!ANTHROPIC_API_KEY) return "ขออภัยครับ ระบบขัดข้องชั่วคราว กรุณาติดต่อ @280uqpab";
 
-  const messages = [
-    { role: "system", content: NONG_SYSTEM },
-    ...history,
-    { role: "user", content: userMessage },
-  ];
-
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "x-api-key": ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gpt-4.1-mini",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 300,
-      messages,
+      system: NONG_SYSTEM,
+      messages: [
+        ...history,
+        { role: "user", content: userMessage },
+      ],
     }),
   });
 
   const data = await res.json();
   if (!res.ok) {
-    console.error("[line-webhook] OpenAI error:", JSON.stringify(data));
+    console.error("[line-webhook] Anthropic error:", JSON.stringify(data));
     return "ขออภัยครับ กรุณาลองใหม่อีกครั้ง";
   }
-  return data.choices?.[0]?.message?.content || "ขออภัยครับ กรุณาลองใหม่อีกครั้ง";
+  return data.content?.[0]?.text || "ขออภัยครับ กรุณาลองใหม่อีกครั้ง";
 }
 
 // ── LINE helpers ───────────────────────────────────────────────────────────
@@ -156,7 +155,7 @@ async function alertTelegram(user: string, question: string, reply: string) {
 
 serve(async (req) => {
   if (req.method === "GET") {
-    return new Response(JSON.stringify({ ok: true, service: "line-webhook-ai", model: "gpt-4.1-mini" }), {
+    return new Response(JSON.stringify({ ok: true, service: "line-webhook-ai", model: "claude-haiku-4-5-20251001" }), {
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -183,6 +182,18 @@ serve(async (req) => {
   // Process events in background
   (async () => {
     for (const event of (payload.events || [])) {
+      // ── Follow event: send welcome message ────────────────────────────────
+      if (event.type === "follow") {
+        const source = event.source as Record<string, unknown>;
+        const userId = (source?.userId as string) || "unknown";
+        const replyToken = event.replyToken as string;
+        const welcomeMsg = "สวัสดีครับ! 😊 ขอบคุณที่ add ThaiCarbide นะครับ\nมีเศษคาร์ไบด์อยากขายไหมครับ?\nส่งรูปมาได้เลย หรือกรอกแบบฟอร์ม:\nthaicarbide.com/checkout.html\nเราจ่ายเงินสดภายใน 48 ชม. 💰";
+        await replyLine(replyToken, welcomeMsg);
+        const name = await getDisplayName(userId);
+        await alertTelegram(name, "[ใหม่ — add friend]", welcomeMsg);
+        continue;
+      }
+
       if (event.type !== "message") continue;
 
       const msg     = event.message as Record<string, unknown>;
