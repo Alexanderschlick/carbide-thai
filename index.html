@@ -404,6 +404,15 @@ footer { background:#070f0a; border-top:1px solid var(--border); padding:56px 40
   .mobile-cta-bar { display:none; }
 }
 
+/* DESKTOP SCROLL STICKY BAR */
+.desktop-sticky-sell { display:none; position:fixed; top:0; left:0; right:0; z-index:101; background:var(--gold); color:#0b1f14; height:48px; align-items:center; justify-content:center; gap:20px; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:900; letter-spacing:1px; text-transform:uppercase; border-bottom:2px solid var(--gold-lt); animation:slideDown 0.3s ease; }
+.desktop-sticky-sell a { color:#0b1f14; text-decoration:none; background:rgba(11,31,20,0.18); border:2px solid rgba(11,31,20,0.3); padding:6px 24px; border-radius:3px; font-size:15px; transition:background 0.2s; white-space:nowrap; }
+.desktop-sticky-sell a:hover { background:rgba(11,31,20,0.32); }
+.desktop-sticky-sell .sticky-price { font-size:14px; font-weight:700; opacity:0.85; }
+.desktop-sticky-sell.visible { display:flex; }
+@keyframes slideDown { from { transform:translateY(-100%); } to { transform:translateY(0); } }
+@media (max-width:768px) { .desktop-sticky-sell { display:none !important; } }
+
 /* REVIEWS */
 .reviews-section { padding:90px 40px; background:var(--bg); }
 .reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
@@ -635,7 +644,7 @@ Carbide<span>Thai</span>
     <li><a href="#how-it-works"><span class="th">วิธีขาย</span><span class="en">How to Sell</span><small>HOW TO SELL</small></a></li>
     <li><a href="#materials"><span class="th">ราคาวันนี้</span><span class="en">Prices</span><small>TODAY'S PRICES</small></a></li>
     <li><a href="#contact"><span class="th">ติดต่อ</span><span class="en">Contact</span><small>CONTACT</small></a></li>
-    <li><a href="#contact" class="nav-cta"><span class="th">ขายเดี๋ยวนี้ →</span><span class="en">Sell Now →</span></a></li>
+    <li><a href="/checkout.html" class="nav-cta"><span class="th">ขายเลย →</span><span class="en">Sell Now →</span></a></li>
   </ul>
   <div class="lang-toggle" role="group" aria-label="Language / ภาษา">
     <button class="lang-btn active" data-lang="th" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
@@ -681,15 +690,15 @@ Carbide<span>Thai</span>
       <span class="en">Estimated daily prices · Paid within 48 hours of receiving material · Free pickup Bangkok & Eastern Seaboard</span>
     </div>
     <div class="hero-cta">
-      <a class="btn-primary" href="/checkout.html" style="animation:pulse-gold 2.8s infinite;">
-        <span class="th">ขายเลย →</span>
-        <span class="en">Sell Now →</span>
-      </a>
-      <a class="btn-line" href="https://line.me/R/ti/p/@280uqpab" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 40 40" fill="white"><path d="M20 2C10.06 2 2 9.16 2 18c0 7.97 6.55 14.62 15.3 15.82.6.13 1.41.4 1.61.91.19.47.12 1.2.06 1.67l-.26 1.55c-.08.47-.37 1.85 1.62.99 1.99-.84 10.74-6.33 14.66-10.84C37.46 24.9 38 21.56 38 18 38 9.16 29.94 2 20 2z"/></svg>
-        LINE
+      <a class="btn-primary" href="/checkout.html" style="animation:pulse-gold 2.8s infinite; padding:18px 48px; font-size:20px;">
+        <span class="th">รับราคาทันที →</span>
+        <span class="en">Get My Price Now →</span>
       </a>
     </div>
+    <p style="margin-top:14px; font-size:13px; color:var(--muted); animation:fadeUp 0.6s 0.4s ease both;">
+      <span class="th">หรือ <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" style="color:#06C755; font-weight:700; text-decoration:none;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');">💚 LINE @280uqpab</a> ถ้าอยากถามก่อน</span>
+      <span class="en">or <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" style="color:#06C755; font-weight:700; text-decoration:none;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');">💚 LINE @280uqpab</a> to ask first</span>
+    </p>
     <div class="hero-trust-badges">
       <span class="hero-trust-badge"><span class="badge-icon">🏭</span><span class="th">บริษัทจดทะเบียนในไทย</span><span class="en">Thai Registered Co.</span></span>
       <span class="hero-trust-badge"><span class="badge-icon">✅</span><span class="th">จ่ายครบ 100%</span><span class="en">Full Payment Guaranteed</span></span>
@@ -2159,6 +2168,16 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
 </script>
 <script src="conversion-tracking.js"></script>
 
+<!-- DESKTOP SCROLL STICKY BAR -->
+<div class="desktop-sticky-sell" id="desktopStickySell">
+  <span class="sticky-price th">💰 ราคาวันนี้อัปเดตแล้ว — ขายก่อนหมดวัน</span>
+  <span class="sticky-price en">💰 Today's prices updated — sell before end of day</span>
+  <a href="/checkout.html">
+    <span class="th">รับราคาทันที →</span>
+    <span class="en">Get My Price →</span>
+  </a>
+</div>
+
 <!-- MOBILE STICKY CTA BAR -->
 <div class="mobile-cta-bar" id="mobileCTABar">
   <a class="mobile-cta-line" href="https://line.me/R/ti/p/@280uqpab" target="_blank">
@@ -2220,6 +2239,25 @@ document.querySelectorAll('a[href*="line.me"]').forEach(function(el){
     if (typeof fbq !== 'undefined') { fbq('track', 'Contact'); }
   });
 });
+
+// Desktop sticky sell bar — show after scrolling past hero, hide near footer
+(function() {
+  var bar    = document.getElementById('desktopStickySell');
+  var hero   = document.querySelector('.hero');
+  var footer = document.querySelector('footer');
+  if (!bar || !hero) return;
+  var shown = false;
+  window.addEventListener('scroll', function() {
+    var heroBottom   = hero.getBoundingClientRect().bottom;
+    var footerTop    = footer ? footer.getBoundingClientRect().top : Infinity;
+    var nearFooter   = footerTop < window.innerHeight + 80;
+    if (heroBottom < 0 && !nearFooter) {
+      if (!shown) { bar.classList.add('visible'); shown = true; }
+    } else {
+      if (shown) { bar.classList.remove('visible'); shown = false; }
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
