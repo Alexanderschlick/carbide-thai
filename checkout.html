@@ -31,6 +31,8 @@ src="https://www.facebook.com/tr?id=FB_PIXEL_ID&ev=PageView&noscript=1"/></noscr
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ขายคาร์ไบด์ | Sell Carbide — ThaiCarbide.com</title>
 <meta name="robots" content="noindex">
+<link rel="alternate" hreflang="th" href="https://thaicarbide.com/checkout.html">
+<link rel="alternate" hreflang="en" href="https://thaicarbide.com/checkout.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -41,7 +43,7 @@ src="https://www.facebook.com/tr?id=FB_PIXEL_ID&ev=PageView&noscript=1"/></noscr
   --gold:    #c9a227;
   --gold-lt: #e8bc30;
   --white:   #f2ede4;
-  --muted:   #7a9480;
+  --muted:   #a8b8a4;
   --border:  rgba(201,162,39,0.18);
   --green-ok:#06C755;
   --red:     #e05555;
@@ -58,7 +60,7 @@ nav { position:sticky; top:0; z-index:100; display:flex; justify-content:space-b
 .nav-back:hover { color:var(--gold); }
 .nav-right { display:flex; align-items:center; gap:20px; }
 .lang-toggle { display:flex; gap:3px; }
-.lang-btn { background:transparent; border:1px solid rgba(201,162,39,0.22); color:var(--muted); font-size:14px; padding:4px 8px; border-radius:3px; cursor:pointer; transition:border-color 0.2s,background 0.2s; line-height:1; font-family:inherit; }
+.lang-btn { background:transparent; border:1px solid rgba(201,162,39,0.22); color:var(--muted); font-size:14px; padding:4px 8px; border-radius:3px; cursor:pointer; transition:border-color 0.2s,background 0.2s; line-height:1; font-family:inherit; min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center; }
 .lang-btn.active { border-color:var(--gold); background:rgba(201,162,39,0.15); color:var(--white); }
 .lang-btn:hover { border-color:var(--gold); }
 body { transition:opacity 0.12s ease; }
@@ -212,6 +214,7 @@ body.lang-en .th { display:none !important; }
 /* MOBILE */
 @media (max-width:768px) {
   nav { padding:12px 16px; }
+  .lang-btn { min-width:48px; min-height:48px; font-size:18px; }
   .page-wrap { padding:32px 16px 60px; }
   .form-row { grid-template-columns:1fr; }
   .material-grid { grid-template-columns:1fr; }
@@ -316,30 +319,30 @@ body.lang-en .th { display:none !important; }
     <div class="card">
       <div class="card-title"><span class="th">ประเภทคาร์ไบด์</span><span class="en"> · Material Type</span></div>
 
-      <div class="material-grid" id="materialGrid">
+      <div class="material-grid" id="materialGrid" role="radiogroup" aria-label="ประเภทคาร์ไบด์ / Material type">
 
-        <label class="mat-card" id="mat-insert" onclick="selectMaterial('Carbide Insert', this)">
+        <label class="mat-card" id="mat-insert" onclick="selectMaterial('Carbide Insert', this)" role="radio" aria-checked="false" tabindex="0" aria-label="คาร์ไบด์อินเสิร์ท / Carbide Inserts">
           <input type="radio" name="material" value="Carbide Insert">
           <div class="mat-name th">คาร์ไบด์อินเสิร์ท</div>
           <div class="mat-name en">Carbide Inserts</div>
           <div class="mat-name-en">CNMG / TNMG / APMT / all grades</div>
         </label>
 
-        <label class="mat-card" id="mat-scrap" onclick="selectMaterial('Carbide Scrap', this)">
+        <label class="mat-card" id="mat-scrap" onclick="selectMaterial('Carbide Scrap', this)" role="radio" aria-checked="false" tabindex="0" aria-label="ดอกสว่าน เอ็นมิล / Drills & End Mills">
           <input type="radio" name="material" value="Carbide Scrap">
           <div class="mat-name th">ดอกสว่าน / เอ็นมิล</div>
           <div class="mat-name en">Drills & End Mills</div>
           <div class="mat-name-en">Solid carbide tools (VHM)</div>
         </label>
 
-        <label class="mat-card" id="mat-mixed" onclick="selectMaterial('Mixed Carbide', this)">
+        <label class="mat-card" id="mat-mixed" onclick="selectMaterial('Mixed Carbide', this)" role="radio" aria-checked="false" tabindex="0" aria-label="คาร์ไบด์ผสม / Mixed Carbide">
           <input type="radio" name="material" value="Mixed Carbide">
           <div class="mat-name th">คาร์ไบด์ผสม</div>
           <div class="mat-name en">Mixed Carbide</div>
           <div class="mat-name-en">Mixed scrap, broken pieces</div>
         </label>
 
-        <label class="mat-card" id="mat-other" onclick="selectMaterial('Other', this)">
+        <label class="mat-card" id="mat-other" onclick="selectMaterial('Other', this)" role="radio" aria-checked="false" tabindex="0" aria-label="อื่นๆ / Other — Rods, powder, wear parts">
           <input type="radio" name="material" value="Other">
           <div class="mat-name th">อื่นๆ</div>
           <div class="mat-name en">Other</div>
@@ -799,8 +802,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function selectMaterial(material, el) {
   selectedMaterial = material;
-  document.querySelectorAll('.mat-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.mat-card').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-checked', 'false'); });
   el.classList.add('selected');
+  el.setAttribute('aria-checked', 'true');
   updatePrice();
   scheduleAbandoned();
 }
