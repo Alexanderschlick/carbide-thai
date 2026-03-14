@@ -200,8 +200,14 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify
 .nav-cta { background:var(--gold) !important; color:#0b1f14 !important; padding:9px 20px; border-radius:3px; font-weight:700 !important; }
 .nav-cta:hover { background:var(--gold-lt) !important; color:#0b1f14 !important; }
 
+/* PROMO BANNER */
+.promo-banner { position:sticky; top:61px; z-index:98; background:#06C755; color:#fff; text-align:center; padding:11px 16px; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; line-height:1.35; text-decoration:none; display:block; cursor:pointer; }
+.promo-banner:hover { background:#05b84e; }
+.promo-slots { font-size:13px; font-weight:800; background:rgba(0,0,0,0.15); border-radius:20px; padding:2px 10px; display:inline-block; margin-left:8px; }
+@media (max-width:768px) { .promo-banner { font-size:14px; padding:12px 12px; } }
+
 /* TICKER */
-.ticker { position:sticky; top:61px; z-index:99; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-align:center; padding:7px 0; margin-top:61px; white-space:nowrap; overflow:hidden; }
+.ticker { position:sticky; top:99px; z-index:97; background:var(--gold); color:#0b1f14; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-align:center; padding:7px 0; margin-top:61px; white-space:nowrap; overflow:hidden; }
 .ticker-inner { display:inline-block; padding:0 48px; }
 @keyframes ticker-scroll { 0% { transform:translateX(105vw); } 100% { transform:translateX(-100%); } }
 
@@ -664,6 +670,12 @@ Carbide<span>Thai</span>
     <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
   </div>
 </nav>
+
+<!-- PROMO BANNER -->
+<a class="promo-banner" href="/checkout.html" id="promoBanner">
+  🎉 โปรเปิดตัว — รับโบนัส ฿200 สำหรับ 50 ลูกค้าแรก!
+  <span class="promo-slots" id="promoSlots">⏳ กำลังโหลด...</span>
+</a>
 
 <!-- TICKER -->
 <div class="ticker" id="ticker"><span class="ticker-inner" id="ticker-inner"><span class="th">กำลังโหลดราคา...</span><span class="en">Loading today's prices...</span></span></div>
@@ -1531,6 +1543,33 @@ function applyTiers(key, tiers) {
   if (over) over.textContent = tiers.over50  != null ? '฿' + tiers.over50.toLocaleString('th-TH')  : '—';
 }
 
+async function loadPromoBanner() {
+  try {
+    const res = await fetch('https://ltupwgytuayzopnsdvpc.supabase.co/rest/v1/promo_claims?select=id', {
+      headers: {
+        'apikey': 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL',
+        'Authorization': 'Bearer sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL',
+        'Prefer': 'count=exact',
+        'Range': '0-0'
+      }
+    });
+    const contentRange = res.headers.get('content-range') || '';
+    const match = contentRange.match(/\/(\d+)$/);
+    const claimed = match ? parseInt(match[1], 10) : 0;
+    const remaining = Math.max(0, 50 - claimed);
+    const el = document.getElementById('promoSlots');
+    const banner = document.getElementById('promoBanner');
+    if (remaining === 0) {
+      if (banner) banner.style.display = 'none';
+    } else {
+      if (el) el.textContent = 'เหลืออีก ' + remaining + ' ที่';
+    }
+  } catch(e) {
+    const el = document.getElementById('promoSlots');
+    if (el) el.textContent = 'เหลืออีก 50 ที่';
+  }
+}
+
 async function loadPrices() {
   try {
     // Try Supabase first for live admin-controlled prices
@@ -1678,6 +1717,7 @@ document.querySelectorAll('.tile-carousel').forEach(carousel => {
 });
 
 loadPrices();
+loadPromoBanner();
 
 function openLightbox(src) {
   document.getElementById('lightboxImg').src = src;
