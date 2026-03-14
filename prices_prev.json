@@ -1,48 +1,8 @@
 {
-  "updated": "2026-03-10T09:47:39.620Z",
-  "updated_display": "10 Mar 2026, 16:47",
-  "eur_thb_rate": 37,
+  "updated": "2026-03-11T17:00:08.556Z",
+  "updated_display": "12 Mar 2026, 00:00",
+  "eur_thb_rate": 36.75,
   "prices": {
-    "carbide_drills": {
-      "thb_per_kg": 1700,
-      "name_en": "Carbide Drills & Endmills",
-      "name_th": "ดอกสว่านและเอ็นมิล VHM",
-      "tiers": {
-        "under20": 1550,
-        "mid": 1600,
-        "over50": 1700
-      }
-    },
-    "carbide_inserts": {
-      "thb_per_kg": 1650,
-      "name_en": "Carbide Inserts",
-      "name_th": "คาร์ไบด์อินเสิร์ท",
-      "tiers": {
-        "under20": 1500,
-        "mid": 1550,
-        "over50": 1650
-      }
-    },
-    "saw_blades": {
-      "thb_per_kg": 1550,
-      "name_en": "Carbide Saw Blades",
-      "name_th": "VHM ใบเลื่อยคาร์ไบด์",
-      "tiers": {
-        "under20": 1500,
-        "mid": 1550,
-        "over50": 1550
-      }
-    },
-    "mixed_carbide": {
-      "thb_per_kg": 1550,
-      "name_en": "Mixed Carbide",
-      "name_th": "คาร์ไบด์ผสม",
-      "tiers": {
-        "under20": 1500,
-        "mid": 1550,
-        "over50": 1550
-      }
-    },
     "sand_rills": {
       "thb_per_kg": 520,
       "name_en": "Sand Rills / Wear Parts",
@@ -58,32 +18,7 @@
       "display": "Anfrage"
     }
   },
-  "teaser_prices": {
-    "carbide_drills": {
-      "thb_per_kg": 2650,
-      "eur_per_kg": 71,
-      "name_en": "Carbide Drills & Endmills",
-      "name_th": "ดอกสว่านและเอ็นมิล VHM"
-    },
-    "carbide_inserts": {
-      "thb_per_kg": 2650,
-      "eur_per_kg": 71.5,
-      "name_en": "Carbide Inserts",
-      "name_th": "คาร์ไบด์อินเสิร์ท"
-    },
-    "saw_blades": {
-      "thb_per_kg": 2600,
-      "eur_per_kg": 70,
-      "name_en": "Carbide Saw Blades",
-      "name_th": "VHM ใบเลื่อยคาร์ไบด์"
-    },
-    "mixed_carbide": {
-      "thb_per_kg": 2600,
-      "eur_per_kg": 70,
-      "name_en": "Mixed Carbide",
-      "name_th": "คาร์ไบด์ผสม"
-    }
-  },
-  "teaser_price": 2650,
-  "teaser_material": "Carbide Drills & Endmills"
+  "teaser_prices": {},
+  "teaser_price": null,
+  "teaser_material": ""
 }

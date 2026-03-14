@@ -19,8 +19,8 @@ serve(async (req) => {
   try {
     const { messages, lang } = await req.json();
 
-    const ANTHROPIC_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_KEY) {
+    const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_KEY) {
       return new Response(JSON.stringify({ error: "API key not configured" }), {
         status: 500, headers: { ...CORS, "Content-Type": "application/json" },
       });
@@ -102,25 +102,34 @@ RULES:
 - Keep messages SHORT and mobile-friendly
 - Do not use markdown formatting like bold or italic. Write plain text only, no asterisks.`;
 
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "x-api-key": ANTHROPIC_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
+        "Authorization": `Bearer ${OPENAI_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: "gpt-4.1-mini",
         max_tokens: 512,
-        system: SYSTEM_PROMPT,
-        messages,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages,
+        ],
       }),
     });
 
     const data = await res.json();
-    return new Response(JSON.stringify(data), {
-      status: res.status,
-      headers: { ...CORS, "Content-Type": "application/json" },
+
+    if (!res.ok) {
+      return new Response(JSON.stringify({ error: data }), {
+        status: res.status, headers: { ...CORS, "Content-Type": "application/json" },
+      });
+    }
+
+    // Return in Anthropic-compatible shape so index.html needs no changes
+    const text = data.choices?.[0]?.message?.content || "";
+    return new Response(JSON.stringify({ content: [{ type: "text", text }] }), {
+      status: 200, headers: { ...CORS, "Content-Type": "application/json" },
     });
 
   } catch (e) {
