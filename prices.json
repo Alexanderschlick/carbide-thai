@@ -1,31 +1,24 @@
 {
-  "updated": "17 Mar 2026",
-  "eur_thb_rate": 37.1905,
-  "margin_applied": 1.0,
+  "updated": "2026-03-17T17:00:07.505Z",
+  "updated_display": "18 Mar 2026, 00:00",
+  "eur_thb_rate": 37.19,
   "prices": {
-    "carbide_inserts": {
-      "thb_per_kg": 930,
-      "eur_per_kg": 25.0,
-      "updated": "17 Mar 2026",
-      "source": "live"
-    },
-    "carbide_drills": {
-      "thb_per_kg": 970,
-      "eur_per_kg": 26.0,
-      "updated": "17 Mar 2026",
-      "source": "live"
-    },
-    "mixed_carbide": {
-      "thb_per_kg": 820,
-      "eur_per_kg": 22.0,
-      "updated": "17 Mar 2026",
-      "source": "live"
-    },
     "sand_rills": {
       "thb_per_kg": 520,
-      "eur_per_kg": 14.0,
-      "updated": "17 Mar 2026",
-      "source": "fallback"
+      "name_en": "Sand Rills / Wear Parts",
+      "name_th": "แซนด์ริล / ชิ้นส่วนสึกหรอ",
+      "tiers": null,
+      "display": "Anfrage"
+    },
+    "carbide_sludge": {
+      "thb_per_kg": null,
+      "name_en": "Carbide Sludge",
+      "name_th": "Hartmetallschlamm",
+      "tiers": null,
+      "display": "Anfrage"
     }
-  }
+  },
+  "teaser_prices": {},
+  "teaser_price": null,
+  "teaser_material": ""
 }
