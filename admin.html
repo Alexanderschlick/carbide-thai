@@ -532,6 +532,16 @@
     vertical-align: middle;
   }
 
+  /* ── TIME ON SITE TABLE ─────────────────────────────────────── */
+  .tos-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tos-table th { background: var(--surface2); padding: 10px 14px; text-align: left; font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); }
+  .tos-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .tos-table tr:last-child td { border-bottom: none; }
+  .tos-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .tos-bar  { flex: 1; background: var(--surface2); height: 12px; border: 1px solid var(--border); overflow: hidden; max-width: 160px; }
+  .tos-fill { height: 100%; background: var(--accent2); }
+  .tos-note { font-size: 10px; color: var(--muted); font-family: var(--mono); margin-top: 8px; }
+
   /* ── ANALYTICS ──────────────────────────────────────────────── */
   .an-note {
     background: rgba(232,200,74,0.05);
@@ -799,6 +809,12 @@
         <div class="an-title">Google Ads Snapshot</div>
         <div id="ads-body"><div class="loading" style="padding:12px 0"><span class="spinner"></span></div></div>
       </div>
+    </div>
+
+    <!-- Time on Site -->
+    <div class="an-card" style="margin-bottom:16px;">
+      <div class="an-title">Avg Time on Site <span style="color:var(--accent);font-size:10px;margin-left:6px;">THIS BROWSER</span></div>
+      <div id="tos-body"><div class="loading"><span class="spinner"></span></div></div>
     </div>
 
     <!-- Recent leads table -->
@@ -1383,6 +1399,7 @@ async function loadAnalytics() {
   renderMaterials();
   renderRevenue();
   renderAdsSnapshot();
+  renderTos();
   renderLeadsList();
   document.getElementById('analytics-ts').textContent = 'Sync: ' + new Date().toLocaleTimeString('de-DE');
 }
@@ -1502,6 +1519,70 @@ function renderAdsSnapshot() {
     <div style="font-size:10px;color:var(--muted);font-family:var(--mono);border-top:1px solid var(--border);padding-top:8px;">
       Cached · last sync ${a.last_updated} · updated by cron daily
     </div>`;
+}
+
+function renderTos() {
+  const el = document.getElementById('tos-body');
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('tc_sessions') || '[]'); } catch(e) {}
+
+  const PAGE_LABELS = { '/sell.html': 'sell.html (ad target)', '/': 'Homepage', '/checkout.html': 'checkout.html' };
+  const pageOrder   = ['/sell.html', '/', '/checkout.html'];
+  const byPage = {};
+  sessions.forEach(s => { if (!byPage[s.p]) byPage[s.p] = []; byPage[s.p].push(s.d); });
+
+  if (!sessions.length) {
+    el.innerHTML = `<div style="color:var(--muted);font-size:12px;font-family:var(--mono);padding:8px 0;">
+      No sessions recorded yet — visit the site pages to populate this tracker.
+    </div>
+    <div class="tos-note">Data is stored in this browser's localStorage. Cross-device tracking requires GA4 (pending service account setup).</div>`;
+    return;
+  }
+
+  function fmt(s) {
+    if (s < 60) return s + 's';
+    return Math.floor(s/60) + 'm ' + (s%60) + 's';
+  }
+
+  const allPages = [...new Set([...pageOrder, ...Object.keys(byPage)])];
+  const maxAvg = Math.max(...allPages.map(p => {
+    const arr = byPage[p] || [];
+    return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+  }), 1);
+
+  let rows = allPages.filter(p => byPage[p]?.length).map(p => {
+    const arr = byPage[p];
+    const avg = Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
+    const max = Math.max(...arr);
+    const min = Math.min(...arr);
+    const pct = avg / maxAvg * 100;
+    const label = PAGE_LABELS[p] || p;
+    return `<tr>
+      <td class="mono" style="font-size:12px;">${label}</td>
+      <td class="mono" style="text-align:center;">${arr.length}</td>
+      <td>
+        <div class="tos-bar-wrap">
+          <div class="tos-bar"><div class="tos-fill" style="width:${pct}%"></div></div>
+          <span class="mono" style="font-size:13px;font-weight:700;color:var(--accent2);">${fmt(avg)}</span>
+        </div>
+      </td>
+      <td class="mono" style="font-size:11px;color:var(--muted);">${fmt(min)} – ${fmt(max)}</td>
+    </tr>`;
+  }).join('');
+
+  const total = sessions.length;
+  const overall = Math.round(sessions.reduce((s,x)=>s+x.d,0)/total);
+
+  el.innerHTML = `
+    <div style="display:flex;gap:24px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+      <div><div class="stat-label">Overall Avg</div><div class="stat-value" style="font-size:22px;color:var(--accent2);">${fmt(overall)}</div></div>
+      <div><div class="stat-label">Total Sessions</div><div class="stat-value" style="font-size:22px;">${total}</div></div>
+    </div>
+    <table class="tos-table">
+      <thead><tr><th>Page</th><th style="text-align:center">Sessions</th><th>Avg Time</th><th>Range</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="tos-note">⚠ This browser only · clears on localStorage reset · <strong style="color:var(--accent)">for cross-device stats configure GA4 service account</strong></div>`;
 }
 
 function renderLeadsList() {

@@ -454,5 +454,8 @@ function showErr(msg) {
 loadPrices();
 loadPromo();
 </script>
+<script>/* tc-tracker: session time */
+(function(){var K='tc_sessions',p='/sell.html',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
+</script>
 </body>
 </html>
