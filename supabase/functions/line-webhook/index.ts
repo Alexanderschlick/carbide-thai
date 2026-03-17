@@ -31,7 +31,7 @@ const NONG_SYSTEM = `คุณคือ Nong (น้อง) ผู้ช่ว�
 - จ่ายเงิน: ภายใน 48 ชั่วโมงหลังรับวัสดุ PromptPay หรือโอนธนาคาร
 - ราคา: อัปเดตทุกวันตามตลาดโลก — กรอกฟอร์มเพื่อรับราคาที่แน่นอน
 
-ลิงก์ฟอร์ม: thaicarbide.com/checkout.html
+ลิงก์ฟอร์ม: https://thaicarbide.com/sell.html
 
 ขั้นตอนการขาย:
 1. ถามว่ามีคาร์ไบด์ประเภทไหน
@@ -39,7 +39,7 @@ const NONG_SYSTEM = `คุณคือ Nong (น้อง) ผู้ช่ว�
 3. ขอ LINE ID หรือเบอร์โทร
 4. ส่งลิงก์ฟอร์มให้กรอก
 
-ถ้าลูกค้าสนใจขายให้จบด้วย: "กรอกได้เลยครับ: thaicarbide.com/checkout.html"`;
+ถ้าลูกค้าสนใจขายให้จบด้วย: "กรอกได้เลยครับ: https://thaicarbide.com/sell.html"`;
 
 // ── Signature verification ─────────────────────────────────────────────────
 
@@ -187,7 +187,7 @@ serve(async (req) => {
         const source = event.source as Record<string, unknown>;
         const userId = (source?.userId as string) || "unknown";
         const replyToken = event.replyToken as string;
-        const welcomeMsg = "สวัสดีครับ! 😊 ขอบคุณที่ add ThaiCarbide นะครับ\nมีเศษคาร์ไบด์อยากขายไหมครับ?\nส่งรูปมาได้เลย หรือกรอกแบบฟอร์ม:\nthaicarbide.com/checkout.html\nเราจ่ายเงินสดภายใน 48 ชม. 💰";
+        const welcomeMsg = "สวัสดีครับ! 😊 ขอบคุณที่ add ThaiCarbide นะครับ\nมีเศษคาร์ไบด์อยากขายไหมครับ?\nส่งรูปมาได้เลย หรือดูราคาและกรอกแบบฟอร์ม:\nhttps://thaicarbide.com/sell.html\nเราจ่ายเงินสดภายใน 48 ชม. 💰";
         await replyLine(replyToken, welcomeMsg);
         const name = await getDisplayName(userId);
         await alertTelegram(name, "[ใหม่ — add friend]", welcomeMsg);
