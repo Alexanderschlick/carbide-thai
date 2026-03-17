@@ -2036,6 +2036,18 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
         },
         body: JSON.stringify({ line_id: lineId, source: 'chat', status: 'chat_lead' }),
       });
+      // Link the LINE ID back to the chat transcript in orders
+      if (sessionId) {
+        fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + sessionId, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ line_id: lineId }),
+        }).catch(() => {});
+      }
     } catch(e) { /* non-critical */ }
     const confirm = document.createElement('div');
     confirm.className = 'chat-msg bot';

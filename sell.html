@@ -393,8 +393,13 @@ async function submitLead() {
         source: 'sell-lp'
       })
     });
+    if (!leadRes.ok) {
+      const errText = await leadRes.text().catch(() => '');
+      console.error('[sell-lp] leads write failed', leadRes.status, errText);
+      throw new Error('db_write_failed');
+    }
     let leadId = null;
-    if (leadRes.ok) { const d = await leadRes.json(); leadId = d[0]?.id; }
+    { const d = await leadRes.json(); leadId = d[0]?.id; }
 
     // 2. Save order
     const ref = 'TC-' + Date.now().toString(36).toUpperCase();
