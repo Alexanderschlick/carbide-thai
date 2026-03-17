@@ -531,6 +531,74 @@
     margin-right: 8px;
     vertical-align: middle;
   }
+
+  /* ── ANALYTICS ──────────────────────────────────────────────── */
+  .an-note {
+    background: rgba(232,200,74,0.05);
+    border: 1px solid rgba(232,200,74,0.2);
+    padding: 10px 16px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .an-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .an-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .analytics-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* Funnel */
+  .funnel-step {
+    display: grid;
+    grid-template-columns: 160px 1fr 68px 52px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .funnel-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+  .funnel-note  { font-size: 10px; color: var(--muted); opacity: 0.6; margin-top: 2px; font-family: var(--mono); }
+  .funnel-track { background: var(--surface2); height: 26px; border: 1px solid var(--border); overflow: hidden; }
+  .funnel-fill  { height: 100%; background: var(--accent); transition: width 0.7s cubic-bezier(.4,0,.2,1); }
+  .funnel-fill.green { background: var(--accent2); }
+  .funnel-fill.zero  { background: #2a2a2a; }
+  .funnel-n    { font-family: var(--mono); font-size: 15px; font-weight: 700; text-align: right; }
+  .funnel-pct  { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; }
+  .funnel-drop {
+    grid-column: 2 / 5;
+    font-size: 10px;
+    color: var(--danger);
+    font-family: var(--mono);
+    padding-left: 2px;
+    opacity: 0.8;
+    margin-bottom: 2px;
+  }
+
+  /* Source / Material bars */
+  .src-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .src-label { font-size: 11px; color: var(--muted); font-family: var(--mono); width: 90px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .src-bar   { flex: 1; background: var(--surface2); height: 14px; border: 1px solid var(--border); overflow: hidden; }
+  .src-fill  { height: 100%; background: var(--accent); }
+  .src-fill.green { background: var(--accent2); }
+  .src-n     { font-family: var(--mono); font-size: 12px; font-weight: 700; width: 24px; text-align: right; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -555,6 +623,9 @@
     </div>
     <div class="nav-item" onclick="showPage('prices')">
       <span class="nav-icon">📈</span> Preise
+    </div>
+    <div class="nav-item" onclick="showPage('analytics')">
+      <span class="nav-icon">🔬</span> Analytics
     </div>
   </nav>
   <button class="sync-btn" onclick="loadAll()">⟳ Sync laden</button>
@@ -677,6 +748,63 @@
 
     <div style="margin-top:24px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--muted);">
       💡 Changes publish instantly to the live site. The daily price scraper will overwrite tiers (but not teaser) at 07:00 BKK each day.
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="page" id="page-analytics">
+    <div class="page-header">
+      <h1 class="page-title">Analytics <span>// Funnel</span></h1>
+      <span style="font-size:12px;color:var(--muted);font-family:var(--mono)" id="analytics-ts">—</span>
+    </div>
+
+    <div class="an-note">
+      ⚠ <strong style="color:var(--accent)">Time on site &amp; page views</strong> require GA4 Data API (service account not yet configured — see Open Items).
+      Funnel below = Supabase live data + Google Ads cached snapshot.
+    </div>
+
+    <!-- FUNNEL -->
+    <div class="an-card" style="margin-bottom:16px;">
+      <div class="an-title">Conversion Funnel</div>
+      <div id="funnel-body"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+    </div>
+
+    <!-- KPI row -->
+    <div class="stats-grid" style="margin-bottom:16px;" id="an-kpis">
+      <div class="stat-card"><div class="stat-label">Total Leads</div><div class="stat-value" id="an-leads">—</div><div class="stat-sub">all sources</div></div>
+      <div class="stat-card"><div class="stat-label">sell.html Submits</div><div class="stat-value" id="an-sellp">—</div><div class="stat-sub">source=sell-lp</div></div>
+      <div class="stat-card" style="--accent:#4ae8a0"><div class="stat-label">Real Orders</div><div class="stat-value" id="an-orders">—</div><div class="stat-sub">excl. chat logs</div></div>
+      <div class="stat-card"><div class="stat-label">Promo Claims</div><div class="stat-value" id="an-promo">—</div><div class="stat-sub">฿200 bonus used</div></div>
+    </div>
+
+    <!-- Sources + Materials -->
+    <div class="analytics-2col">
+      <div class="an-card">
+        <div class="an-title">Lead Sources</div>
+        <div id="sources-body"><div class="loading" style="padding:12px 0"><span class="spinner"></span></div></div>
+      </div>
+      <div class="an-card">
+        <div class="an-title">Material Mix (leads)</div>
+        <div id="materials-body"><div class="loading" style="padding:12px 0"><span class="spinner"></span></div></div>
+      </div>
+    </div>
+
+    <!-- Revenue + Ads -->
+    <div class="analytics-2col">
+      <div class="an-card">
+        <div class="an-title">Revenue Pipeline</div>
+        <div id="revenue-body"><div class="loading" style="padding:12px 0"><span class="spinner"></span></div></div>
+      </div>
+      <div class="an-card">
+        <div class="an-title">Google Ads Snapshot</div>
+        <div id="ads-body"><div class="loading" style="padding:12px 0"><span class="spinner"></span></div></div>
+      </div>
+    </div>
+
+    <!-- Recent leads table -->
+    <div class="an-card">
+      <div class="an-title">Recent Leads (last 10)</div>
+      <div id="leads-list-body"><div class="loading"><span class="spinner"></span></div></div>
     </div>
   </div>
 
@@ -831,11 +959,13 @@ function showPage(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.textContent.trim().toLowerCase().includes(name === 'dashboard' ? 'dash' : name === 'orders' ? 'bestellung' : name === 'payments' ? 'zahlung' : name === 'inventory' ? 'lager' : 'preis')) {
+    const kw = name === 'dashboard' ? 'dash' : name === 'orders' ? 'bestellung' : name === 'payments' ? 'zahlung' : name === 'inventory' ? 'lager' : name === 'prices' ? 'preis' : 'analytics';
+    if (n.textContent.trim().toLowerCase().includes(kw)) {
       n.classList.add('active');
     }
   });
-  if (name === 'prices') loadPricesFromDB();
+  if (name === 'prices')    loadPricesFromDB();
+  if (name === 'analytics') loadAnalytics();
 }
 
 // DASHBOARD
@@ -1216,6 +1346,183 @@ function showToast(msg, err = false) {
   t.textContent = msg;
   t.className = 'toast show' + (err ? ' error' : '');
   setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── ANALYTICS ────────────────────────────────────────────────────────────────
+
+let analyticsLeads = [];
+let analyticsClaims = [];
+
+// Google Ads — cached snapshot (updated by cron → ads.json)
+const ADS_SNAPSHOT = {
+  clicks: 118, impressions: 1243, spend_thb: 67,
+  ctr: 9.49, cpc_thb: 0.57, conversions: 2,
+  last_updated: '2026-03-12'
+};
+
+async function loadAnalytics() {
+  try {
+    const [lr, cr] = await Promise.all([
+      fetch(SUPABASE_URL + '/rest/v1/leads?select=*&order=created_at.desc', {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+      }),
+      fetch(SUPABASE_URL + '/rest/v1/promo_claims?select=*', {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+      })
+    ]);
+    analyticsLeads  = lr.ok ? await lr.json() : [];
+    analyticsClaims = cr.ok ? await cr.json() : [];
+  } catch(e) {
+    analyticsLeads  = [];
+    analyticsClaims = [];
+  }
+
+  renderAnKpis();
+  renderFunnel();
+  renderSources();
+  renderMaterials();
+  renderRevenue();
+  renderAdsSnapshot();
+  renderLeadsList();
+  document.getElementById('analytics-ts').textContent = 'Sync: ' + new Date().toLocaleTimeString('de-DE');
+}
+
+function renderAnKpis() {
+  const realOrders = allOrders.filter(o => o.status !== 'chat');
+  document.getElementById('an-leads').textContent  = analyticsLeads.length;
+  document.getElementById('an-sellp').textContent  = analyticsLeads.filter(l => l.source === 'sell-lp').length;
+  document.getElementById('an-orders').textContent = realOrders.length;
+  document.getElementById('an-promo').textContent  = analyticsClaims.length;
+}
+
+function renderFunnel() {
+  const realOrders = allOrders.filter(o => o.status !== 'chat');
+  const paid       = allOrders.filter(o => o.status === 'bezahlt');
+  const sellLeads  = analyticsLeads.filter(l => l.source === 'sell-lp');
+
+  const steps = [
+    { label: 'Ad Clicks',     note: 'Google Ads · ' + ADS_SNAPSHOT.last_updated, n: ADS_SNAPSHOT.clicks, cls: '' },
+    { label: 'Form Submits',  note: 'sell.html · source=sell-lp',                 n: sellLeads.length,   cls: '' },
+    { label: 'Real Orders',   note: 'excl. chat logs',                             n: realOrders.length,  cls: 'green' },
+    { label: 'Paid Out',      note: 'status = bezahlt',                            n: paid.length,        cls: 'green' },
+  ];
+
+  const top = steps[0].n || 1;
+  let html = '';
+  steps.forEach((s, i) => {
+    if (i > 0) {
+      const prev = steps[i-1].n;
+      const lost = prev > 0 ? Math.round((1 - s.n / prev) * 100) : null;
+      if (lost !== null) {
+        html += `<div class="funnel-step"><div></div><div class="funnel-drop" style="grid-column:2/5">↓ ${lost}% drop-off (${prev - s.n} lost)</div></div>`;
+      }
+    }
+    const pct = top > 0 ? (s.n / top * 100) : 0;
+    const fillW = s.n > 0 ? Math.max(pct, 1.5) : 0;
+    html += `
+      <div class="funnel-step">
+        <div><div class="funnel-label">${s.label}</div><div class="funnel-note">${s.note}</div></div>
+        <div class="funnel-track">
+          <div class="funnel-fill ${s.cls}${s.n === 0 ? ' zero' : ''}" style="width:${fillW}%"></div>
+        </div>
+        <div class="funnel-n" style="color:${s.n > 0 ? 'var(--text)' : 'var(--muted)'}">${s.n}</div>
+        <div class="funnel-pct">${pct.toFixed(1)}%</div>
+      </div>`;
+  });
+  document.getElementById('funnel-body').innerHTML = html;
+}
+
+function renderSources() {
+  const counts = {};
+  analyticsLeads.forEach(l => { const s = l.source || 'unknown'; counts[s] = (counts[s] || 0) + 1; });
+  const total = analyticsLeads.length || 1;
+  const labels = { 'sell-lp': 'sell.html', 'chat': 'Chat widget', 'checkout': 'Checkout', 'openclaw_test': 'Test', 'chat_lead': 'Chat lead' };
+  const el = document.getElementById('sources-body');
+  if (!analyticsLeads.length) { el.innerHTML = '<div style="color:var(--muted);font-size:12px;font-family:var(--mono);">No leads yet</div>'; return; }
+  el.innerHTML = Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([src, n]) =>
+    `<div class="src-row">
+       <div class="src-label">${labels[src] || src}</div>
+       <div class="src-bar"><div class="src-fill" style="width:${n/total*100}%"></div></div>
+       <div class="src-n">${n}</div>
+     </div>`
+  ).join('');
+}
+
+function renderMaterials() {
+  const counts = {};
+  analyticsLeads.forEach(l => { if (l.material_type) { counts[l.material_type] = (counts[l.material_type] || 0) + 1; } });
+  const total = Object.values(counts).reduce((s,n) => s+n, 0) || 1;
+  const el = document.getElementById('materials-body');
+  if (!Object.keys(counts).length) { el.innerHTML = '<div style="color:var(--muted);font-size:12px;font-family:var(--mono);">No data yet</div>'; return; }
+  el.innerHTML = Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([mat, n]) =>
+    `<div class="src-row">
+       <div class="src-label">${mat.replace('Carbide ', '').replace(' Carbide','')}</div>
+       <div class="src-bar"><div class="src-fill green" style="width:${n/total*100}%"></div></div>
+       <div class="src-n">${n}</div>
+     </div>`
+  ).join('');
+}
+
+function renderRevenue() {
+  const realOrders = allOrders.filter(o => o.status !== 'chat');
+  const pipeline   = analyticsLeads.reduce((s, l) => s + (l.price_shown || 0), 0);
+  const confirmed  = realOrders.reduce((s, o) => s + (o.total_amount || 0), 0);
+  const paidOut    = allOrders.filter(o => o.status === 'bezahlt').reduce((s, o) => s + (o.total_amount || 0), 0);
+  document.getElementById('revenue-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div>
+        <div class="stat-label">Leads Shown</div>
+        <div class="stat-value" style="font-size:20px;">฿${pipeline.toLocaleString('de-DE')}</div>
+        <div class="stat-sub">${analyticsLeads.length} leads</div>
+      </div>
+      <div>
+        <div class="stat-label">Orders</div>
+        <div class="stat-value" style="font-size:20px;color:var(--accent2);">฿${confirmed.toLocaleString('de-DE')}</div>
+        <div class="stat-sub">${realOrders.length} orders</div>
+      </div>
+      <div>
+        <div class="stat-label">Paid Out</div>
+        <div class="stat-value" style="font-size:20px;color:#88cc88;">฿${paidOut.toLocaleString('de-DE')}</div>
+        <div class="stat-sub">bezahlt</div>
+      </div>
+    </div>`;
+}
+
+function renderAdsSnapshot() {
+  const a = ADS_SNAPSHOT;
+  document.getElementById('ads-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div><div class="stat-label">Spend</div><div class="stat-value" style="font-size:18px;">฿${a.spend_thb}</div></div>
+      <div><div class="stat-label">Clicks</div><div class="stat-value" style="font-size:18px;">${a.clicks}</div></div>
+      <div><div class="stat-label">CTR</div><div class="stat-value" style="font-size:18px;">${a.ctr}%</div></div>
+      <div><div class="stat-label">CPC</div><div class="stat-value" style="font-size:18px;">฿${a.cpc_thb}</div></div>
+      <div><div class="stat-label">Impr.</div><div class="stat-value" style="font-size:18px;">${a.impressions.toLocaleString()}</div></div>
+      <div><div class="stat-label">Conv.</div><div class="stat-value" style="font-size:18px;color:var(--accent2);">${a.conversions}</div></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);font-family:var(--mono);border-top:1px solid var(--border);padding-top:8px;">
+      Cached · last sync ${a.last_updated} · updated by cron daily
+    </div>`;
+}
+
+function renderLeadsList() {
+  const el = document.getElementById('leads-list-body');
+  const rows = analyticsLeads.slice(0, 10);
+  if (!rows.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No leads yet</div></div>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <thead><tr><th>Date</th><th>LINE ID</th><th>Material</th><th>Weight</th><th>Price Shown</th><th>Source</th></tr></thead>
+    <tbody>` +
+    rows.map(l => `<tr>
+      <td class="mono" style="font-size:11px;">${new Date(l.created_at).toLocaleDateString('de-DE')}</td>
+      <td class="mono">${l.line_id || '—'}</td>
+      <td>${l.material_type || '—'}</td>
+      <td class="mono">${l.weight_kg != null ? l.weight_kg + ' kg' : '—'}</td>
+      <td class="mono">${l.price_shown != null ? '฿' + l.price_shown.toLocaleString('de-DE') : '—'}</td>
+      <td><span class="badge badge-${l.source === 'sell-lp' ? 'neu' : 'empfangen'}">${l.source || '—'}</span></td>
+    </tr>`).join('') +
+    `</tbody></table>`;
 }
 
 // INIT
