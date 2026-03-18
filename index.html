@@ -1640,9 +1640,10 @@ async function loadPrices() {
     }
 
     // What-we-buy badges (language-aware)
+    const _en = document.body.classList.contains('lang-en');
     const b = (n) => {
-      if (n == null) return isEn() ? 'Up to —' : 'สูงสุด —';
-      return isEn()
+      if (n == null) return _en ? 'Up to —' : 'สูงสุด —';
+      return _en
         ? 'Up to ฿' + Number(n).toLocaleString('en-US') + '/kg'
         : 'สูงสุด ฿' + Number(n).toLocaleString('th-TH') + '/กก.';
     };
@@ -1678,10 +1679,10 @@ async function loadPrices() {
       if (el) el.innerHTML = fmt(val);
     }
     document.getElementById('ticker-inner').innerHTML =
-      'CarbideThai.com &nbsp;·&nbsp; ' +
-      '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ฿1,650/kg &nbsp;·&nbsp; ' +
-      '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ฿1,700/kg &nbsp;·&nbsp; ' +
-      '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ฿1,550/kg &nbsp;·&nbsp; ' +
+      'ThaiCarbide.com &nbsp;·&nbsp; ' +
+      '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ' + fmt(FALLBACK.carbide_inserts) + '/kg &nbsp;·&nbsp; ' +
+      '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ' + fmt(FALLBACK.carbide_drills) + '/kg &nbsp;·&nbsp; ' +
+      '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ' + fmt(FALLBACK.mixed_carbide) + '/kg &nbsp;·&nbsp; ' +
       '<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿520/kg';
     document.getElementById('price-updated-note').innerHTML =
       '<span class="th">ราคาโดยประมาณ · ติดต่อเราสำหรับราคาที่ถูกต้อง</span>' +
