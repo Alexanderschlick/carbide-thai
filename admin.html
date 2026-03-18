@@ -847,6 +847,16 @@
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label>LINE ID</label>
+          <input class="form-control" id="f-line-id" type="text" placeholder="@yourlineid" />
+        </div>
+        <div class="form-group">
+          <label>Provinz</label>
+          <input class="form-control" id="f-province" type="text" placeholder="จังหวัด" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label>Telefon</label>
           <input class="form-control" id="f-phone" type="text" placeholder="+66..." />
         </div>
@@ -1015,6 +1025,8 @@ function buildOrderTable(orders, compact) {
     <tr>
       <td class="mono">${new Date(o.created_at).toLocaleDateString('de-DE')}</td>
       <td><strong>${o.name || '—'}</strong><br><span style="color:var(--muted);font-size:11px">${o.email || ''}</span></td>
+      <td class="mono" style="font-size:12px;">${o.line_id || '—'}</td>
+      <td style="font-size:12px;">${o.province || '—'}</td>
       <td>${o.material || '—'}</td>
       <td class="mono">${o.weight_ordered ? o.weight_ordered + ' kg' : '—'}</td>
       ${!compact ? `<td class="mono">${o.weight_received ? o.weight_received + ' kg' : '—'}</td>` : ''}
@@ -1026,7 +1038,7 @@ function buildOrderTable(orders, compact) {
 
   return `<table>
     <thead><tr>
-      <th>Datum</th><th>Kunde</th><th>Material</th><th>Best. kg</th>
+      <th>Datum</th><th>Kunde</th><th>LINE ID</th><th>Provinz</th><th>Material</th><th>Best. kg</th>
       ${!compact ? '<th>Empf. kg</th>' : ''}
       <th>Betrag</th><th>Status</th><th></th>
     </tr></thead>
@@ -1275,7 +1287,7 @@ function openNewOrder() {
   document.getElementById('modalTitle').textContent = 'Neue Bestellung';
   document.getElementById('editId').value = '';
   document.getElementById('deleteBtn').style.display = 'none';
-  ['name','email','phone','material','weight-ordered','weight-received','price-per-kg','payment-ref','notes'].forEach(f => {
+  ['name','email','line-id','province','phone','material','weight-ordered','weight-received','price-per-kg','payment-ref','notes'].forEach(f => {
     const el = document.getElementById('f-' + f);
     if (el) el.value = '';
   });
@@ -1292,6 +1304,8 @@ function editOrder(id) {
   document.getElementById('deleteBtn').style.display = 'inline-block';
   document.getElementById('f-name').value = o.name || '';
   document.getElementById('f-email').value = o.email || '';
+  document.getElementById('f-line-id').value = o.line_id || '';
+  document.getElementById('f-province').value = o.province || '';
   document.getElementById('f-phone').value = o.phone || '';
   document.getElementById('f-material').value = o.material || '';
   document.getElementById('f-weight-ordered').value = o.weight_ordered || '';
@@ -1324,7 +1338,9 @@ async function saveOrder() {
   const p = parseFloat(document.getElementById('f-price-per-kg').value) || 0;
   const data = {
     name: document.getElementById('f-name').value,
-    email: document.getElementById('f-email').value,
+    email: document.getElementById('f-email').value || null,
+    line_id: document.getElementById('f-line-id').value || null,
+    province: document.getElementById('f-province').value || null,
     phone: document.getElementById('f-phone').value,
     material: document.getElementById('f-material').value,
     weight_ordered: parseFloat(document.getElementById('f-weight-ordered').value) || null,

@@ -204,21 +204,60 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
     <div class="step-label">ขั้นที่ 3 — ข้อมูลติดต่อ</div>
 
     <div class="form-block">
-      <label for="lineId">LINE ID ของคุณ <span style="color:#e05555">*</span></label>
+      <label for="lineId">LINE ID <span style="color:#e05555">*</span></label>
       <input class="form-input" type="text" id="lineId" autocomplete="off"
-             placeholder="@ LINE ID ของคุณ" inputmode="text">
+             placeholder="@yourlineid" inputmode="text" required>
     </div>
 
     <div class="form-block">
       <label for="fullName">ชื่อ-นามสกุล <span style="color:#e05555">*</span></label>
       <input class="form-input" type="text" id="fullName" autocomplete="name"
-             placeholder="สมชาย ใจดี">
+             placeholder="สมชาย ใจดี" required>
+    </div>
+
+    <div class="form-block">
+      <label for="province">จังหวัด <span style="color:#e05555">*</span></label>
+      <select class="form-input" id="province" required>
+        <option value="">— เลือกจังหวัด —</option>
+        <option>กรุงเทพมหานคร</option><option>กระบี่</option><option>กาญจนบุรี</option>
+        <option>กาฬสินธุ์</option><option>กำแพงเพชร</option><option>ขอนแก่น</option>
+        <option>จันทบุรี</option><option>ฉะเชิงเทรา</option><option>ชลบุรี</option>
+        <option>ชัยนาท</option><option>ชัยภูมิ</option><option>ชุมพร</option>
+        <option>เชียงราย</option><option>เชียงใหม่</option><option>ตรัง</option>
+        <option>ตราด</option><option>ตาก</option><option>นครนายก</option>
+        <option>นครปฐม</option><option>นครพนม</option><option>นครราชสีมา</option>
+        <option>นครศรีธรรมราช</option><option>นครสวรรค์</option><option>นนทบุรี</option>
+        <option>นราธิวาส</option><option>น่าน</option><option>บึงกาฬ</option>
+        <option>บุรีรัมย์</option><option>ปทุมธานี</option><option>ประจวบคีรีขันธ์</option>
+        <option>ปราจีนบุรี</option><option>ปัตตานี</option><option>พระนครศรีอยุธยา</option>
+        <option>พะเยา</option><option>พังงา</option><option>พัทลุง</option>
+        <option>พิจิตร</option><option>พิษณุโลก</option><option>เพชรบุรี</option>
+        <option>เพชรบูรณ์</option><option>แพร่</option><option>ภูเก็ต</option>
+        <option>มหาสารคาม</option><option>มุกดาหาร</option><option>แม่ฮ่องสอน</option>
+        <option>ยโสธร</option><option>ยะลา</option><option>ร้อยเอ็ด</option>
+        <option>ระนอง</option><option>ระยอง</option><option>ราชบุรี</option>
+        <option>ลพบุรี</option><option>ลำปาง</option><option>ลำพูน</option>
+        <option>เลย</option><option>ศรีสะเกษ</option><option>สกลนคร</option>
+        <option>สงขลา</option><option>สตูล</option><option>สมุทรปราการ</option>
+        <option>สมุทรสงคราม</option><option>สมุทรสาคร</option><option>สระแก้ว</option>
+        <option>สระบุรี</option><option>สิงห์บุรี</option><option>สุโขทัย</option>
+        <option>สุพรรณบุรี</option><option>สุราษฎร์ธานี</option><option>สุรินทร์</option>
+        <option>หนองคาย</option><option>หนองบัวลำภู</option><option>อ่างทอง</option>
+        <option>อำนาจเจริญ</option><option>อุดรธานี</option><option>อุตรดิตถ์</option>
+        <option>อุทัยธานี</option><option>อุบลราชธานี</option>
+      </select>
     </div>
 
     <div class="form-block">
       <label for="phone">เบอร์โทร <span class="opt">(ไม่บังคับ)</span></label>
       <input class="form-input" type="tel" id="phone" autocomplete="tel"
              placeholder="08X-XXX-XXXX" inputmode="tel">
+    </div>
+
+    <div class="form-block">
+      <label for="email">Email <span class="opt">(ไม่บังคับ)</span></label>
+      <input class="form-input" type="email" id="email" autocomplete="email"
+             placeholder="your@email.com" inputmode="email">
     </div>
 
     <button class="btn-submit" id="submitBtn" onclick="submitLead()">
@@ -347,7 +386,9 @@ function calcPrice() {
 async function submitLead() {
   const lineId   = document.getElementById('lineId').value.trim();
   const fullName = document.getElementById('fullName').value.trim();
+  const province = document.getElementById('province').value.trim();
   const phone    = document.getElementById('phone').value.trim();
+  const email    = document.getElementById('email').value.trim();
   const weight   = parseFloat(document.getElementById('weightInput').value) || null;
   const errEl    = document.getElementById('errorMsg');
   const btn      = document.getElementById('submitBtn');
@@ -357,6 +398,7 @@ async function submitLead() {
   if (!selKey)   return showErr('กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
   if (!lineId)   return showErr('กรุณาใส่ LINE ID ของคุณครับ');
   if (!fullName) return showErr('กรุณาใส่ชื่อ-นามสกุลครับ');
+  if (!province) return showErr('กรุณาเลือกจังหวัดครับ');
 
   btn.disabled = true;
   btn.textContent = 'กำลังส่ง...';
@@ -396,8 +438,10 @@ async function submitLead() {
       headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: fullName,
-        phone: phone || lineId,
+        phone: phone || null,
+        email: email || null,
         line_id: lineId,
+        province: province,
         material: selName,
         weight_ordered: weight,
         price_per_kg: pricePerKg,
@@ -419,7 +463,15 @@ async function submitLead() {
     gtag('event', 'generate_lead', { currency: 'THB', value: priceShown || 0 });
     if (typeof fbq !== 'undefined') fbq('track', 'Lead', { value: priceShown || 0, currency: 'THB' });
 
-    // 5. Show success
+    // 5. Telegram notification
+    const tgText = `🆕 NEUER LEAD!\n👤 Name: ${fullName}\n📱 Tel: ${phone || '—'}\nLINE: ${lineId}\n📦 Material: ${selName}\n⚖️ Gewicht: ${weight != null ? weight : '—'}kg\n📍 Provinz: ${province}\n💰 Preis: ฿${priceShown != null ? priceShown.toLocaleString('th-TH') : '—'}\n🔗 Ref: ${ref}`;
+    fetch('https://api.telegram.org/bot8653052939:AAE1450o0j2JpNsf2sMdIWroLHuKRA6QTqA/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: '697775946', text: tgText })
+    }).catch(() => {});
+
+    // 6. Show success
     document.getElementById('formSection').style.display = 'none';
     document.getElementById('refBox').textContent = ref;
     document.getElementById('successScreen').style.display = 'block';

@@ -24,6 +24,19 @@ const NONG_SYSTEM = `คุณคือ Nong (น้อง) ผู้ช่ว�
 - ข้อความสั้น กระชับ เหมาะกับมือถือ ไม่เกิน 4-5 บรรทัด
 - อย่าใช้ markdown หรือ ** ตัวหนา — เป็นข้อความธรรมดาเท่านั้น
 
+กฎพิเศษ — ผู้ซื้อ vs ผู้ขาย:
+- ถ้าลูกค้าพูดว่า "ซื้อ" / "จะซื้อ" / "ต้องการซื้อ" / "หาซื้อ" / "อยากซื้อ" หมายความว่าเขาต้องการซื้อสินค้าจากเรา
+- เราไม่ได้ขายสินค้า — เรารับซื้อเศษคาร์ไบด์เท่านั้น
+- ตอบว่า: "ขออภัยครับ เราเป็นผู้รับซื้อเท่านั้น ไม่ได้จำหน่ายครับ 🙏"
+- อย่าส่งลิงก์ฟอร์มให้ผู้ที่ต้องการซื้อสินค้า
+- ถ้าลูกค้าพูดว่า "ขาย" / "อยากขาย" / "มีของขาย" — ให้ดำเนินการตามปกติ
+
+กฎบทสนทนา:
+- อ่านประวัติการสนทนา 3 ข้อความล่าสุดก่อนตอบเสมอ
+- อย่าถามคำถามเดิมซ้ำในบทสนทนาเดียวกัน
+  เช่น ถ้าถาม "มีคาร์ไบด์ประเภทไหน" แล้ว อย่าถามอีก — ใช้คำตอบที่ได้รับแล้ว
+- ตรวจสอบว่าได้ถามแล้วหรือยัง: ประเภท? น้ำหนัก? ข้อมูลติดต่อ? — ข้ามสิ่งที่ตอบแล้ว
+
 ข้อมูลที่ตอบได้:
 - รับซื้อ: อินเสิร์ท, ดอกสว่าน, เอ็นมิล, คาร์ไบด์ผสม ทุกชนิด
 - ขั้นต่ำ: 1 กิโลกรัม ไม่มีขั้นต่ำ
@@ -33,10 +46,10 @@ const NONG_SYSTEM = `คุณคือ Nong (น้อง) ผู้ช่ว�
 
 ลิงก์ฟอร์ม: https://thaicarbide.com/sell.html
 
-ขั้นตอนการขาย:
-1. ถามว่ามีคาร์ไบด์ประเภทไหน
-2. ถามน้ำหนักโดยประมาณ
-3. ขอ LINE ID หรือเบอร์โทร
+ขั้นตอนการขาย (เฉพาะผู้ที่ต้องการขายให้เรา):
+1. ถามว่ามีคาร์ไบด์ประเภทไหน (ถ้ายังไม่รู้)
+2. ถามน้ำหนักโดยประมาณ (ถ้ายังไม่รู้)
+3. ขอ LINE ID หรือเบอร์โทร (ถ้ายังไม่มี)
 4. ส่งลิงก์ฟอร์มให้กรอก
 
 ถ้าลูกค้าสนใจขายให้จบด้วย: "กรอกได้เลยครับ: https://thaicarbide.com/sell.html"`;
@@ -216,6 +229,18 @@ serve(async (req) => {
       const userMessage = msg.text as string;
       const msgId = msg.id as string;
 
+      // Dedup: skip if we already processed this message ID
+      const { data: existing } = await supabase
+        .from("line_chats")
+        .select("id")
+        .eq("msg_id", msgId)
+        .maybeSingle();
+      if (existing) {
+        console.log(`[line-webhook] Duplicate msg_id ${msgId} — skipping`);
+        continue;
+      }
+
+      let replied = false;
       try {
         // 1. Get display name + conversation history in parallel
         const [displayName, history] = await Promise.all([
@@ -239,6 +264,7 @@ serve(async (req) => {
 
         // 4. Reply via LINE
         await replyLine(replyToken, nongReply);
+        replied = true;
 
         // 5. Telegram summary
         await alertTelegram(displayName, userMessage, nongReply);
@@ -247,8 +273,10 @@ serve(async (req) => {
 
       } catch (e) {
         console.error("[line-webhook] Error processing message:", e);
-        // Best-effort fallback reply
-        await replyLine(replyToken, "ขออภัยครับ เกิดข้อผิดพลาดชั่วคราว กรุณาลองใหม่หรือ LINE: @280uqpab").catch(() => {});
+        // Best-effort fallback reply — only if we haven't already replied
+        if (!replied) {
+          await replyLine(replyToken, "ขออภัยครับ เกิดข้อผิดพลาดชั่วคราว กรุณาลองใหม่หรือ LINE: @280uqpab").catch(() => {});
+        }
       }
     }
   })();
