@@ -1595,14 +1595,22 @@ async function loadPrices() {
           });
         }
       }
-    } catch(sbErr) { /* fall through to prices.json */ }
+    } catch(sbErr) { /* fall through to FALLBACK */ }
 
     if (!P) {
-      const res  = await fetch('prices.json?v=' + Date.now());
-      data = await res.json();
-      if (!data.prices) throw new Error('no prices key');
-      P  = data.prices;
-      TP = data.teaser_prices || {};
+      // prices.json is not reliable (cron overwrites it) — use hardcoded FALLBACK
+      P  = {
+        carbide_inserts: { thb_per_kg: FALLBACK.carbide_inserts, tiers: { under20: 2800, mid: 2850, over50: FALLBACK.carbide_inserts } },
+        carbide_drills:  { thb_per_kg: FALLBACK.carbide_drills,  tiers: { under20: 2600, mid: 2800, over50: FALLBACK.carbide_drills  } },
+        mixed_carbide:   { thb_per_kg: FALLBACK.mixed_carbide,   tiers: { under20: 2600, mid: 2800, over50: FALLBACK.mixed_carbide   } },
+        sand_rills:      { thb_per_kg: FALLBACK.sand_rills,      tiers: null },
+      };
+      TP = {
+        carbide_inserts: { thb_per_kg: FALLBACK.carbide_inserts },
+        carbide_drills:  { thb_per_kg: FALLBACK.carbide_drills  },
+        mixed_carbide:   { thb_per_kg: FALLBACK.mixed_carbide   },
+        sand_rills:      { thb_per_kg: FALLBACK.sand_rills      },
+      };
     }
     // Teaser prices for display (fixed EUR base × live rate); fall back to tier max
     const ins = (TP.carbide_inserts?.thb_per_kg) ?? P.carbide_inserts?.thb_per_kg;

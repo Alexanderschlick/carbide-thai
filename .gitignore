@@ -1,0 +1,5 @@
+# Ignore auto-generated prices.json — site reads prices from Supabase,
+# not from this file. The price-scraper cron overwrites it with EU data.
+prices.json
+
+.DS_Store
