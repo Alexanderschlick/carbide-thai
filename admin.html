@@ -1163,14 +1163,17 @@ async function loadPricesFromDB() {
     const res = await fetch(SUPABASE_URL + '/rest/v1/prices?select=*&order=key', {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
     });
+    if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + await res.text());
     const rows = await res.json();
+    if (!Array.isArray(rows)) throw new Error('Unexpected response: ' + JSON.stringify(rows));
     liveDbPrices = {};
     rows.forEach(r => { liveDbPrices[r.key] = r; });
     renderPrices();
     const updated = rows[0]?.updated_at ? new Date(rows[0].updated_at).toLocaleString('en-GB') : '—';
     document.getElementById('prices-status').textContent = 'Last saved: ' + updated;
   } catch(e) {
-    document.getElementById('prices-status').textContent = 'Load failed';
+    document.getElementById('prices-status').textContent = 'Load failed: ' + e.message;
+    console.error('[admin] loadPricesFromDB error:', e);
   }
 }
 
