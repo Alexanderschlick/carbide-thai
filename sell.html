@@ -147,7 +147,6 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 <!-- PROMO STRIP -->
 <div class="promo-strip">
   🎉 โปรเปิดตัว — รับโบนัส ฿200 สำหรับ 50 ลูกค้าแรก
-  <span class="promo-slots" id="promoSlots">⏳</span>
 </div>
 
 <!-- MAIN -->
@@ -280,22 +279,7 @@ async function loadPrices() {
 }
 
 // ── Load promo slot count ────────────────────────────────────────────────────
-async function loadPromo() {
-  try {
-    const res = await fetch(SB_URL + '/rest/v1/promo_claims?select=id', {
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'count=exact', 'Range': '0-0' }
-    });
-    const cr = res.headers.get('content-range') || '';
-    const m  = cr.match(/\/(\d+)$/);
-    const n  = m ? parseInt(m[1], 10) : 0;
-    const rem = Math.max(0, 50 - n);
-    const el = document.getElementById('promoSlots');
-    if (el) el.textContent = rem > 0 ? `เหลืออีก ${rem} ที่` : 'หมดแล้ว';
-  } catch(e) {
-    const el = document.getElementById('promoSlots');
-    if (el) el.textContent = 'เหลืออีก 50 ที่';
-  }
-}
+// promo slot counter removed — no remaining count shown
 
 // ── Material pick ────────────────────────────────────────────────────────────
 function pickMat(key, name, el) {
@@ -456,7 +440,6 @@ function showErr(msg) {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 loadPrices();
-loadPromo();
 </script>
 <script>/* tc-tracker: session time */
 (function(){var K='tc_sessions',p='/sell.html',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
