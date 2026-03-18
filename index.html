@@ -1556,8 +1556,8 @@ async function loadPromoBanner() {
   try {
     const res = await fetch('https://ltupwgytuayzopnsdvpc.supabase.co/rest/v1/promo_claims?select=id', {
       headers: {
-        'apikey': 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL',
-        'Authorization': 'Bearer sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL',
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE',
         'Prefer': 'count=exact',
         'Range': '0-0'
       }
@@ -1578,7 +1578,7 @@ async function loadPrices() {
     let P = null, TP = {}, data = null;
     try {
       const sbRes = await fetch('https://ltupwgytuayzopnsdvpc.supabase.co/rest/v1/prices?select=*', {
-        headers: { 'apikey': 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL', 'Authorization': 'Bearer sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL' }
+        headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE' }
       });
       if (sbRes.ok) {
         const rows = await sbRes.json();
@@ -1929,7 +1929,7 @@ Hi! I'm Nong from ThaiCarbide. Looking to sell carbide scrap? Today's prices are
 (function() {
   const CHAT_PROXY   = 'https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/chat-proxy';
   const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_ihIWCFsOZXGn9KlE-KsQjQ_yMXdq6fL';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
   const LINE_URL     = 'https://line.me/R/ti/p/@280uqpab';
   const AW_ID        = 'AW-18001691387';
 
