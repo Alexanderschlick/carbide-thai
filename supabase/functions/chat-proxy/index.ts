@@ -89,9 +89,9 @@ OBJECTION HANDLING:
 "ที่อยู่บริษัทอยู่ไหน?" → "เราไปรับถึงที่เลยครับ ไม่ต้องเดินทางมา 😊 / We come to you — no need to visit us!"
 
 CURRENT PRICES (estimated, update daily with EUR/THB rate):
-- Carbide Inserts (อินเสิร์ท): up to ฿2,650/kg
-- Drills & Endmills (ดอกสว่าน/เอ็นมิล): up to ฿2,700/kg
-- Mixed Carbide (คาร์ไบด์ผสม): up to ฿2,600/kg
+- Carbide Inserts / เม็ด (อินเสิร์ท): up to ฿4,500/kg
+- Drills & Endmills / ก้าน (ดอกสว่าน/เอ็นมิล): up to ฿4,600/kg
+- Mixed Carbide / ก้อน (คาร์ไบด์ผสม): up to ฿4,700/kg
 
 RULES:
 - NEVER discuss competitors
