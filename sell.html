@@ -132,6 +132,14 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 .teaser-amount{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,14vw,76px);font-weight:900;color:var(--gold);line-height:1;margin:4px 0;}
 .teaser-sub{font-size:12px;color:var(--muted);margin-top:4px;}
 
+/* ── LANGUAGE ────────────────────────────────────── */
+body.lang-th .en{display:none !important;}
+body.lang-en .th{display:none !important;}
+.lang-btn{background:transparent;border:1px solid rgba(201,162,39,0.22);color:var(--muted);font-size:14px;padding:4px 8px;border-radius:3px;cursor:pointer;transition:border-color 0.2s,background 0.2s;line-height:1;font-family:inherit;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+.lang-btn.active{border-color:var(--gold);background:rgba(201,162,39,0.15);color:var(--white);}
+.lang-btn:hover{border-color:var(--gold);}
+.lang-switcher{display:flex;gap:6px;}
+
 /* ── MOBILE ──────────────────────────────────────── */
 @media(max-width:380px){
   .mat-name{font-size:15px;}
@@ -139,20 +147,27 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 }
 </style>
 </head>
-<body>
+<body class="lang-th">
 
 <!-- TOP BAR -->
 <header class="topbar">
   <a class="topbar-logo" href="/">Carbide<span>Thai</span></a>
-  <a class="topbar-line" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.952 12.081C19.952 7.62 15.49 4 10 4S.048 7.62.048 12.081c0 4.01 3.556 7.37 8.352 8.002.325.07.768.214.88.49.1.25.065.644.032.896l-.142.856c-.043.25-.198.977.856.533 1.054-.444 5.687-3.35 7.76-5.735 1.43-1.57 2.166-3.163 2.166-4.942z"/></svg>
-    ติดต่อ LINE
-  </a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
+      <button class="lang-btn" onclick="setLang('en')" title="English">🇬🇧</button>
+    </div>
+    <a class="topbar-line" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.952 12.081C19.952 7.62 15.49 4 10 4S.048 7.62.048 12.081c0 4.01 3.556 7.37 8.352 8.002.325.07.768.214.88.49.1.25.065.644.032.896l-.142.856c-.043.25-.198.977.856.533 1.054-.444 5.687-3.35 7.76-5.735 1.43-1.57 2.166-3.163 2.166-4.942z"/></svg>
+      <span class="th">ติดต่อ LINE</span><span class="en">Contact LINE</span>
+    </a>
+  </div>
 </header>
 
 <!-- PROMO STRIP -->
 <div class="promo-strip">
-  🎉 โปรเปิดตัว — รับโบนัส ฿200 สำหรับ 50 ลูกค้าแรก <span class="promo-slots">เหลืออีก 14 ที่</span>
+  <span class="th">🎉 โปรเปิดตัว — รับโบนัส ฿200 สำหรับ 50 ลูกค้าแรก <span class="promo-slots">เหลืออีก 14 ที่</span></span>
+  <span class="en">🎉 Launch Special — ฿200 Bonus for the first 50 customers <span class="promo-slots">14 spots left</span></span>
 </div>
 
 <!-- MAIN -->
@@ -160,51 +175,51 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 
   <!-- HERO -->
   <div class="hero-text">
-    <h1>ขายคาร์ไบด์เก่า<br><em>รู้ราคาทันที</em></h1>
+    <h1><span class="th">ขายคาร์ไบด์เก่า<br><em>รู้ราคาทันที</em></span><span class="en">Sell Carbide Scrap<br><em>Instant Price Quote</em></span></h1>
     <div class="teaser-price">
-      <div class="teaser-label">รับซื้อสูงสุด</div>
+      <div class="teaser-label"><span class="th">รับซื้อสูงสุด</span><span class="en">We Pay Up To</span></div>
       <div class="teaser-amount">฿4,600/kg</div>
-      <div class="teaser-sub">สำหรับคาร์ไบด์อินเสิร์ท • ราคาอัปเดตทุกวัน</div>
+      <div class="teaser-sub"><span class="th">สำหรับคาร์ไบด์อินเสิร์ท • ราคาอัปเดตทุกวัน</span><span class="en">For Carbide Inserts • Price updated daily</span></div>
     </div>
-    <p class="hero-sub">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</p>
+    <p class="hero-sub"><span class="th">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</span><span class="en">Select type → Enter weight → See price instantly</span></p>
   </div>
 
   <!-- FORM SECTION -->
   <div id="formSection">
 
     <!-- STEP 1: MATERIAL -->
-    <div class="step-label">ขั้นที่ 1 — เลือกประเภทคาร์ไบด์</div>
+    <div class="step-label"><span class="th">ขั้นที่ 1 — เลือกประเภทคาร์ไบด์</span><span class="en">Step 1 — Select Carbide Type</span></div>
     <div class="mat-grid" role="radiogroup" aria-label="ประเภทคาร์ไบด์">
       <button class="mat-btn" id="m-insert" onclick="pickMat('carbide_inserts','Carbide Insert',this)" role="radio" aria-checked="false">
-        <div class="mat-name">อินเสิร์ท</div>
+        <div class="mat-name"><span class="th">อินเสิร์ท</span><span class="en">Inserts</span></div>
         <div class="mat-sub">CNMG / TNMG / APMT</div>
       </button>
       <button class="mat-btn" id="m-drill" onclick="pickMat('carbide_drills','Carbide Drills',this)" role="radio" aria-checked="false">
-        <div class="mat-name">ดอกสว่าน / เอ็นมิล</div>
+        <div class="mat-name"><span class="th">ดอกสว่าน / เอ็นมิล</span><span class="en">Drills / End Mills</span></div>
         <div class="mat-sub">Solid carbide (VHM)</div>
       </button>
       <button class="mat-btn" id="m-mixed" onclick="pickMat('mixed_carbide','Mixed Carbide',this)" role="radio" aria-checked="false">
-        <div class="mat-name">คาร์ไบด์ผสม</div>
-        <div class="mat-sub">ทุกชนิดรวมกัน</div>
+        <div class="mat-name"><span class="th">คาร์ไบด์ผสม</span><span class="en">Mixed Carbide</span></div>
+        <div class="mat-sub"><span class="th">ทุกชนิดรวมกัน</span><span class="en">All types mixed</span></div>
       </button>
       <button class="mat-btn" id="m-other" onclick="pickMat('sand_rills','Other',this)" role="radio" aria-checked="false">
-        <div class="mat-name">อื่นๆ</div>
-        <div class="mat-sub">แซนด์ริล / ผง / อื่น</div>
+        <div class="mat-name"><span class="th">อื่นๆ</span><span class="en">Other</span></div>
+        <div class="mat-sub"><span class="th">แซนด์ริล / ผง / อื่น</span><span class="en">Sand Rills / Powder / Other</span></div>
       </button>
     </div>
 
     <!-- STEP 2: WEIGHT + LIVE PRICE -->
-    <div class="step-label">ขั้นที่ 2 — ใส่น้ำหนักโดยประมาณ</div>
+    <div class="step-label"><span class="th">ขั้นที่ 2 — ใส่น้ำหนักโดยประมาณ</span><span class="en">Step 2 — Enter Approximate Weight</span></div>
     <div class="weight-row">
       <input class="weight-input" type="number" id="weightInput" inputmode="decimal"
-             placeholder="เช่น 25" min="0.1" step="0.5" oninput="calcPrice()">
-      <div class="weight-unit">กก.</div>
+             placeholder="e.g. 25" min="0.1" step="0.5" oninput="calcPrice()">
+      <div class="weight-unit">kg</div>
     </div>
 
     <!-- LIVE PRICE BOX -->
     <div class="price-box" id="priceBox">
-      <div class="price-label">ราคาประเมิน</div>
-      <div class="price-main" id="priceMain">฿0 <span>บาท</span></div>
+      <div class="price-label"><span class="th">ราคาประเมิน</span><span class="en">Estimated Price</span></div>
+      <div class="price-main" id="priceMain">฿0 <span><span class="th">บาท</span><span class="en">THB</span></span></div>
       <div class="price-tier-note" id="priceTierNote"></div>
       <div class="price-upsell" id="priceUpsell"></div>
     </div>
@@ -212,7 +227,7 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
     <hr class="divider">
 
     <!-- STEP 3: CONTACT -->
-    <div class="step-label">ขั้นที่ 3 — ข้อมูลติดต่อ</div>
+    <div class="step-label"><span class="th">ขั้นที่ 3 — ข้อมูลติดต่อ</span><span class="en">Step 3 — Contact Info</span></div>
 
     <div class="form-block">
       <label for="lineId">LINE ID <span style="color:#e05555">*</span></label>
@@ -221,15 +236,15 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
     </div>
 
     <div class="form-block">
-      <label for="fullName">ชื่อ-นามสกุล <span style="color:#e05555">*</span></label>
+      <label for="fullName"><span class="th">ชื่อ-นามสกุล</span><span class="en">Full Name</span> <span style="color:#e05555">*</span></label>
       <input class="form-input" type="text" id="fullName" autocomplete="name"
-             placeholder="สมชาย ใจดี" required>
+             placeholder="Full Name" required>
     </div>
 
     <div class="form-block">
-      <label for="province">จังหวัด <span style="color:#e05555">*</span></label>
+      <label for="province"><span class="th">จังหวัด</span><span class="en">Province</span> <span style="color:#e05555">*</span></label>
       <select class="form-input" id="province" required>
-        <option value="">— เลือกจังหวัด —</option>
+        <option value=""><span class="th">— เลือกจังหวัด —</span><span class="en">— Select Province —</span></option>
         <option>กรุงเทพมหานคร</option><option>กระบี่</option><option>กาญจนบุรี</option>
         <option>กาฬสินธุ์</option><option>กำแพงเพชร</option><option>ขอนแก่น</option>
         <option>จันทบุรี</option><option>ฉะเชิงเทรา</option><option>ชลบุรี</option>
@@ -260,32 +275,32 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
     </div>
 
     <div class="form-block">
-      <label for="phone">เบอร์โทร <span class="opt">(ไม่บังคับ)</span></label>
+      <label for="phone"><span class="th">เบอร์โทร</span><span class="en">Phone</span> <span class="opt">(<span class="th">ไม่บังคับ</span><span class="en">optional</span>)</span></label>
       <input class="form-input" type="tel" id="phone" autocomplete="tel"
              placeholder="08X-XXX-XXXX" inputmode="tel">
     </div>
 
     <div class="form-block">
-      <label for="email">Email <span class="opt">(ไม่บังคับ)</span></label>
+      <label for="email">Email <span class="opt">(<span class="th">ไม่บังคับ</span><span class="en">optional</span>)</span></label>
       <input class="form-input" type="email" id="email" autocomplete="email"
              placeholder="your@email.com" inputmode="email">
     </div>
 
     <button class="btn-submit" id="submitBtn" onclick="submitLead()">
-      ส่งข้อมูล → รับเงินใน 48 ชม. 💰
+      <span class="th">ส่งข้อมูล → รับเงินใน 48 ชม. 💰</span><span class="en">Submit → Get Paid in 48h 💰</span>
     </button>
     <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;">
-      🔒 ข้อมูลของคุณปลอดภัย · จ่ายเงินภายใน 48 ชม.พร้อมรายงานชั่งน้ำหนัก<br>
-      <span style="font-size:11px;opacity:0.7;">Your data is safe · Paid within 48hrs with full weight report</span>
+      <span class="th">🔒 ข้อมูลของคุณปลอดภัย · จ่ายเงินภายใน 48 ชม.พร้อมรายงานชั่งน้ำหนัก</span>
+      <span class="en">🔒 Your data is safe · Paid within 48hrs with full weight report</span>
     </div>
     <div class="error-msg" id="errorMsg"></div>
 
     <!-- TRUST -->
     <div class="trust">
-      <div class="trust-item"><span class="trust-icon">✅</span> จ่ายเงินภายใน 48 ชั่วโมง</div>
-      <div class="trust-item"><span class="trust-icon">✅</span> รับซื้อทั่วไทย — รับของถึงที่</div>
-      <div class="trust-item"><span class="trust-icon">✅</span> ราคาอัปเดตทุกวัน ตามตลาดโลก</div>
-      <div class="trust-item"><span class="trust-icon">✅</span> รับขั้นต่ำ 1 กก. ทุกชนิด</div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">จ่ายเงินภายใน 48 ชั่วโมง</span><span class="en">Payment within 48 hours</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">รับซื้อทั่วไทย — รับของถึงที่</span><span class="en">Nationwide pickup — we come to you</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">ราคาอัปเดตทุกวัน ตามตลาดโลก</span><span class="en">Daily prices — global tungsten market</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">รับขั้นต่ำ 1 กก. ทุกชนิด</span><span class="en">Min. 1 kg — all carbide types accepted</span></div>
     </div>
 
   </div><!-- /formSection -->
@@ -293,14 +308,14 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
   <!-- SUCCESS -->
   <div class="success-screen" id="successScreen">
     <div class="success-icon">✅</div>
-    <div class="success-title">รับข้อมูลแล้วครับ!</div>
+    <div class="success-title"><span class="th">รับข้อมูลแล้วครับ!</span><span class="en">Submission received!</span></div>
     <div class="success-sub">
-      Nong จะติดต่อกลับใน 2 ชั่วโมงผ่าน LINE<br>
-      เพื่อยืนยันรายละเอียดและนัดรับของ
+      <span class="th">Nong จะติดต่อกลับใน 2 ชั่วโมงผ่าน LINE<br>เพื่อยืนยันรายละเอียดและนัดรับของ</span>
+      <span class="en">We'll reach out within 2 hours via LINE<br>to confirm details and arrange pickup.</span>
     </div>
     <a class="success-line-btn" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.952 12.081C19.952 7.62 15.49 4 10 4S.048 7.62.048 12.081c0 4.01 3.556 7.37 8.352 8.002.325.07.768.214.88.49.1.25.065.644.032.896l-.142.856c-.043.25-.198.977.856.533 1.054-.444 5.687-3.35 7.76-5.735 1.43-1.57 2.166-3.163 2.166-4.942z"/></svg>
-      แอด LINE @ThaiCarbide
+      <span class="th">แอด LINE @ThaiCarbide</span><span class="en">Add LINE @ThaiCarbide</span>
     </a>
     <div class="ref-box" id="refBox"></div>
   </div>
@@ -406,13 +421,14 @@ async function submitLead() {
 
   errEl.style.display = 'none';
 
-  if (!selKey)   return showErr('กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
-  if (!lineId)   return showErr('กรุณาใส่ LINE ID ของคุณครับ');
-  if (!fullName) return showErr('กรุณาใส่ชื่อ-นามสกุลครับ');
-  if (!province) return showErr('กรุณาเลือกจังหวัดครับ');
+  const isEn = document.body.classList.contains('lang-en');
+  if (!selKey)   return showErr(isEn ? 'Please select a carbide type first.' : 'กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
+  if (!lineId)   return showErr(isEn ? 'Please enter your LINE ID.' : 'กรุณาใส่ LINE ID ของคุณครับ');
+  if (!fullName) return showErr(isEn ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุลครับ');
+  if (!province) return showErr(isEn ? 'Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
 
   btn.disabled = true;
-  btn.textContent = 'กำลังส่ง...';
+  btn.textContent = isEn ? 'Sending...' : 'กำลังส่ง...';
 
   const p        = prices[selKey] || {};
   let pricePerKg = p.tier_over50 ?? p.tier_mid ?? p.tier_under20 ?? p.teaser_thb ?? null;
@@ -490,8 +506,8 @@ async function submitLead() {
 
   } catch(e) {
     btn.disabled = false;
-    btn.textContent = 'ส่งข้อมูล → รับเงินใน 48 ชม. 💰';
-    showErr('เกิดข้อผิดพลาด กรุณาลองใหม่หรือติดต่อ LINE @280uqpab');
+    btn.textContent = isEn ? 'Submit → Get Paid in 48h 💰' : 'ส่งข้อมูล → รับเงินใน 48 ชม. 💰';
+    showErr(isEn ? 'An error occurred. Please try again or contact LINE @280uqpab' : 'เกิดข้อผิดพลาด กรุณาลองใหม่หรือติดต่อ LINE @280uqpab');
   }
 }
 
@@ -500,6 +516,17 @@ function showErr(msg) {
   el.textContent = msg;
   el.style.display = 'block';
 }
+
+// ── Language toggle ──────────────────────────────────────────────────────────
+function setLang(lang) {
+  document.body.classList.remove('lang-th','lang-en');
+  document.body.classList.add('lang-' + lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const active = document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]');
+  if (active) active.classList.add('active');
+  localStorage.setItem('carbide-lang', lang);
+}
+(function(){ setLang(localStorage.getItem('carbide-lang') || 'th'); })();
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 loadPrices();
