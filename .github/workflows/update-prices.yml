@@ -28,7 +28,9 @@ jobs:
 
       - name: Run price scraper
         env:
-          THAILAND_MARGIN: ${{ secrets.THAILAND_MARGIN }}
+          THAILAND_MARGIN:       ${{ secrets.THAILAND_MARGIN }}
+          SUPABASE_URL:          https://ltupwgytuayzopnsdvpc.supabase.co
+          SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scraper/scrape_prices.py
 
       - name: Commit updated prices.json
