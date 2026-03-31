@@ -1,30 +1,30 @@
 {
-  "updated": "30 Mar 2026",
-  "eur_thb_rate": 37.8939,
+  "updated": "31 Mar 2026",
+  "eur_thb_rate": 37.6801,
   "margin_applied": 1.0,
   "prices": {
     "carbide_inserts": {
-      "thb_per_kg": 950,
+      "thb_per_kg": 940,
       "eur_per_kg": 25.0,
-      "updated": "30 Mar 2026",
+      "updated": "31 Mar 2026",
       "source": "live"
     },
     "carbide_drills": {
-      "thb_per_kg": 990,
+      "thb_per_kg": 980,
       "eur_per_kg": 26.0,
-      "updated": "30 Mar 2026",
+      "updated": "31 Mar 2026",
       "source": "live"
     },
     "mixed_carbide": {
       "thb_per_kg": 830,
       "eur_per_kg": 22.0,
-      "updated": "30 Mar 2026",
+      "updated": "31 Mar 2026",
       "source": "live"
     },
     "sand_rills": {
       "thb_per_kg": 530,
       "eur_per_kg": 14.0,
-      "updated": "30 Mar 2026",
+      "updated": "31 Mar 2026",
       "source": "fallback"
     }
   }
