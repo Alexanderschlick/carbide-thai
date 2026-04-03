@@ -1,31 +1,59 @@
 {
-  "updated": "03 Apr 2026",
+  "updated": "2026-04-03T15:09:47.000Z",
+  "updated_display": "03 Apr 2026",
   "eur_thb_rate": 37.6857,
-  "margin_applied": 1.0,
-  "prices": {
+  "teaser_price": 950,
+  "teaser_material": "carbide_inserts",
+  "teaser_prices": {
     "carbide_inserts": {
-      "thb_per_kg": 940,
-      "eur_per_kg": 25.0,
-      "updated": "03 Apr 2026",
-      "source": "live"
+      "thb_per_kg": 950
     },
     "carbide_drills": {
-      "thb_per_kg": 980,
-      "eur_per_kg": 26.0,
-      "updated": "03 Apr 2026",
-      "source": "live"
+      "thb_per_kg": 1000
     },
     "mixed_carbide": {
-      "thb_per_kg": 830,
-      "eur_per_kg": 22.0,
-      "updated": "03 Apr 2026",
-      "source": "live"
+      "thb_per_kg": 850
     },
     "sand_rills": {
-      "thb_per_kg": 530,
-      "eur_per_kg": 14.0,
-      "updated": "03 Apr 2026",
-      "source": "fallback"
+      "thb_per_kg": 550
+    }
+  },
+  "prices": {
+    "carbide_inserts": {
+      "thb_per_kg": 950,
+      "name_en": "Carbide Inserts",
+      "name_th": "คาร์ไบด์อินเสิฺท",
+      "tiers": {
+        "under20": 600,
+        "mid": 600,
+        "over50": 950
+      }
+    },
+    "carbide_drills": {
+      "thb_per_kg": 1000,
+      "name_en": "Carbide Drills & Endmills",
+      "name_th": "ดอกสว่าน / เอ็นมิล VHM",
+      "tiers": {
+        "under20": 550,
+        "mid": 600,
+        "over50": 1000
+      }
+    },
+    "mixed_carbide": {
+      "thb_per_kg": 850,
+      "name_en": "Mixed Carbide",
+      "name_th": "คาร์ไบด์ผสม",
+      "tiers": {
+        "under20": 450,
+        "mid": 500,
+        "over50": 850
+      }
+    },
+    "sand_rills": {
+      "thb_per_kg": 550,
+      "name_en": "Sand Rills / Wear Parts",
+      "name_th": "แซนด์ริล / ชิ้นส่วนสึกหรอ",
+      "tiers": null
     }
   }
 }
