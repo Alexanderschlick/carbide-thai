@@ -271,6 +271,674 @@ body.lang-en .th{display:none !important;}
 
     <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(6,199,85,0.08); border:1px solid rgba(6,199,85,0.25); border-radius:10px; padding:14px;">
       <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
+        <span class="th">📦 <strong>ส่งพัสดุมาที่:</strong><br>ThaiCarbide<br>97/82 The Reserve Hideaway, Lobby B<br>สุขุมวิท 61 แขวงคลองตันเหนือ<br>เขตวัฒนา กรุงเทพฯ 10110<br>โทร: 093-696-9935<br><br>💡 ส่งได้ทาง Kerry Express, J&T Express หรือ ไปรษณีย์ไทย<br>📝 กรุณาเขียน "ThaiCarbide" และชื่อของท่านบนกล่อง</span>
+        <span class="en">📦 <strong>Send your parcel to:</strong><br>ThaiCarbide<br>725 Sukhumvit Rd, Khlong Tan Nuea<br>Watthana, Bangkok 10110<br>Tel: 093-696-9935<br><br>💡 Ship via Kerry Express, J&T Express or Thailand Post<br>📝 Please write "ThaiCarbide" and your name on the box</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+
+    <!-- STEP 4: CONTACT -->
+    <div class="step-label"><span class="th">ขั้นที่ 4 — ข้อมูลติดต่อ</span><span class="en">Step 4 — Contact Info</span></div>
+
+    <div class="form-block">
+      <label for="lineId">LINE ID <span style="color:#e05555">*</span></label>
+      <input class="form-input" type="text" id="lineId" autocomplete="off"
+             placeholder="@yourlineid" inputmode="text" required>
+    </div>
+
+    <div class="form-block">
+      <label for="fullName"><span class="th">ชื่อ-นามสกุล</span><span class="en">Full Name</span> <span style="color:#e05555">*</span></label>
+      <input class="form-input" type="text" id="fullName" autocomplete="name"
+             placeholder="Full Name" required>
+    </div>
+
+    <div class="form-block">
+      <label for="province"><span class="th">จังหวัด</span><span class="en">Province</span> <span style="color:#e05555">*</span></label>
+      <select class="form-input" id="province" required>
+        <option value=""><span class="th">— เลือกจังหวัด —</span><span class="en">— Select Province —</span></option>
+        <option>กรุงเทพมหานคร</option><option>กระบี่</option><option>กาญจนบุรี</option>
+        <option>กาฬสินธุ์</option><option>กำแพงเพชร</option><option>ขอนแก่น</option>
+        <option>จันทบุรี</option><option>ฉะเชิงเทรา</option><option>ชลบุรี</option>
+        <option>ชัยนาท</option><option>ชัยภูมิ</option><option>ชุมพร</option>
+        <option>เชียงราย</option><option>เชียงใหม่</option><option>ตรัง</option>
+        <option>ตราด</option><option>ตาก</option><option>นครนายก</option>
+        <option>นครปฐม</option><option>นครพนม</option><option>นครราชสีมา</option>
+        <option>นครศรีธรรมราช</option><option>นครสวรรค์</option><option>นนทบุรี</option>
+        <option>นราธิวาส</option><option>น่าน</option><option>บึงกาฬ</option>
+        <option>บุรีรัมย์</option><option>ปทุมธานี</option><option>ประจวบคีรีขันธ์</option>
+        <option>ปราจีนบุรี</option><option>ปัตตานี</option><option>พระนครศรีอยุธยา</option>
+        <option>พะเยา</option><option>พังงา</option><option>พัทลุง</option>
+        <option>พิจิตร</option><option>พิษณุโลก</option><option>เพชรบุรี</option>
+        <option>เพชรบูรณ์</option><option>แพร่</option><option>ภูเก็ต</option>
+        <option>มหาสารคาม</option><option>มุกดาหาร</option><option>แม่ฮ่องสอน</option>
+        <option>ยโสธร</option><option>ยะลา</option><option>ร้อยเอ็ด</option>
+        <option>ระนอง</option><option>ระยอง</option><option>ราชบุรี</option>
+        <option>ลพบุรี</option><option>ลำปาง</option><option>ลำพูน</option>
+        <option>เลย</option><option>ศรีสะเกษ</option><option>สกลนคร</option>
+        <option>สงขลา</option><option>สตูล</option><option>สมุทรปราการ</option>
+        <option>สมุทรสงคราม</option><option>สมุทรสาคร</option><option>สระแก้ว</option>
+        <option>สระบุรี</option><option>สิงห์บุรี</option><option>สุโขทัย</option>
+        <option>สุพรรณบุรี</option><option>สุราษฎร์ธานี</option><option>สุรินทร์</option>
+        <option>หนองคาย</option><option>หนองบัวลำภู</option><option>อ่างทอง</option>
+        <option>อำนาจเจริญ</option><option>อุดรธานี</option><option>อุตรดิตถ์</option>
+        <option>อุทัยธานี</option><option>อุบลราชธานี</option>
+      </select>
+    </div>
+
+    <div class="form-block">
+      <label for="phone"><span class="th">เบอร์โทร</span><span class="en">Phone</span> <span class="opt">(<span class="th">ไม่บังคับ</span><span class="en">optional</span>)</span></label>
+      <input class="form-input" type="tel" id="phone" autocomplete="tel"
+             placeholder="08X-XXX-XXXX" inputmode="tel">
+    </div>
+
+    <div class="form-block">
+      <label for="email">Email <span class="opt">(<span class="th">ไม่บังคับ</span><span class="en">optional</span>)</span></label>
+      <input class="form-input" type="email" id="email" autocomplete="email"
+             placeholder="your@email.com" inputmode="email">
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitLead()">
+      <span class="th">ส่งข้อมูล → รับเงินใน 48 ชม. 💰</span><span class="en">Submit → Get Paid in 48h 💰</span>
+    </button>
+    <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;">
+      <span class="th">🔒 ข้อมูลของคุณปลอดภัย · จ่ายเงินภายใน 48 ชม.พร้อมรายงานชั่งน้ำหนัก</span>
+      <span class="en">🔒 Your data is safe · Paid within 48hrs with full weight report</span>
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+
+    <!-- TRUST -->
+    <div class="trust">
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">จ่ายเงินภายใน 48 ชั่วโมง</span><span class="en">Payment within 48 hours</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">รับซื้อทั่วไทย — รับของถึงที่</span><span class="en">Nationwide pickup — we come to you</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">ราคาอัปเดตทุกวัน ตามตลาดโลก</span><span class="en">Daily prices — global tungsten market</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">รับขั้นต่ำ 1 กก. ทุกชนิด</span><span class="en">Min. 1 kg — all carbide types accepted</span></div>
+    </div>
+
+  </div><!-- /formSection -->
+
+  <!-- SUCCESS -->
+    <div id="successScreen" style="display:none; text-align:center; padding:40px 20px;">
+      <div style="font-size:48px; margin-bottom:16px;">✅</div>
+      <h2 style="color:#c9a227; font-size:22px; margin-bottom:8px;">
+        <span class="th">รับข้อมูลแล้วครับ!</span><span class="en">Submission Received!</span>
+      </h2>
+      <p style="color:#9a9a7a; margin-bottom:8px;">
+        <span class="th">หมายเลขอ้างอิง:</span><span class="en">Reference:</span>
+        <strong id="refBox" style="color:#c9a227;"></strong>
+      </p>
+
+      <div id="successParcel" style="display:none; text-align:left; max-width:480px; margin:24px auto 0;">
+        <div style="background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.3); border-radius:12px; padding:24px;">
+          <div style="text-align:center; margin-bottom:16px;">
+            <span class="lang-th">กรุณาเขียนหมายเลขนี้บนพัสดุของคุณ:</span>
+            <span class="lang-en">Please write this number on your parcel:</span>
+          </div>
+          <div style="text-align:center; background:#0f2a1a; border:2px dashed #059669; border-radius:10px; padding:18px; margin-bottom:16px;">
+            <span style="font-size:2rem; font-weight:800; color:#06c755; letter-spacing:2px;" class="ref-inline"></span>
+          </div>
+          <div style="font-size:0.9rem; color:#ccc; margin-bottom:16px;">
+            <span class="lang-th">ส่งพัสดุไปที่:</span>
+            <span class="lang-en">Send your parcel to:</span><br>
+            <strong style="color:#fff;">ThaiCarbide</strong><br>
+            97/82 The Reserve Hideaway, Lobby B<br>
+            สุขุมวิท 61 แขวงคลองตันเหนือ<br>
+            เขตวัฒนา กรุงเทพฯ 10110<br>
+            โทร: 093-696-9935
+          </div>
+          <button onclick="copyAddress()" style="width:100%; background:#059669; color:#fff; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.95rem;">
+            <span class="lang-th">คัดลอกที่อยู่</span>
+            <span class="lang-en">Copy Address</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="successPickup" style="display:none; text-align:left; max-width:480px; margin:24px auto 0;">
+        <div style="background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.3); border-radius:12px; padding:24px;">
+          <div style="text-align:center; margin-bottom:16px;">
+            <span class="lang-th">หมายเลขอ้างอิงของคุณ:</span>
+            <span class="lang-en">Your reference number:</span>
+          </div>
+          <div style="text-align:center; background:#0f2a1a; border:2px dashed #059669; border-radius:10px; padding:18px; margin-bottom:16px;">
+            <span style="font-size:2rem; font-weight:800; color:#06c755; letter-spacing:2px;" class="ref-inline"></span>
+          </div>
+          <div style="font-size:0.9rem; color:#ccc;">
+            <span class="lang-th">เราจะติดต่อคุณเพื่อนัดวันและเวลารับพัสดุ กรุณาเตรียมของให้พร้อม</span>
+            <span class="lang-en">We will contact you to arrange pickup date and time. Please have your materials ready.</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank"
+         style="display:inline-flex; align-items:center; gap:8px; background:#06C755; color:#fff; text-decoration:none; border-radius:10px; padding:12px 24px; font-weight:700; font-size:15px; margin-top:16px;">
+        💚 <span class="th">แอด LINE @ThaiCarbide</span><span class="en">Add LINE @ThaiCarbide</span>
+      </a>
+    </div>
+  </div><!-- /wrap -->
+
+<script>
+const SB_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
+
+let selKey  = null; // supabase key e.g. 'carbide_inserts'
+let selName = null; // display name
+let prices  = {};   // loaded from supabase
+
+let selectedDelivery = null;
+
+function pickDelivery(method, el) {
+  selectedDelivery = method;
+  document.querySelectorAll('.delivery-btn').forEach(b => {
+    b.style.borderColor = 'rgba(201,162,39,0.3)';
+    b.style.background = 'rgba(201,162,39,0.05)';
+  });
+  el.style.borderColor = '#c9a227';
+  el.style.background = 'rgba(201,162,39,0.15)';
+  document.getElementById('pickupAddressBox').style.display = method === 'pickup' ? 'block' : 'none';
+  document.getElementById('parcelInfoBox').style.display = method === 'parcel' ? 'block' : 'none';
+}
+
+function copyAddress() {
+  const addr = "ThaiCarbide\n97/82 The Reserve Hideaway, Lobby B\nสุขุมวิท 61 แขวงคลองตันเหนือ\nเขตวัฒนา กรุงเทพฯ 10110\nโทร: 093-696-9935";
+  navigator.clipboard.writeText(addr).then(() => {
+    const btn = event.target.closest('button');
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ คัดลอกแล้ว!';
+    setTimeout(() => btn.innerHTML = original, 2000);
+  });
+}
+
+// ── Load prices ──────────────────────────────────────────────────────────────
+async function loadPrices() {
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/prices?select=*', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (res.ok) {
+      const rows = await res.json();
+      rows.forEach(r => { prices[r.key] = r; });
+    }
+  } catch(e) { /* use fallback */ }
+}
+
+// ── Load promo slot count ────────────────────────────────────────────────────
+// promo slot counter removed — no remaining count shown
+
+// ── Material pick ────────────────────────────────────────────────────────────
+function pickMat(key, name, el) {
+  selKey  = key;
+  selName = name;
+  document.querySelectorAll('.mat-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-checked', 'false');
+  });
+  el.classList.add('active');
+  el.setAttribute('aria-checked', 'true');
+  calcPrice();
+}
+
+// ── Calculate + show price ───────────────────────────────────────────────────
+function calcPrice() {
+  const weight = parseFloat(document.getElementById('weightInput').value);
+  const box    = document.getElementById('priceBox');
+
+  if (!selKey || !weight || weight <= 0) { box.classList.remove('show'); return; }
+
+  const p = prices[selKey];
+  if (!p) { box.classList.remove('show'); return; }
+
+  // Pick correct tier
+  let pricePerKg = p.tier_over50 ?? p.tier_mid ?? p.tier_under20 ?? p.teaser_thb;
+  let tierLabel  = '> 50 kg';
+  if (weight < 20) {
+    pricePerKg = p.tier_under20 ?? p.teaser_thb;
+    tierLabel  = '< 20 kg';
+  } else if (weight < 50) {
+    pricePerKg = p.tier_mid ?? p.tier_over50 ?? p.tier_under20 ?? p.teaser_thb;
+    tierLabel  = '20–50 kg';
+  }
+
+  const total = Math.round(weight * pricePerKg);
+
+  document.getElementById('priceMain').innerHTML =
+    '฿' + total.toLocaleString('th-TH') + ' <span>บาท</span>';
+  document.getElementById('priceTierNote').textContent =
+    `(฿${pricePerKg.toLocaleString('th-TH')}/กก. สำหรับ ${tierLabel})`;
+
+  // Upsell: show next tier if applicable
+  const upsell = document.getElementById('priceUpsell');
+  if (weight < 20 && p.tier_mid) {
+    const diff = Math.round(20 - weight);
+    const extra = Math.round(20 * p.tier_mid - total);
+    upsell.textContent = `🔥 ถ้าขาย 20 กก. ขึ้นไป ได้เพิ่มอีก ฿${extra.toLocaleString('th-TH')} (ราคา ฿${p.tier_mid.toLocaleString('th-TH')}/กก.)`;
+    upsell.classList.add('show');
+  } else if (weight < 50 && p.tier_over50) {
+    const extra = Math.round(50 * p.tier_over50 - total);
+    upsell.textContent = `🔥 ถ้าขาย 50 กก. ขึ้นไป ได้เพิ่มอีก ฿${extra.toLocaleString('th-TH')} (ราคา ฿${p.tier_over50.toLocaleString('th-TH')}/กก.)`;
+    upsell.classList.add('show');
+  } else {
+    upsell.classList.remove('show');
+  }
+
+  box.classList.add('show');
+
+  // Track price view in GA4
+  gtag('event', 'price_calculated', { material: selKey, weight_kg: weight, total_thb: total });
+}
+
+// ── Submit ───────────────────────────────────────────────────────────────────
+async function submitLead() {
+  const lineId   = document.getElementById('lineId').value.trim();
+  const fullName = document.getElementById('fullName').value.trim();
+  const province = document.getElementById('province').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const weight   = parseFloat(document.getElementById('weightInput').value) || null;
+  const errEl    = document.getElementById('errorMsg');
+  const btn      = document.getElementById('submitBtn');
+
+  errEl.style.display = 'none';
+
+  const isEn = document.body.classList.contains('lang-en');
+  if (!selKey)   return showErr(isEn ? 'Please select a carbide type first.' : 'กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
+  if (!selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
+  if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) {
+    return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
+  }
+  if (!lineId)   return showErr(isEn ? 'Please enter your LINE ID.' : 'กรุณาใส่ LINE ID ของคุณครับ');
+  if (!fullName) return showErr(isEn ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุลครับ');
+  if (!province) return showErr(isEn ? 'Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
+
+  btn.disabled = true;
+  btn.textContent = isEn ? 'Sending...' : 'กำลังส่ง...';
+
+  const p        = prices[selKey] || {};
+  let pricePerKg = p.tier_over50 ?? p.tier_mid ?? p.tier_under20 ?? p.teaser_thb ?? null;
+  if (weight && weight < 20) pricePerKg = p.tier_under20 ?? pricePerKg;
+  else if (weight && weight < 50) pricePerKg = p.tier_mid ?? pricePerKg;
+  const priceShown = (pricePerKg && weight) ? Math.round(weight * pricePerKg) : null;
+
+  try {
+    // 1. Save lead
+    const leadRes = await fetch(SB_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify({
+        line_id: lineId,
+        ref: ref,
+        material_type: selName,
+        weight_kg: weight,
+        price_shown: priceShown,
+        status: 'submitted',
+        source: 'sell-lp'
+      })
+    });
+    if (!leadRes.ok) {
+      const errText = await leadRes.text().catch(() => '');
+      console.error('[sell-lp] leads write failed', leadRes.status, errText);
+      throw new Error('db_write_failed');
+    }
+    let leadId = null;
+    { const d = await leadRes.json(); leadId = d[0]?.id; }
+
+    // 2. Save order
+    const ref = 'TC-' + Date.now().toString(36).toUpperCase();
+    await fetch(SB_URL + '/rest/v1/orders', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: fullName,
+        phone: phone || null,
+        email: email || null,
+        line_id: lineId,
+        province: province,
+        material: selName,
+        weight_ordered: weight,
+        price_per_kg: pricePerKg,
+        total_amount: priceShown,
+        status: 'neu',
+            delivery_method: selectedDelivery,
+        parcel_status: selectedDelivery === 'parcel' ? 'waiting' : null,
+            pickup_address: selectedDelivery === 'pickup' ? document.getElementById('pickupAddress').value.trim() : null,
+        notes: `Source: sell-lp | Ref: ${ref}`
+      })
+    });
+
+    // 3. Promo claim
+    fetch(SB_URL + '/rest/v1/promo_claims', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line_user_id: lineId, display_name: fullName })
+    }).catch(() => {});
+
+    // 4. GA4 + Ads conversion
+    gtag('event', 'conversion', { 'send_to': 'AW-18001691387' });
+    gtag('event', 'generate_lead', { currency: 'THB', value: priceShown || 0 });
+    if (typeof fbq !== 'undefined') fbq('track', 'Lead', { value: priceShown || 0, currency: 'THB' });
+
+    // 5. Telegram notification
+    const tgText = `🆕 NEUER LEAD!\n👤 Name: ${fullName}\n📱 Tel: ${phone || '—'}\nLINE: ${lineId}\n📦 Material: ${selName}\n⚖️ Gewicht: ${weight != null ? weight : '—'}kg\n📍 Provinz: ${province}\n💰 Preis: ฿${priceShown != null ? priceShown.toLocaleString('th-TH') : '—'}\n🚚 Versand: ${selectedDelivery === 'parcel' ? 'Paket (Seller sendet)' : 'Pickup (wir holen ab)'}${selectedDelivery === 'pickup' ? '\n📍 Adresse: ' + document.getElementById('pickupAddress').value.trim() : ''}\n🔗 Ref: ${ref}`;
+    fetch('https://api.telegram.org/bot8653052939:AAE1450o0j2JpNsf2sMdIWroLHuKRA6QTqA/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: '697775946', text: tgText })
+    }).catch(() => {});
+
+    // 6. Show success
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('refBox').textContent = ref;
+    document.getElementById('successParcel').style.display = selectedDelivery === 'parcel' ? 'block' : 'none';
+      document.getElementById('successPickup').style.display = selectedDelivery === 'pickup' ? 'block' : 'none';
+      document.querySelectorAll('.ref-inline').forEach(el => el.textContent = ref);
+      document.getElementById('successScreen').style.display = 'block';
+    window.scrollTo(0, 0);
+
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = isEn ? 'Submit → Get Paid in 48h 💰' : 'ส่งข้อมูล → รับเงินใน 48 ชม. 💰';
+    showErr(isEn ? 'An error occurred. Please try again or contact LINE @280uqpab' : 'เกิดข้อผิดพลาด กรุณาลองใหม่หรือติดต่อ LINE @280uqpab');
+  }
+}
+
+function showErr(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ── Language toggle ──────────────────────────────────────────────────────────
+function setLang(lang) {
+  document.body.classList.remove('lang-th','lang-en');
+  document.body.classList.add('lang-' + lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const active = document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]');
+  if (active) active.classList.add('active');
+  localStorage.setItem('carbide-lang', lang);
+}
+(function(){ setLang(localStorage.getItem('carbide-lang') || 'th'); })();
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+loadPrices();
+</script>
+<script>/* tc-tracker: session time */
+(function(){var K='tc_sessions',p='/sell.html',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ขายคาร์ไบด์ — รับราคาทันที | ThaiCarbide.com</title>
+<meta name="robots" content="noindex">
+<!-- Google Ads -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001691387"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18001691387');
+</script>
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RNXH6EX220"></script>
+<script>gtag('config', 'G-RNXH6EX220');</script>
+<!-- Facebook Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'FB_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #0b1f14;
+  --sur:    #0f2a1a;
+  --sur2:   #132e1d;
+  --gold:   #c9a227;
+  --green:  #06C755;
+  --white:  #f2ede4;
+  --muted:  #a8b8a4;
+  --border: rgba(201,162,39,0.18);
+  --red:    #e05555;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.5;min-height:100vh;}
+
+/* ── TOP BAR ─────────────────────────────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(11,31,20,0.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--white);text-decoration:none;letter-spacing:1px;}
+.topbar-logo span{color:var(--gold);}
+.topbar-line{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;padding:8px 16px;border-radius:4px;text-decoration:none;}
+
+/* ── PROMO STRIP ─────────────────────────────────── */
+.promo-strip{background:var(--green);color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:700;line-height:1.4;}
+.promo-slots{background:rgba(0,0,0,0.2);border-radius:20px;padding:2px 10px;display:inline-block;margin-left:6px;font-size:13px;}
+
+/* ── WRAP ────────────────────────────────────────── */
+.wrap{max-width:480px;margin:0 auto;padding:24px 16px 80px;}
+
+/* ── HERO ────────────────────────────────────────── */
+.hero-text{text-align:center;margin-bottom:28px;}
+.hero-text h1{font-family:'Sarabun',sans-serif;font-size:clamp(28px,7vw,40px);font-weight:800;line-height:1.25;color:var(--white);}
+.hero-text h1 em{color:var(--green);font-style:normal;}
+.hero-sub{font-size:16px;color:var(--muted);margin-top:8px;}
+
+/* ── STEP LABEL ──────────────────────────────────── */
+.step-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+
+/* ── MATERIAL GRID ───────────────────────────────── */
+.mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.mat-btn{background:var(--sur2);border:2px solid rgba(201,162,39,0.2);border-radius:6px;padding:16px 12px;cursor:pointer;text-align:left;transition:border-color 0.15s,background 0.15s;min-height:72px;display:flex;flex-direction:column;justify-content:center;}
+.mat-btn:hover{border-color:var(--gold);}
+.mat-btn.active{border-color:var(--green);background:rgba(6,199,85,0.1);}
+.mat-name{font-size:16px;font-weight:800;color:var(--white);line-height:1.2;}
+.mat-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* ── WEIGHT ──────────────────────────────────────── */
+.weight-row{display:flex;gap:10px;align-items:stretch;margin-bottom:20px;}
+.weight-input{flex:1;background:var(--sur2);border:2px solid rgba(201,162,39,0.2);color:var(--white);padding:14px 16px;border-radius:6px;font-size:22px;font-weight:700;font-family:'Sarabun',sans-serif;outline:none;min-height:56px;transition:border-color 0.15s;-moz-appearance:textfield;}
+.weight-input::-webkit-outer-spin-button,.weight-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.weight-input:focus{border-color:var(--gold);}
+.weight-unit{background:var(--sur);border:2px solid var(--border);border-radius:6px;padding:0 18px;font-size:15px;font-weight:700;color:var(--muted);display:flex;align-items:center;}
+
+/* ── PRICE BOX ───────────────────────────────────── */
+.price-box{background:rgba(6,199,85,0.08);border:2px solid rgba(6,199,85,0.35);border-radius:8px;padding:18px 20px;margin-bottom:20px;display:none;animation:fadeUp 0.25s ease;}
+.price-box.show{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.price-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:4px;}
+.price-main{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--white);line-height:1;}
+.price-main span{font-size:20px;font-weight:700;color:var(--muted);margin-left:4px;}
+.price-tier-note{font-size:12px;color:var(--muted);margin-top:6px;}
+.price-upsell{font-size:13px;color:var(--green);margin-top:8px;padding-top:8px;border-top:1px solid rgba(6,199,85,0.2);display:none;}
+.price-upsell.show{display:block;}
+
+/* ── FORM ────────────────────────────────────────── */
+.form-block{margin-bottom:14px;}
+.form-block label{display:block;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.form-block label .opt{color:var(--muted);font-weight:400;}
+.form-input{width:100%;background:var(--sur2);border:2px solid rgba(201,162,39,0.2);color:var(--white);padding:14px 16px;border-radius:6px;font-size:16px;font-family:'Sarabun',sans-serif;outline:none;min-height:52px;transition:border-color 0.15s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--muted);opacity:0.5;}
+
+/* ── SUBMIT ──────────────────────────────────────── */
+.btn-submit{width:100%;background:var(--green);color:#fff;border:none;border-radius:6px;min-height:60px;font-family:'Sarabun',sans-serif;font-size:20px;font-weight:800;cursor:pointer;transition:background 0.15s,transform 0.1s;margin-top:8px;letter-spacing:0.3px;animation:pulse 2.5s infinite;}
+.btn-submit:hover{background:#05b84e;transform:translateY(-1px);}
+.btn-submit:active{transform:translateY(0);}
+.btn-submit:disabled{background:var(--muted);cursor:not-allowed;transform:none;animation:none;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(6,199,85,0.45);}55%{box-shadow:0 0 0 14px rgba(6,199,85,0);}}
+
+/* ── TRUST ───────────────────────────────────────── */
+.trust{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
+.trust-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);}
+.trust-icon{color:var(--green);font-size:18px;flex-shrink:0;}
+
+/* ── ERROR ───────────────────────────────────────── */
+.error-msg{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.35);border-radius:6px;color:#f08080;padding:12px 16px;font-size:14px;margin-top:10px;display:none;}
+
+/* ── SUCCESS ─────────────────────────────────────── */
+.success-screen{display:none;text-align:center;padding:48px 20px;}
+.success-icon{font-size:64px;margin-bottom:16px;}
+.success-title{font-size:28px;font-weight:800;color:var(--white);margin-bottom:8px;}
+.success-sub{font-size:16px;color:var(--muted);line-height:1.6;margin-bottom:24px;}
+.success-line-btn{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;padding:14px 28px;border-radius:6px;font-size:17px;font-weight:700;text-decoration:none;}
+.ref-box{display:inline-block;background:var(--sur);border:1px solid var(--border);border-radius:4px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:3px;color:var(--gold);margin-top:16px;}
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+
+/* ── TEASER PRICE ────────────────────────────────── */
+.teaser-price{text-align:center;margin:16px 0 20px;padding:18px 20px;background:rgba(201,162,39,0.08);border:1.5px solid rgba(201,162,39,0.4);border-radius:10px;}
+.teaser-label{font-size:17px;font-weight:800;color:var(--gold);letter-spacing:0.5px;}
+.teaser-amount{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,14vw,76px);font-weight:900;color:var(--gold);line-height:1;margin:4px 0;}
+.teaser-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ── LANGUAGE ────────────────────────────────────── */
+body.lang-th .en{display:none !important;}
+body.lang-en .th{display:none !important;}
+.lang-btn{background:transparent;border:1px solid rgba(201,162,39,0.22);color:var(--muted);font-size:14px;padding:4px 8px;border-radius:3px;cursor:pointer;transition:border-color 0.2s,background 0.2s;line-height:1;font-family:inherit;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+.lang-btn.active{border-color:var(--gold);background:rgba(201,162,39,0.15);color:var(--white);}
+.lang-btn:hover{border-color:var(--gold);}
+.lang-switcher{display:flex;gap:6px;}
+
+/* ── MOBILE ──────────────────────────────────────── */
+@media(max-width:380px){
+  .mat-name{font-size:15px;}
+  .hero-text h1{font-size:26px;}
+}
+/* DELIVERY */
+.delivery-btn:hover {
+  border-color: rgba(201,162,39,0.6) !important;
+  background: rgba(201,162,39,0.1) !important;
+}
+@media (max-width: 480px) {
+  .delivery-options { flex-direction: column !important; }
+}
+</style>
+</head>
+<body class="lang-th">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <a class="topbar-logo" href="/">Carbide<span>Thai</span></a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('th')" title="ภาษาไทย">🇹🇭</button>
+      <button class="lang-btn" onclick="setLang('en')" title="English">🇬🇧</button>
+    </div>
+    <a class="topbar-line" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.952 12.081C19.952 7.62 15.49 4 10 4S.048 7.62.048 12.081c0 4.01 3.556 7.37 8.352 8.002.325.07.768.214.88.49.1.25.065.644.032.896l-.142.856c-.043.25-.198.977.856.533 1.054-.444 5.687-3.35 7.76-5.735 1.43-1.57 2.166-3.163 2.166-4.942z"/></svg>
+      <span class="th">ติดต่อ LINE</span><span class="en">Contact LINE</span>
+    </a>
+  </div>
+</header>
+
+<!-- PROMO STRIP -->
+<div class="promo-strip">
+  <span class="th">🎉 โปรเปิดตัว — รับโบนัส ฿200 สำหรับ 50 ลูกค้าแรก <span class="promo-slots">เหลืออีก 14 ที่</span></span>
+  <span class="en">🎉 Launch Special — ฿200 Bonus for the first 50 customers <span class="promo-slots">14 spots left</span></span>
+</div>
+
+<!-- MAIN -->
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero-text">
+    <h1><span class="th">ขายคาร์ไบด์เก่า<br><em>รู้ราคาทันที</em></span><span class="en">Sell Carbide Scrap<br><em>Instant Price Quote</em></span></h1>
+    <div class="teaser-price">
+      <div class="teaser-label"><span class="th">รับซื้อสูงสุด</span><span class="en">We Pay Up To</span></div>
+      <div class="teaser-amount">฿4,600/kg</div>
+      <div class="teaser-sub"><span class="th">สำหรับคาร์ไบด์อินเสิร์ท • ราคาอัปเดตทุกวัน</span><span class="en">For Carbide Inserts • Price updated daily</span></div>
+    </div>
+    <p class="hero-sub"><span class="th">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</span><span class="en">Select type → Enter weight → See price instantly</span></p>
+  </div>
+
+  <!-- FORM SECTION -->
+  <div id="formSection">
+
+    <!-- STEP 1: MATERIAL -->
+    <div class="step-label"><span class="th">ขั้นที่ 1 — เลือกประเภทคาร์ไบด์</span><span class="en">Step 1 — Select Carbide Type</span></div>
+    <div class="mat-grid" role="radiogroup" aria-label="ประเภทคาร์ไบด์">
+      <button class="mat-btn" id="m-insert" onclick="pickMat('carbide_inserts','Carbide Insert',this)" role="radio" aria-checked="false">
+        <div class="mat-name"><span class="th">อินเสิร์ท</span><span class="en">Inserts</span></div>
+        <div class="mat-sub">CNMG / TNMG / APMT</div>
+      </button>
+      <button class="mat-btn" id="m-drill" onclick="pickMat('carbide_drills','Carbide Drills',this)" role="radio" aria-checked="false">
+        <div class="mat-name"><span class="th">ดอกสว่าน / เอ็นมิล</span><span class="en">Drills / End Mills</span></div>
+        <div class="mat-sub">Solid carbide (VHM)</div>
+      </button>
+      <button class="mat-btn" id="m-mixed" onclick="pickMat('mixed_carbide','Mixed Carbide',this)" role="radio" aria-checked="false">
+        <div class="mat-name"><span class="th">คาร์ไบด์ผสม</span><span class="en">Mixed Carbide</span></div>
+        <div class="mat-sub"><span class="th">ทุกชนิดรวมกัน</span><span class="en">All types mixed</span></div>
+      </button>
+      <button class="mat-btn" id="m-other" onclick="pickMat('sand_rills','Other',this)" role="radio" aria-checked="false">
+        <div class="mat-name"><span class="th">อื่นๆ</span><span class="en">Other</span></div>
+        <div class="mat-sub"><span class="th">แซนด์ริล / ผง / อื่น</span><span class="en">Sand Rills / Powder / Other</span></div>
+      </button>
+    </div>
+
+    <!-- STEP 2: WEIGHT + LIVE PRICE -->
+    <div class="step-label"><span class="th">ขั้นที่ 2 — ใส่น้ำหนักโดยประมาณ</span><span class="en">Step 2 — Enter Approximate Weight</span></div>
+    <div class="weight-row">
+      <input class="weight-input" type="number" id="weightInput" inputmode="decimal"
+             placeholder="e.g. 25" min="0.1" step="0.5" oninput="calcPrice()">
+      <div class="weight-unit">kg</div>
+    </div>
+
+    <!-- LIVE PRICE BOX -->
+    <div class="price-box" id="priceBox">
+      <div class="price-label"><span class="th">ราคาประเมิน</span><span class="en">Estimated Price</span></div>
+      <div class="price-main" id="priceMain">฿0 <span><span class="th">บาท</span><span class="en">THB</span></span></div>
+      <div class="price-tier-note" id="priceTierNote"></div>
+      <div class="price-upsell" id="priceUpsell"></div>
+    </div>
+
+
+    <!-- STEP 3: DELIVERY METHOD -->
+    <div class="step-label"><span class="th">ขั้นที่ 3 — วิธีจัดส่ง</span><span class="en">Step 3 — Delivery Method</span></div>
+
+    <div class="delivery-options" style="display:flex; gap:12px; margin:0 0 20px;">
+      <button type="button" class="mat-btn delivery-btn" id="btn-parcel"
+              onclick="pickDelivery('parcel', this)"
+              style="flex:1; padding:20px 16px; border:2px solid rgba(201,162,39,0.3); border-radius:12px; background:rgba(201,162,39,0.05); cursor:pointer; text-align:center; transition:all 0.2s;">
+        <div style="font-size:28px; margin-bottom:8px;">📦</div>
+        <div style="font-weight:700; font-size:15px; color:#f2ede4;">
+          <span class="th">ส่งพัสดุเอง</span><span class="en">Send Parcel</span>
+        </div>
+        <div style="font-size:12px; color:#9a9a7a; margin-top:4px;">
+          <span class="th">ส่ง Kerry / J&T / ไปรษณีย์ไทย</span><span class="en">Via Kerry / J&T / Thailand Post</span>
+        </div>
+      </button>
+      <button type="button" class="mat-btn delivery-btn" id="btn-pickup"
+              onclick="pickDelivery('pickup', this)"
+              style="flex:1; padding:20px 16px; border:2px solid rgba(201,162,39,0.3); border-radius:12px; background:rgba(201,162,39,0.05); cursor:pointer; text-align:center; transition:all 0.2s;">
+        <div style="font-size:28px; margin-bottom:8px;">🚚</div>
+        <div style="font-weight:700; font-size:15px; color:#f2ede4;">
+          <span class="th">ให้เรามารับ</span><span class="en">We Pick Up</span>
+        </div>
+        <div style="font-size:12px; color:#9a9a7a; margin-top:4px;">
+          <span class="th">เราจัดรถไปรับถึงที่</span><span class="en">We arrange courier to you</span>
+        </div>
+      </button>
+    </div>
+
+    <div id="pickupAddressBox" style="display:none; margin-bottom:20px;">
+      <label style="display:block; font-size:13px; color:#c9a227; margin-bottom:6px;">
+        <span class="th">ที่อยู่สำหรับรับของ *</span><span class="en">Pickup Address *</span>
+      </label>
+      <textarea id="pickupAddress" rows="3" placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"
+                style="width:100%; background:#0b1f14; border:1px solid rgba(201,162,39,0.25); color:#f2ede4; padding:12px; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:14px; resize:vertical; box-sizing:border-box;"></textarea>
+    </div>
+
+    <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(6,199,85,0.08); border:1px solid rgba(6,199,85,0.25); border-radius:10px; padding:14px;">
+      <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
         <span class="th">📦 <strong>ส่งพัสดุมาที่:</strong><br>ThaiCarbide<br>725 ถ.สุขุมวิท แขวงคลองตันเหนือ<br>เขตวัฒนา กรุงเทพฯ 10110<br>โทร: 093-696-9935<br><br>💡 ส่งได้ทาง Kerry Express, J&T Express หรือ ไปรษณีย์ไทย<br>📝 กรุณาเขียน "ThaiCarbide" และชื่อของท่านบนกล่อง</span>
         <span class="en">📦 <strong>Send your parcel to:</strong><br>ThaiCarbide<br>725 Sukhumvit Rd, Khlong Tan Nuea<br>Watthana, Bangkok 10110<br>Tel: 093-696-9935<br><br>💡 Ship via Kerry Express, J&T Express or Thailand Post<br>📝 Please write "ThaiCarbide" and your name on the box</span>
       </div>
