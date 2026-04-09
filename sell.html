@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+    if (!selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
+    if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
 <html lang="th">
 <head>
 <meta charset="UTF-8">
@@ -145,6 +147,14 @@ body.lang-en .th{display:none !important;}
   .mat-name{font-size:15px;}
   .hero-text h1{font-size:26px;}
 }
+/* DELIVERY */
+.delivery-btn:hover {
+  border-color: rgba(201,162,39,0.6) !important;
+  background: rgba(201,162,39,0.1) !important;
+}
+@media (max-width: 480px) {
+  .delivery-options { flex-direction: column !important; }
+}
 </style>
 </head>
 <body class="lang-th">
@@ -224,10 +234,55 @@ body.lang-en .th{display:none !important;}
       <div class="price-upsell" id="priceUpsell"></div>
     </div>
 
+
+    <!-- STEP 3: DELIVERY METHOD -->
+    <div class="step-label"><span class="th">ขั้นที่ 3 — วิธีจัดส่ง</span><span class="en">Step 3 — Delivery Method</span></div>
+
+    <div class="delivery-options" style="display:flex; gap:12px; margin:0 0 20px;">
+      <button type="button" class="mat-btn delivery-btn" id="btn-parcel"
+              onclick="pickDelivery('parcel', this)"
+              style="flex:1; padding:20px 16px; border:2px solid rgba(201,162,39,0.3); border-radius:12px; background:rgba(201,162,39,0.05); cursor:pointer; text-align:center; transition:all 0.2s;">
+        <div style="font-size:28px; margin-bottom:8px;">📦</div>
+        <div style="font-weight:700; font-size:15px; color:#f2ede4;">
+          <span class="th">ส่งพัสดุเอง</span><span class="en">Send Parcel</span>
+        </div>
+        <div style="font-size:12px; color:#9a9a7a; margin-top:4px;">
+          <span class="th">ส่ง Kerry / J&T / ไปรษณีย์ไทย</span><span class="en">Via Kerry / J&T / Thailand Post</span>
+        </div>
+      </button>
+      <button type="button" class="mat-btn delivery-btn" id="btn-pickup"
+              onclick="pickDelivery('pickup', this)"
+              style="flex:1; padding:20px 16px; border:2px solid rgba(201,162,39,0.3); border-radius:12px; background:rgba(201,162,39,0.05); cursor:pointer; text-align:center; transition:all 0.2s;">
+        <div style="font-size:28px; margin-bottom:8px;">🚚</div>
+        <div style="font-weight:700; font-size:15px; color:#f2ede4;">
+          <span class="th">ให้เรามารับ</span><span class="en">We Pick Up</span>
+        </div>
+        <div style="font-size:12px; color:#9a9a7a; margin-top:4px;">
+          <span class="th">เราจัดรถไปรับถึงที่</span><span class="en">We arrange courier to you</span>
+        </div>
+      </button>
+    </div>
+
+    <div id="pickupAddressBox" style="display:none; margin-bottom:20px;">
+      <label style="display:block; font-size:13px; color:#c9a227; margin-bottom:6px;">
+        <span class="th">ที่อยู่สำหรับรับของ *</span><span class="en">Pickup Address *</span>
+      </label>
+      <textarea id="pickupAddress" rows="3" placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"
+                style="width:100%; background:#0b1f14; border:1px solid rgba(201,162,39,0.25); color:#f2ede4; padding:12px; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:14px; resize:vertical; box-sizing:border-box;"></textarea>
+    </div>
+
+    <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(6,199,85,0.08); border:1px solid rgba(6,199,85,0.25); border-radius:10px; padding:14px;">
+      <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
+        <span class="th">📦 <strong>ส่งพัสดุมาที่:</strong><br>ThaiCarbide<br>725 ถ.สุขุมวิท แขวงคลองตันเหนือ<br>เขตวัฒนา กรุงเทพฯ 10110<br>โทร: 093-696-9935<br><br>💡 ส่งได้ทาง Kerry Express, J&T Express หรือ ไปรษณีย์ไทย<br>📝 กรุณาเขียน "ThaiCarbide" และชื่อของท่านบนกล่อง</span>
+        <span class="en">📦 <strong>Send your parcel to:</strong><br>ThaiCarbide<br>725 Sukhumvit Rd, Khlong Tan Nuea<br>Watthana, Bangkok 10110<br>Tel: 093-696-9935<br><br>💡 Ship via Kerry Express, J&T Express or Thailand Post<br>📝 Please write "ThaiCarbide" and your name on the box</span>
+      </div>
+    </div>
+
     <hr class="divider">
 
-    <!-- STEP 3: CONTACT -->
-    <div class="step-label"><span class="th">ขั้นที่ 3 — ข้อมูลติดต่อ</span><span class="en">Step 3 — Contact Info</span></div>
+
+    <!-- STEP 4: CONTACT -->
+    <div class="step-label"><span class="th">ขั้นที่ 4 — ข้อมูลติดต่อ</span><span class="en">Step 4 — Contact Info</span></div>
 
     <div class="form-block">
       <label for="lineId">LINE ID <span style="color:#e05555">*</span></label>
@@ -306,21 +361,53 @@ body.lang-en .th{display:none !important;}
   </div><!-- /formSection -->
 
   <!-- SUCCESS -->
-  <div class="success-screen" id="successScreen">
-    <div class="success-icon">✅</div>
-    <div class="success-title"><span class="th">รับข้อมูลแล้วครับ!</span><span class="en">Submission received!</span></div>
-    <div class="success-sub">
-      <span class="th">Nong จะติดต่อกลับใน 2 ชั่วโมงผ่าน LINE<br>เพื่อยืนยันรายละเอียดและนัดรับของ</span>
-      <span class="en">We'll reach out within 2 hours via LINE<br>to confirm details and arrange pickup.</span>
-    </div>
-    <a class="success-line-btn" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.952 12.081C19.952 7.62 15.49 4 10 4S.048 7.62.048 12.081c0 4.01 3.556 7.37 8.352 8.002.325.07.768.214.88.49.1.25.065.644.032.896l-.142.856c-.043.25-.198.977.856.533 1.054-.444 5.687-3.35 7.76-5.735 1.43-1.57 2.166-3.163 2.166-4.942z"/></svg>
-      <span class="th">แอด LINE @ThaiCarbide</span><span class="en">Add LINE @ThaiCarbide</span>
-    </a>
-    <div class="ref-box" id="refBox"></div>
-  </div>
+    <div id="successScreen" style="display:none; text-align:center; padding:40px 20px;">
+      <div style="font-size:48px; margin-bottom:16px;">✅</div>
+      <h2 style="color:#c9a227; font-size:22px; margin-bottom:8px;">
+        <span class="th">รับข้อมูลแล้วครับ!</span><span class="en">Submission Received!</span>
+      </h2>
+      <p style="color:#9a9a7a; margin-bottom:8px;">
+        <span class="th">หมายเลขอ้างอิง:</span><span class="en">Reference:</span>
+        <strong id="refBox" style="color:#c9a227;"></strong>
+      </p>
 
-</div><!-- /wrap -->
+      <div id="successParcel" style="display:none; text-align:left; max-width:480px; margin:24px auto 0;">
+        <div style="background:rgba(6,199,85,0.1); border:2px solid rgba(6,199,85,0.35); border-radius:14px; padding:20px; margin-bottom:16px;">
+          <h3 style="color:#06C755; font-size:16px; margin:0 0 12px 0;">
+            <span class="th">📦 ส่งพัสดุมาที่นี่เลยครับ:</span><span class="en">📦 Send your parcel here:</span>
+          </h3>
+          <div style="background:#0b1f14; border-radius:8px; padding:16px; font-size:15px; color:#f2ede4; line-height:1.8;" id="shippingAddressBlock">
+            <strong>ThaiCarbide</strong><br>725 ถ.สุขุมวิท แขวงคลองตันเหนือ<br>เขตวัฒนา กรุงเทพฯ 10110<br>
+            <span class="th">โทร:</span><span class="en">Tel:</span> 093-696-9935
+          </div>
+          <button onclick="copyAddress()" style="margin-top:10px; background:#059669; color:#fff; border:none; border-radius:8px; padding:8px 16px; cursor:pointer; font-size:13px; font-family:'Sarabun',sans-serif;">
+            <span class="th">📋 คัดลอกที่อยู่</span><span class="en">📋 Copy Address</span>
+          </button>
+        </div>
+        <div style="background:rgba(201,162,39,0.08); border:1px solid rgba(201,162,39,0.2); border-radius:10px; padding:16px; font-size:13px; color:#c9a84c; line-height:1.7;">
+          <span class="th"><strong>ขั้นตอนต่อไป:</strong><br>1️⃣ ใส่ของในกล่อง เขียน "ThaiCarbide" + ชื่อคุณ + หมายเลข <span class="ref-inline"></span><br>2️⃣ ส่งทาง Kerry Express / J&T Express / ไปรษณีย์ไทย<br>3️⃣ แจ้งเลขพัสดุทาง LINE @280uqpab<br>4️⃣ เราชั่งน้ำหนัก + โอนเงินภายใน 48 ชม.</span>
+          <span class="en"><strong>Next steps:</strong><br>1️⃣ Pack your carbide, write "ThaiCarbide" + your name + ref <span class="ref-inline"></span> on the box<br>2️⃣ Ship via Kerry Express / J&T Express / Thailand Post<br>3️⃣ Send us the tracking number via LINE @280uqpab<br>4️⃣ We weigh + transfer payment within 48 hours</span>
+        </div>
+      </div>
+
+      <div id="successPickup" style="display:none; text-align:left; max-width:480px; margin:24px auto 0;">
+        <div style="background:rgba(6,199,85,0.1); border:2px solid rgba(6,199,85,0.35); border-radius:14px; padding:20px; margin-bottom:16px;">
+          <h3 style="color:#06C755; font-size:16px; margin:0 0 12px 0;">
+            <span class="th">🚚 เราจะจัดรถไปรับครับ!</span><span class="en">🚚 We'll arrange pickup!</span>
+          </h3>
+          <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
+            <span class="th">ทีมงานจะติดต่อท่านทาง LINE ภายใน <strong>2 ชั่วโมง</strong> เพื่อนัดวันและเวลารับของ<br><br>📍 เราจะส่ง courier ไปรับถึงที่อยู่ที่ท่านแจ้งไว้<br>💰 ชำระเงินภายใน 48 ชม. หลังรับและชั่งน้ำหนัก</span>
+            <span class="en">Our team will contact you via LINE within <strong>2 hours</strong> to arrange pickup date and time.<br><br>📍 We'll send a courier to the address you provided<br>💰 Payment within 48 hours after receiving and weighing</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank"
+         style="display:inline-flex; align-items:center; gap:8px; background:#06C755; color:#fff; text-decoration:none; border-radius:10px; padding:12px 24px; font-weight:700; font-size:15px; margin-top:16px;">
+        💚 <span class="th">แอด LINE @ThaiCarbide</span><span class="en">Add LINE @ThaiCarbide</span>
+      </a>
+    </div>
+  </div><!-- /wrap -->
 
 <script>
 const SB_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
@@ -329,6 +416,30 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 let selKey  = null; // supabase key e.g. 'carbide_inserts'
 let selName = null; // display name
 let prices  = {};   // loaded from supabase
+
+let selectedDelivery = null;
+
+function pickDelivery(method, el) {
+  selectedDelivery = method;
+  document.querySelectorAll('.delivery-btn').forEach(b => {
+    b.style.borderColor = 'rgba(201,162,39,0.3)';
+    b.style.background = 'rgba(201,162,39,0.05)';
+  });
+  el.style.borderColor = '#c9a227';
+  el.style.background = 'rgba(201,162,39,0.15)';
+  document.getElementById('pickupAddressBox').style.display = method === 'pickup' ? 'block' : 'none';
+  document.getElementById('parcelInfoBox').style.display = method === 'parcel' ? 'block' : 'none';
+}
+
+function copyAddress() {
+  const addr = "ThaiCarbide\n725 ถ.สุขุมวิท แขวงคลองตันเหนือ\nเขตวัฒนา กรุงเทพฯ 10110\nโทร: 093-696-9935";
+  navigator.clipboard.writeText(addr).then(() => {
+    const btn = event.target.closest('button');
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ คัดลอกแล้ว!';
+    setTimeout(() => btn.innerHTML = original, 2000);
+  });
+}
 
 // ── Load prices ──────────────────────────────────────────────────────────────
 async function loadPrices() {
@@ -474,6 +585,8 @@ async function submitLead() {
         price_per_kg: pricePerKg,
         total_amount: priceShown,
         status: 'neu',
+            delivery_method: selectedDelivery,
+            pickup_address: selectedDelivery === 'pickup' ? document.getElementById('pickupAddress').value.trim() : null,
         notes: `Source: sell-lp | Ref: ${ref}`
       })
     });
@@ -491,7 +604,7 @@ async function submitLead() {
     if (typeof fbq !== 'undefined') fbq('track', 'Lead', { value: priceShown || 0, currency: 'THB' });
 
     // 5. Telegram notification
-    const tgText = `🆕 NEUER LEAD!\n👤 Name: ${fullName}\n📱 Tel: ${phone || '—'}\nLINE: ${lineId}\n📦 Material: ${selName}\n⚖️ Gewicht: ${weight != null ? weight : '—'}kg\n📍 Provinz: ${province}\n💰 Preis: ฿${priceShown != null ? priceShown.toLocaleString('th-TH') : '—'}\n🔗 Ref: ${ref}`;
+    const tgText = `🆕 NEUER LEAD!\n👤 Name: ${fullName}\n📱 Tel: ${phone || '—'}\nLINE: ${lineId}\n📦 Material: ${selName}\n⚖️ Gewicht: ${weight != null ? weight : '—'}kg\n📍 Provinz: ${province}\n💰 Preis: ฿${priceShown != null ? priceShown.toLocaleString('th-TH') : '—'}\n🚚 Versand: ${selectedDelivery === 'parcel' ? 'Paket (Seller sendet)' : 'Pickup (wir holen ab)'}${selectedDelivery === 'pickup' ? '\n📍 Adresse: ' + document.getElementById('pickupAddress').value.trim() : ''}\n🔗 Ref: ${ref}`;
     fetch('https://api.telegram.org/bot8653052939:AAE1450o0j2JpNsf2sMdIWroLHuKRA6QTqA/sendMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
