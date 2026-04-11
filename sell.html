@@ -23,7 +23,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'FB_PIXEL_ID');
+// fbq('init', 'YOUR_PIXEL_ID'); // TODO: Add real Facebook Pixel ID
 fbq('track', 'PageView');
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -295,8 +295,8 @@ body.lang-en .th{display:none !important;}
     </div>
 
     <div class="form-block">
-      <label for="province"><span class="th">จังหวัด</span><span class="en">Province</span> <span style="color:#e05555">*</span></label>
-      <select class="form-input" id="province" required>
+      <label for="province"><span class="th">จังหวัด</span><span class="en">Province</span> <span class="opt">(<span class="th">ไม่บังคับ</span><span class="en">optional</span>)</span></label>
+      <select class="form-input" id="province">
         <option value=""><span class="th">— เลือกจังหวัด —</span><span class="en">— Select Province —</span></option>
         <option>กรุงเทพมหานคร</option><option>กระบี่</option><option>กาญจนบุรี</option>
         <option>กาฬสินธุ์</option><option>กำแพงเพชร</option><option>ขอนแก่น</option>
@@ -542,13 +542,13 @@ async function submitLead() {
 
   const isEn = document.body.classList.contains('lang-en');
   if (!selKey)   return showErr(isEn ? 'Please select a carbide type first.' : 'กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
-  if (!selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
+  if (!selectedDelivery) { selectedDelivery = 'parcel'; } if (false && !selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
   if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) {
     return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
   }
   if (!lineId)   return showErr(isEn ? 'Please enter your LINE ID.' : 'กรุณาใส่ LINE ID ของคุณครับ');
   if (!fullName) return showErr(isEn ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุลครับ');
-  if (!province) return showErr(isEn ? 'Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
+  // province is now optional - if (!province) showErr('Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
 
   btn.disabled = true;
   btn.textContent = isEn ? 'Sending...' : 'กำลังส่ง...';
@@ -659,7 +659,7 @@ function setLang(lang) {
 (function(){ setLang(localStorage.getItem('carbide-lang') || 'th'); })();
 
 // ── Init ─────────────────────────────────────────────────────────────────────
-loadPrices();
+loadPrices(); setTimeout(function(){ pickDelivery('parcel', document.getElementById('btn-parcel')); }, 500);
 </script>
 <script>/* tc-tracker: session time */
 (function(){var K='tc_sessions',p='/sell.html',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
