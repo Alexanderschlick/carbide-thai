@@ -546,7 +546,11 @@ async function submitLead() {
   if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) {
     return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
   }
-  if (!lineId)   return showErr(isEn ? 'Please enter your LINE ID.' : 'กรุณาใส่ LINE ID ของคุณครับ');
+  if (window._abVariant === 'B') {
+      if (!lineId && !phone && !email) return showErr(isEn ? 'Please enter LINE ID, phone, or email.' : 'กรุณาใส่ LINE ID เบอร์โทร หรืออีเมล');
+    } else {
+      if (!lineId) return showErr(isEn ? 'Please enter your LINE ID.' : 'กรุณาใส่ LINE ID ของคุณครับ');
+    }
   if (!fullName) return showErr(isEn ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุลครับ');
   // province is now optional - if (!province) showErr('Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
 
@@ -601,7 +605,7 @@ async function submitLead() {
             delivery_method: selectedDelivery,
         parcel_status: selectedDelivery === 'parcel' ? 'waiting' : null,
             pickup_address: selectedDelivery === 'pickup' ? document.getElementById('pickupAddress').value.trim() : null,
-        notes: `Source: sell-lp | Ref: ${ref}`
+        notes: `Source: sell-lp | Ref: ${ref} | AB: ${window._abVariant || 'A'}`
       })
     });
 
@@ -663,6 +667,27 @@ loadPrices(); setTimeout(function(){ pickDelivery('parcel', document.getElementB
 </script>
 <script>/* tc-tracker: session time */
 (function(){var K='tc_sessions',p='/sell.html',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
+</script>
+
+<!-- A/B Test: LINE ID optional -->
+<script>
+(function(){
+  var v = localStorage.getItem('tc_ab_line');
+  if (!v) { v = Math.random() < 0.5 ? 'A' : 'B'; localStorage.setItem('tc_ab_line', v); }
+  window._abVariant = v;
+  if (typeof gtag !== 'undefined') gtag('event', 'ab_test_view', { variant: v, test_name: 'line_id_optional' });
+  if (v === 'B') {
+    document.addEventListener('DOMContentLoaded', function() {
+      var ll = document.querySelector('label[for="lineId"]');
+      if (ll) { var a = ll.querySelector('span[style]'); if (a && a.style.color) a.style.display = 'none';
+        var o = document.createElement('span'); o.style.cssText = 'color:#999;font-size:.85em;margin-left:4px';
+        o.innerHTML = '<span class=th>(ไม่บังคับ)</span><span class=en>(optional)</span>'; ll.appendChild(o); }
+      var li = document.getElementById('lineId'); if (li) li.removeAttribute('required');
+      var pl = document.querySelector('label[for="phone"]');
+      if (pl) { var r = document.createElement('span'); r.style.color = '#c9a227'; r.textContent = ' *'; pl.appendChild(r); }
+    });
+  }
+})();
 </script>
 </body>
 </html>
