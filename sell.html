@@ -192,6 +192,29 @@ body.lang-en .th{display:none !important;}
     <p class="hero-sub"><span class="th">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</span><span class="en">Select type → Enter weight → See price instantly</span></p>
   </div>
 
+  <!-- SMALL PARCEL FOCUS BANNER -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;">
+    <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
+      <div style="font-size:24px;margin-bottom:4px;">📦</div>
+      <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">ส่งพัสดุง่ายๆ</span><span class="en">Ship a Parcel</span></div>
+      <div style="font-size:11px;color:#a8b8a4;">Kerry / J&T</div>
+    </div>
+    <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
+      <div style="font-size:24px;margin-bottom:4px;">🆓</div>
+      <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">เราออกค่าส่งให้!</span><span class="en">Free Shipping!</span></div>
+      <div style="font-size:11px;color:#a8b8a4;"><span class="th">ฟรีค่าส่ง</span><span class="en">We pay shipping</span></div>
+    </div>
+    <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
+      <div style="font-size:24px;margin-bottom:4px;">💸</div>
+      <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">โอนเงินใน 48 ชม.</span><span class="en">Paid in 48h</span></div>
+      <div style="font-size:11px;color:#a8b8a4;"><span class="th">จ่ายไว</span><span class="en">Fast payment</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-bottom:24px;font-size:15px;font-weight:700;color:var(--green);">
+    <span class="th">🎯 รับซื้อตั้งแต่ 1 กก. — ส่งมาเลย!</span>
+    <span class="en">🎯 We buy from 1 kg — ship it now!</span>
+  </div>
+
   <!-- FORM SECTION -->
   <div id="formSection">
 
@@ -220,7 +243,7 @@ body.lang-en .th{display:none !important;}
     <div class="step-label"><span class="th">ขั้นที่ 2 — ใส่น้ำหนักโดยประมาณ</span><span class="en">Step 2 — Enter Approximate Weight</span></div>
     <div class="weight-row">
       <input class="weight-input" type="number" id="weightInput" inputmode="decimal"
-             placeholder="e.g. 25" min="0.1" step="0.5" oninput="calcPrice()">
+             placeholder="e.g. 5" min="0.1" step="0.5" oninput="calcPrice()">
       <div class="weight-unit">kg</div>
     </div>
 
@@ -415,7 +438,25 @@ body.lang-en .th{display:none !important;}
         💚 <span class="th">แอด LINE @ThaiCarbide</span><span class="en">Add LINE @ThaiCarbide</span>
       </a>
     </div>
-  </div><!-- /wrap -->
+  <!-- LARGE QUANTITY INQUIRY -->
+  <div style="margin-top:32px;padding:24px 20px;background:rgba(201,162,39,0.08);border:1.5px solid rgba(201,162,39,0.3);border-radius:12px;text-align:center;">
+    <div style="font-size:24px;margin-bottom:8px;">🏭</div>
+    <div style="font-size:18px;font-weight:800;color:var(--gold);margin-bottom:6px;">
+      <span class="th">มีมากกว่า 50 กก.?</span>
+      <span class="en">More than 50 kg?</span>
+    </div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:14px;line-height:1.5;">
+      <span class="th">จัดรถไปรับถึงที่ฟรี! ติดต่อเราโดยตรง</span>
+      <span class="en">Free pickup at your location! Contact us directly</span>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <a href="mailto:thaicarbide@gmail.com" style="display:inline-flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--border);color:var(--white);padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">📧 Email</a>
+      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">💚 LINE @ThaiCarbide</a>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:10px;">Tel: 093-696-9935</div>
+  </div>
+
+</div><!-- /wrap -->
 
 <script>
 const SB_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
