@@ -351,7 +351,7 @@ body.lang-en .th{display:none !important;}
     </div>
 
     <div class="form-block">
-      <label for="phone"><span class="th">เบอร์โทร</span><span class="en">Phone</span> <span style="color:#e05555">*</span><span class="en">optional</span>)</span></label>
+      <label for="phone"><span class="th">เบอร์โทร</span><span class="en">Phone</span> <span class="opt"><span class="th">(ไม่บังคับ)</span><span class="en">(optional)</span></span><span class="en">optional</span>)</span></label>
       <input class="form-input" type="tel" id="phone" autocomplete="tel"
              placeholder="08X-XXX-XXXX" inputmode="tel">
     </div>
@@ -587,7 +587,7 @@ async function submitLead() {
   if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) {
     return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
   }
-  if (!phone && !lineId) return showErr(isEn ? 'Please enter phone or LINE ID.' : '\u0E01\u0E23\u0E38\u0E13\u0E32\u0E43\u0E2A\u0E48\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E42\u0E17\u0E23 \u0E2B\u0E23\u0E37\u0E2D LINE ID');
+  if (!phone && !lineId && !email) return showErr(isEn ? 'Please enter LINE ID, phone, or email.' : '\u0E01\u0E23\u0E38\u0E13\u0E32\u0E43\u0E2A\u0E48 LINE ID \u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E42\u0E17\u0E23 \u0E2B\u0E23\u0E37\u0E2D\u0E2D\u0E35\u0E40\u0E21\u0E25');
   if (!fullName) return showErr(isEn ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุลครับ');
   // province is now optional - if (!province) showErr('Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
 
