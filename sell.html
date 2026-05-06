@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="notranslate" translate="no">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -173,7 +173,7 @@ body.lang-en .th{display:none !important;}
 </header>
 
 <!-- PROMO STRIP -->
-<div class="promo-strip">
+<div class="promo-strip" style="display:none!important">
   <span class="th">🎉 โปรเปิดตัว — รับโบนัส ฿200 สำหรับ 50 ลูกค้าแรก <span class="promo-slots">เหลืออีก 14 ที่</span></span>
   <span class="en">🎉 Launch Special — ฿200 Bonus for the first 50 customers <span class="promo-slots">14 spots left</span></span>
 </div>
@@ -186,7 +186,7 @@ body.lang-en .th{display:none !important;}
     <h1><span class="th">ขายคาร์ไบด์เก่า<br><em>รู้ราคาทันที</em></span><span class="en">Sell Carbide Scrap<br><em>Instant Price Quote</em></span></h1>
     <div class="teaser-price">
       <div class="teaser-label"><span class="th">รับซื้อสูงสุด</span><span class="en">We Pay Up To</span></div>
-      <div class="teaser-amount">฿4,600/kg</div>
+      <div class="teaser-amount">฿2,600/kg</div>
       <div class="teaser-sub"><span class="th">สำหรับคาร์ไบด์อินเสิร์ท • ราคาอัปเดตทุกวัน</span><span class="en">For Carbide Inserts • Price updated daily</span></div>
     </div>
     <p class="hero-sub"><span class="th">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</span><span class="en">Select type → Enter weight → See price instantly</span></p>
@@ -443,7 +443,7 @@ body.lang-en .th{display:none !important;}
     <div style="font-size:24px;margin-bottom:8px;">🏭</div>
     <div style="font-size:18px;font-weight:800;color:var(--gold);margin-bottom:6px;">
       <span class="th">มีมากกว่า 50 กก.?</span>
-      <span class="en">More than 50 kg?</span>
+      <span class="en">More than 10 kg?</span>
     </div>
     <div style="font-size:14px;color:var(--muted);margin-bottom:14px;line-height:1.5;">
       <span class="th">จัดรถไปรับถึงที่ฟรี! ติดต่อเราโดยตรง</span>
@@ -583,7 +583,7 @@ async function submitLead() {
 
   const isEn = document.body.classList.contains('lang-en');
   if (!selKey)   return showErr(isEn ? 'Please select a carbide type first.' : 'กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
-  if (!selectedDelivery) { selectedDelivery = 'parcel'; } if (false && !selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
+  /* Silent parcel default removed */ if (!selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
   if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) {
     return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
   }
@@ -607,7 +607,7 @@ async function submitLead() {
       headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
       body: JSON.stringify({
         line_id: lineId,
-        ref: ref,
+        ref: 'TC-' + Date.now().toString(36).toUpperCase(),
         material_type: selName,
         weight_kg: weight,
         price_shown: priceShown,
@@ -700,7 +700,7 @@ function setLang(lang) {
 (function(){ setLang(localStorage.getItem('carbide-lang') || 'th'); })();
 
 // ── Init ─────────────────────────────────────────────────────────────────────
-loadPrices(); setTimeout(function(){ pickDelivery('parcel', document.getElementById('btn-parcel')); }, 500);
+loadPrices(); /* Auto-parcel selection removed */
 </script>
 <script>/* tc-tracker: session time */
 (function(){var K='tc_sessions',p='/sell.html',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
