@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <!-- Google Ads -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001691387"></script>
-<script>
+<script
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -186,7 +186,7 @@ body.lang-en .th{display:none !important;}
     <h1><span class="th">ขายคาร์ไบด์เก่า<br><em>รู้ราคาทันที</em></span><span class="en">Sell Carbide Scrap<br><em>Instant Price Quote</em></span></h1>
     <div class="teaser-price">
       <div class="teaser-label"><span class="th">รับซื้อสูงสุด</span><span class="en">We Pay Up To</span></div>
-      <div class="teaser-amount">฿2,600/kg</div>
+      <div class="teaser-amount">฿1,750/kg</div>
       <div class="teaser-sub"><span class="th">สำหรับคาร์ไบด์อินเสิร์ท • ราคาอัปเดตทุกวัน</span><span class="en">For Carbide Inserts • Price updated daily</span></div>
     </div>
     <p class="hero-sub"><span class="th">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</span><span class="en">Select type → Enter weight → See price instantly</span></p>
@@ -206,8 +206,8 @@ body.lang-en .th{display:none !important;}
     </div>
     <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
       <div style="font-size:24px;margin-bottom:4px;">💸</div>
-      <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">โอนเงินใน 48 ชม.</span><span class="en">Paid in 48h</span></div>
-      <div style="font-size:11px;color:#a8b8a4;"><span class="th">จ่ายไว</span><span class="en">Fast payment</span></div>
+      <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">จ่ายเงินสดทันที</span><span class="en">Instant Cash</span></div>
+      <div style="font-size:11px;color:#a8b8a4;"><span class="th">เงินสดทันที</span><span class="en">Instant cash</span></div>
     </div>
   </div>
   <div style="text-align:center;margin-bottom:24px;font-size:15px;font-weight:700;color:var(--green);">
@@ -363,17 +363,17 @@ body.lang-en .th{display:none !important;}
     </div>
 
     <button class="btn-submit" id="submitBtn" onclick="submitLead()">
-      <span class="th">ส่งข้อมูล → รับเงินใน 48 ชม. 💰</span><span class="en">Submit → Get Paid in 48h 💰</span>
+      <span class="th">ส่งข้อมูล → รับเงินสดทันที 💰</span><span class="en">Submit → Get Instant Cash 💰</span>
     </button>
     <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6;">
-      <span class="th">🔒 ข้อมูลของคุณปลอดภัย · จ่ายเงินภายใน 48 ชม.พร้อมรายงานชั่งน้ำหนัก</span>
-      <span class="en">🔒 Your data is safe · Paid within 48hrs with full weight report</span>
+      <span class="th">🔒 ข้อมูลของคุณปลอดภัย · จ่ายเงินสดทันทีพร้อมรายงานชั่งน้ำหนัก</span>
+      <span class="en">🔒 Your data is safe · Instant cash payment with full weight report</span>
     </div>
     <div class="error-msg" id="errorMsg"></div>
 
     <!-- TRUST -->
     <div class="trust">
-      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">จ่ายเงินภายใน 48 ชั่วโมง</span><span class="en">Payment within 48 hours</span></div>
+      <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">จ่ายเงินสดทันที</span><span class="en">Instant cash payment</span></div>
       <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">รับซื้อทั่วไทย — รับของถึงที่</span><span class="en">Nationwide pickup — we come to you</span></div>
       <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">ราคาอัปเดตทุกวัน ตามตลาดโลก</span><span class="en">Daily prices — global tungsten market</span></div>
       <div class="trust-item"><span class="trust-icon">✅</span> <span class="th">รับขั้นต่ำ 1 กก. ทุกชนิด</span><span class="en">Min. 1 kg — all carbide types accepted</span></div>
@@ -677,7 +677,7 @@ async function submitLead() {
 
   } catch(e) {
     btn.disabled = false;
-    btn.textContent = isEn ? 'Submit → Get Paid in 48h 💰' : 'ส่งข้อมูล → รับเงินใน 48 ชม. 💰';
+    btn.textContent = isEn ? 'Submit → Get Instant Cash 💰' : 'ส่งข้อมูล → รับเงินสดทันที 💰';
     showErr(isEn ? 'An error occurred. Please try again or contact LINE @280uqpab' : 'เกิดข้อผิดพลาด กรุณาลองใหม่หรือติดต่อ LINE @280uqpab');
   }
 }
