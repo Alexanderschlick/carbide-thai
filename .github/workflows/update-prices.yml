@@ -1,4 +1,4 @@
-name: Daily Price Update
+name: Update Prices from HM24
 
 on:
   schedule:
@@ -21,14 +21,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install Python dependencies
         run: pip install requests beautifulsoup4
 
-      - name: Run price scraper
+      - name: Run HM24 price scraper
         env:
-          THAILAND_MARGIN:       ${{ secrets.THAILAND_MARGIN }}
           SUPABASE_URL:          https://ltupwgytuayzopnsdvpc.supabase.co
           SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scraper/scrape_prices.py
@@ -36,7 +35,7 @@ jobs:
       - name: Commit updated prices.json
         run: |
           git config user.name "CarbideThai Bot"
-          git config user.email "bot@carbidethaii.com"
+          git config user.email "bot@carbidethai.com"
           git add prices.json
-          git diff --staged --quiet || git commit -m "chore: update prices $(date +'%Y-%m-%d %H:%M UTC')"
+          git diff --staged --quiet || git commit -m "chore: update prices from HM24 $(date -u +%Y-%m-%d)"
           git push
