@@ -574,7 +574,7 @@ async function loadParcels() {
   }
   const matNames = { carbide_inserts:'Inserts', carbide_drills:'Drills', mixed_carbide:'Mixed', sand_rills:'Sand Rills' };
   wrap.innerHTML = `<table>
-    <thead><tr><th>Date</th><th>Seller</th><th>Material</th><th>Est. kg</th><th>Actual kg</th><th>&#3647;/kg</th><th>Total &#3647;</th><th>Commission</th><th>Status</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Date</th><th>Seller</th><th>Material</th><th>Est. kg</th><th>Actual kg</th><th>฿/kg</th><th>Total ฿</th><th>Commission</th><th>Status</th><th>Actions</th></tr></thead>
     <tbody>${parcels.map(p => `<tr>
       <td>${fmtDate(p.created_at)}</td>
       <td><strong>${esc(p.seller_name||'â')}</strong><br><span style="font-size:11px;color:var(--text-secondary)">${esc(p.seller_contact||'')}</span></td>
@@ -673,8 +673,8 @@ function openParcelModal(data) {
       <div class="form-group"><label class="form-label">Actual kg</label><input type="number" step="0.01" class="form-input" id="p-actkg" value="${d.actual_kg||''}"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Price per kg (&#3647;)</label><input type="number" step="0.01" class="form-input" id="p-ppk" value="${d.price_per_kg||''}"></div>
-      <div class="form-group"><label class="form-label">Commission per kg (&#3647;)</label><input type="number" step="0.01" class="form-input" id="p-cpk" value="${d.commission_per_kg||defaultCommission}"></div>
+      <div class="form-group"><label class="form-label">Price per kg (฿)</label><input type="number" step="0.01" class="form-input" id="p-ppk" value="${d.price_per_kg||''}"></div>
+      <div class="form-group"><label class="form-label">Commission per kg (฿)</label><input type="number" step="0.01" class="form-input" id="p-cpk" value="${d.commission_per_kg||defaultCommission}"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Status</label>
@@ -815,7 +815,7 @@ function openLeadModal(data) {
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Quoted Price (&#3647;/kg)</label><input type="number" step="0.01" class="form-input" id="l-qprice" value="${d.quoted_price||''}"></div>
+      <div class="form-group"><label class="form-label">Quoted Price (฿/kg)</label><input type="number" step="0.01" class="form-input" id="l-qprice" value="${d.quoted_price||''}"></div>
       <div class="form-group"><label class="form-label">Has Photos</label>
         <select class="form-input" id="l-photos">
           <option value="false" ${!d.has_photos?'selected':''}>No</option>
@@ -893,7 +893,7 @@ async function loadExport() {
 
   const matNames = { carbide_inserts:'Inserts', carbide_drills:'Drills', mixed_carbide:'Mixed', sand_rills:'Sand Rills' };
   tblEl.innerHTML = `<table>
-    <thead><tr><th>Date</th><th>Buyer</th><th>Seller</th><th>Material</th><th>kg</th><th>Total &#3647;</th><th>Export Status</th></tr></thead>
+    <thead><tr><th>Date</th><th>Buyer</th><th>Seller</th><th>Material</th><th>kg</th><th>Total ฿</th><th>Export Status</th></tr></thead>
     <tbody>${parcels.map(p => `<tr>
       <td>${fmtDate(p.created_at)}</td>
       <td><strong>${esc(p.export_buyer)}</strong></td>
@@ -916,7 +916,7 @@ async function loadSettings() {
       <div class="settings-label">Default Commission Rate</div>
       <div style="display:flex;align-items:center;gap:8px;">
         <input type="number" step="1" class="form-input" style="width:120px" id="set-commission" value="${defaultCommission}">
-        <span>&#3647;/kg</span>
+        <span>฿/kg</span>
         <button class="btn btn-primary btn-sm" onclick="saveCommission()">Save</button>
       </div>
     </div>
