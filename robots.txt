@@ -1,30 +1,6 @@
 User-agent: *
 Allow: /
-
-# AI crawlers — explicitly welcome
-User-agent: GPTBot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: cohere-ai
-Allow: /
-
-User-agent: Applebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
+Disallow: /admin.html
+Disallow: /bo.html
 
 Sitemap: https://thaicarbide.com/sitemap.xml
-LLMs: https://thaicarbide.com/llms.txt
