@@ -6,7 +6,7 @@
 <title>ขายคาร์ไบด์ — รับราคาทันที | ThaiCarbide.com</title>
 <meta name="description" content="\u0E23\u0E31\u0E1A\u0E0B\u0E37\u0E49\u0E2D\u0E04\u0E32\u0E23\u0E4C\u0E44\u0E1A\u0E14\u0E4C\u0E40\u0E01\u0E48\u0E32\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E39\u0E07 \u0E3F1,300-2,600/\u0E01\u0E01. \u0E08\u0E48\u0E32\u0E22\u0E40\u0E07\u0E34\u0E19\u0E20\u0E32\u0E22\u0E43\u0E19 48 \u0E0A\u0E21. \u0E23\u0E31\u0E1A\u0E0B\u0E37\u0E49\u0E2D\u0E17\u0E31\u0E48\u0E27\u0E44\u0E17\u0E22 \u0E2A\u0E48\u0E07\u0E1E\u0E31\u0E2A\u0E14\u0E38\u0E2B\u0E23\u0E37\u0E2D\u0E19\u0E31\u0E14\u0E23\u0E31\u0E1A\u0E16\u0E36\u0E07\u0E17\u0E35\u0E48 Buy tungsten carbide scrap Thailand - best prices, paid in 48h">
 <link rel="canonical" href="https://thaicarbide.com/sell.html">
-<link rel="alternate" hreflang="th" href="https://thaicarbide.com/sell.html">
+<link rel="alternate" hreflang="th" hef="https://thaicarbide.com/sell.html">
 <link rel="alternate" hreflang="en" href="https://thaicarbide.com/sell.html">
 <link rel="alternate" hreflang="x-default" href="https://thaicarbide.com/sell.html">
 <!-- Open Graph -->
@@ -729,5 +729,35 @@ loadPrices(); /* Auto-parcel selection removed */
 </script>
 
 
+<script>/* tc-pageview: track visits to Supabase */
+(function(){
+  try {
+    if (sessionStorage.getItem('tc_pv')) return;
+    var u = new URL(window.location.href);
+    var dev = /mobile|android|iphone|ipad/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+    var sid = sessionStorage.getItem('tc_sid');
+    if (!sid) { sid = Math.random().toString(36).substr(2,9); sessionStorage.setItem('tc_sid', sid); }
+    fetch('https://ltupwgytuayzopnsdvpc.supabase.co/rest/v1/page_views', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        page: u.pathname || '/sell.html',
+        referrer: document.referrer || null,
+        utm_source: u.searchParams.get('utm_source') || null,
+        utm_medium: u.searchParams.get('utm_medium') || null,
+        utm_campaign: u.searchParams.get('utm_campaign') || null,
+        user_agent: navigator.userAgent.substr(0,200),
+        device: dev,
+        session_id: sid
+      })
+    }).catch(function(){});
+    sessionStorage.setItem('tc_pv', '1');
+  } catch(e){}
+})();
+</script>
 </body>
 </html>
