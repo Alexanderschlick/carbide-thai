@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime, timezone, timedelta
 from urllib.request import Request, urlopen
+from urllib.parse import quote
 
 SB_URL = os.environ.get('SUPABASE_URL', '')
 SB_KEY = os.environ.get('SUPABASE_KEY', '')
@@ -18,8 +19,12 @@ def sb_get(table, params=''):
     req = Request(url, headers={
         'apikey': SB_KEY, 'Authorization': f'Bearer {SB_KEY}'
     })
-    with urlopen(req, timeout=15) as r:
-        return json.loads(r.read())
+    try:
+        with urlopen(req, timeout=15) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        print(f"Warning: query to {table} failed: {e}")
+        return []
 
 def fmt_baht(n):
     if n is None: return '-'
@@ -27,13 +32,15 @@ def fmt_baht(n):
 
 def main():
     now = datetime.now(BKK)
-    yesterday = (now - timedelta(hours=24)).isoformat()
+    yesterday_dt = now - timedelta(hours=24)
+    yesterday = yesterday_dt.strftime('%Y-%m-%dT%H:%M:%S')
 
     # 1. Prices
     prices = sb_get('prices', 'select=*&order=key')
 
-    # 2. New leads (24h)
-    new_leads = sb_get('leads', f'select=*&created_at=gte.{yesterday}&order=created_at.desc')
+    # 2. New leads (24h) - URL-encode the timestamp
+    lead_params = f'select=*&created_at=gte.{quote(yesterday)}&order=created_at.desc'
+    new_leads = sb_get('leads', lead_params)
 
     # 3. All parcels for summary
     parcels = sb_get('parcels', 'select=*')
@@ -42,7 +49,8 @@ def main():
     pending = [p for p in parcels if p.get('status') in ('pending','delivered','weighed')]
 
     # Stats
-    total_leads = len(sb_get('leads', 'select=id'))
+    all_leads = sb_get('leads', 'select=id')
+    total_leads = len(all_leads)
     settled = [p for p in parcels if p.get('status') == 'settled']
     total_kg = sum(float(p.get('actual_kg') or 0) for p in settled)
     total_comm = sum(float(p.get('commission_total') or 0) for p in settled)
@@ -83,7 +91,7 @@ def main():
     if pending:
         for p in pending:
             pending_section += f"<li><b>{p.get('seller_name','?')}</b> - {p.get('material_type','')} ({p.get('estimated_kg','?')}kg) - Status: {p.get('status','')} - Added: {str(p.get('created_at',''))[:10]}</li>"
-        pending_section = f"<h3>\u26a0\ufe0f Pending Actions ({len(pending)})</h3><ul>{pending_section}</ul>"
+        pending_section = f"<h3>Pending Actions ({len(pending)})</h3><ul>{pending_section}</ul>"
 
     html = f"""<html><body style="font-family:-apple-system,sans-serif;max-width:600px;margin:0 auto;padding:20px;color:#333">
     <div style="background:#1a1a2e;color:#fff;padding:20px;border-radius:8px 8px 0 0">
@@ -116,7 +124,7 @@ def main():
         <th style="padding:8px;text-align:right">20-50kg</th>
         <th style="padding:8px;text-align:right">&gt;50kg</th>
     </tr></thead>
-    <tbody>{price_rows}</tbody></table>
+    <tbody>{price_rows if price_rows else '<tr><td colspan=5 style="padding:8px;color:#999">No price data</td></tr>'}</tbody></table>
 
     {lead_section}
 
