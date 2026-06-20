@@ -1,0 +1,26 @@
+name: Daily Business Report
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 8:00 AM Bangkok (UTC+7)
+  workflow_dispatch: {}    # Manual trigger button
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate and send daily report
+        env:
+          SUPABASE_URL: https://ltupwgytuayzopnsdvpc.supabase.co
+          SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          GMAIL_USER: thaicarbide@gmail.com
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_EMAIL: thaicarbide@gmail.com
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: '697775946'
+        run: python scraper/daily_report.py
