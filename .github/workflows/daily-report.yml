@@ -20,7 +20,7 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           GMAIL_USER: thaicarbide@gmail.com
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          REPORT_EMAIL: thaicarbide@gmail.com
+          REPORT_EMAIL: schlick@metaloop.com
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: '697775946'
         run: python scraper/daily_report.py
