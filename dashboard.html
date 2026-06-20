@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001691387"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18001691387');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Dashboard - ติดตามสถานะการขาย | ThaiCarbide</title>
+<meta name="description" content="ติดตามสถานะพัสดุคาร์ไบด์ ตรวจสอบน้ำหนัก ราคา และการชำระเงิน | Track your carbide parcel status, weight, price, and payment">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://thaicarbide.com/dashboard.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thaicarbide.com/dashboard.html">
+<meta property="og:title" content="Seller Dashboard - ติดตามสถานะการขาย | ThaiCarbide">
+<meta property="og:description" content="ติดตามสถานะพัสดุคาร์ไบด์ ตรวจสอบน้ำหนัก ราคา และการชำระเงิน">
+<meta property="og:site_name" content="ThaiCarbide.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1f14;--surface:#0f2a1a;--sur2:#132e1d;--gold:#c9a227;--gold-lt:#e8bc30;--white:#f2ede4;--muted:#a8b8a4;--border:rgba(201,162,39,0.18);--card:#132b1a;--lime:#4caf50;--text:#e8e8e8;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+body.lang-th .en{display:none !important;}
+body.lang-en .th{display:none !important;}
+
+/* ── Nav ───────────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:14px 40px;background:rgba(11,31,20,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;letter-spacing:1px;color:var(--white);text-decoration:none;}
+.logo span{color:var(--gold);}
+.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{background:var(--gold)!important;color:#0b1f14!important;padding:9px 20px;border-radius:3px;font-weight:700!important;}
+.nav-lang{display:flex;gap:4px;margin-left:8px;}
+.nav-lang button{background:none;border:1px solid var(--border);color:var(--muted);font-size:12px;padding:4px 10px;border-radius:2px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600;transition:all 0.2s;}
+.nav-lang button.active{background:var(--gold);color:#0b1f14;border-color:var(--gold);}
+
+/* ── Main Container ────────────────────────────────────────────── */
+.dashboard{max-width:960px;margin:0 auto;padding:100px 20px 60px;}
+
+/* ── Page Header ───────────────────────────────────────────────── */
+.page-header{text-align:center;margin-bottom:40px;}
+.page-header .label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.page-header h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,5vw,44px);font-weight:900;text-transform:uppercase;line-height:1.1;margin-bottom:12px;}
+.page-header p{font-size:15px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.6;}
+
+/* ── Search Box ────────────────────────────────────────────────── */
+.search-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:32px;margin-bottom:32px;}
+.search-box h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-transform:uppercase;margin-bottom:6px;}
+.search-box p{font-size:14px;color:var(--muted);margin-bottom:20px;}
+.search-form{display:flex;gap:12px;}
+.search-input{flex:1;background:var(--sur2);border:1px solid var(--border);border-radius:4px;padding:14px 18px;font-size:16px;color:var(--white);font-family:'Sarabun',sans-serif;outline:none;transition:border-color 0.2s;}
+.search-input::placeholder{color:#607a62;}
+.search-input:focus{border-color:var(--gold);}
+.search-btn{background:var(--gold);color:#0b1f14;border:none;padding:14px 28px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;transition:background 0.2s,transform 0.15s;white-space:nowrap;}
+.search-btn:hover{background:var(--gold-lt);transform:translateY(-1px);}
+.search-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.search-hint{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
+.search-hint span{font-size:12px;color:#607a62;}
+.search-hint code{background:var(--sur2);color:var(--gold);padding:2px 8px;border-radius:3px;font-size:12px;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;}
+
+/* ── Loading / Error ───────────────────────────────────────────── */
+.loading{text-align:center;padding:60px 20px;display:none;}
+.loading.show{display:block;}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading p{color:var(--muted);font-size:14px;}
+.error-msg{background:rgba(220,53,69,0.12);border:1px solid rgba(220,53,69,0.4);border-radius:6px;padding:16px 20px;color:#ff8a8a;font-size:14px;margin-bottom:20px;display:none;}
+.error-msg.show{display:block;}
+
+/* ── Results Container ─────────────────────────────────────────── */
+#results{display:none;}
+#results.show{display:block;}
+
+/* ── Seller Info ────────────────────────────────────────────────── */
+.seller-info{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;gap:16px;}
+.seller-avatar{width:48px;height:48px;background:rgba(201,162,39,0.15);border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.seller-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);}
+.seller-id{font-size:13px;color:var(--muted);margin-top:2px;}
+
+/* ── Summary Cards ─────────────────────────────────────────────── */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;transition:border-color 0.2s;}
+.summary-card:hover{border-color:rgba(201,162,39,0.4);}
+.summary-icon{font-size:24px;margin-bottom:8px;}
+.summary-value{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--gold);line-height:1;}
+.summary-label{font-size:12px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+
+/* ── Status Tracker ────────────────────────────────────────────── */
+.tracker-section{margin-bottom:32px;}
+.tracker-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;margin-bottom:16px;color:var(--white);}
+.tracker-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:12px;}
+.tracker-ref{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.tracker-material{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.progress-bar{display:flex;align-items:center;gap:0;position:relative;}
+.progress-step{flex:1;text-align:center;position:relative;}
+.progress-dot{width:32px;height:32px;border-radius:50%;background:var(--sur2);border:2px solid #3a5444;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:14px;transition:all 0.3s;position:relative;z-index:2;}
+.progress-step.done .progress-dot{background:var(--lime);border-color:var(--lime);color:#fff;}
+.progress-step.active .progress-dot{background:var(--gold);border-color:var(--gold);color:#0b1f14;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,162,39,0.4);}50%{box-shadow:0 0 0 8px rgba(201,162,39,0);}}
+.progress-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
+.progress-step.done .progress-label{color:var(--lime);}
+.progress-step.active .progress-label{color:var(--gold);}
+.progress-line{position:absolute;top:16px;left:calc(50% + 16px);right:calc(-50% + 16px);height:2px;background:#3a5444;z-index:1;}
+.progress-step:last-child .progress-line{display:none;}
+.progress-step.done .progress-line{background:var(--lime);}
+
+/* ── Orders Table ──────────────────────────────────────────────── */
+.orders-section{margin-bottom:32px;}
+.orders-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;margin-bottom:16px;color:var(--white);display:flex;align-items:center;gap:10px;}
+.orders-count{background:rgba(201,162,39,0.18);color:var(--gold);font-size:12px;padding:2px 10px;border-radius:10px;font-weight:700;}
+.order-card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;transition:border-color 0.2s;}
+.order-card:hover{border-color:rgba(201,162,39,0.35);}
+.order-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px;flex-wrap:wrap;}
+.order-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.order-ref{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--white);letter-spacing:0.5px;}
+.order-date{font-size:12px;color:var(--muted);}
+.order-right{display:flex;align-items:center;gap:12px;}
+.order-amount{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:var(--gold);}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;text-transform:uppercase;letter-spacing:0.5px;font-family:'Barlow Condensed',sans-serif;}
+.badge-submitted,.badge-neu,.badge-pending,.badge-waiting{background:rgba(255,193,7,0.15);color:#ffc107;border:1px solid rgba(255,193,7,0.3);}
+.badge-received,.badge-delivered{background:rgba(33,150,243,0.15);color:#42a5f5;border:1px solid rgba(33,150,243,0.3);}
+.badge-weighed{background:rgba(156,39,176,0.15);color:#ce93d8;border:1px solid rgba(156,39,176,0.3);}
+.badge-paid,.badge-settled{background:rgba(76,175,80,0.15);color:#4caf50;border:1px solid rgba(76,175,80,0.3);}
+.badge-cancelled{background:rgba(244,67,54,0.15);color:#ef5350;border:1px solid rgba(244,67,54,0.3);}
+.order-expand{font-size:18px;color:var(--muted);transition:transform 0.2s;flex-shrink:0;}
+.order-card.open .order-expand{transform:rotate(180deg);}
+.order-details{display:none;padding:0 20px 20px;border-top:1px solid var(--border);}
+.order-card.open .order-details{display:block;}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding-top:16px;}
+.detail-item label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:4px;}
+.detail-item .val{font-size:15px;color:var(--white);font-weight:600;}
+.detail-item .val.gold{color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;}
+
+/* ── Leads Section ─────────────────────────────────────────────── */
+.leads-section{margin-bottom:32px;}
+.lead-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.lead-info{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.lead-material{font-weight:700;color:var(--white);}
+.lead-weight{font-size:14px;color:var(--muted);}
+.lead-price{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--gold);}
+.lead-date{font-size:12px;color:#607a62;}
+
+/* ── Empty State ───────────────────────────────────────────────── */
+.empty-state{text-align:center;padding:60px 20px;display:none;}
+.empty-state.show{display:block;}
+.empty-icon{font-size:56px;margin-bottom:16px;opacity:0.6;}
+.empty-state h3{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;margin-bottom:10px;color:var(--white);}
+.empty-state p{font-size:15px;color:var(--muted);max-width:400px;margin:0 auto 24px;line-height:1.7;}
+.empty-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-sell{display:inline-block;background:var(--gold);color:#0b1f14;padding:14px 28px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;text-decoration:none;transition:background 0.2s;}
+.btn-sell:hover{background:var(--gold-lt);}
+.btn-line-sm{display:inline-flex;align-items:center;gap:8px;background:#06C755;color:#fff;padding:14px 22px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;text-decoration:none;transition:opacity 0.2s;}
+.btn-line-sm:hover{opacity:0.88;}
+.btn-line-sm svg{flex-shrink:0;}
+
+/* ── Footer ────────────────────────────────────────────────────── */
+footer{background:#070f0a;border-top:1px solid var(--border);padding:48px 40px 32px;text-align:center;}
+.footer-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--white);text-decoration:none;display:inline-block;margin-bottom:16px;}
+.footer-logo span{color:var(--gold);}
+footer p{font-size:13px;color:var(--muted);line-height:1.8;}
+footer a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+footer a:hover{color:var(--gold);}
+.footer-links{display:flex;justify-content:center;gap:28px;margin:16px 0;flex-wrap:wrap;}
+.footer-bottom{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:#3a5444;}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media(max-width:768px){
+  nav{padding:12px 16px;}
+  .nav-links li:not(:last-child):not(.nav-lang-li){display:none;}
+  .nav-links{gap:12px;}
+  .dashboard{padding:80px 14px 40px;}
+  .search-form{flex-direction:column;}
+  .search-btn{width:100%;}
+  .summary-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .summary-value{font-size:22px;}
+  .order-header{padding:14px 16px;}
+  .order-left{gap:8px;}
+  .detail-grid{grid-template-columns:1fr 1fr;}
+  footer{padding:32px 16px 24px;}
+  .footer-links{gap:16px;font-size:14px;}
+  .seller-info{flex-direction:column;text-align:center;}
+  .progress-label{font-size:9px;}
+  .progress-dot{width:26px;height:26px;font-size:12px;}
+}
+@media(max-width:480px){
+  .summary-grid{grid-template-columns:1fr 1fr;}
+  .summary-card{padding:14px 10px;}
+  .summary-value{font-size:20px;}
+  .order-right{flex-direction:column;align-items:flex-end;gap:6px;}
+  .page-header h1{font-size:26px;}
+}
+</style>
+</head>
+<body class="lang-th">
+
+<!-- ── Nav ──────────────────────────────────────────────────────── -->
+<nav>
+  <a class="logo" href="/">Carbide<span>Thai</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/sell.html">Sell</a></li>
+    <li><a href="/inserts.html">Inserts</a></li>
+    <li><a href="/drills.html">Drills</a></li>
+    <li><a href="/mixed.html">Mixed</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li class="nav-lang-li">
+      <div class="nav-lang">
+        <button class="lang-btn active" onclick="setLang('th')" title="ภาษาไทย">TH</button>
+        <button class="lang-btn" onclick="setLang('en')" title="English">EN</button>
+      </div>
+    </li>
+    <li><a href="/sell.html" class="nav-cta">Sell Now</a></li>
+  </ul>
+</nav>
+
+<!-- ── Dashboard ───────────────────────────────────────────────── -->
+<main class="dashboard">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="label">SELLER DASHBOARD</div>
+    <h1>
+      <span class="th">ติดตามสถานะการขาย</span>
+      <span class="en">Track Your Sales</span>
+    </h1>
+    <p>
+      <span class="th">ตรวจสอบสถานะพัสดุ น้ำหนัก ราคา และประวัติการชำระเงิน</span>
+      <span class="en">Check parcel status, weight, price, and payment history</span>
+    </p>
+  </div>
+
+  <!-- Search Box -->
+  <div class="search-box">
+    <h2>
+      <span class="th">ค้นหาคำสั่งซื้อ</span>
+      <span class="en">Look Up Your Orders</span>
+    </h2>
+    <p>
+      <span class="th">กรอกหมายเลขอ้างอิง (TC-XXXX) หรือ LINE ID ของคุณ</span>
+      <span class="en">Enter your reference number (TC-XXXX) or LINE ID</span>
+    </p>
+    <form class="search-form" onsubmit="handleSearch(event)">
+      <input type="text" class="search-input" id="searchInput"
+             placeholder="TC-XXXXX or LINE ID"
+             autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="submit" class="search-btn" id="searchBtn">
+        <span class="th">ค้นหา</span>
+        <span class="en">Search</span>
+      </button>
+    </form>
+    <div class="search-hint">
+      <span>
+        <span class="th">ตัวอย่าง:</span>
+        <span class="en">Examples:</span>
+        <code>TC-A1B2C3</code>
+      </span>
+      <span>
+        <span class="th">หรือ LINE ID:</span>
+        <span class="en">or LINE ID:</span>
+        <code>@mylineid</code>
+      </span>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-msg" id="errorMsg"></div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>
+      <span class="th">กำลังค้นหาข้อมูล...</span>
+      <span class="en">Searching your records...</span>
+    </p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">&#128270;</div>
+    <h3>
+      <span class="th">ไม่พบข้อมูล</span>
+      <span class="en">No Records Found</span>
+    </h3>
+    <p>
+      <span class="th">ไม่พบรายการที่ตรงกับข้อมูลที่คุณกรอก ลองตรวจสอบหมายเลขอ้างอิงหรือ LINE ID อีกครั้ง หรือเริ่มขายคาร์ไบด์กับเราวันนี้</span>
+      <span class="en">We couldn't find any records matching your input. Double-check your reference number or LINE ID, or start selling with us today.</span>
+    </p>
+    <div class="empty-actions">
+      <a href="/sell.html" class="btn-sell">
+        <span class="th">เริ่มขายเลย</span>
+        <span class="en">Sell Now</span>
+      </a>
+      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener" class="btn-line-sm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        LINE @280uqpab
+      </a>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+
+    <!-- Seller Info -->
+    <div class="seller-info" id="sellerInfo">
+      <div class="seller-avatar">&#9830;</div>
+      <div>
+        <div class="seller-name" id="sellerName"></div>
+        <div class="seller-id" id="sellerIdDisplay"></div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-icon">&#128230;</div>
+        <div class="summary-value" id="totalOrders">0</div>
+        <div class="summary-label">
+          <span class="th">รายการทั้งหมด</span>
+          <span class="en">Total Orders</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">&#9878;</div>
+        <div class="summary-value" id="totalWeight">0</div>
+        <div class="summary-label">
+          <span class="th">น้ำหนักรวม (กก.)</span>
+          <span class="en">Total Weight (kg)</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">&#3647;</div>
+        <div class="summary-value" id="totalEarned">0</div>
+        <div class="summary-label">
+          <span class="th">รายได้รวม</span>
+          <span class="en">Total Earned</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">&#9203;</div>
+        <div class="summary-value" id="activeOrders">0</div>
+        <div class="summary-label">
+          <span class="th">กำลังดำเนินการ</span>
+          <span class="en">Active Orders</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Tracker for Active Orders -->
+    <div class="tracker-section" id="trackerSection" style="display:none;">
+      <div class="tracker-title">
+        <span class="th">&#128205; สถานะคำสั่งซื้อที่กำลังดำเนินการ</span>
+        <span class="en">&#128205; Active Order Status</span>
+      </div>
+      <div id="trackerCards"></div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="orders-section">
+      <div class="orders-title">
+        <span class="th">&#128196; ประวัติคำสั่งซื้อทั้งหมด</span>
+        <span class="en">&#128196; All Order History</span>
+        <span class="orders-count" id="ordersCount">0</span>
+      </div>
+      <div id="ordersContainer"></div>
+    </div>
+
+    <!-- Leads Section -->
+    <div class="leads-section" id="leadsSection" style="display:none;">
+      <div class="orders-title">
+        <span class="th">&#128200; ประวัติการประเมินราคา</span>
+        <span class="en">&#128200; Price Estimate History</span>
+        <span class="orders-count" id="leadsCount">0</span>
+      </div>
+      <div id="leadsContainer"></div>
+    </div>
+
+  </div><!-- /results -->
+
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────── -->
+<footer>
+  <a class="footer-logo" href="/">Carbide<span>Thai</span></a>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/sell.html">Sell Carbide</a>
+    <a href="/inserts.html">Inserts</a>
+    <a href="/drills.html">Drills</a>
+    <a href="/mixed.html">Mixed</a>
+    <a href="/blog.html">Blog</a>
+    <a href="https://line.me/R/ti/p/@280uqpab">LINE @280uqpab</a>
+  </div>
+  <p>
+    <span class="th">รับซื้อเศษคาร์ไบด์ทุกชนิด</span>
+    <span class="en">Thailand's leading carbide scrap buyer</span>
+  </p>
+  <div class="footer-bottom">&copy; 2025 ThaiCarbide.com &middot; thaicarbide.com</div>
+</footer>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
+const HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+// ── Status mappings ─────────────────────────────────────────────
+const STATUS_ORDER = ['pending','neu','waiting','submitted','delivered','received','weighed','paid','settled'];
+const STATUS_LABELS = {
+  pending:   { th:'รอดำเนินการ', en:'Pending' },
+  neu:       { th:'รอดำเนินการ', en:'Pending' },
+  waiting:   { th:'รอรับพัสดุ', en:'Waiting' },
+  submitted: { th:'ส่งแล้ว', en:'Submitted' },
+  delivered: { th:'ได้รับแล้ว', en:'Received' },
+  received:  { th:'ได้รับแล้ว', en:'Received' },
+  weighed:   { th:'ชั่งแล้ว', en:'Weighed' },
+  paid:      { th:'จ่ายแล้ว', en:'Paid' },
+  settled:   { th:'เสร็จสิ้น', en:'Settled' },
+  cancelled: { th:'ยกเลิก', en:'Cancelled' }
+};
+
+// Progress steps for tracker
+const PROGRESS_STEPS = [
+  { key:'submitted', icon:'&#10003;', th:'ส่งแล้ว', en:'Submitted' },
+  { key:'received',  icon:'&#10003;', th:'ได้รับแล้ว', en:'Received' },
+  { key:'weighed',   icon:'&#10003;', th:'ชั่งแล้ว', en:'Weighed' },
+  { key:'paid',      icon:'&#10003;', th:'จ่ายแล้ว', en:'Paid' }
+];
+
+// ── Helpers ─────────────────────────────────────────────────────
+function fmt(n) { return n ? Number(n).toLocaleString() : '0'; }
+function fmtBaht(n) { return n ? '&#3647;' + Number(n).toLocaleString() : '&#3647;0'; }
+function fmtDate(d) {
+  if (!d) return '-';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric' });
+}
+function fmtDateEn(d) {
+  if (!d) return '-';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+}
+
+function getBadgeClass(status) {
+  const s = (status || 'pending').toLowerCase();
+  if (['paid','settled'].includes(s)) return 'badge-paid';
+  if (['received','delivered'].includes(s)) return 'badge-received';
+  if (s === 'weighed') return 'badge-weighed';
+  if (s === 'cancelled') return 'badge-cancelled';
+  return 'badge-submitted';
+}
+
+// Map status from parcels table
+function getEffectiveStatus(order) {
+  const s = (order.status || '').toLowerCase();
+  if (s === 'paid' || s === 'settled') return 'paid';
+  if (s === 'weighed') return 'weighed';
+  if (s === 'received' || s === 'delivered') return 'received';
+  if (s === 'cancelled') return 'cancelled';
+  return 'submitted';
+}
+
+function shortId(uuid) {
+  return uuid ? uuid.substring(0, 8).toUpperCase() : 'N/A';
+}
+
+function getStepIndex(status) {
+  const map = { submitted:0, received:1, delivered:1, weighed:2, paid:3, settled:3 };
+  return map[status] !== undefined ? map[status] : 0;
+}
+
+// ── Supabase Fetch ──────────────────────────────────────────────
+async function fetchOrders(query) {
+  const q = query.trim();
+  if (!q) return { orders:[], leads:[] };
+
+  // Search parcels by seller_contact (LINE ID) or seller_name
+  let parcelsUrl = `${SUPABASE_URL}/rest/v1/parcels?or=(seller_contact.ilike.*${encodeURIComponent(q)}*,seller_name.ilike.*${encodeURIComponent(q)}*)&order=created_at.desc`;
+  let leadsUrl = `${SUPABASE_URL}/rest/v1/leads?or=(line_id.ilike.*${encodeURIComponent(q)}*,display_name.ilike.*${encodeURIComponent(q)}*)&order=created_at.desc`;
+
+  const [parcelsRes, leadsRes] = await Promise.all([
+    fetch(parcelsUrl, { headers: HEADERS }),
+    fetch(leadsUrl, { headers: HEADERS })
+  ]);
+
+  const orders = parcelsRes.ok ? await parcelsRes.json() : [];
+  const leads = leadsRes.ok ? await leadsRes.json() : [];
+
+  return { orders, leads };
+}
+
+// ── Render ──────────────────────────────────────────────────────
+function renderResults(orders, leads) {
+  const resultsEl = document.getElementById('results');
+  const emptyEl = document.getElementById('emptyState');
+
+  if (orders.length === 0 && leads.length === 0) {
+    resultsEl.classList.remove('show');
+    emptyEl.classList.add('show');
+    return;
+  }
+
+  emptyEl.classList.remove('show');
+  resultsEl.classList.add('show');
+
+  // Seller info
+  const first = orders[0] || {};
+  document.getElementById('sellerName').textContent = first.seller_name || '-';
+  const idDisplay = first.seller_contact ? 'LINE: ' + first.seller_contact : '';
+  document.getElementById('sellerIdDisplay').textContent = idDisplay;
+
+  // Summary
+  const totalWeight = orders.reduce((s, o) => s + Number(o.actual_kg || o.estimated_kg || 0), 0);
+  const totalEarned = orders.reduce((s, o) => s + Number(o.total_thb || 0), 0);
+  const activeCount = orders.filter(o => {
+    const es = getEffectiveStatus(o);
+    return es !== 'paid' && es !== 'cancelled';
+  }).length;
+
+  document.getElementById('totalOrders').textContent = orders.length;
+  document.getElementById('totalWeight').textContent = fmt(totalWeight);
+  document.getElementById('totalEarned').innerHTML = fmtBaht(totalEarned);
+  document.getElementById('activeOrders').textContent = activeCount;
+
+  // Active order trackers
+  const activeOrders = orders.filter(o => {
+    const es = getEffectiveStatus(o);
+    return es !== 'paid' && es !== 'cancelled';
+  });
+
+  const trackerSection = document.getElementById('trackerSection');
+  const trackerCards = document.getElementById('trackerCards');
+  trackerCards.innerHTML = '';
+
+  if (activeOrders.length > 0) {
+    trackerSection.style.display = 'block';
+    activeOrders.forEach(order => {
+      const es = getEffectiveStatus(order);
+      const stepIdx = getStepIndex(es);
+      let html = `<div class="tracker-card">
+        <div class="tracker-ref">#${shortId(order.id)}</div>
+        <div class="tracker-material">
+          <span class="th">${order.material_type || '-'} &middot; ${fmt(order.estimated_kg || 0)} กก.</span>
+          <span class="en">${order.material_type || '-'} &middot; ${fmt(order.estimated_kg || 0)} kg</span>
+        </div>
+        <div class="progress-bar">`;
+
+      PROGRESS_STEPS.forEach((step, i) => {
+        let cls = '';
+        if (i < stepIdx) cls = 'done';
+        else if (i === stepIdx) cls = 'active';
+        html += `<div class="progress-step ${cls}">
+          <div class="progress-line"></div>
+          <div class="progress-dot">${i <= stepIdx ? '&#10003;' : (i + 1)}</div>
+          <div class="progress-label">
+            <span class="th">${step.th}</span>
+            <span class="en">${step.en}</span>
+          </div>
+        </div>`;
+      });
+
+      html += `</div></div>`;
+      trackerCards.innerHTML += html;
+    });
+  } else {
+    trackerSection.style.display = 'none';
+  }
+
+  // Orders list
+  const ordersContainer = document.getElementById('ordersContainer');
+  ordersContainer.innerHTML = '';
+  document.getElementById('ordersCount').textContent = orders.length;
+
+  orders.forEach((order, idx) => {
+    const es = getEffectiveStatus(order);
+    const sl = STATUS_LABELS[es] || STATUS_LABELS.submitted;
+    const badgeCls = getBadgeClass(es);
+    const weight = order.actual_kg || order.estimated_kg || 0;
+
+    const card = document.createElement('div');
+    card.className = 'order-card';
+    card.innerHTML = `
+      <div class="order-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="order-left">
+          <span class="order-ref">#${shortId(order.id)}</span>
+          <span class="order-date">
+            <span class="th">${fmtDate(order.created_at)}</span>
+            <span class="en">${fmtDateEn(order.created_at)}</span>
+          </span>
+        </div>
+        <div class="order-right">
+          <span class="badge ${badgeCls}">
+            <span class="th">${sl.th}</span>
+            <span class="en">${sl.en}</span>
+          </span>
+          <span class="order-amount">${fmtBaht(order.total_thb)}</span>
+          <span class="order-expand">&#9660;</span>
+        </div>
+      </div>
+      <div class="order-details">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>
+              <span class="th">วัสดุ</span>
+              <span class="en">Material</span>
+            </label>
+            <div class="val">${order.material_type || '-'}</div>
+          </div>
+          <div class="detail-item">
+            <label>
+              <span class="th">น้ำหนักประเมิน</span>
+              <span class="en">Estimated Weight</span>
+            </label>
+            <div class="val">${fmt(order.estimated_kg)} <span class="th">กก.</span><span class="en">kg</span></div>
+          </div>
+          <div class="detail-item">
+            <label>
+              <span class="th">น้ำหนักจริง</span>
+              <span class="en">Actual Weight</span>
+            </label>
+            <div class="val">${order.actual_kg ? fmt(order.actual_kg) + ' <span class="th">กก.</span><span class="en">kg</span>' : '<span style="color:var(--muted)">-</span>'}</div>
+          </div>
+          <div class="detail-item">
+            <label>
+              <span class="th">ราคาต่อ กก.</span>
+              <span class="en">Price/kg</span>
+            </label>
+            <div class="val gold">${order.price_per_kg ? fmtBaht(order.price_per_kg) : '-'}</div>
+          </div>
+          <div class="detail-item">
+            <label>
+              <span class="th">ยอดรวม</span>
+              <span class="en">Total</span>
+            </label>
+            <div class="val gold">${fmtBaht(order.total_thb)}</div>
+          </div>
+          <div class="detail-item">
+            <label>
+              <span class="th">ช่องทาง</span>
+              <span class="en">Source</span>
+            </label>
+            <div class="val">${order.source || '-'}</div>
+          </div>
+          <div class="detail-item">
+            <label>
+              <span class="th">หมายเหตุ</span>
+              <span class="en">Notes</span>
+            </label>
+            <div class="val">${order.notes || '-'}</div>
+          </div>
+        </div>
+      </div>`;
+    ordersContainer.appendChild(card);
+  });
+
+  // Leads
+  const leadsSection = document.getElementById('leadsSection');
+  const leadsContainer = document.getElementById('leadsContainer');
+  leadsContainer.innerHTML = '';
+
+  if (leads.length > 0) {
+    leadsSection.style.display = 'block';
+    document.getElementById('leadsCount').textContent = leads.length;
+
+    leads.forEach(lead => {
+      const card = document.createElement('div');
+      card.className = 'lead-card';
+      card.innerHTML = `
+        <div class="lead-info">
+          <span class="lead-material">${lead.material_type || '-'}</span>
+          <span class="lead-weight">${fmt(lead.weight_kg)} <span class="th">กก.</span><span class="en">kg</span></span>
+          <span class="lead-date">
+            <span class="th">${fmtDate(lead.created_at)}</span>
+            <span class="en">${fmtDateEn(lead.created_at)}</span>
+          </span>
+        </div>
+        <div class="lead-price">${fmtBaht(lead.price_shown)}</div>`;
+      leadsContainer.appendChild(card);
+    });
+  } else {
+    leadsSection.style.display = 'none';
+  }
+}
+
+// ── Search Handler ──────────────────────────────────────────────
+async function handleSearch(e) {
+  e.preventDefault();
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) return;
+
+  const loadingEl = document.getElementById('loading');
+  const errorEl = document.getElementById('errorMsg');
+  const resultsEl = document.getElementById('results');
+  const emptyEl = document.getElementById('emptyState');
+  const btn = document.getElementById('searchBtn');
+
+  // Reset
+  resultsEl.classList.remove('show');
+  emptyEl.classList.remove('show');
+  errorEl.classList.remove('show');
+  loadingEl.classList.add('show');
+  btn.disabled = true;
+
+  try {
+    const { orders, leads } = await fetchOrders(query);
+    loadingEl.classList.remove('show');
+    renderResults(orders, leads);
+
+    // Save to URL for sharing
+    const url = new URL(window.location);
+    url.searchParams.set('q', query);
+    window.history.replaceState({}, '', url);
+
+  } catch (err) {
+    loadingEl.classList.remove('show');
+    const isEn = document.body.classList.contains('lang-en');
+    errorEl.textContent = isEn
+      ? 'Something went wrong. Please try again or contact us via LINE @280uqpab.'
+      : 'เกิดข้อผิดพลาด กรุณาลองอีกครั้งหรือติดต่อเราทาง LINE @280uqpab';
+    errorEl.classList.add('show');
+    console.error('Dashboard error:', err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── Language Toggle ─────────────────────────────────────────────
+function setLang(lang) {
+  document.body.classList.remove('lang-th','lang-en');
+  document.body.classList.add('lang-' + lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const active = document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]');
+  if (active) active.classList.add('active');
+  localStorage.setItem('carbide-lang', lang);
+}
+
+// ── Init ────────────────────────────────────────────────────────
+(function(){
+  // Restore language preference
+  setLang(localStorage.getItem('carbide-lang') || 'th');
+
+  // Auto-search if query in URL
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q') || params.get('ref') || params.get('line_id');
+  if (q) {
+    document.getElementById('searchInput').value = q;
+    handleSearch(new Event('submit'));
+  }
+})();
+</script>
+</body>
+</html>
