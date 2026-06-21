@@ -4,27 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ส่งคำสั่งสำเร็จ | ThaiCarbide.com</title>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001691387"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'AW-18001691387');
-  </script>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#0a1628">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="manifest" href="/manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --green-dark: #0d2b0d;
-      --green-mid: #1a3a1a;
-      --gold: #d4af37;
-      --gold-light: #f0d060;
-      --cream: #f5f0e8;
+      --navy-dark: #0a1628;
+      --navy-mid: #111d33;
+      --gold: #c8a84e;
+      --gold-light: #e0c56a;
+      --cream: #f0eee6;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Sarabun', sans-serif;
-      background: var(--green-dark);
+      background: var(--navy-dark);
       color: var(--cream);
       min-height: 100vh;
       display: flex;
@@ -38,7 +35,7 @@
     .checkmark {
       width: 100px; height: 100px;
       border-radius: 50%;
-      background: rgba(212,175,55,0.15);
+      background: rgba(200,168,78,0.15);
       border: 3px solid var(--gold);
       display: flex; align-items: center; justify-content: center;
       font-size: 3rem;
@@ -59,14 +56,14 @@
     }
     .sub {
       font-size: 1rem;
-      color: #aaa;
+      color: #94a3b8;
       margin-bottom: 36px;
       line-height: 1.6;
     }
 
     .steps-box {
-      background: var(--green-mid);
-      border: 1px solid rgba(212,175,55,0.2);
+      background: var(--navy-mid);
+      border: 1px solid rgba(200,168,78,0.2);
       border-radius: 14px;
       padding: 28px;
       max-width: 460px;
@@ -92,7 +89,7 @@
     .ns-num {
       width: 30px; height: 30px;
       border-radius: 50%;
-      background: rgba(212,175,55,0.15);
+      background: rgba(200,168,78,0.15);
       border: 1px solid var(--gold);
       display: flex; align-items: center; justify-content: center;
       font-weight: 700;
@@ -100,13 +97,13 @@
       color: var(--gold);
       flex-shrink: 0;
     }
-    .ns-text { font-size: 0.9rem; color: #ccc; line-height: 1.5; padding-top: 4px; }
+    .ns-text { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; padding-top: 4px; }
     .ns-text strong { color: var(--cream); }
 
     .btn-home {
       display: inline-block;
       background: var(--gold);
-      color: var(--green-dark);
+      color: var(--navy-dark);
       border-radius: 10px;
       padding: 14px 36px;
       font-family: 'Prompt', sans-serif;
@@ -142,6 +139,12 @@
       display: block;
     }
     .logo span { color: var(--cream); }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 1.6rem; }
+      .steps-box { padding: 20px; }
+      .btn-home, .btn-line { display: block; margin: 8px auto; }
+    }
   </style>
 </head>
 <body>
@@ -151,13 +154,13 @@
   <div class="checkmark">✓</div>
 
   <h1>ส่งคำสั่งสำเร็จแล้ว!</h1>
-  <p class="sub">ขอบคุณที่ไว้วางใจ ThaiCarbide<br>เราจะติดต่อคุณเพื่อนัดรับหรือแนะนำวิธีจัดส่ง</p>
+  <p class="sub">ขอบคุณที่ไว้วางใจ ThaiCarbide<br>เราจะติดต่อคุณภายใน 24 ชั่วโมง เพื่อยืนยันและนัดรับสินค้า</p>
 
   <div class="steps-box">
     <div class="steps-title">ขั้นตอนถัดไป</div>
     <div class="next-step">
       <div class="ns-num">1</div>
-      <div class="ns-text"><strong>รอการติดต่อจากเรา</strong><br>เราจะโทรหรือ LINE เพื่อนัดรับหรือแนะนำวิธีจัดส่ง ราคาจริงยืนยันหลังชั่งน้ำหนัก</div>
+      <div class="ns-text"><strong>รอการติดต่อจากเรา</strong><br>เราจะโทรหรือ LINE ภายใน 24 ชม. เพื่อยืนยันราคาและนัดหมาย</div>
     </div>
     <div class="next-step">
       <div class="ns-num">2</div>
@@ -165,15 +168,14 @@
     </div>
     <div class="next-step">
       <div class="ns-num">3</div>
-      <div class="ns-text"><strong>รับเงินภายใน 48 ชม.</strong><br>หลังรับและชั่งน้ำหนักวัสดุแล้ว โอนเงินผ่าน PromptPay / โอนธนาคาร</div>
+      <div class="ns-text"><strong>รับเงินทันที</strong><br>หลังรับและตรวจสอบของ โอนเงินภายใน 48 ชม. ทาง PromptPay / โอนธนาคาร</div>
     </div>
   </div>
 
   <div>
     <a href="/" class="btn-home">← กลับหน้าหลัก</a>
-    <a href="https://line.me/R/ti/p/@280uqpab" class="btn-line">💬 LINE เรา</a>
+    <a href="https://line.me/ti/p/@thaicarbide" class="btn-line">💬 LINE เรา</a>
   </div>
 
-<script src="conversion-tracking.js"></script>
 </body>
 </html>
