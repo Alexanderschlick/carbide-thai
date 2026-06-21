@@ -639,19 +639,19 @@
   // Fetch live prices from Supabase
   async function loadPrices() {
     try {
-      const res = await fetch(SUPABASE_URL + '/rest/v1/prices?select=material,price_high&order=material', {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/prices?select=key,tier_over50', {
         headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON }
       });
       if (!res.ok) return;
       const data = await res.json();
       const priceMap = {};
-      data.forEach(row => { priceMap[row.material] = row.price_high; });
+      data.forEach(row => { priceMap[row.key] = parseInt(row.tier_over50); });
 
       // Update cards with live prices
-      if (priceMap['Inserts']) updateCardPrice('insert', priceMap['Inserts'], 'price-insert');
-      if (priceMap['Drills']) updateCardPrice('drill', priceMap['Drills'], 'price-drill');
-      if (priceMap['Mixed']) updateCardPrice('mixed', priceMap['Mixed'], 'price-mixed');
-      if (priceMap['Sand/Rills']) updateCardPrice('sand', priceMap['Sand/Rills'], 'price-sand');
+      if (priceMap['carbide_inserts']) updateCardPrice('insert', priceMap['carbide_inserts'], 'price-insert');
+      if (priceMap['carbide_drills']) updateCardPrice('drill', priceMap['carbide_drills'], 'price-drill');
+      if (priceMap['mixed_carbide']) updateCardPrice('mixed', priceMap['mixed_carbide'], 'price-mixed');
+      if (priceMap['sand_rills']) updateCardPrice('sand', priceMap['sand_rills'], 'price-sand');
     } catch(e) { /* fallback to hardcoded prices */ }
   }
 
