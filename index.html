@@ -1745,7 +1745,7 @@ Carbide<span>Thai</span>
 </footer>
 
 <script>
-const FALLBACK = { carbide_inserts:4500, carbide_drills:4600, sand_rills:520, mixed_carbide:4700 };
+const FALLBACK = { carbide_inserts:1750, carbide_drills:1650, sand_rills:1500, mixed_carbide:1600 };
 
 function fmt(n) { return n != null ? '฿' + Number(n).toLocaleString('th-TH') : '—'; }
 
@@ -1893,7 +1893,7 @@ async function loadPrices() {
       '<span class="th">คาร์ไบด์อินเสิร์ท: สูงสุด</span><span class="en">Carbide Inserts: up to</span> ' + fmt(FALLBACK.carbide_inserts) + '/kg &nbsp;·&nbsp; ' +
       '<span class="th">ดอกสว่าน: สูงสุด</span><span class="en">Drills: up to</span> ' + fmt(FALLBACK.carbide_drills) + '/kg &nbsp;·&nbsp; ' +
       '<span class="th">คาร์ไบด์ผสม: สูงสุด</span><span class="en">Mixed: up to</span> ' + fmt(FALLBACK.mixed_carbide) + '/kg &nbsp;·&nbsp; ' +
-      '<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ฿520/kg';
+      '<span class="th">แซนด์ริล: สูงสุด</span><span class="en">Sand Rills: up to</span> ' + fmt(FALLBACK.sand_rills) + '/kg';
     document.getElementById('price-updated-note').innerHTML =
       '<span class="th">ราคาโดยประมาณ · ติดต่อเราสำหรับราคาที่ถูกต้อง</span>' +
       '<span class="en">Estimated prices · Contact us for exact quote</span>';
