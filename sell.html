@@ -52,13 +52,13 @@ fbq('track', 'PageView');
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:     #0b1f14;
-  --sur:    #0f2a1a;
-  --sur2:   #132e1d;
+  --bg:     #0a1628;
+  --sur:    #0c1a30;
+  --sur2:   #111d33;
   --gold:   #c9a227;
-  --green:  #06C755;
+  --line:#06C755;--accent:#2e7df7;
   --white:  #f2ede4;
-  --muted:  #a8b8a4;
+  --muted:  #8a9ab0;
   --border: rgba(201,162,39,0.18);
   --red:    #e05555;
 }
@@ -67,13 +67,13 @@ html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.5;min-height:100vh;}
 
 /* ── TOP BAR ─────────────────────────────────────── */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(11,31,20,0.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
 .topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--white);text-decoration:none;letter-spacing:1px;}
 .topbar-logo span{color:var(--gold);}
-.topbar-line{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;padding:8px 16px;border-radius:4px;text-decoration:none;}
+.topbar-line{display:inline-flex;align-items:center;gap:6px;background:var(--line);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;padding:8px 16px;border-radius:4px;text-decoration:none;}
 
 /* ── PROMO STRIP ─────────────────────────────────── */
-.promo-strip{background:var(--green);color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:700;line-height:1.4;}
+.promo-strip{background:var(--accent);color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:700;line-height:1.4;}
 .promo-slots{background:rgba(0,0,0,0.2);border-radius:20px;padding:2px 10px;display:inline-block;margin-left:6px;font-size:13px;}
 
 /* ── WRAP ────────────────────────────────────────── */
@@ -82,7 +82,7 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 /* ── HERO ────────────────────────────────────────── */
 .hero-text{text-align:center;margin-bottom:28px;}
 .hero-text h1{font-family:'Sarabun',sans-serif;font-size:clamp(28px,7vw,40px);font-weight:800;line-height:1.25;color:var(--white);}
-.hero-text h1 em{color:var(--green);font-style:normal;}
+.hero-text h1 em{color:#c8a84e;font-style:normal;}
 .hero-sub{font-size:16px;color:var(--muted);margin-top:8px;}
 
 /* ── STEP LABEL ──────────────────────────────────── */
@@ -92,7 +92,7 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 .mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .mat-btn{background:var(--sur2);border:2px solid rgba(201,162,39,0.2);border-radius:6px;padding:16px 12px;cursor:pointer;text-align:left;transition:border-color 0.15s,background 0.15s;min-height:72px;display:flex;flex-direction:column;justify-content:center;}
 .mat-btn:hover{border-color:var(--gold);}
-.mat-btn.active{border-color:var(--green);background:rgba(6,199,85,0.1);}
+.mat-btn.active{border-color:var(--accent);background:rgba(46,125,247,0.1);}
 .mat-name{font-size:16px;font-weight:800;color:var(--white);line-height:1.2;}
 .mat-sub{font-size:11px;color:var(--muted);margin-top:3px;}
 
@@ -104,14 +104,14 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 .weight-unit{background:var(--sur);border:2px solid var(--border);border-radius:6px;padding:0 18px;font-size:15px;font-weight:700;color:var(--muted);display:flex;align-items:center;}
 
 /* ── PRICE BOX ───────────────────────────────────── */
-.price-box{background:rgba(6,199,85,0.08);border:2px solid rgba(6,199,85,0.35);border-radius:8px;padding:18px 20px;margin-bottom:20px;display:none;animation:fadeUp 0.25s ease;}
+.price-box{background:rgba(46,125,247,0.08);border:2px solid rgba(46,125,247,0.35);border-radius:8px;padding:18px 20px;margin-bottom:20px;display:none;animation:fadeUp 0.25s ease;}
 .price-box.show{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.price-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:4px;}
+.price-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
 .price-main{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--white);line-height:1;}
 .price-main span{font-size:20px;font-weight:700;color:var(--muted);margin-left:4px;}
 .price-tier-note{font-size:12px;color:var(--muted);margin-top:6px;}
-.price-upsell{font-size:13px;color:var(--green);margin-top:8px;padding-top:8px;border-top:1px solid rgba(6,199,85,0.2);display:none;}
+.price-upsell{font-size:13px;color:var(--accent);margin-top:8px;padding-top:8px;border-top:1px solid rgba(46,125,247,0.2);display:none;}
 .price-upsell.show{display:block;}
 
 /* ── FORM ────────────────────────────────────────── */
@@ -123,16 +123,16 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 .form-input::placeholder{color:var(--muted);opacity:0.5;}
 
 /* ── SUBMIT ──────────────────────────────────────── */
-.btn-submit{width:100%;background:var(--green);color:#fff;border:none;border-radius:6px;min-height:60px;font-family:'Sarabun',sans-serif;font-size:20px;font-weight:800;cursor:pointer;transition:background 0.15s,transform 0.1s;margin-top:8px;letter-spacing:0.3px;animation:pulse 2.5s infinite;}
-.btn-submit:hover{background:#05b84e;transform:translateY(-1px);}
+.btn-submit{width:100%;background:var(--accent);color:#fff;border:none;border-radius:6px;min-height:60px;font-family:'Sarabun',sans-serif;font-size:20px;font-weight:800;cursor:pointer;transition:background 0.15s,transform 0.1s;margin-top:8px;letter-spacing:0.3px;animation:pulse 2.5s infinite;}
+.btn-submit:hover{background:#2563eb;transform:translateY(-1px);}
 .btn-submit:active{transform:translateY(0);}
 .btn-submit:disabled{background:var(--muted);cursor:not-allowed;transform:none;animation:none;}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(6,199,85,0.45);}55%{box-shadow:0 0 0 14px rgba(6,199,85,0);}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(46,125,247,0.45);}55%{box-shadow:0 0 0 14px rgba(46,125,247,0);}}
 
 /* ── TRUST ───────────────────────────────────────── */
 .trust{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
 .trust-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);}
-.trust-icon{color:var(--green);font-size:18px;flex-shrink:0;}
+.trust-icon{color:var(--accent);font-size:18px;flex-shrink:0;}
 
 /* ── ERROR ───────────────────────────────────────── */
 .error-msg{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.35);border-radius:6px;color:#f08080;padding:12px 16px;font-size:14px;margin-top:10px;display:none;}
@@ -142,7 +142,7 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 .success-icon{font-size:64px;margin-bottom:16px;}
 .success-title{font-size:28px;font-weight:800;color:var(--white);margin-bottom:8px;}
 .success-sub{font-size:16px;color:var(--muted);line-height:1.6;margin-bottom:24px;}
-.success-line-btn{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;padding:14px 28px;border-radius:6px;font-size:17px;font-weight:700;text-decoration:none;}
+.success-line-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:14px 28px;border-radius:6px;font-size:17px;font-weight:700;text-decoration:none;}
 .ref-box{display:inline-block;background:var(--sur);border:1px solid var(--border);border-radius:4px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:3px;color:var(--gold);margin-top:16px;}
 
 /* ── DIVIDER ─────────────────────────────────────── */
@@ -216,23 +216,23 @@ body.lang-en .th{display:none !important;}
 
   <!-- SMALL PARCEL FOCUS BANNER -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;">
-    <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
+    <div style="background:rgba(46,125,247,0.1);border:1px solid rgba(46,125,247,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
       <div style="font-size:24px;margin-bottom:4px;">📦</div>
       <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">ส่งพัสดุง่ายๆ</span><span class="en">Ship a Parcel</span></div>
-      <div style="font-size:11px;color:#a8b8a4;">Kerry / J&T</div>
+      <div style="font-size:11px;color:#8a9ab0;">Kerry / J&T</div>
     </div>
-    <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
+    <div style="background:rgba(46,125,247,0.1);border:1px solid rgba(46,125,247,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
       <div style="font-size:24px;margin-bottom:4px;">🆓</div>
       <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">เราออกค่าส่งให้!</span><span class="en">Free Shipping!</span></div>
-      <div style="font-size:11px;color:#a8b8a4;"><span class="th">ฟรีค่าส่ง</span><span class="en">We pay shipping</span></div>
+      <div style="font-size:11px;color:#8a9ab0;"><span class="th">ฟรีค่าส่ง</span><span class="en">We pay shipping</span></div>
     </div>
-    <div style="background:rgba(6,199,85,0.1);border:1px solid rgba(6,199,85,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
+    <div style="background:rgba(46,125,247,0.1);border:1px solid rgba(46,125,247,0.25);border-radius:10px;padding:14px 10px;text-align:center;">
       <div style="font-size:24px;margin-bottom:4px;">💸</div>
       <div style="font-size:13px;font-weight:700;color:#f2ede4;"><span class="th">จ่ายเงินสดทันที</span><span class="en">Instant Cash</span></div>
-      <div style="font-size:11px;color:#a8b8a4;"><span class="th">เงินสดทันที</span><span class="en">Instant cash</span></div>
+      <div style="font-size:11px;color:#8a9ab0;"><span class="th">เงินสดทันที</span><span class="en">Instant cash</span></div>
     </div>
   </div>
-  <div style="text-align:center;margin-bottom:24px;font-size:15px;font-weight:700;color:var(--green);">
+  <div style="text-align:center;margin-bottom:24px;font-size:15px;font-weight:700;color:var(--accent);">
     <span class="th">🎯 รับซื้อตั้งแต่ 1 กก. — ส่งมาเลย!</span>
     <span class="en">🎯 We buy from 1 kg — ship it now!</span>
   </div>
@@ -289,7 +289,7 @@ body.lang-en .th{display:none !important;}
         <div style="font-weight:700; font-size:15px; color:#f2ede4;">
           <span class="th">ส่งพัสดุเอง</span><span class="en">Send Parcel</span>
         </div>
-        <div style="font-size:12px; color:#9a9a7a; margin-top:4px;">
+        <div style="font-size:12px; color:#7a8a9a; margin-top:4px;">
           <span class="th">ส่ง Kerry / J&T / ไปรษณีย์ไทย</span><span class="en">Via Kerry / J&T / Thailand Post</span>
         </div>
       </button>
@@ -300,7 +300,7 @@ body.lang-en .th{display:none !important;}
         <div style="font-weight:700; font-size:15px; color:#f2ede4;">
           <span class="th">ให้เรามารับ</span><span class="en">We Pick Up</span>
         </div>
-        <div style="font-size:12px; color:#9a9a7a; margin-top:4px;">
+        <div style="font-size:12px; color:#7a8a9a; margin-top:4px;">
           <span class="th">เราจัดรถไปรับถึงที่</span><span class="en">We arrange courier to you</span>
         </div>
       </button>
@@ -311,10 +311,10 @@ body.lang-en .th{display:none !important;}
         <span class="th">ที่อยู่สำหรับรับของ *</span><span class="en">Pickup Address *</span>
       </label>
       <textarea id="pickupAddress" rows="3" placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"
-                style="width:100%; background:#0b1f14; border:1px solid rgba(201,162,39,0.25); color:#f2ede4; padding:12px; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:14px; resize:vertical; box-sizing:border-box;"></textarea>
+                style="width:100%; background:#0a1628; border:1px solid rgba(201,162,39,0.25); color:#f2ede4; padding:12px; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:14px; resize:vertical; box-sizing:border-box;"></textarea>
     </div>
 
-    <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(6,199,85,0.08); border:1px solid rgba(6,199,85,0.25); border-radius:10px; padding:14px;">
+    <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(46,125,247,0.08); border:1px solid rgba(46,125,247,0.25); border-radius:10px; padding:14px;">
       <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
         <span class="th">📦 <strong>ส่งพัสดุมาที่:</strong><br>ThaiCarbide<br>97/82 The Reserve Hideaway, Lobby B<br>สุขุมวิท 61 แขวงคลองตันเหนือ<br>เขตวัฒนา กรุงเทพฯ 10110<br>โทร: 093-696-9935<br><br>💡 ส่งได้ทาง Kerry Express, J&T Express หรือ ไปรษณีย์ไทย<br>📝 กรุณาเขียน "ThaiCarbide" และชื่อของท่านบนกล่อง</span>
         <span class="en">📦 <strong>Send your parcel to:</strong><br>ThaiCarbide<br>725 Sukhumvit Rd, Khlong Tan Nuea<br>Watthana, Bangkok 10110<br>Tel: 093-696-9935<br><br>💡 Ship via Kerry Express, J&T Express or Thailand Post<br>📝 Please write "ThaiCarbide" and your name on the box</span>
@@ -409,18 +409,18 @@ body.lang-en .th{display:none !important;}
       <h2 style="color:#c9a227; font-size:22px; margin-bottom:8px;">
         <span class="th">รับข้อมูลแล้วครับ!</span><span class="en">Submission Received!</span>
       </h2>
-      <p style="color:#9a9a7a; margin-bottom:8px;">
+      <p style="color:#7a8a9a; margin-bottom:8px;">
         <span class="th">หมายเลขอ้างอิง:</span><span class="en">Reference:</span>
         <strong id="refBox" style="color:#c9a227;"></strong>
       </p>
 
       <div id="successParcel" style="display:none; text-align:left; max-width:480px; margin:24px auto 0;">
-        <div style="background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.3); border-radius:12px; padding:24px;">
+        <div style="background:rgba(46,125,247,0.1); border:1px solid rgba(46,125,247,0.3); border-radius:12px; padding:24px;">
           <div style="text-align:center; margin-bottom:16px;">
             <span class="lang-th">กรุณาเขียนหมายเลขนี้บนพัสดุของคุณ:</span>
             <span class="lang-en">Please write this number on your parcel:</span>
           </div>
-          <div style="text-align:center; background:#0f2a1a; border:2px dashed #059669; border-radius:10px; padding:18px; margin-bottom:16px;">
+          <div style="text-align:center; background:#0c1a30; border:2px dashed #2e7df7; border-radius:10px; padding:18px; margin-bottom:16px;">
             <span style="font-size:2rem; font-weight:800; color:#06c755; letter-spacing:2px;" class="ref-inline"></span>
           </div>
           <div style="font-size:0.9rem; color:#ccc; margin-bottom:16px;">
@@ -432,7 +432,7 @@ body.lang-en .th{display:none !important;}
             เขตวัฒนา กรุงเทพฯ 10110<br>
             โทร: 093-696-9935
           </div>
-          <button onclick="copyAddress()" style="width:100%; background:#059669; color:#fff; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.95rem;">
+          <button onclick="copyAddress()" style="width:100%; background:#2e7df7; color:#fff; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.95rem;">
             <span class="lang-th">คัดลอกที่อยู่</span>
             <span class="lang-en">Copy Address</span>
           </button>
@@ -440,12 +440,12 @@ body.lang-en .th{display:none !important;}
       </div>
 
       <div id="successPickup" style="display:none; text-align:left; max-width:480px; margin:24px auto 0;">
-        <div style="background:rgba(6,199,85,0.1); border:1px solid rgba(6,199,85,0.3); border-radius:12px; padding:24px;">
+        <div style="background:rgba(46,125,247,0.1); border:1px solid rgba(46,125,247,0.3); border-radius:12px; padding:24px;">
           <div style="text-align:center; margin-bottom:16px;">
             <span class="lang-th">หมายเลขอ้างอิงของคุณ:</span>
             <span class="lang-en">Your reference number:</span>
           </div>
-          <div style="text-align:center; background:#0f2a1a; border:2px dashed #059669; border-radius:10px; padding:18px; margin-bottom:16px;">
+          <div style="text-align:center; background:#0c1a30; border:2px dashed #2e7df7; border-radius:10px; padding:18px; margin-bottom:16px;">
             <span style="font-size:2rem; font-weight:800; color:#06c755; letter-spacing:2px;" class="ref-inline"></span>
           </div>
           <div style="font-size:0.9rem; color:#ccc;">
@@ -473,7 +473,7 @@ body.lang-en .th{display:none !important;}
     </div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
       <a href="mailto:thaicarbide@gmail.com" style="display:inline-flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--border);color:var(--white);padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">📧 Email</a>
-      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">💚 LINE @ThaiCarbide</a>
+      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">💚 LINE @ThaiCarbide</a>
     </div>
     <div style="font-size:12px;color:var(--muted);margin-top:10px;">Tel: 093-696-9935</div>
   </div>
