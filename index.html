@@ -1026,6 +1026,41 @@ Carbide<span>Thai</span>
   </div>
 </section>
 
+<!-- MARKET DATA & PRICE TREND -->
+<section class="section fade-in" id="market-data" style="max-width:1000px;margin:0 auto;padding:50px 20px 30px">
+  <div class="section-label"><span class="th">ข้อมูลตลาด · </span>Market Data</div>
+  <div class="section-head">
+    <span class="th">ราคาอ้างอิง APT & แนวโน้มราคา</span>
+    <span class="en">APT Reference & Price Trends</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:4px">APT Reference (USD/MTU)</div>
+      <div id="apt-usd" style="font-size:1.6rem;font-weight:700;color:var(--gold)">—</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:4px">APT Reference (THB/MTU)</div>
+      <div id="apt-thb" style="font-size:1.6rem;font-weight:700;color:var(--gold)">—</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+      <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:4px">
+        <span class="th">แหล่งข้อมูล</span><span class="en">Source</span>
+      </div>
+      <div id="apt-source" style="font-size:0.9rem;color:var(--text)">Metal Bulletin</div>
+    </div>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;height:280px">
+    <canvas id="priceChart" style="width:100%;height:100%"></canvas>
+    <div id="chart-loading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-dim)">
+      <span class="th">กำลังโหลดกราฟ...</span><span class="en">Loading chart...</span>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:0.75rem;color:var(--text-dim);margin-top:12px">
+    <span class="th">📊 ราคา APT อ้างอิงจาก Metal Bulletin / Fastmarkets · อัปเดตรายสัปดาห์ · ราคารับซื้อจริงขึ้นอยู่กับเกรดและปริมาณ</span>
+    <span class="en">📊 APT reference from Metal Bulletin / Fastmarkets · Updated weekly · Actual buy price depends on grade & quantity</span>
+  </p>
+</section>
+
 <!-- CUSTOMER INDUSTRIES -->
 <div class="customers-section fade-in">
   <div class="customers-label">
@@ -2462,6 +2497,61 @@ document.querySelectorAll('a[href*="line.me"]').forEach(function(el){
 </script>
 <script>/* tc-tracker: session time */
 (function(){var K='tc_sessions',p='/',t=Date.now();function flush(){var d=Math.round((Date.now()-t)/1000);if(d<3)return;try{var a=JSON.parse(localStorage.getItem(K)||'[]');a.push({p:p,d:d,ts:new Date().toISOString().slice(0,16)});if(a.length>300)a=a.slice(-300);localStorage.setItem(K,JSON.stringify(a));}catch(e){}}document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();});window.addEventListener('pagehide',flush);})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+(async function loadMarketData() {
+  try {
+    const res = await fetch('https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/market-data?action=get');
+    if (!res.ok) return;
+    const d = await res.json();
+    // APT reference cards
+    if (d.apt) {
+      const usdEl = document.getElementById('apt-usd');
+      const thbEl = document.getElementById('apt-thb');
+      const srcEl = document.getElementById('apt-source');
+      if (usdEl && d.apt.mid_usd) usdEl.textContent = '$' + Number(d.apt.mid_usd).toFixed(0);
+      if (thbEl && d.apt.mid_thb) thbEl.textContent = '฿' + Number(d.apt.mid_thb).toLocaleString('th-TH');
+      if (srcEl && d.apt.source) srcEl.textContent = d.apt.source;
+    }
+    // Price history chart
+    const canvas = document.getElementById('priceChart');
+    const loading = document.getElementById('chart-loading');
+    if (!canvas || !d.history || !window.Chart) return;
+    const inserts = d.history['carbide_inserts'] || [];
+    const drills = d.history['carbide_drills'] || [];
+    const mixed = d.history['mixed_carbide'] || [];
+    if (inserts.length === 0) return;
+    const labels = inserts.map(p => {
+      const dt = new Date(p.date);
+      return dt.toLocaleDateString('th-TH', {day:'numeric',month:'short'});
+    });
+    if (loading) loading.style.display = 'none';
+    new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Inserts (50kg+)', data: inserts.map(p=>Math.round(p.over50)), borderColor: '#c8a84e', backgroundColor: 'rgba(200,168,78,0.1)', tension: 0.3, fill: true, pointRadius: 2 },
+          { label: 'Drills (50kg+)', data: drills.map(p=>Math.round(p.over50)), borderColor: '#2e7df7', backgroundColor: 'rgba(46,125,247,0.1)', tension: 0.3, fill: false, pointRadius: 2 },
+          { label: 'Mixed (50kg+)', data: mixed.map(p=>Math.round(p.over50)), borderColor: '#48bb78', backgroundColor: 'rgba(72,187,120,0.1)', tension: 0.3, fill: false, pointRadius: 2 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#8899aa', font: { size: 11 } } },
+          tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ฿' + ctx.parsed.y.toLocaleString() + '/kg' } }
+        },
+        scales: {
+          x: { ticks: { color: '#667788', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: '#667788', callback: v => '฿'+v.toLocaleString() }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+  } catch(e) { console.warn('Market data load error:', e); }
+})();
 </script>
 </body>
 </html>
