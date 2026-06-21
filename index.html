@@ -649,6 +649,9 @@ footer { background:#060d1a; border-top:1px solid var(--border); padding:56px 40
   .brand-logo-card img { max-height:38px; max-width:110px; }
   .trust-badges-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
   .trust-badges-section { padding:40px 16px; }
+  /* Prevent iOS Safari auto-zoom on form inputs */
+  .form-field input, .form-field select, .form-field textarea,
+  #calc-type, #calc-weight, #chat-input { font-size:16px !important; }
 }
 @media (max-width:480px) {
   .trust-badges-grid { grid-template-columns:repeat(2,1fr); }
