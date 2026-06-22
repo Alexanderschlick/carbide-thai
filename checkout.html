@@ -12,6 +12,27 @@
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="manifest" href="/manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RNXH6EX220"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RNXH6EX220');
+  </script>
+  <!-- Google Ads -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001691387"></script>
+  <script>gtag('config', 'AW-18001691387');</script>
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init','1080836985122313');
+    fbq('track','PageView');
+  </script>
   <style>
     :root {
       --navy-dark: #0a1628;
@@ -837,7 +858,17 @@
       });
 
       if (response.ok) {
-        window.location.href = '/thank-you.html';
+        // Fire Google Ads conversion on successful submit
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'conversion', {
+          send_to: 'AW-18001691387/hrp0CKb63oUcEPuF8IdD',
+          value: parseFloat(document.getElementById('weight')?.value) || 8,
+          currency: 'THB'
+        });
+      }
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead');
+
+      window.location.href = '/thank-you.html';
       } else {
         throw new Error('Submit failed');
       }
@@ -848,6 +879,8 @@
     }
   }
 </script>
+<script src="conversion-tracking.js"></script>
+<script src="analytics.js"></script>
 
 </body>
 </html>
