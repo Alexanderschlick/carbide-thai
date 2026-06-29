@@ -315,14 +315,20 @@ function closeModal(){document.getElementById('chatModal').classList.remove('sho
 let currentModalUid='';
 const ADMIN_API=SB+'/functions/v1/admin-api';
 
-async function translateText(text,el){
-  el.textContent='...';
+const _chatTexts={};let _tid=0;
+function storeText(t){const id='_t'+(++_tid);_chatTexts[id]=t;return id}
+
+async function translateEl(el){
+  const key=el.dataset.tkey;
+  const text=_chatTexts[key];
+  if(!text)return;
+  el.textContent='translating...';el.style.color='var(--muted)';
   try{
     const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text})});
     const d=await r.json();
-    if(d.translation){el.textContent=d.translation;el.style.color='#93c5fd'}
-    else{el.textContent='[error]'}
-  }catch(e){el.textContent='[failed]'}
+    if(d.translation){el.textContent=d.translation;el.style.color='#93c5fd';el.style.cursor='default'}
+    else{el.textContent='[error]';el.style.color='#ef4444'}
+  }catch(e){el.textContent='[failed]';el.style.color='#ef4444'}
 }
 
 async function sendReply(){
@@ -354,15 +360,17 @@ async function showConversation(uid,name){
   let html='';
   for(const c of chats){
     if(!c.message||c.message.includes('[system')||c.message.includes('[followup'))continue;
-    const mid='t'+Math.random().toString(36).slice(2,8);
+    const mk=storeText(c.message);
     html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
-    html+=`<div class="chat-bubble user">${trunc(c.message,300)} <span id="${mid}" style="font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px" onclick="translateText('${c.message.replace(/'/g,"\\'")}',this)">EN</span></div>`;
+    html+=`<div class="chat-bubble user">${trunc(c.message,300)} <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
     if(c.bot_reply){
-      const bid='t'+Math.random().toString(36).slice(2,8);
-      html+=`<div class="chat-bubble bot">${trunc(c.bot_reply,400)} <span id="${bid}" style="font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px" onclick="translateText('${c.bot_reply.replace(/'/g,"\\'")}',this)">EN</span></div>`;
+      const bk=storeText(c.bot_reply);
+      html+=`<div class="chat-bubble bot">${trunc(c.bot_reply,400)} <span class="en-btn" data-tkey="${bk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
     }
   }
   document.getElementById('modalBody').innerHTML=html||'<p style="color:var(--muted)">No messages</p>';
+  // Attach translate click handlers
+  document.querySelectorAll('.en-btn').forEach(btn=>btn.addEventListener('click',()=>translateEl(btn)));
   document.getElementById('chatModal').classList.add('show');
 }
 
