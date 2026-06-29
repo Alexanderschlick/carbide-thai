@@ -135,6 +135,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="tab active" data-tab="overview" onclick="showTab('overview',this)">Overview</button>
     <button class="tab" data-tab="leads" onclick="showTab('leads',this)">Leads</button>
     <button class="tab" data-tab="chats" onclick="showTab('chats',this)">Chats</button>
+    <button class="tab" data-tab="analytics" onclick="showTab('analytics',this)">Analytics</button>
     <button class="tab" data-tab="prices" onclick="showTab('prices',this)">Prices</button>
     <button class="tab" data-tab="systems" onclick="showTab('systems',this)">Systems</button>
   </div>
@@ -181,6 +182,45 @@ tr:hover { background: rgba(200,168,78,0.04); }
       <h2>Full Chat History (last 100)</h2>
       <table><thead><tr><th>Name</th><th>Message</th><th>Bot Reply</th><th>Time</th></tr></thead>
       <tbody id="fullChats"></tbody></table>
+    </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div id="tab-analytics" class="tab-content" style="display:none">
+    <div class="kpi-row" style="grid-template-columns:repeat(6,1fr)">
+      <div class="kpi blue"><div class="value" id="aViews">--</div><div class="label">Views (14d)</div></div>
+      <div class="kpi gold"><div class="value" id="aSessions">--</div><div class="label">Sessions (14d)</div></div>
+      <div class="kpi green"><div class="value" id="aClicks">--</div><div class="label">CTA Clicks</div></div>
+      <div class="kpi"><div class="value" id="aCTR">--</div><div class="label">Click Rate</div></div>
+      <div class="kpi blue"><div class="value" id="aMobile">--</div><div class="label">Mobile %</div></div>
+      <div class="kpi gold"><div class="value" id="aChats">--</div><div class="label">LINE Chats (7d)</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h2>Daily Traffic (14 days)</h2>
+        <canvas id="trafficChart" height="200"></canvas>
+      </div>
+      <div class="card">
+        <h2>Funnel: Visit → Chat → Quote</h2>
+        <div id="funnelViz"></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h2>Top Pages</h2>
+        <table><thead><tr><th>Page</th><th>Views</th><th>% Total</th></tr></thead>
+        <tbody id="topPages"></tbody></table>
+      </div>
+      <div class="card">
+        <h2>Traffic Sources</h2>
+        <table><thead><tr><th>Source</th><th>Views</th></tr></thead>
+        <tbody id="trafficSources"></tbody></table>
+        <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:10px">
+          <h2 style="border:none;padding:0;margin-bottom:8px">Device Split</h2>
+          <table><thead><tr><th>Device</th><th>Views</th><th>%</th></tr></thead>
+          <tbody id="deviceSplit"></tbody></table>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -232,6 +272,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
@@ -452,11 +493,128 @@ async function loadAll(){
     const funcs=['line-webhook','chat-proxy','fb-webhook','auto-followup','line-broadcast','price-scraper','auto-price-update','email-report','seo-optimizer','blog-generator','sea-orchestrator','sea-engine','sourcing-pipeline','analytics-api','google-ads-manager','fb-ads-manager','send-push-replies','market-data','setup-richmenu','notify-lead'];
     document.getElementById('funcPanel').innerHTML=funcs.map(f=>`<div class="sys-row"><span class="name">${f}</span><span class="badge ok">Deployed</span></div>`).join('');
 
+    // Analytics
+    await loadAnalytics(chats);
+
     document.getElementById('lastUpdate').textContent='Updated: '+new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'})+' (Bangkok)';
   }catch(e){
     console.error(e);
     document.getElementById('lastUpdate').textContent='Error loading: '+e.message;
   }
+}
+
+let trafficChartInstance=null;
+
+async function loadAnalytics(lineChats){
+  const events=await sbGet('conversion_events','select=event_type,page,utm_source,device,session_id,created_at&order=created_at.desc&limit=2000');
+
+  const now=Date.now();
+  const d14=new Date(now-14*86400000).toISOString();
+  const d7=new Date(now-7*86400000).toISOString();
+  const recent=events.filter(e=>e.created_at>d14);
+
+  // KPIs
+  const views=recent.filter(e=>e.event_type==='page_view');
+  const clicks=recent.filter(e=>e.event_type==='cta_click');
+  const sessions=new Set(views.map(e=>e.session_id)).size;
+  const mobile=views.filter(e=>e.device==='mobile').length;
+  const ctr=views.length?((clicks.length/views.length)*100).toFixed(1):'0';
+  const weekChats=lineChats?new Set(lineChats.filter(c=>c.created_at>d7).map(c=>c.line_user_id)).size:0;
+
+  document.getElementById('aViews').textContent=views.length;
+  document.getElementById('aSessions').textContent=sessions;
+  document.getElementById('aClicks').textContent=clicks.length;
+  document.getElementById('aCTR').textContent=ctr+'%';
+  document.getElementById('aMobile').textContent=views.length?Math.round(mobile/views.length*100)+'%':'--';
+  document.getElementById('aChats').textContent=weekChats;
+
+  // Daily traffic chart
+  const dayMap={};
+  for(let i=13;i>=0;i--){
+    const d=new Date(now-i*86400000);
+    const key=d.toISOString().slice(0,10);
+    dayMap[key]={views:0,clicks:0,sessions:new Set()};
+  }
+  for(const e of recent){
+    const key=e.created_at.slice(0,10);
+    if(!dayMap[key])continue;
+    if(e.event_type==='page_view'){dayMap[key].views++;dayMap[key].sessions.add(e.session_id)}
+    if(e.event_type==='cta_click')dayMap[key].clicks++;
+  }
+
+  const labels=Object.keys(dayMap).map(k=>{const d=new Date(k);return(d.getMonth()+1)+'/'+d.getDate()});
+  const viewData=Object.values(dayMap).map(d=>d.views);
+  const sessionData=Object.values(dayMap).map(d=>d.sessions.size);
+  const clickData=Object.values(dayMap).map(d=>d.clicks);
+
+  if(trafficChartInstance)trafficChartInstance.destroy();
+  const ctx=document.getElementById('trafficChart');
+  if(ctx&&typeof Chart!=='undefined'){
+    trafficChartInstance=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels,
+        datasets:[
+          {label:'Views',data:viewData,backgroundColor:'rgba(46,125,247,0.6)',borderRadius:3,order:2},
+          {label:'Sessions',data:sessionData,backgroundColor:'rgba(200,168,78,0.6)',borderRadius:3,order:3},
+          {label:'CTA Clicks',data:clickData,type:'line',borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.1)',pointRadius:3,tension:0.3,order:1}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},
+        scales:{
+          x:{ticks:{color:'#94a3b8',font:{size:9}},grid:{color:'rgba(26,58,92,0.3)'}},
+          y:{ticks:{color:'#94a3b8',font:{size:9}},grid:{color:'rgba(26,58,92,0.3)'},beginAtZero:true}
+        }
+      }
+    });
+  }
+
+  // Funnel
+  const totalVisitors=sessions;
+  const chatUsers=weekChats;
+  const quotesGiven=lineChats?lineChats.filter(c=>c.created_at>d7&&c.bot_reply&&(c.bot_reply.includes('฿')||c.bot_reply.includes('ราคา')||c.bot_reply.includes('price')||c.bot_reply.includes('→'))).length:0;
+  const funnelSteps=[
+    {label:'Website Visitors',value:totalVisitors,color:'var(--blue)'},
+    {label:'LINE Chats Started',value:chatUsers,color:'var(--gold)'},
+    {label:'Quotes Given',value:quotesGiven,color:'#22c55e'}
+  ];
+  const maxF=Math.max(...funnelSteps.map(s=>s.value),1);
+  document.getElementById('funnelViz').innerHTML=funnelSteps.map((s,i)=>{
+    const w=Math.max((s.value/maxF)*100,8);
+    const conv=i>0?((s.value/funnelSteps[i-1].value)*100).toFixed(0)+'%':'—';
+    return`<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span style="color:var(--dark-text)">${s.label}</span>
+        <span style="color:var(--muted)">${s.value} ${i>0?'('+conv+' conv)':''}</span>
+      </div>
+      <div style="background:rgba(26,58,92,0.3);border-radius:4px;height:28px;overflow:hidden">
+        <div style="width:${w}%;height:100%;background:${s.color};border-radius:4px;display:flex;align-items:center;padding-left:8px">
+          <span style="font-size:12px;font-weight:700;color:#fff">${s.value}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('')+`<div style="font-size:10px;color:var(--muted);margin-top:8px">14-day visitors vs 7-day LINE activity. Quotes = bot replies containing price info.</div>`;
+
+  // Top pages
+  const pageCount={};
+  views.forEach(e=>{pageCount[e.page]=(pageCount[e.page]||0)+1});
+  const totalV=views.length||1;
+  const sortedPages=Object.entries(pageCount).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('topPages').innerHTML=sortedPages.map(([p,c])=>`<tr><td>${p}</td><td>${c}</td><td>${((c/totalV)*100).toFixed(1)}%</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
+
+  // Sources
+  const srcCount={};
+  views.forEach(e=>{const s=e.utm_source||'(direct/organic)';srcCount[s]=(srcCount[s]||0)+1});
+  const sortedSrc=Object.entries(srcCount).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('trafficSources').innerHTML=sortedSrc.map(([s,c])=>`<tr><td>${s}</td><td>${c}</td></tr>`).join('');
+
+  // Devices
+  const devCount={};
+  views.forEach(e=>{const d=e.device||'unknown';devCount[d]=(devCount[d]||0)+1});
+  const sortedDev=Object.entries(devCount).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('deviceSplit').innerHTML=sortedDev.map(([d,c])=>`<tr><td style="text-transform:capitalize">${d}</td><td>${c}</td><td>${((c/totalV)*100).toFixed(0)}%</td></tr>`).join('');
 }
 
 document.getElementById('chatModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
