@@ -222,6 +222,11 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <h3 id="modalTitle">Conversation</h3>
     <div id="modalBody"></div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
+      <input type="text" id="replyInput" placeholder="Type reply..." style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;">
+      <button class="btn-sm btn-gold" onclick="sendReply()" id="replyBtn">Send via LINE</button>
+    </div>
+    <div id="replyStatus" style="font-size:11px;color:var(--muted);margin-top:6px;"></div>
   </div>
 </div>
 
@@ -264,15 +269,55 @@ function showTab(name,el){
 }
 function closeModal(){document.getElementById('chatModal').classList.remove('show')}
 
+let currentModalUid='';
+const ADMIN_API=SB+'/functions/v1/admin-api';
+
+async function translateText(text,el){
+  el.textContent='...';
+  try{
+    const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text})});
+    const d=await r.json();
+    if(d.translation){el.textContent=d.translation;el.style.color='#93c5fd'}
+    else{el.textContent='[error]'}
+  }catch(e){el.textContent='[failed]'}
+}
+
+async function sendReply(){
+  const msg=document.getElementById('replyInput').value.trim();
+  if(!msg||!currentModalUid)return;
+  const btn=document.getElementById('replyBtn');
+  btn.textContent='Sending...';btn.disabled=true;
+  try{
+    const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'reply',user_id:currentModalUid,message:msg})});
+    const d=await r.json();
+    if(d.success){
+      document.getElementById('replyStatus').textContent='✓ Sent!';
+      document.getElementById('replyInput').value='';
+      // Add to modal
+      const body=document.getElementById('modalBody');
+      body.innerHTML+=`<div class="chat-time">just now</div><div class="chat-bubble bot">${msg}</div>`;
+      body.scrollTop=body.scrollHeight;
+    }else{document.getElementById('replyStatus').textContent='Error: '+(d.error||'failed')}
+  }catch(e){document.getElementById('replyStatus').textContent='Error: '+e.message}
+  btn.textContent='Send via LINE';btn.disabled=false;
+}
+
 async function showConversation(uid,name){
+  currentModalUid=uid;
   const chats=await sbGet('line_chats',`select=message,bot_reply,created_at&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
   document.getElementById('modalTitle').textContent=name;
+  document.getElementById('replyInput').value='';
+  document.getElementById('replyStatus').textContent='';
   let html='';
   for(const c of chats){
     if(!c.message||c.message.includes('[system')||c.message.includes('[followup'))continue;
+    const mid='t'+Math.random().toString(36).slice(2,8);
     html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
-    html+=`<div class="chat-bubble user">${trunc(c.message,300)}</div>`;
-    if(c.bot_reply)html+=`<div class="chat-bubble bot">${trunc(c.bot_reply,400)}</div>`;
+    html+=`<div class="chat-bubble user">${trunc(c.message,300)} <span id="${mid}" style="font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px" onclick="translateText('${c.message.replace(/'/g,"\\'")}',this)">EN</span></div>`;
+    if(c.bot_reply){
+      const bid='t'+Math.random().toString(36).slice(2,8);
+      html+=`<div class="chat-bubble bot">${trunc(c.bot_reply,400)} <span id="${bid}" style="font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px" onclick="translateText('${c.bot_reply.replace(/'/g,"\\'")}',this)">EN</span></div>`;
+    }
   }
   document.getElementById('modalBody').innerHTML=html||'<p style="color:var(--muted)">No messages</p>';
   document.getElementById('chatModal').classList.add('show');
