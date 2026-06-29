@@ -186,18 +186,20 @@ tr:hover { background: rgba(200,168,78,0.04); }
 
   <!-- PRICES TAB -->
   <div id="tab-prices" class="tab-content" style="display:none">
-    <div class="grid2">
-      <div class="card">
-        <h2>Our Buying Prices (THB/kg)</h2>
-        <table><thead><tr><th>Material</th><th>&lt;10kg</th><th>10-30kg</th><th>30-50kg</th><th>Teaser</th><th>Updated</th></tr></thead>
-        <tbody id="prTable"></tbody></table>
-      </div>
-      <div class="card">
-        <h2>EU Competitor Prices (Source)</h2>
-        <table><thead><tr><th>Material</th><th>EUR/kg</th><th>THB Equiv</th></tr></thead>
-        <tbody id="compTable"></tbody></table>
-        <div id="compMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
-      </div>
+    <div class="card" style="margin-bottom:12px;overflow-x:auto;">
+      <h2>Price Comparison — ThaiCarbide vs EU (hartmetallschrott24.de)</h2>
+      <table><thead><tr>
+        <th rowspan="2">Material</th>
+        <th colspan="3" style="text-align:center;color:var(--gold);border-bottom:1px solid var(--gold)">ThaiCarbide (THB/kg)</th>
+        <th colspan="3" style="text-align:center;color:var(--blue);border-bottom:1px solid var(--blue)">EU — EUR/kg</th>
+        <th colspan="3" style="text-align:center;color:#22c55e;border-bottom:1px solid #22c55e">EU → THB/kg</th>
+      </tr><tr>
+        <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
+        <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
+        <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
+      </tr></thead>
+      <tbody id="comparisonTable"></tbody></table>
+      <div id="compMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
     </div>
   </div>
 
@@ -328,7 +330,7 @@ async function loadAll(){
     const[chats,prices,comp,flags]=await Promise.all([
       sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at&line_user_id=neq.BROADCAST&order=created_at.desc&limit=1000'),
       sbGet('prices','select=key,name_en,tier_under10,tier_10_30,tier_30_50,teaser_thb,updated_at&order=key'),
-      sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,scraped_at&order=scraped_at.desc&limit=10'),
+      sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=10'),
       sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line')
     ]);
 
@@ -398,12 +400,41 @@ async function loadAll(){
       return`<tr><td>${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
     }).join('');
 
-    // Prices
-    document.getElementById('prTable').innerHTML=prices.map(p=>`<tr><td>${p.name_en||p.key}</td><td style="color:var(--gold)">฿${Number(p.tier_under10||0).toLocaleString()}</td><td style="color:var(--gold)">฿${Number(p.tier_10_30||0).toLocaleString()}</td><td style="color:var(--gold)">฿${Number(p.tier_30_50||0).toLocaleString()}</td><td>฿${Number(p.teaser_thb||0).toLocaleString()}</td><td style="font-size:10px;color:var(--muted)">${fmtDate(p.updated_at)}</td></tr>`).join('');
+    // Prices comparison table
+    const compNames={VHM_BOHRER_FRAESER:'Drills/Endmills',WENDESCHNEIDPLATTEN:'Inserts',HARTMETALL_GEMISCHT:'Mixed Carbide',HARTMETALL_STUECKSCHROTT:'Solid Pieces'};
+    const priceMap={carbide_drills:'VHM_BOHRER_FRAESER',carbide_inserts:'WENDESCHNEIDPLATTEN',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
+    const rate=comp[0]?Number(comp[0].exchange_rate):38;
+    const compMap={};comp.forEach(c=>{if(!compMap[c.material_key])compMap[c.material_key]=c});
 
-    const compNames={VHM_BOHRER_FRAESER:'Drills/Endmills',WENDESCHNEIDPLATTEN:'Inserts',HARTMETALL_GEMISCHT:'Mixed Carbide',HARTMETALL_STUECKSCHROTT:'Solid Pieces',SCHLAEMME_MAX:'Sludge/Powder',VHM_PLAETTCHEN_MAX:'Insert Tips',VHM_SPAENE_MAX:'Chips/Shavings',HSS_WERKZEUGE:'HSS Tools'};
-    document.getElementById('compTable').innerHTML=comp.map(c=>`<tr><td>${compNames[c.material_key]||c.material_key}</td><td>&euro;${Number(c.price_eur).toFixed(0)}</td><td>฿${Number(c.price_thb).toLocaleString()}</td></tr>`).join('');
-    if(comp[0])document.getElementById('compMeta').textContent=`Source: hartmetallschrott24.de | Rate: ${Number(comp[0].exchange_rate).toFixed(2)} | ${fmtDate(comp[0].scraped_at)}`;
+    let compRows='';
+    for(const p of prices){
+      const euKey=priceMap[p.key];
+      const eu=euKey?compMap[euKey]:null;
+      const tiers=eu&&eu.tier_data?eu.tier_data:[];
+      const t10=tiers.find(t=>t.maxKg<=10||t.label?.includes('10'));
+      const t30=tiers.find(t=>t.label?.includes('10–30')||t.label?.includes('10-30'));
+      const t50=tiers.find(t=>t.label?.includes('30–50')||t.label?.includes('30-50'));
+      const e10=t10?t10.price:'—';const e30=t30?t30.price:'—';const e50=t50?t50.price:'—';
+      const thb10=t10?Math.round(t10.price*rate):'—';
+      const thb30=t30?Math.round(t30.price*rate):'—';
+      const thb50=t50?Math.round(t50.price*rate):'—';
+      const our10=Number(p.tier_under10||0);const our30=Number(p.tier_10_30||0);const our50=Number(p.tier_30_50||0);
+      function cmp(ours,theirs){if(theirs==='—')return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
+      compRows+=`<tr>
+        <td style="font-weight:600">${p.name_en||p.key}</td>
+        <td style="color:var(--gold)">฿${our10.toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${our30.toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${our50.toLocaleString()}</td>
+        <td style="color:var(--blue)">€${e10}</td>
+        <td style="color:var(--blue)">€${e30}</td>
+        <td style="color:var(--blue)">€${e50}</td>
+        <td style="${cmp(our10,thb10)}">฿${typeof thb10==='number'?thb10.toLocaleString():thb10}</td>
+        <td style="${cmp(our30,thb30)}">฿${typeof thb30==='number'?thb30.toLocaleString():thb30}</td>
+        <td style="${cmp(our50,thb50)}">฿${typeof thb50==='number'?thb50.toLocaleString():thb50}</td>
+      </tr>`;
+    }
+    document.getElementById('comparisonTable').innerHTML=compRows;
+    if(comp[0])document.getElementById('compMeta').textContent=`Source: hartmetallschrott24.de | Rate: €1 = ฿${rate.toFixed(2)} | Scraped: ${fmtDate(comp[0].scraped_at)} | Green = we buy cheaper than EU converts to`;
 
     // Systems
     const crons=[
