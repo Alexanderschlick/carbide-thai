@@ -208,7 +208,7 @@ body.lang-en .th{display:none !important;}
     <h1><span class="th">ขายคาร์ไบด์เก่า<br><em>รู้ราคาทันที</em></span><span class="en">Sell Carbide Scrap<br><em>Instant Price Quote</em></span></h1>
     <div class="teaser-price">
       <div class="teaser-label"><span class="th">รับซื้อสูงสุด</span><span class="en">We Pay Up To</span></div>
-      <div class="teaser-amount">฿1,750/kg</div>
+      <div class="teaser-amount" id="teaserAmount">฿2,250/kg</div>
       <div class="teaser-sub"><span class="th">สำหรับคาร์ไบด์อินเสิร์ท • ราคาอัปเดตทุกวัน</span><span class="en">For Carbide Inserts • Price updated daily</span></div>
     </div>
     <p class="hero-sub"><span class="th">เลือกประเภท → ใส่น้ำหนัก → เห็นราคาเลย</span><span class="en">Select type → Enter weight → See price instantly</span></p>
@@ -464,8 +464,8 @@ body.lang-en .th{display:none !important;}
   <div style="margin-top:32px;padding:24px 20px;background:rgba(201,162,39,0.08);border:1.5px solid rgba(201,162,39,0.3);border-radius:12px;text-align:center;">
     <div style="font-size:24px;margin-bottom:8px;">🏭</div>
     <div style="font-size:18px;font-weight:800;color:var(--gold);margin-bottom:6px;">
-      <span class="th">มีมากกว่า 10 กก.?</span>
-      <span class="en">More than 10 kg?</span>
+      <span class="th">มีมากกว่า 50 กก.?</span>
+      <span class="en">More than 50 kg?</span>
     </div>
     <div style="font-size:14px;color:var(--muted);margin-bottom:14px;line-height:1.5;">
       <span class="th">จัดรถไปรับถึงที่ฟรี! ติดต่อเราโดยตรง</span>
@@ -521,6 +521,11 @@ async function loadPrices() {
     if (res.ok) {
       const rows = await res.json();
       rows.forEach(r => { prices[r.key] = r; });
+      var ins = prices['carbide_inserts'];
+      if (ins && ins.teaser_thb) {
+        var tel = document.getElementById('teaserAmount');
+        if (tel) tel.textContent = '฿' + Number(ins.teaser_thb).toLocaleString('th-TH') + '/kg';
+      }
     }
   } catch(e) { /* use fallback */ }
 }
@@ -552,14 +557,14 @@ function calcPrice() {
   if (!p) { box.classList.remove('show'); return; }
 
   // Pick correct tier
-  let pricePerKg = p.tier_over50 ?? p.tier_mid ?? p.tier_under20 ?? p.teaser_thb;
-  let tierLabel  = '> 50 kg';
-  if (weight < 20) {
-    pricePerKg = p.tier_under20 ?? p.teaser_thb;
-    tierLabel  = '< 20 kg';
-  } else if (weight < 50) {
-    pricePerKg = p.tier_mid ?? p.tier_over50 ?? p.tier_under20 ?? p.teaser_thb;
-    tierLabel  = '20–50 kg';
+  let pricePerKg = p.tier_30_50 ?? p.tier_10_30 ?? p.tier_under10 ?? p.teaser_thb;
+  let tierLabel  = '30–50 kg';
+  if (weight <= 10) {
+    pricePerKg = p.tier_under10 ?? p.teaser_thb;
+    tierLabel  = '≤ 10 kg';
+  } else if (weight <= 30) {
+    pricePerKg = p.tier_10_30 ?? p.tier_30_50 ?? p.tier_under10 ?? p.teaser_thb;
+    tierLabel  = '10–30 kg';
   }
 
   const total = Math.round(weight * pricePerKg);
@@ -571,14 +576,11 @@ function calcPrice() {
 
   // Upsell: show next tier if applicable
   const upsell = document.getElementById('priceUpsell');
-  if (weight < 20 && p.tier_mid) {
-    const diff = Math.round(20 - weight);
-    const extra = Math.round(20 * p.tier_mid - total);
-    upsell.textContent = `🔥 ถ้าขาย 20 กก. ขึ้นไป ได้เพิ่มอีก ฿${extra.toLocaleString('th-TH')} (ราคา ฿${p.tier_mid.toLocaleString('th-TH')}/กก.)`;
+  if (weight <= 10 && p.tier_10_30) {
+    upsell.textContent = `🔥 ถ้าขายมากกว่า 10 กก. ได้ราคา ฿${Number(p.tier_10_30).toLocaleString('th-TH')}/กก.`;
     upsell.classList.add('show');
-  } else if (weight < 50 && p.tier_over50) {
-    const extra = Math.round(50 * p.tier_over50 - total);
-    upsell.textContent = `🔥 ถ้าขาย 50 กก. ขึ้นไป ได้เพิ่มอีก ฿${extra.toLocaleString('th-TH')} (ราคา ฿${p.tier_over50.toLocaleString('th-TH')}/กก.)`;
+  } else if (weight <= 30 && p.tier_30_50) {
+    upsell.textContent = `🔥 ถ้าขายมากกว่า 30 กก. ได้ราคา ฿${Number(p.tier_30_50).toLocaleString('th-TH')}/กก.`;
     upsell.classList.add('show');
   } else {
     upsell.classList.remove('show');
@@ -617,9 +619,9 @@ async function submitLead() {
   btn.textContent = isEn ? 'Sending...' : 'กำลังส่ง...';
 
   const p        = prices[selKey] || {};
-  let pricePerKg = p.tier_over50 ?? p.tier_mid ?? p.tier_under20 ?? p.teaser_thb ?? null;
-  if (weight && weight < 20) pricePerKg = p.tier_under20 ?? pricePerKg;
-  else if (weight && weight < 50) pricePerKg = p.tier_mid ?? pricePerKg;
+  let pricePerKg = p.tier_30_50 ?? p.tier_10_30 ?? p.tier_under10 ?? p.teaser_thb ?? null;
+  if (weight && weight <= 10) pricePerKg = p.tier_under10 ?? pricePerKg;
+  else if (weight && weight <= 30) pricePerKg = p.tier_10_30 ?? pricePerKg;
   const priceShown = (pricePerKg && weight) ? Math.round(weight * pricePerKg) : null;
 
   try {
