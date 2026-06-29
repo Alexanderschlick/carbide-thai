@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
 Disallow: /bo.html
 
 Sitemap: https://thaicarbide.com/sitemap.xml

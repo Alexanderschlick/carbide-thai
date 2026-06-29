@@ -1,283 +1,214 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="notranslate" translate="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บทความ | Blog - ThaiCarbide.com</title>
-    <meta name="description" content="บทความเกี่ยวกับทังสเตนคาร์ไบด์ การรีไซเคิล และราคาเศษซาก | Articles about tungsten carbide recycling and scrap prices in Thailand">
-    <link rel="canonical" href="https://thaicarbide.com/blog.html">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background: #0a1628;
-            color: #e0e0e0;
-            min-height: 100vh;
-        }
-        .nav {
-            background: #111d33;
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid #c8a84e;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-logo {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #c8a84e;
-            text-decoration: none;
-        }
-        .nav-links { list-style: none; display: flex; gap: 1.5rem; }
-        .nav-links a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        .nav-links a:hover { color: #c8a84e; }
-        .nav-cta {
-            background: #c8a84e;
-            color: #0a1628 !important;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-        }
-        .hero {
-            text-align: center;
-            padding: 3rem 2rem 2rem;
-            background: linear-gradient(180deg, #111d33 0%, #0a1628 100%);
-        }
-        .hero h1 {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 2.5rem;
-            color: #c8a84e;
-            margin-bottom: 0.5rem;
-        }
-        .hero p { color: #a0a0a0; font-size: 1.1rem; }
-        .blog-grid {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-        .blog-card {
-            background: #111d33;
-            border: 1px solid #1a3a5c;
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: transform 0.3s, border-color 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        .blog-card:hover {
-            transform: translateY(-4px);
-            border-color: #c8a84e;
-        }
-        .blog-card .category {
-            display: inline-block;
-            background: #2e7df7;
-            color: #0a1628;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 0.75rem;
-            width: fit-content;
-        }
-        .blog-card h2 {
-            font-size: 1.2rem;
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-        }
-        .blog-card .excerpt {
-            color: #a0a0a0;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            flex-grow: 1;
-            margin-bottom: 1rem;
-        }
-        .blog-card .meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #707070;
-        }
-        .blog-card .read-more {
-            color: #c8a84e;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .blog-card .read-more:hover { text-decoration: underline; }
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #a0a0a0;
-        }
-        .loading .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #1a3a5c;
-            border-top-color: #c8a84e;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #707070;
-        }
-        .empty-state h3 { color: #c8a84e; margin-bottom: 0.5rem; }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid #1a3a5c;
-            margin-top: 3rem;
-            color: #707070;
-            font-size: 0.85rem;
-        }
-        footer a { color: #c8a84e; text-decoration: none; }
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 1.8rem; }
-            .blog-grid { grid-template-columns: 1fr; padding: 1rem; }
-        }
-    </style>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Blog",
-        "name": "ThaiCarbide Blog",
-        "description": "Articles about tungsten carbide scrap recycling in Thailand",
-        "url": "https://thaicarbide.com/blog.html",
-        "publisher": {
-            "@type": "Organization",
-            "name": "ThaiCarbide",
-            "url": "https://thaicarbide.com"
-        }
-    }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทความคาร์ไบด์ | Carbide Market Blog | ThaiCarbide</title>
+<meta name="description" content="ข่าวสารตลาดคาร์ไบด์ ความรู้ทังสเตนคาร์ไบด์ ราคาอัพเดต เคล็ดลับการขาย Carbide market news, price updates, and selling tips from ThaiCarbide.">
+<link rel="canonical" href="https://thaicarbide.com/blog.html">
+<link rel="alternate" hreflang="th" href="https://thaicarbide.com/blog.html">
+<link rel="alternate" hreflang="en" href="https://thaicarbide.com/blog.html">
+<link rel="alternate" hreflang="x-default" href="https://thaicarbide.com/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thaicarbide.com/blog.html">
+<meta property="og:title" content="บทความคาร์ไบด์ | Carbide Market Blog | ThaiCarbide">
+<meta property="og:description" content="ข่าวสารตลาดคาร์ไบด์ ความรู้ทังสเตนคาร์ไบด์ ราคาอัพเดต เคล็ดลับการขาย Carbide market news, price updates, and selling tips from ThaiCarbide.">
+<meta property="og:locale" content="th_TH">
+<meta property="og:site_name" content="ThaiCarbide">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="บทความคาร์ไบด์ | Carbide Market Blog | ThaiCarbide">
+<meta name="twitter:description" content="ข่าวสารตลาดคาร์ไบด์ ความรู้ทังสเตนคาร์ไบด์ ราคาอัพเดต เคล็ดลับการขาย Carbide market news, price updates, and selling tips from ThaiCarbide.">
+<meta name="geo.region" content="TH">
+<meta name="keywords" content="บทความคาร์ไบด์,tungsten carbide blog,carbide market,ราคาคาร์ไบด์">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Blog", "name": "ThaiCarbide Blog", "description": "ข่าวสารตลาดคาร์ไบด์ ความรู้เกี่ยวกับทังสเตนคาร์ไบด์ ราคาอัพเดต — Carbide market news, tungsten carbide knowledge, price updates", "url": "https://thaicarbide.com/blog.html"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1f14; --sur: #0f2a1a; --sur2: #132e1d;
+  --gold: #c9a227; --green: #06C755; --white: #f2ede4;
+  --muted: #a8b8a4; --border: rgba(201,162,39,0.18); --red: #e05555;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.7;min-height:100vh;}
+
+/* ── TOP BAR ─────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(11,31,20,0.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);}
+.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--white);text-decoration:none;letter-spacing:1px;}
+.topbar-logo span{color:var(--gold);}
+.topbar-line{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;padding:8px 16px;border-radius:4px;text-decoration:none;}
+
+/* ── NAV ─────────────────── */
+.nav{background:var(--sur);border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;}
+.nav a{display:inline-block;padding:12px 16px;color:var(--muted);font-size:14px;font-weight:600;text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;}
+.nav a:hover,.nav a.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── CONTENT ─────────────── */
+.page-wrap{max-width:800px;margin:0 auto;padding:32px 20px 80px;}
+.hero-section{text-align:center;padding:40px 0 32px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+.hero-section h1{font-family:'Sarabun',sans-serif;font-size:clamp(26px,5vw,38px);font-weight:800;line-height:1.3;color:var(--white);margin-bottom:8px;}
+.hero-section h1 em{color:var(--green);font-style:normal;}
+.hero-section .subtitle{font-size:17px;color:var(--muted);max-width:600px;margin:0 auto;}
+
+/* ── PRICE CARDS ─────────── */
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0 32px;}
+.price-card{background:var(--sur);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;transition:border-color 0.2s;}
+.price-card:hover{border-color:var(--gold);}
+.price-card.featured{border-color:var(--green);background:rgba(6,199,85,0.06);}
+.price-card h3{font-size:14px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-family:'Barlow Condensed',sans-serif;}
+.price-card .amount{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--white);line-height:1;}
+.price-card .amount small{font-size:16px;color:var(--muted);font-weight:700;}
+.price-card .tier{font-size:12px;color:var(--muted);margin-top:6px;}
+
+/* ── CONTENT SECTIONS ────── */
+.content-section{margin-bottom:36px;}
+.content-section h2{font-size:22px;font-weight:800;color:var(--white);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--gold);}
+.content-section h3{font-size:17px;font-weight:700;color:var(--gold);margin:20px 0 8px;}
+.content-section p{color:var(--muted);margin-bottom:14px;font-size:15px;}
+.content-section strong{color:var(--white);}
+
+/* ── FEATURE LIST ────────── */
+.feature-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0;}
+.feature-item{background:var(--sur);border:1px solid var(--border);border-radius:6px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
+.feature-item .icon{font-size:24px;flex-shrink:0;}
+.feature-item .text{font-size:14px;color:var(--muted);line-height:1.4;}
+.feature-item .text strong{color:var(--white);display:block;margin-bottom:2px;}
+
+/* ── FAQ ─────────────────── */
+.faq-item{background:var(--sur);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
+.faq-q{padding:16px 20px;cursor:pointer;font-weight:700;color:var(--white);display:flex;justify-content:space-between;align-items:center;font-size:15px;}
+.faq-q::after{content:'+';color:var(--gold);font-size:20px;font-weight:700;transition:transform 0.2s;}
+.faq-item.open .faq-q::after{transform:rotate(45deg);}
+.faq-a{padding:0 20px 16px;color:var(--muted);font-size:14px;display:none;}
+.faq-item.open .faq-a{display:block;}
+
+/* ── CTA ─────────────────── */
+.cta-section{background:rgba(6,199,85,0.08);border:2px solid rgba(6,199,85,0.35);border-radius:12px;padding:32px 24px;text-align:center;margin:36px 0;}
+.cta-section h2{font-size:24px;font-weight:800;color:var(--white);margin-bottom:8px;}
+.cta-section p{color:var(--muted);margin-bottom:20px;font-size:15px;}
+.cta-btn{display:inline-block;background:var(--green);color:#fff;font-size:18px;font-weight:700;padding:16px 40px;border-radius:6px;text-decoration:none;font-family:'Sarabun',sans-serif;transition:transform 0.15s;box-shadow:0 0 20px rgba(6,199,85,0.3);}
+.cta-btn:hover{transform:scale(1.03);}
+.cta-btn-secondary{display:inline-block;background:transparent;color:var(--green);font-size:15px;font-weight:700;padding:12px 24px;border:2px solid var(--green);border-radius:6px;text-decoration:none;margin-left:10px;transition:all 0.15s;}
+.cta-btn-secondary:hover{background:rgba(6,199,85,0.1);}
+
+/* ── BREADCRUMB ──────────── */
+.breadcrumb{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.breadcrumb a{color:var(--gold);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ── FOOTER ──────────────── */
+.footer{background:var(--sur);border-top:1px solid var(--border);padding:32px 20px;text-align:center;}
+.footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-bottom:16px;}
+.footer-links a{color:var(--muted);font-size:14px;text-decoration:none;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-size:12px;color:var(--muted);}
+
+/* ── BLOG CARDS ──────────── */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0;}
+.blog-card{background:var(--sur);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color 0.2s;}
+.blog-card:hover{border-color:var(--gold);}
+.blog-card-body{padding:20px;}
+.blog-card-tag{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.blog-card h3{font-size:17px;font-weight:700;color:var(--white);margin-bottom:8px;line-height:1.3;}
+.blog-card h3 a{color:inherit;text-decoration:none;}
+.blog-card p{font-size:14px;color:var(--muted);line-height:1.5;}
+.blog-card-date{font-size:12px;color:var(--muted);margin-top:12px;}
+
+/* ── INTERNAL LINKS ──────── */
+.related-pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:20px 0;}
+.related-link{display:block;background:var(--sur);border:1px solid var(--border);border-radius:6px;padding:16px;text-decoration:none;transition:border-color 0.2s;}
+.related-link:hover{border-color:var(--gold);}
+.related-link h4{color:var(--white);font-size:15px;font-weight:700;margin-bottom:4px;}
+.related-link p{color:var(--muted);font-size:13px;}
+
+@media(max-width:600px){
+  .page-wrap{padding:20px 16px 60px;}
+  .price-grid{grid-template-columns:1fr 1fr;}
+  .feature-list{grid-template-columns:1fr;}
+  .hero-section{padding:24px 0 20px;}
+}
+</style>
+<!-- Analytics -->
+<script defer data-domain="thaicarbide.com" src="https://plausible.io/js/script.js"></script>
 </head>
 <body>
-    <nav class="nav">
-        <a href="/" class="nav-logo">THAICARBIDE</a>
-        <ul class="nav-links">
-            <li><a href="/#materials">ราคา / Prices</a></li>
-            <li><a href="/inserts.html">เม็ดมีด / Inserts</a></li>
-            <li><a href="/drills.html">ดอกสว่าน / Drills</a></li>
-            <li><a href="/mixed.html">เศษผสม / Mixed</a></li>
-            <li><a href="/blog.html" style="color:#c8a84e;">บทความ / Blog</a></li>
-            <li><a href="/sell.html" class="nav-cta">ขายเลย → Sell Now</a></li>
-        </ul>
-    </nav>
+<div class="topbar">
+  <a href="/" class="topbar-logo">Thai<span>Carbide</span></a>
+  <a href="https://line.me/R/ti/p/@280uqpab" class="topbar-line" target="_blank">💬 LINE</a>
+</div><nav class="nav"><a href="/">Home</a><a href="/sell.html">ขายคาร์ไบด์</a><a href="/inserts.html">Inserts</a><a href="/drills.html">Drills</a><a href="/mixed.html">Mixed</a><a href="/sandrills.html">Sand & Rills</a><a href="/blog.html" class="active">Blog</a></nav>
+<div class="page-wrap">
+<div class="breadcrumb"><a href="/">Home</a> › <span>Blog</span></div>
+<div class="hero-section">
+  <h1><em>บทความ</em>คาร์ไบด์<br>ThaiCarbide Blog</h1>
+  <p class="subtitle">ข่าวสารตลาด ความรู้ และเคล็ดลับการขายคาร์ไบด์<br>Market news, carbide knowledge, and selling tips</p>
+</div>
 
-    <section class="hero">
-        <h1>บทความ & ข่าวสาร | Blog & News</h1>
-        <p>ความรู้เกี่ยวกับทังสเตนคาร์ไบด์ การรีไซเคิล และราคาตลาด</p>
-        <p>Knowledge about tungsten carbide, recycling, and market prices</p>
-    </section>
+<div id="blog-posts" class="blog-grid">
+  <!-- Posts loaded dynamically from Supabase -->
+</div>
 
-    <div id="blog-container">
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>กำลังโหลดบทความ... Loading articles...</p>
-        </div>
-    </div>
+<div id="blog-fallback" class="blog-grid" style="display:none;">
+  <div class="blog-card"><div class="blog-card-body">
+    <div class="blog-card-tag">Market Update</div>
+    <h3><a href="/sell.html">ราคาคาร์ไบด์อัพเดตล่าสุด — Latest Carbide Prices</a></h3>
+    <p>ดูราคารับซื้อคาร์ไบด์วันนี้ อัพเดตทุกวันจากตลาดยุโรป Check today's carbide buying prices, updated daily from European markets.</p>
+  </div></div>
+  <div class="blog-card"><div class="blog-card-body">
+    <div class="blog-card-tag">Education</div>
+    <h3><a href="/inserts.html">วิธีสังเกตเม็ดมีดคาร์ไบด์ — How to Identify Carbide Inserts</a></h3>
+    <p>เรียนรู้วิธีแยกคาร์ไบด์จาก HSS และวิธีประเมินมูลค่า Learn to tell carbide from HSS and estimate value.</p>
+  </div></div>
+  <div class="blog-card"><div class="blog-card-body">
+    <div class="blog-card-tag">Tips</div>
+    <h3><a href="/drills.html">HSS vs คาร์ไบด์ — วิธีแยกความแตกต่าง</a></h3>
+    <p>4 วิธีง่ายๆ ในการแยก HSS กับคาร์ไบด์ 4 simple ways to tell HSS from carbide.</p>
+  </div></div>
+</div>
 
-    <footer>
-        <p>&copy; 2025 ThaiCarbide.com | <a href="/">หน้าแรก / Home</a> | <a href="/sell.html">ขายเศษคาร์ไบด์ / Sell Scrap</a></p>
-    </footer>
+</div>
 
-    <script>
-    const SUPABASE_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
-
-    async function loadBlogPosts() {
-        const container = document.getElementById('blog-container');
-        const loading = document.getElementById('loading');
-
-        try {
-            const response = await fetch(
-                `${SUPABASE_URL}/rest/v1/blog_posts?status=eq.published&order=published_at.desc&select=slug,title,title_th,meta_description,category,published_at,word_count`,
-                {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
-                }
-            );
-
-            if (!response.ok) throw new Error('Failed to fetch posts');
-
-            const posts = await response.json();
-
-            if (posts.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>เร็วๆ นี้ | Coming Soon</h3>
-                        <p>กำลังเตรียมบทความใหม่ให้คุณ | New articles are being prepared.</p>
-                    </div>`;
-                return;
-            }
-
-            const grid = document.createElement('div');
-            grid.className = 'blog-grid';
-
-            posts.forEach(post => {
-                const date = new Date(post.published_at).toLocaleDateString('th-TH', {
-                    year: 'numeric', month: 'long', day: 'numeric'
-                });
-                const excerpt = post.meta_description || post.title_th || '';
-                const readTime = Math.max(1, Math.ceil((post.word_count || 500) / 200));
-
-                const card = document.createElement('article');
-                card.className = 'blog-card';
-                card.innerHTML = `
-                    <span class="category">${post.category || 'article'}</span>
-                    <h2>${post.title_th || post.title}</h2>
-                    <p class="excerpt">${excerpt}</p>
-                    <div class="meta">
-                        <span>${date} · ${readTime} min read</span>
-                        <a href="/blog/${post.slug}.html" class="read-more">อ่านต่อ → Read more</a>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            container.innerHTML = '';
-            container.appendChild(grid);
-
-        } catch (error) {
-            console.error('Blog load error:', error);
-            // Fallback: show static first post
-            container.innerHTML = `
-                <div class="blog-grid">
-                    <article class="blog-card">
-                        <span class="category">guides</span>
-                        <h2>คู่มือฉบับสมบูรณ์: การขายเศษทังสเตนคาร์ไบด์ในประเทศไทย</h2>
-                        <p class="excerpt">Complete Guide to Selling Tungsten Carbide Scrap in Thailand — types, prices, and how to get the best value for your scrap.</p>
-                        <div class="meta">
-                            <span>2025 · 6 min read</span>
-                            <a href="/blog/tungsten-carbide-scrap-recycling-guide-thailand.html" class="read-more">อ่านต่อ → Read more</a>
-                        </div>
-                    </article>
-                </div>`;
-        }
-    }
-
-    loadBlogPosts();
-    </script>
-</body>
-</html>
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/sell.html">ขายคาร์ไบด์</a>
+    <a href="/inserts.html">Inserts</a>
+    <a href="/drills.html">Drills</a>
+    <a href="/mixed.html">Mixed</a>
+    <a href="/sandrills.html">Sand & Rills</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/bangkok.html">กรุงเทพ</a>
+    <a href="/chonburi.html">ชลบุรี</a>
+    <a href="/rayong.html">ระยอง</a>
+    <a href="/samutprakan.html">สมุทรปราการ</a>
+    <a href="/pathumthani.html">ปทุมธานี</a>
+  </div>
+  <p class="footer-copy">© 2024-2026 ThaiCarbide.com — รับซื้อเศษคาร์ไบด์ทั่วไทย | Tungsten carbide scrap buyer Thailand</p>
+  <p class="footer-copy" style="margin-top:4px;">📞 093-696-9935 | 📧 thaicarbide@gmail.com | LINE @280uqpab</p>
+</footer>
+<script>
+(async function(){
+  try {
+    const SB = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
+    const r = await fetch(SB + '/rest/v1/blog_posts?select=*&order=created_at.desc&limit=12&published=eq.true', {
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+    });
+    const posts = await r.json();
+    if (!posts.length) throw new Error('No posts');
+    const grid = document.getElementById('blog-posts');
+    grid.innerHTML = posts.map(p => `
+      <div class="blog-card"><div class="blog-card-body">
+        <div class="blog-card-tag">${p.category || 'Article'}</div>
+        <h3>${p.title_th || p.title_en}</h3>
+        <p>${(p.excerpt_th || p.excerpt_en || '').substring(0, 150)}...</p>
+        <div class="blog-card-date">${new Date(p.created_at).toLocaleDateString('th-TH')}</div>
+      </div></div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('blog-posts').style.display = 'none';
+    document.getElementById('blog-fallback').style.display = 'grid';
+  }
+})();
+</script>
+</body></html>
