@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-07T15:36:45.000Z",
-  "updated_display": "07 Jul 2026",
+  "updated": "2026-07-08T04:14:00.000Z",
+  "updated_display": "08 Jul 2026",
   "source": "hartmetallschrott24.de",
-  "eur_thb_rate": 38.0618,
+  "eur_thb_rate": 38.0486,
   "buy_ratio": 0.667,
   "hm24_prices": {
     "carbide_inserts": {
@@ -50,15 +50,15 @@
       }
     },
     "carbide_drills": {
-      "thb_per_kg": 1700,
+      "thb_per_kg": 1650,
       "name_en": "Carbide Drills & Endmills",
       "name_th": "ดอกสว่าน / เอ็นมิล VHM",
       "hm24_eur": 60.0,
       "buy_eur": 44.02,
       "tiers": {
-        "tier_under20": 1450,
-        "tier_mid": 1600,
-        "tier_over50": 1700
+        "tier_under20": 1400,
+        "tier_mid": 1550,
+        "tier_over50": 1650
       }
     },
     "carbide_inserts": {
