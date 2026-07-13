@@ -26,6 +26,42 @@ def sb_get(table, params=''):
         print(f"Warning: query to {table} failed: {e}")
         return []
 
+def sb_count(table, params=''):
+    """Exact row count via Content-Range header (Supabase caps row fetches at 1000)."""
+    url = f"{SB_URL}/rest/v1/{table}?{params}"
+    req = Request(url, headers={
+        'apikey': SB_KEY, 'Authorization': f'Bearer {SB_KEY}',
+        'Prefer': 'count=exact', 'Range-Unit': 'items', 'Range': '0-0'
+    })
+    try:
+        with urlopen(req, timeout=15) as r:
+            total = r.headers.get('Content-Range', '').split('/')[-1]
+            return int(total) if total.isdigit() else 0
+    except Exception as e:
+        print(f"Warning: count query to {table} failed: {e}")
+        return 0
+
+def sb_get_all(table, params='', page_size=1000):
+    """Fetch all rows with Range pagination (avoids the 1000-row cap)."""
+    rows, start = [], 0
+    while True:
+        url = f"{SB_URL}/rest/v1/{table}?{params}"
+        req = Request(url, headers={
+            'apikey': SB_KEY, 'Authorization': f'Bearer {SB_KEY}',
+            'Range-Unit': 'items', 'Range': f'{start}-{start + page_size - 1}'
+        })
+        try:
+            with urlopen(req, timeout=15) as r:
+                batch = json.loads(r.read())
+        except Exception as e:
+            print(f"Warning: paged query to {table} failed: {e}")
+            break
+        rows.extend(batch)
+        if len(batch) < page_size:
+            break
+        start += page_size
+    return rows
+
 def get_eur_thb_rate():
     """Fetch current EUR/THB exchange rate from free API."""
     try:
@@ -62,20 +98,16 @@ def main():
     prices = sb_get('prices', 'select=*&order=key')
     lead_params = f'select=*&created_at=gte.{quote(yesterday)}&order=created_at.desc'
     new_leads = sb_get('leads', lead_params)
-    parcels = sb_get('parcels', 'select=*')
+    parcels = sb_get_all('parcels', 'select=*')
     pending = [p for p in parcels if p.get('status') in ('pending','delivered','weighed')]
 
-    views_24h_params = f'select=id&created_at=gte.{quote(yesterday)}'
-    views_24h = sb_get('page_views', views_24h_params)
-    total_views_24h = len(views_24h)
+    total_views_24h = sb_count('page_views', f'select=id&created_at=gte.{quote(yesterday)}')
 
-    views_7d_params = f'select=id&created_at=gte.{quote(seven_days_ago)}'
-    views_7d = sb_get('page_views', views_7d_params)
-    total_views_7d = len(views_7d)
+    total_views_7d = sb_count('page_views', f'select=id&created_at=gte.{quote(seven_days_ago)}')
 
-    total_views_all = len(sb_get('page_views', 'select=id'))
+    total_views_all = sb_count('page_views', 'select=id')
 
-    views_7d_full = sb_get('page_views', f'select=utm_source,referrer,device&created_at=gte.{quote(seven_days_ago)}')
+    views_7d_full = sb_get_all('page_views', f'select=utm_source,referrer,device&created_at=gte.{quote(seven_days_ago)}')
     source_counts = {}
     device_counts = {}
     for v in views_7d_full:
@@ -90,8 +122,7 @@ def main():
         dev = v.get('device') or 'unknown'
         device_counts[dev] = device_counts.get(dev, 0) + 1
 
-    all_leads = sb_get('leads', 'select=id')
-    total_leads = len(all_leads)
+    total_leads = sb_count('leads', 'select=id')
     settled = [p for p in parcels if p.get('status') == 'settled']
     total_kg = sum(float(p.get('actual_kg') or 0) for p in settled)
     total_comm = sum(float(p.get('commission_total') or 0) for p in settled)
