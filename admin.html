@@ -198,7 +198,9 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <div class="grid2">
       <div class="card">
         <h2>Daily Traffic (14 days)</h2>
-        <canvas id="trafficChart" height="200"></canvas>
+        <div style="position:relative;height:220px;width:100%;">
+          <canvas id="trafficChart"></canvas>
+        </div>
       </div>
       <div class="card">
         <h2>Funnel: Visit → Chat → Quote</h2>
@@ -262,11 +264,14 @@ tr:hover { background: rgba(200,168,78,0.04); }
 <div class="modal-overlay" id="chatModal">
   <div class="modal">
     <button class="close-btn" onclick="closeModal()">&times;</button>
-    <h3 id="modalTitle">Conversation</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <h3 id="modalTitle" style="margin:0;">Conversation</h3>
+      <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">🌐 Translate all → EN</button>
+    </div>
     <div id="modalBody"></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
-      <input type="text" id="replyInput" placeholder="Type reply..." style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;">
-      <button class="btn-sm btn-gold" onclick="sendReply()" id="replyBtn">Send via LINE</button>
+      <input type="text" id="replyInput" placeholder="Type your reply in English — sent to the seller in Thai" onkeydown="if(event.key==='Enter')sendReply()" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;">
+      <button class="btn-sm btn-gold" onclick="sendReply()" id="replyBtn">Send in Thai</button>
     </div>
     <div id="replyStatus" style="font-size:11px;color:var(--muted);margin-top:6px;"></div>
   </div>
@@ -331,24 +336,36 @@ async function translateEl(el){
   }catch(e){el.textContent='[failed]';el.style.color='#ef4444'}
 }
 
+function translateAll(){
+  document.querySelectorAll('#modalBody .en-btn').forEach(b=>{ if(b.style.cursor!=='default') translateEl(b); });
+}
+
 async function sendReply(){
-  const msg=document.getElementById('replyInput').value.trim();
-  if(!msg||!currentModalUid)return;
+  const en=document.getElementById('replyInput').value.trim();
+  if(!en||!currentModalUid)return;
   const btn=document.getElementById('replyBtn');
-  btn.textContent='Sending...';btn.disabled=true;
+  const status=document.getElementById('replyStatus');
+  status.style.color='var(--muted)';
+  btn.disabled=true;btn.textContent='Translating…';
   try{
-    const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'reply',user_id:currentModalUid,message:msg})});
+    // 1) English -> Thai
+    const tr=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:en,target:'th'})});
+    const td=await tr.json();
+    const thai=(td.translation||'').trim();
+    if(!thai){status.style.color='#ef4444';status.textContent='Translation failed — not sent';btn.disabled=false;btn.textContent='Send in Thai';return;}
+    // 2) send Thai to the seller
+    btn.textContent='Sending…';
+    const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'reply',user_id:currentModalUid,message:thai})});
     const d=await r.json();
     if(d.success){
-      document.getElementById('replyStatus').textContent='✓ Sent!';
+      status.innerHTML='✓ Sent in Thai: <span style="color:#93c5fd">'+thai.replace(/</g,'&lt;')+'</span>';
       document.getElementById('replyInput').value='';
-      // Add to modal
       const body=document.getElementById('modalBody');
-      body.innerHTML+=`<div class="chat-time">just now</div><div class="chat-bubble bot">${msg}</div>`;
+      body.innerHTML+=`<div class="chat-time">just now (you wrote: ${en.replace(/</g,'&lt;')})</div><div class="chat-bubble bot">${thai.replace(/</g,'&lt;')}</div>`;
       body.scrollTop=body.scrollHeight;
-    }else{document.getElementById('replyStatus').textContent='Error: '+(d.error||'failed')}
-  }catch(e){document.getElementById('replyStatus').textContent='Error: '+e.message}
-  btn.textContent='Send via LINE';btn.disabled=false;
+    }else{status.style.color='#ef4444';status.textContent='Error: '+(d.error||'failed')}
+  }catch(e){status.style.color='#ef4444';status.textContent='Error: '+e.message}
+  btn.disabled=false;btn.textContent='Send in Thai';
 }
 
 async function showConversation(uid,name){
