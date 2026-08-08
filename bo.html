@@ -597,9 +597,9 @@ async function loadDashboard() {
           <div><div class="price-card-name">${esc(p.name_en || matNames[p.key] || p.key)}</div><div class="price-card-name-th">${esc(p.name_th||'')}</div></div>
         </div>
         <div class="price-tier"><span class="price-tier-label">Teaser</span><span class="price-tier-value">${fmtBaht(p.teaser_thb)}</span></div>
-        <div class="price-tier"><span class="price-tier-label">&lt; 20 kg</span><span class="price-tier-value">${fmtBaht(p.tier_under20)}</span></div>
-        <div class="price-tier"><span class="price-tier-label">20-50 kg</span><span class="price-tier-value">${fmtBaht(p.tier_mid)}</span></div>
-        <div class="price-tier"><span class="price-tier-label">&gt; 50 kg</span><span class="price-tier-value">${fmtBaht(p.tier_over50)}</span></div>
+        <div class="price-tier"><span class="price-tier-label">&lt; 10 kg</span><span class="price-tier-value">${fmtBaht(p.tier_under10)}</span></div>
+        <div class="price-tier"><span class="price-tier-label">10-30 kg</span><span class="price-tier-value">${fmtBaht(p.tier_10_30)}</span></div>
+        <div class="price-tier"><span class="price-tier-label">30-50 kg</span><span class="price-tier-value">${fmtBaht(p.tier_30_50)}</span></div>
         <div class="price-updated">Updated: ${fmtDate(p.updated_at)}</div>
       </div>
     `).join('');
