@@ -316,8 +316,8 @@ body.lang-en .th{display:none !important;}
 
     <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(46,125,247,0.08); border:1px solid rgba(46,125,247,0.25); border-radius:10px; padding:14px;">
       <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
-        <span class="th">📦 <strong>ส่งพัสดุมาที่:</strong><br>ThaiCarbide<br>97/82 The Reserve Hideaway, Lobby B<br>สุขุมวิท 61 แขวงคลองตันเหนือ<br>เขตวัฒนา กรุงเทพฯ 10110<br>โทร: 093-696-9935<br><br>💡 ส่งได้ทาง Kerry Express, J&T Express หรือ ไปรษณีย์ไทย<br>📝 กรุณาเขียน "ThaiCarbide" และชื่อของท่านบนกล่อง</span>
-        <span class="en">📦 <strong>Send your parcel to:</strong><br>ThaiCarbide<br>725 Sukhumvit Rd, Khlong Tan Nuea<br>Watthana, Bangkok 10110<br>Tel: 093-696-9935<br><br>💡 Ship via Kerry Express, J&T Express or Thailand Post<br>📝 Please write "ThaiCarbide" and your name on the box</span>
+        <span class="th">📦 <strong>ส่งพัสดุมาที่:</strong><br>ThaiCarbide (ลานพาร์ทเนอร์)<br>92/78 หมู่ 9 ถนนฉลองกรุง<br>แขวงลำผักชี เขตหนองจอก<br>กรุงเทพฯ 10530<br>โทร: 093-696-9935<br><br>💡 ส่งได้ทาง Kerry Express, J&T Express หรือ ไปรษณีย์ไทย<br>📝 กรุณาเขียน "ThaiCarbide" และหมายเลขอ้างอิงของท่านบนกล่อง</span>
+        <span class="en">📦 <strong>Send your parcel to:</strong><br>ThaiCarbide (partner yard)<br>92/78 Moo 9, Chalong Krung Rd<br>Lampakchee, Nong Chok<br>Bangkok 10530<br>Tel: 093-696-9935<br><br>💡 Ship via Kerry Express, J&T Express or Thailand Post<br>📝 Please write "ThaiCarbide" and your reference number on the box</span>
       </div>
     </div>
 
@@ -426,11 +426,11 @@ body.lang-en .th{display:none !important;}
           <div style="font-size:0.9rem; color:#ccc; margin-bottom:16px;">
             <span class="lang-th">ส่งพัสดุไปที่:</span>
             <span class="lang-en">Send your parcel to:</span><br>
-            <strong style="color:#fff;">ThaiCarbide</strong><br>
-            97/82 The Reserve Hideaway, Lobby B<br>
-            สุขุมวิท 61 แขวงคลองตันเหนือ<br>
-            เขตวัฒนา กรุงเทพฯ 10110<br>
-            โทร: 093-696-9935
+            <strong style="color:#fff;">ThaiCarbide (partner yard)</strong><br>
+            92/78 Moo 9, Chalong Krung Rd<br>
+            Lampakchee, Nong Chok<br>
+            Bangkok 10530<br>
+            โทร / Tel: 093-696-9935
           </div>
           <button onclick="copyAddress()" style="width:100%; background:#2e7df7; color:#fff; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.95rem;">
             <span class="lang-th">คัดลอกที่อยู่</span>
@@ -487,7 +487,7 @@ function pickDelivery(method, el) {
 }
 
 function copyAddress() {
-  const addr = "ThaiCarbide\n97/82 The Reserve Hideaway, Lobby B\nสุขุมวิท 61 แขวงคลองตันเหนือ\nเขตวัฒนา กรุงเทพฯ 10110\nโทร: 093-696-9935";
+  const addr = "ThaiCarbide (partner yard)\n92/78 Moo 9, Chalong Krung Rd\nLampakchee, Nong Chok\nBangkok 10530\nTel: 093-696-9935";
   navigator.clipboard.writeText(addr).then(() => {
     const btn = event.target.closest('button');
     const original = btn.innerHTML;
