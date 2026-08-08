@@ -296,22 +296,22 @@ body.lang-en .th{display:none !important;}
       <button type="button" class="mat-btn delivery-btn" id="btn-pickup"
               onclick="pickDelivery('pickup', this)"
               style="flex:1; padding:20px 16px; border:2px solid rgba(201,162,39,0.3); border-radius:12px; background:rgba(201,162,39,0.05); cursor:pointer; text-align:center; transition:all 0.2s;">
-        <div style="font-size:28px; margin-bottom:8px;">🚚</div>
+        <div style="font-size:28px; margin-bottom:8px;">🏭</div>
         <div style="font-weight:700; font-size:15px; color:#f2ede4;">
-          <span class="th">ให้เรามารับ</span><span class="en">We Pick Up</span>
+          <span class="th">ส่งเอง</span><span class="en">Self delivery</span>
         </div>
         <div style="font-size:12px; color:#7a8a9a; margin-top:4px;">
-          <span class="th">เราจัดรถไปรับถึงที่</span><span class="en">We arrange courier to you</span>
+          <span class="th">นำมาส่งที่ลานพาร์ทเนอร์ — หนองจอก กทม.</span><span class="en">Bring it to our partner yard — Nong Chok, Bangkok</span>
         </div>
       </button>
     </div>
 
-    <div id="pickupAddressBox" style="display:none; margin-bottom:20px;">
-      <label style="display:block; font-size:13px; color:#c9a227; margin-bottom:6px;">
-        <span class="th">ที่อยู่สำหรับรับของ *</span><span class="en">Pickup Address *</span>
-      </label>
-      <textarea id="pickupAddress" rows="3" placeholder="บ้านเลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"
-                style="width:100%; background:#0a1628; border:1px solid rgba(201,162,39,0.25); color:#f2ede4; padding:12px; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:14px; resize:vertical; box-sizing:border-box;"></textarea>
+    <div id="pickupAddressBox" style="display:none; margin-bottom:20px; background:rgba(201,162,39,0.08); border:1px solid rgba(201,162,39,0.25); border-radius:10px; padding:14px;">
+      <div style="font-size:14px; color:#f2ede4; line-height:1.7;">
+        <span class="th">🏭 <strong>ส่งเองที่ลานพาร์ทเนอร์</strong><br>พื้นที่โดยประมาณ: หนองจอก กรุงเทพฯ<br>เราจะส่งที่อยู่แน่นอนและเวลาทำการให้ทาง LINE หลังยืนยันคำสั่ง</span>
+        <span class="en">🏭 <strong>Self delivery to our partner yard</strong><br>Approx. area: Nong Chok, Bangkok<br>We'll send the exact address & opening hours on LINE after you submit.</span>
+      </div>
+      <textarea id="pickupAddress" style="display:none"></textarea>
     </div>
 
     <div id="parcelInfoBox" style="display:none; margin-bottom:20px; background:rgba(46,125,247,0.08); border:1px solid rgba(46,125,247,0.25); border-radius:10px; padding:14px;">
@@ -449,8 +449,8 @@ body.lang-en .th{display:none !important;}
             <span style="font-size:2rem; font-weight:800; color:#06c755; letter-spacing:2px;" class="ref-inline"></span>
           </div>
           <div style="font-size:0.9rem; color:#ccc;">
-            <span class="lang-th">เราจะติดต่อคุณเพื่อนัดวันและเวลารับพัสดุ กรุณาเตรียมของให้พร้อม</span>
-            <span class="lang-en">We will contact you to arrange pickup date and time. Please have your materials ready.</span>
+            <span class="lang-th">นำของมาส่งเองที่ลานพาร์ทเนอร์ (พื้นที่หนองจอก กรุงเทพฯ) เราจะส่งที่อยู่แน่นอนและเวลาทำการให้ทาง LINE กรุณาเขียนหมายเลขอ้างอิงนี้บนกล่อง</span>
+            <span class="lang-en">Bring your materials to our partner yard (Nong Chok, Bangkok area). We'll send the exact address & opening hours on LINE. Please write this reference number on your package.</span>
           </div>
         </div>
       </div>
@@ -460,23 +460,7 @@ body.lang-en .th{display:none !important;}
         💚 <span class="th">แอด LINE @ThaiCarbide</span><span class="en">Add LINE @ThaiCarbide</span>
       </a>
     </div>
-  <!-- LARGE QUANTITY INQUIRY -->
-  <div style="margin-top:32px;padding:24px 20px;background:rgba(201,162,39,0.08);border:1.5px solid rgba(201,162,39,0.3);border-radius:12px;text-align:center;">
-    <div style="font-size:24px;margin-bottom:8px;">🏭</div>
-    <div style="font-size:18px;font-weight:800;color:var(--gold);margin-bottom:6px;">
-      <span class="th">มีมากกว่า 50 กก.?</span>
-      <span class="en">More than 50 kg?</span>
-    </div>
-    <div style="font-size:14px;color:var(--muted);margin-bottom:14px;line-height:1.5;">
-      <span class="th">จัดรถไปรับถึงที่ฟรี! ติดต่อเราโดยตรง</span>
-      <span class="en">Free pickup at your location! Contact us directly</span>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <a href="mailto:thaicarbide@gmail.com" style="display:inline-flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--border);color:var(--white);padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">📧 Email</a>
-      <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:700;">💚 LINE @ThaiCarbide</a>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin-top:10px;">Tel: 093-696-9935</div>
-  </div>
+  <!-- LARGE QUANTITY INQUIRY removed: >50kg / enterprise moved to landing page; keep sellers finishing the transaction here -->
 
 </div><!-- /wrap -->
 
@@ -608,9 +592,6 @@ async function submitLead() {
   const isEn = document.body.classList.contains('lang-en');
   if (!selKey)   return showErr(isEn ? 'Please select a carbide type first.' : 'กรุณาเลือกประเภทคาร์ไบด์ก่อนครับ');
   /* Silent parcel default removed */ if (!selectedDelivery) return showErr(isEn ? 'Please select a delivery method.' : 'กรุณาเลือกวิธีจัดส่งครับ');
-  if (selectedDelivery === 'pickup' && !document.getElementById('pickupAddress').value.trim()) {
-    return showErr(isEn ? 'Please enter your pickup address.' : 'กรุณาใส่ที่อยู่สำหรับรับของครับ');
-  }
   if (!phone && !lineId && !email) return showErr(isEn ? 'Please enter LINE ID, phone, or email.' : '\u0E01\u0E23\u0E38\u0E13\u0E32\u0E43\u0E2A\u0E48 LINE ID \u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E42\u0E17\u0E23 \u0E2B\u0E23\u0E37\u0E2D\u0E2D\u0E35\u0E40\u0E21\u0E25');
   if (!fullName) return showErr(isEn ? 'Please enter your full name.' : 'กรุณาใส่ชื่อ-นามสกุลครับ');
   // province is now optional - if (!province) showErr('Please select your province.' : 'กรุณาเลือกจังหวัดครับ');
