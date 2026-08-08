@@ -243,6 +243,34 @@ tr:hover td { background: #fafbfc; }
 .empty-state { text-align:center; padding:40px; color: var(--text-secondary); }
 .empty-state-icon { font-size:40px; margin-bottom:8px; opacity:0.3; }
 
+/* Marketing channel cards */
+.mkt-channels { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:24px; }
+.mkt-card {
+  background: var(--bg-white); border-radius: var(--radius); padding:20px; box-shadow: var(--shadow);
+  border-left: 4px solid var(--border); position:relative;
+}
+.mkt-card.status-ok { border-left-color: var(--accent-green); }
+.mkt-card.status-warn { border-left-color: var(--accent-orange); }
+.mkt-card.status-off { border-left-color: var(--accent-red); }
+.mkt-card.status-info { border-left-color: var(--accent-blue); }
+.mkt-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.mkt-card-title { font-weight:600; font-size:14px; display:flex; align-items:center; gap:8px; }
+.mkt-card-icon { font-size:18px; }
+.mkt-card-status { font-size:11px; font-weight:600; padding:2px 8px; border-radius:10px; text-transform:uppercase; }
+.mkt-status-active { background:#eafaf1; color:#27ae60; }
+.mkt-status-warning { background:#fef9e7; color:#d68910; }
+.mkt-status-inactive { background:#fdedec; color:#e74c3c; }
+.mkt-status-nodata { background:#ecf0f1; color:#7f8c8d; }
+.mkt-card-body { font-size:13px; color: var(--text-secondary); }
+.mkt-card-metric { font-size:22px; font-weight:700; color: var(--text-primary); margin:4px 0; }
+.mkt-card-detail { font-size:12px; color: var(--text-light); margin-top:6px; }
+.mkt-card-link { display:inline-block; margin-top:8px; font-size:12px; color: var(--accent-blue); text-decoration:none; }
+.mkt-card-link:hover { text-decoration:underline; }
+
+/* Cron table */
+.cron-schedule { font-family: 'SF Mono', 'Fira Code', monospace; font-size:11px; background:#f0f0f0; padding:2px 6px; border-radius:3px; }
+.cron-freq { font-size:11px; color: var(--text-secondary); }
+
 /* Responsive */
 @media (max-width:768px) {
   .content { padding:16px; }
@@ -257,11 +285,13 @@ tr:hover td { background: #fafbfc; }
   .header-meta .last-update { display:none; }
   table { font-size:12px; }
   th, td { padding:8px 6px; }
+  .mkt-channels { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width:480px) {
   .card-grid { grid-template-columns:1fr 1fr; gap:8px; }
   .card { padding:12px; }
   .card-value { font-size:20px; }
+  .mkt-channels { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -335,6 +365,35 @@ tr:hover td { background: #fafbfc; }
       <div class="section"><div class="table-wrap" id="export-table"></div></div>
     </div>
 
+    <!-- Marketing -->
+    <div class="tab-content" id="tab-marketing">
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;">Marketing &amp; Automation</h2>
+      <div class="mkt-channels" id="mkt-channels"></div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">Automation Jobs (pg_cron)</div>
+          <span style="font-size:12px;color:var(--text-secondary)">15 active jobs</span>
+        </div>
+        <div class="section-body"><div class="table-wrap" id="cron-table"></div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-title">Recent Blog Posts</div></div>
+        <div class="section-body" id="blog-table"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-title">SEO Scores by Page</div></div>
+        <div class="section-body" id="seo-table"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><div class="section-title">External Tools &amp; Links</div></div>
+        <div class="section-body" id="ext-tools"></div>
+      </div>
+    </div>
+
     <!-- Settings -->
     <div class="tab-content" id="tab-settings">
       <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;">Settings</h2>
@@ -366,32 +425,32 @@ tr:hover td { background: #fafbfc; }
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-// ââ Supabase ââ
+// == Supabase ==
 const SUPA_URL = 'https://ltupwgytuayzopnsdvpc.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ââ State ââ
+// == State ==
 let ROLE = null;
 let currentTab = 'dashboard';
 let lastFetchTime = null;
 let defaultCommission = 150;
 
-// ââ Helpers ââ
+// == Helpers ==
 const BKK = { timeZone: 'Asia/Bangkok' };
 function fmtDate(d) {
-  if (!d) return 'â';
+  if (!d) return '–';
   const dt = new Date(d);
   const day = dt.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', ...BKK });
   const time = dt.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', hour12:false, ...BKK });
   return `${day}, ${time}`;
 }
 function fmtNum(n, dec=2) {
-  if (n == null) return 'â';
+  if (n == null) return '–';
   return Number(n).toLocaleString('en-US', { minimumFractionDigits:dec, maximumFractionDigits:dec });
 }
-function fmtBaht(n) { return n == null ? 'â' : `\u0E3F${fmtNum(n)}`; }
-function fmtKg(n) { return n == null ? 'â' : `${fmtNum(n)} kg`; }
+function fmtBaht(n) { return n == null ? '–' : `฿${fmtNum(n)}`; }
+function fmtKg(n) { return n == null ? '–' : `${fmtNum(n)} kg`; }
 function timeAgo(d) {
   if (!d) return '';
   const mins = Math.floor((Date.now() - new Date(d).getTime())/60000);
@@ -407,8 +466,12 @@ function esc(s) {
   d.textContent = String(s);
   return d.innerHTML;
 }
+function daysOld(d) {
+  if (!d) return 999;
+  return Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
+}
 
-// ââ Toast ââ
+// == Toast ==
 function toast(msg, type='success') {
   const c = document.getElementById('toast-container');
   const t = document.createElement('div');
@@ -419,10 +482,10 @@ function toast(msg, type='success') {
   setTimeout(() => t.remove(), 3000);
 }
 
-// ââ Loading ââ
+// == Loading ==
 function showLoading(el) { el.innerHTML = '<div class="loading-center"><div class="spinner"></div></div>'; }
 
-// ââ Auth ââ
+// == Auth ==
 function handleLogin() {
   const pw = document.getElementById('login-password').value.trim();
   const err = document.getElementById('login-error');
@@ -446,12 +509,13 @@ function checkSession() {
 }
 document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 
-// ââ Tabs ââ
+// == Tabs ==
 const TABS = [
   { id:'dashboard', label:'Dashboard', icon:'&#9635;' },
   { id:'parcels', label:'Parcels', icon:'&#9744;' },
   { id:'leads', label:'Leads', icon:'&#9733;' },
   { id:'export', label:'Export', icon:'&#9992;' },
+  { id:'marketing', label:'Marketing', icon:'&#9776;', admin:true },
   { id:'settings', label:'Settings', icon:'&#9881;', admin:true },
 ];
 function renderTabs() {
@@ -480,7 +544,7 @@ function updateLastFetch() {
   document.getElementById('last-update').textContent = `Updated ${fmtDate(lastFetchTime)}`;
 }
 
-// ââ Data loaders ââ
+// == Data loaders ==
 async function loadTabData(tab) {
   try {
     switch(tab) {
@@ -488,13 +552,14 @@ async function loadTabData(tab) {
       case 'parcels': await loadParcels(); break;
       case 'leads': await loadLeads(); break;
       case 'export': await loadExport(); break;
+      case 'marketing': await loadMarketing(); break;
       case 'settings': await loadSettings(); break;
     }
     updateLastFetch();
   } catch(e) { console.error(e); toast('Error loading data', 'error'); }
 }
 
-// ââ Dashboard ââ
+// == Dashboard ==
 async function loadDashboard() {
   const sc = document.getElementById('summary-cards');
   const pg = document.getElementById('prices-grid');
@@ -559,7 +624,7 @@ async function loadDashboard() {
   }
 }
 
-// ââ Parcels ââ
+// == Parcels ==
 async function loadParcels() {
   const wrap = document.getElementById('parcels-table');
   const acts = document.getElementById('parcel-actions');
@@ -574,13 +639,13 @@ async function loadParcels() {
   }
   const matNames = { carbide_inserts:'Inserts', carbide_drills:'Drills', mixed_carbide:'Mixed', sand_rills:'Sand Rills' };
   wrap.innerHTML = `<table>
-    <thead><tr><th>Date</th><th>Seller</th><th>Material</th><th>Est. kg</th><th>Actual kg</th><th>\u0E3F/kg</th><th>Total \u0E3F</th><th>Commission</th><th>Status</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Date</th><th>Seller</th><th>Material</th><th>Est. kg</th><th>Actual kg</th><th>฿/kg</th><th>Total ฿</th><th>Commission</th><th>Status</th><th>Actions</th></tr></thead>
     <tbody>${parcels.map(p => `<tr>
       <td>${fmtDate(p.created_at)}</td>
-      <td><strong>${esc(p.seller_name||'â')}</strong><br><span style="font-size:11px;color:var(--text-secondary)">${esc(p.seller_contact||'')}</span></td>
+      <td><strong>${esc(p.seller_name||'–')}</strong><br><span style="font-size:11px;color:var(--text-secondary)">${esc(p.seller_contact||'')}</span></td>
       <td>${esc(matNames[p.material_type]||p.material_type)}</td>
       <td>${fmtNum(p.estimated_kg,1)}</td>
-      <td>${p.actual_kg!=null ? fmtNum(p.actual_kg,2) : 'â'}</td>
+      <td>${p.actual_kg!=null ? fmtNum(p.actual_kg,2) : '–'}</td>
       <td>${fmtBaht(p.price_per_kg)}</td>
       <td>${fmtBaht(p.total_thb)}</td>
       <td>${fmtBaht(p.commission_total)}</td>
@@ -601,7 +666,7 @@ function parcelActions(p) {
   if (ROLE === 'PARTNER' && p.status === 'delivered') {
     btns += `<button class="btn btn-sm btn-orange" onclick="openWeighModal('${p.id}', ${p.price_per_kg||0}, ${p.commission_per_kg||defaultCommission})">Confirm Weight</button>`;
   }
-  return btns || 'â';
+  return btns || '–';
 }
 
 async function changeParcelStatus(id, status) {
@@ -673,8 +738,8 @@ function openParcelModal(data) {
       <div class="form-group"><label class="form-label">Actual kg</label><input type="number" step="0.01" class="form-input" id="p-actkg" value="${d.actual_kg||''}"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Price per kg (\u0E3F)</label><input type="number" step="0.01" class="form-input" id="p-ppk" value="${d.price_per_kg||''}"></div>
-      <div class="form-group"><label class="form-label">Commission per kg (\u0E3F)</label><input type="number" step="0.01" class="form-input" id="p-cpk" value="${d.commission_per_kg||defaultCommission}"></div>
+      <div class="form-group"><label class="form-label">Price per kg (฿)</label><input type="number" step="0.01" class="form-input" id="p-ppk" value="${d.price_per_kg||''}"></div>
+      <div class="form-group"><label class="form-label">Commission per kg (฿)</label><input type="number" step="0.01" class="form-input" id="p-cpk" value="${d.commission_per_kg||defaultCommission}"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Status</label>
@@ -717,10 +782,8 @@ async function saveParcel() {
     export_status: document.getElementById('p-exstatus').value,
     notes: document.getElementById('p-notes').value.trim() || null,
   };
-  // Auto-calc totals
   if (obj.actual_kg && obj.price_per_kg) obj.total_thb = obj.actual_kg * obj.price_per_kg;
   if (obj.actual_kg && obj.commission_per_kg) obj.commission_total = obj.actual_kg * obj.commission_per_kg;
-  // Timestamps
   if (obj.status === 'delivered' && !editingParcelId) obj.delivered_at = new Date().toISOString();
   if (obj.status === 'weighed') obj.weighed_at = new Date().toISOString();
   if (obj.status === 'paid') obj.paid_at = new Date().toISOString();
@@ -736,7 +799,7 @@ async function saveParcel() {
   closeModal(); toast(editingParcelId ? 'Parcel updated' : 'Parcel created'); loadParcels();
 }
 
-// ââ Leads ââ
+// == Leads ==
 async function loadLeads() {
   const wrap = document.getElementById('leads-table');
   const acts = document.getElementById('lead-actions');
@@ -756,11 +819,11 @@ async function loadLeads() {
       const scoreColor = l.lead_score >= 70 ? 'var(--accent-green)' : l.lead_score >= 40 ? 'var(--accent-orange)' : 'var(--accent-red)';
       return `<tr>
         <td>${fmtDate(l.created_at)}</td>
-        <td><strong>${esc(l.display_name||'â')}</strong></td>
-        <td>${esc(l.phone||l.email||l.line_id||'â')}<br><span style="font-size:11px;color:var(--text-secondary)">${esc(l.location||'')}</span></td>
-        <td>${esc(matNames[l.material_type]||l.material_type||'â')}</td>
-        <td>${l.weight_kg!=null ? fmtNum(l.weight_kg,1) : 'â'}</td>
-        <td><div class="score-bar"><div class="score-fill" style="width:${l.lead_score||0}%;background:${scoreColor}"></div></div>${l.lead_score!=null?l.lead_score:'â'}</td>
+        <td><strong>${esc(l.display_name||'–')}</strong></td>
+        <td>${esc(l.phone||l.email||l.line_id||'–')}<br><span style="font-size:11px;color:var(--text-secondary)">${esc(l.location||'')}</span></td>
+        <td>${esc(matNames[l.material_type]||l.material_type||'–')}</td>
+        <td>${l.weight_kg!=null ? fmtNum(l.weight_kg,1) : '–'}</td>
+        <td><div class="score-bar"><div class="score-fill" style="width:${l.lead_score||0}%;background:${scoreColor}"></div></div>${l.lead_score!=null?l.lead_score:'–'}</td>
         <td><span class="badge badge-${l.status||'new'}">${l.status||'new'}</span></td>
         <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.notes||'')}</td>
         ${ROLE==='ADMIN'?`<td><button class="btn btn-secondary btn-sm" onclick="openEditLead('${l.id}')">Edit</button></td>`:''}
@@ -797,7 +860,7 @@ function openLeadModal(data) {
     <div class="form-row">
       <div class="form-group"><label class="form-label">Material Type</label>
         <select class="form-input" id="l-material">
-          <option value="">â</option>
+          <option value="">--</option>
           <option value="carbide_inserts" ${d.material_type==='carbide_inserts'?'selected':''}>Carbide Inserts</option>
           <option value="carbide_drills" ${d.material_type==='carbide_drills'?'selected':''}>Carbide Drills</option>
           <option value="mixed_carbide" ${d.material_type==='mixed_carbide'?'selected':''}>Mixed Carbide</option>
@@ -815,7 +878,7 @@ function openLeadModal(data) {
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Quoted Price (\u0E3F/kg)</label><input type="number" step="0.01" class="form-input" id="l-qprice" value="${d.quoted_price||''}"></div>
+      <div class="form-group"><label class="form-label">Quoted Price (฿/kg)</label><input type="number" step="0.01" class="form-input" id="l-qprice" value="${d.quoted_price||''}"></div>
       <div class="form-group"><label class="form-label">Has Photos</label>
         <select class="form-input" id="l-photos">
           <option value="false" ${!d.has_photos?'selected':''}>No</option>
@@ -860,7 +923,7 @@ async function saveLead() {
   closeModal(); toast(editingLeadId ? 'Lead updated' : 'Lead created'); loadLeads();
 }
 
-// ââ Export ââ
+// == Export ==
 async function loadExport() {
   const sumEl = document.getElementById('export-summary');
   const tblEl = document.getElementById('export-table');
@@ -873,7 +936,6 @@ async function loadExport() {
     tblEl.innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#9992;</div>No export parcels yet</div>';
     return;
   }
-  // Group by buyer
   const byBuyer = {};
   parcels.forEach(p => {
     const b = p.export_buyer;
@@ -893,11 +955,11 @@ async function loadExport() {
 
   const matNames = { carbide_inserts:'Inserts', carbide_drills:'Drills', mixed_carbide:'Mixed', sand_rills:'Sand Rills' };
   tblEl.innerHTML = `<table>
-    <thead><tr><th>Date</th><th>Buyer</th><th>Seller</th><th>Material</th><th>kg</th><th>Total \u0E3F</th><th>Export Status</th></tr></thead>
+    <thead><tr><th>Date</th><th>Buyer</th><th>Seller</th><th>Material</th><th>kg</th><th>Total ฿</th><th>Export Status</th></tr></thead>
     <tbody>${parcels.map(p => `<tr>
       <td>${fmtDate(p.created_at)}</td>
       <td><strong>${esc(p.export_buyer)}</strong></td>
-      <td>${esc(p.seller_name||'â')}</td>
+      <td>${esc(p.seller_name||'–')}</td>
       <td>${esc(matNames[p.material_type]||p.material_type)}</td>
       <td>${fmtNum(p.actual_kg||p.estimated_kg||0,1)}</td>
       <td>${fmtBaht(p.total_thb)}</td>
@@ -906,7 +968,279 @@ async function loadExport() {
   </table>`;
 }
 
-// ââ Settings ââ
+// == Marketing ==
+async function loadMarketing() {
+  const chEl = document.getElementById('mkt-channels');
+  const crEl = document.getElementById('cron-table');
+  const blEl = document.getElementById('blog-table');
+  const seEl = document.getElementById('seo-table');
+  const exEl = document.getElementById('ext-tools');
+  showLoading(chEl); showLoading(crEl); showLoading(blEl); showLoading(seEl);
+
+  // Fetch all marketing data in parallel
+  const [blogsRes, seoRes, gadsRes, compRes, pricesRes, leadsRes, chatsRes, mktRes] = await Promise.all([
+    sb.from('blog_posts').select('*').order('created_at', { ascending:false }),
+    sb.from('seo_reports').select('*').order('created_at', { ascending:false }).limit(20),
+    sb.from('google_ads_data').select('*').order('updated_at', { ascending:false }).limit(1),
+    sb.from('competitor_prices').select('*').order('scraped_at', { ascending:false }).limit(5),
+    sb.from('prices').select('updated_at').order('updated_at', { ascending:false }).limit(1),
+    sb.from('leads').select('id, source, status, created_at'),
+    sb.from('line_chats').select('id, created_at').order('created_at', { ascending:false }).limit(1),
+    sb.from('market_data').select('*').order('recorded_at', { ascending:false }).limit(1),
+  ]);
+
+  const blogs = blogsRes.data || [];
+  const seoReports = seoRes.data || [];
+  const gads = gadsRes.data || [];
+  const comp = compRes.data || [];
+  const prices = pricesRes.data || [];
+  const leads = leadsRes.data || [];
+  const lastChat = chatsRes.data?.[0] || null;
+  const lastMarket = mktRes.data?.[0] || null;
+
+  // Compute channel statuses
+  const lastPriceUpdate = prices[0]?.updated_at;
+  const lastScrape = comp[0]?.scraped_at;
+  const lastBlog = blogs[0]?.created_at;
+  const lastSeo = seoReports[0]?.created_at;
+  const latestSeoScores = {};
+  seoReports.forEach(r => { if (!latestSeoScores[r.page_slug]) latestSeoScores[r.page_slug] = r; });
+  const avgSeo = Object.values(latestSeoScores);
+  const avgSeoScore = avgSeo.length ? Math.round(avgSeo.reduce((s,r)=>s+r.overall_score,0)/avgSeo.length) : 0;
+
+  const publishedBlogs = blogs.filter(b => b.status === 'published').length;
+  const totalLeads = leads.length;
+  const lineLeads = leads.filter(l => l.source === 'line' || l.source === 'chat').length;
+
+  // Channel cards
+  const channels = [
+    {
+      icon: '📊', title: 'Plausible Analytics',
+      status: 'ok', statusLabel: 'Active',
+      metric: 'Live', detail: 'Tracking thaicarbide.com',
+      link: 'https://plausible.io/thaicarbide.com', linkText: 'Open Dashboard →'
+    },
+    {
+      icon: '💰', title: 'Price Scraper',
+      status: daysOld(lastScrape) <= 2 ? 'ok' : daysOld(lastScrape) <= 7 ? 'warn' : 'off',
+      statusLabel: daysOld(lastScrape) <= 2 ? 'Active' : daysOld(lastScrape) <= 7 ? 'Stale' : 'Down',
+      metric: comp.length > 0 ? `€${Number(comp[0].price_eur).toFixed(0)}/kg` : '–',
+      detail: `HM24 price • Last scrape: ${timeAgo(lastScrape)}`,
+      link: 'https://www.hartmetallschrott24.de', linkText: 'View Source →'
+    },
+    {
+      icon: '🔍', title: 'SEO Optimizer',
+      status: avgSeoScore >= 50 ? 'ok' : avgSeoScore >= 30 ? 'warn' : 'off',
+      statusLabel: avgSeoScore >= 50 ? 'Good' : avgSeoScore >= 30 ? 'Needs Work' : 'Low',
+      metric: `${avgSeoScore}/100`,
+      detail: `Avg score across ${avgSeo.length} pages • Weekly Monday 11:00`,
+      link: null
+    },
+    {
+      icon: '📝', title: 'Blog Generator',
+      status: daysOld(lastBlog) <= 14 ? 'ok' : daysOld(lastBlog) <= 30 ? 'warn' : 'off',
+      statusLabel: daysOld(lastBlog) <= 14 ? 'Active' : 'Stale',
+      metric: `${publishedBlogs} posts`,
+      detail: `Latest: ${timeAgo(lastBlog)} • Weekly Wednesday 12:00`,
+      link: 'https://thaicarbide.com/blog.html', linkText: 'View Blog →'
+    },
+    {
+      icon: '🟢', title: 'LINE Official',
+      status: lastChat ? (daysOld(lastChat.created_at) <= 7 ? 'ok' : 'warn') : 'off',
+      statusLabel: lastChat ? 'Connected' : 'No Data',
+      metric: lastChat ? timeAgo(lastChat.created_at) : '–',
+      detail: `Last chat activity • Webhook + Rich Menu active`,
+      link: 'https://manager.line.biz', linkText: 'LINE Manager →'
+    },
+    {
+      icon: '📧', title: 'Email Reports',
+      status: 'ok', statusLabel: 'Active',
+      metric: 'Daily + Weekly',
+      detail: 'Daily 2:30pm BKK • Weekly Sunday 4:30pm',
+      link: null
+    },
+    {
+      icon: '📱', title: 'Facebook Ads',
+      status: 'info', statusLabel: 'Cron Only',
+      metric: 'No API data',
+      detail: 'Cron runs daily 1pm BKK • No FB API credentials configured',
+      link: 'https://business.facebook.com', linkText: 'FB Business →'
+    },
+    {
+      icon: '🎯', title: 'Google Ads',
+      status: gads.length > 0 ? 'ok' : 'off',
+      statusLabel: gads.length > 0 ? 'Active' : 'No Data',
+      metric: gads.length > 0 ? 'Connected' : 'Not Connected',
+      detail: gads.length > 0 ? 'Cron daily 12:30pm BKK' : 'Cron runs but no API credentials configured',
+      link: 'https://ads.google.com', linkText: 'Google Ads →'
+    },
+    {
+      icon: '🌏', title: 'SEA Engine',
+      status: 'info', statusLabel: 'Cron Only',
+      metric: '0 campaigns',
+      detail: 'Orchestrator + engine run daily/weekly • No campaigns created yet',
+      link: null
+    },
+    {
+      icon: '📈', title: 'Market Data',
+      status: lastMarket ? (daysOld(lastMarket.recorded_at) <= 14 ? 'ok' : 'warn') : 'off',
+      statusLabel: lastMarket ? (daysOld(lastMarket.recorded_at) <= 14 ? 'Fresh' : 'Stale') : 'None',
+      metric: lastMarket ? `$${Number(lastMarket.value_usd).toFixed(0)} APT` : '–',
+      detail: lastMarket ? `Last: ${timeAgo(lastMarket.recorded_at)} • Source: Fastmarkets` : 'No market data',
+      link: null
+    },
+  ];
+
+  const statusCss = { ok:'status-ok', warn:'status-warn', off:'status-off', info:'status-info' };
+  const statusBadge = { ok:'mkt-status-active', warn:'mkt-status-warning', off:'mkt-status-inactive', info:'mkt-status-nodata' };
+
+  chEl.innerHTML = channels.map(ch => `
+    <div class="mkt-card ${statusCss[ch.status]}">
+      <div class="mkt-card-header">
+        <div class="mkt-card-title"><span class="mkt-card-icon">${ch.icon}</span> ${ch.title}</div>
+        <span class="mkt-card-status ${statusBadge[ch.status]}">${ch.statusLabel}</span>
+      </div>
+      <div class="mkt-card-body">
+        <div class="mkt-card-metric">${ch.metric}</div>
+        <div class="mkt-card-detail">${ch.detail}</div>
+        ${ch.link ? `<a class="mkt-card-link" href="${ch.link}" target="_blank" rel="noopener">${ch.linkText}</a>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  // Cron jobs table (hardcoded definitions + inferred status from data freshness)
+  const cronJobs = [
+    { name:'daily-price-scraper', schedule:'0 2 * * *', freq:'Daily 9am BKK', fn:'price-scraper', desc:'Scrapes HM24 prices' },
+    { name:'daily-auto-price-update', schedule:'15 2 * * *', freq:'Daily 9:15am', fn:'auto-price-update', desc:'Updates prices table from scrape' },
+    { name:'daily-price-snapshot', schedule:'30 2 * * *', freq:'Daily 9:30am', fn:'market-data', desc:'Records price history snapshot' },
+    { name:'daily-auto-followup', schedule:'0 3 * * *', freq:'Daily 10am', fn:'auto-followup', desc:'Sends follow-up messages to leads' },
+    { name:'daily-google-ads-report', schedule:'30 5 * * *', freq:'Daily 12:30pm', fn:'google-ads-manager', desc:'Analyzes Google Ads performance' },
+    { name:'daily-fb-ads-optimizer', schedule:'0 6 * * *', freq:'Daily 1pm', fn:'fb-ads-manager', desc:'Optimizes Facebook ad campaigns' },
+    { name:'daily-sea-orchestrator', schedule:'0 7 * * *', freq:'Daily 2pm', fn:'sea-orchestrator', desc:'Runs search engine ad orchestration' },
+    { name:'daily-email-report', schedule:'30 7 * * *', freq:'Daily 2:30pm', fn:'email-report', desc:'Sends daily email summary' },
+    { name:'daily-sourcing-pipeline', schedule:'0 8 * * *', freq:'Daily 3pm', fn:'sourcing-pipeline', desc:'Runs sourcing pipeline digest' },
+    { name:'weekly-seo-optimizer', schedule:'0 4 * * 1', freq:'Mon 11am', fn:'seo-optimizer', desc:'Audits and optimizes SEO across pages' },
+    { name:'weekly-blog-generator', schedule:'0 5 * * 3', freq:'Wed 12pm', fn:'blog-generator', desc:'Generates new blog post with AI' },
+    { name:'weekly-sea-engine', schedule:'0 6 * * 1', freq:'Mon 1pm', fn:'sea-engine', desc:'Full SEA campaign engine run' },
+    { name:'weekly-line-broadcast', schedule:'0 3 * * 4', freq:'Thu 10am', fn:'line-broadcast', desc:'Sends LINE broadcast to followers' },
+    { name:'weekly-analytics-report', schedule:'0 9 * * 0', freq:'Sun 4pm', fn:'analytics-api', desc:'Generates weekly analytics report' },
+    { name:'weekly-email-report', schedule:'30 9 * * 0', freq:'Sun 4:30pm', fn:'email-report', desc:'Sends weekly email summary' },
+  ];
+
+  crEl.innerHTML = `<table>
+    <thead><tr><th>Job Name</th><th>Schedule</th><th>Frequency (BKK)</th><th>Edge Function</th><th>Description</th></tr></thead>
+    <tbody>${cronJobs.map(j => `<tr>
+      <td><strong>${esc(j.name)}</strong></td>
+      <td><span class="cron-schedule">${j.schedule}</span></td>
+      <td class="cron-freq">${j.freq}</td>
+      <td><code style="font-size:12px;background:#f0f0f0;padding:2px 6px;border-radius:3px">${j.fn}</code></td>
+      <td style="color:var(--text-secondary)">${j.desc}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+
+  // Blog posts
+  if (blogs.length === 0) {
+    blEl.innerHTML = '<div class="empty-state">No blog posts</div>';
+  } else {
+    blEl.innerHTML = `<table>
+      <thead><tr><th>Published</th><th>Title</th><th>Slug</th><th>Category</th><th>Words</th><th>Status</th></tr></thead>
+      <tbody>${blogs.slice(0,10).map(b => `<tr>
+        <td>${fmtDate(b.published_at || b.created_at)}</td>
+        <td><strong>${esc(b.title)}</strong></td>
+        <td><a href="https://thaicarbide.com/blog/${esc(b.slug)}.html" target="_blank" style="color:var(--accent-blue);font-size:12px">${esc(b.slug)}</a></td>
+        <td>${esc(b.category||'–')}</td>
+        <td>${b.word_count||'–'}</td>
+        <td><span class="badge badge-${b.status==='published'?'paid':'pending'}">${b.status}</span></td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+  }
+
+  // SEO scores (latest per page)
+  if (avgSeo.length === 0) {
+    seEl.innerHTML = '<div class="empty-state">No SEO reports</div>';
+  } else {
+    seEl.innerHTML = `<table>
+      <thead><tr><th>Page</th><th>Overall</th><th>Title</th><th>Meta</th><th>Content</th><th>Technical</th><th>Last Checked</th></tr></thead>
+      <tbody>${avgSeo.sort((a,b)=>b.overall_score-a.overall_score).map(r => {
+        const sc = r.overall_score;
+        const color = sc >= 60 ? 'var(--accent-green)' : sc >= 35 ? 'var(--accent-orange)' : 'var(--accent-red)';
+        return `<tr>
+          <td><strong>${esc(r.page_slug)}</strong></td>
+          <td><div class="score-bar" style="width:80px"><div class="score-fill" style="width:${sc}%;background:${color}"></div></div> <strong style="color:${color}">${sc}</strong></td>
+          <td>${r.title_score}</td>
+          <td>${r.meta_score}</td>
+          <td>${r.content_score}</td>
+          <td>${r.technical_score}</td>
+          <td>${timeAgo(r.created_at)}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+  }
+
+  // External tools
+  exEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">📊 Plausible Analytics</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Website traffic & visitor analytics</div>
+        </div>
+        <a href="https://plausible.io/thaicarbide.com" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">🟢 LINE Official Account</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Manage LINE OA, rich menu, broadcasts</div>
+        </div>
+        <a href="https://manager.line.biz" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">📱 Facebook Business</div>
+          <div style="font-size:12px;color:var(--text-secondary)">FB page, ads manager, insights</div>
+        </div>
+        <a href="https://business.facebook.com" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">🎯 Google Ads</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Search & display ad campaigns</div>
+        </div>
+        <a href="https://ads.google.com" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">🛠 Supabase Dashboard</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Database, edge functions, logs</div>
+        </div>
+        <a href="https://supabase.com/dashboard/project/ltupwgytuayzopnsdvpc" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">💻 GitHub Pages</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Website source code & deployment</div>
+        </div>
+        <a href="https://github.com/Alexanderschlick/carbide-thai" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">🌍 ThaiCarbide.com</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Live website</div>
+        </div>
+        <a href="https://thaicarbide.com" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+      <div class="settings-row" style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;">
+        <div>
+          <div style="font-weight:600;font-size:14px">📨 Telegram Bot</div>
+          <div style="font-size:12px;color:var(--text-secondary)">Lead notifications & alerts</div>
+        </div>
+        <a href="https://t.me/ThaiCarbideBot" target="_blank" class="btn btn-secondary btn-sm">Open</a>
+      </div>
+    </div>
+  `;
+}
+
+// == Settings ==
 async function loadSettings() {
   const commEl = document.getElementById('settings-commission');
   const sysEl = document.getElementById('settings-system');
@@ -916,15 +1250,14 @@ async function loadSettings() {
       <div class="settings-label">Default Commission Rate</div>
       <div style="display:flex;align-items:center;gap:8px;">
         <input type="number" step="1" class="form-input" style="width:120px" id="set-commission" value="${defaultCommission}">
-        <span>\u0E3F/kg</span>
+        <span>฿/kg</span>
         <button class="btn btn-primary btn-sm" onclick="saveCommission()">Save</button>
       </div>
     </div>
   `;
 
-  // System check
   let supaOk = false;
-  let priceUpdate = 'â';
+  let priceUpdate = '–';
   try {
     const { data } = await sb.from('prices').select('updated_at').order('updated_at', { ascending:false }).limit(1);
     if (data && data.length) { supaOk = true; priceUpdate = fmtDate(data[0].updated_at); }
@@ -950,7 +1283,7 @@ async function loadSettings() {
     </div>
     <div class="settings-row">
       <div class="settings-label">App Version</div>
-      <div class="settings-value">1.0.0</div>
+      <div class="settings-value">2.0.0</div>
     </div>
   `;
 }
@@ -960,10 +1293,10 @@ function saveCommission() {
   if (!v || v <= 0) { toast('Enter a valid commission', 'error'); return; }
   defaultCommission = v;
   localStorage.setItem('tc_commission', v);
-  toast(`Commission rate set to \u0E3F${v}/kg`);
+  toast(`Commission rate set to ฿${v}/kg`);
 }
 
-// ââ Modal ââ
+// == Modal ==
 function openModal(title, body, footer) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-body').innerHTML = body;
@@ -978,14 +1311,13 @@ function closeModal() {
 document.getElementById('modal-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ââ Init ââ
+// == Init ==
 function initApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   const badge = document.getElementById('role-badge');
   badge.textContent = ROLE;
   badge.className = 'role-badge' + (ROLE === 'PARTNER' ? ' partner' : '');
-  // Load saved commission
   const sc = localStorage.getItem('tc_commission');
   if (sc) defaultCommission = parseInt(sc);
   renderTabs();
