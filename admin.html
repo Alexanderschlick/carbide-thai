@@ -134,6 +134,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
   <div class="tab-bar">
     <button class="tab active" data-tab="overview" onclick="showTab('overview',this)">Overview</button>
     <button class="tab" data-tab="leads" onclick="showTab('leads',this)">Leads</button>
+    <button class="tab" data-tab="conversions" onclick="showTab('conversions',this)">Conversions</button>
     <button class="tab" data-tab="chats" onclick="showTab('chats',this)">Chats</button>
     <button class="tab" data-tab="analytics" onclick="showTab('analytics',this)">Analytics</button>
     <button class="tab" data-tab="prices" onclick="showTab('prices',this)">Prices</button>
@@ -173,6 +174,16 @@ tr:hover { background: rgba(200,168,78,0.04); }
       <h2>All Leads &mdash; Full Pipeline</h2>
       <table><thead><tr><th>Name</th><th>Messages</th><th>First</th><th>Last</th><th>Status</th><th>Actions</th></tr></thead>
       <tbody id="allLeads"></tbody></table>
+    </div>
+  </div>
+
+  <!-- CONVERSIONS TAB -->
+  <div id="tab-conversions" class="tab-content" style="display:none">
+    <div class="card">
+      <h2>Conversions &mdash; Actual Orders</h2>
+      <div id="convSummary" style="margin-bottom:12px;color:var(--muted);font-size:13px;"></div>
+      <table><thead><tr><th>Ref</th><th>Name</th><th>Contact</th><th>Material</th><th>Weight</th><th>&#3647;/kg</th><th>Total</th><th>Delivery</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody id="convRows"></tbody></table>
     </div>
   </div>
 
@@ -391,7 +402,24 @@ async function showConversation(uid,name){
   document.getElementById('chatModal').classList.add('show');
 }
 
+async function loadConversions(){
+  const e=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const orders=await sbGet('orders','select=ref,name,phone,line_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,created_at&order=created_at.desc&limit=300');
+  const tbody=document.getElementById('convRows'); if(!tbody)return;
+  const sum=document.getElementById('convSummary');
+  if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="10" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
+  let kg=0,thb=0;
+  tbody.innerHTML=orders.map(o=>{
+    const w=o.weight_received!=null?o.weight_received:o.weight_ordered; kg+=Number(w)||0; thb+=Number(o.total_amount)||0;
+    const deliv=o.delivery_method==='parcel'?'📦 Parcel':(o.delivery_method==='pickup'?'🏭 Self':e(o.delivery_method||'—'));
+    const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'—')+(o.weight_received!=null?' → '+o.weight_received:'');
+    return `<tr><td style="font-family:monospace;color:var(--gold)">${e(o.ref||'—')}</td><td>${e(o.name||'—')}</td><td>${e(o.phone||o.line_id||'—')}</td><td>${e(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td><span class="badge">${e(o.status||'—')}</span></td><td>${fmtDate(o.created_at)}</td></tr>`;
+  }).join('');
+  if(sum)sum.textContent=`${orders.length} orders · ${kg.toLocaleString()} kg · ฿${thb.toLocaleString()} total`;
+}
+
 async function loadAll(){
+  loadConversions();
   try{
     const[chats,prices,comp,flags]=await Promise.all([
       sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at&line_user_id=neq.BROADCAST&order=created_at.desc&limit=1000'),
