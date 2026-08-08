@@ -137,6 +137,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="tab" data-tab="conversions" onclick="showTab('conversions',this)">Conversions</button>
     <button class="tab" data-tab="chats" onclick="showTab('chats',this)">Chats</button>
     <button class="tab" data-tab="analytics" onclick="showTab('analytics',this)">Analytics</button>
+    <button class="tab" data-tab="ads" onclick="showTab('ads',this)">Ads</button>
     <button class="tab" data-tab="prices" onclick="showTab('prices',this)">Prices</button>
     <button class="tab" data-tab="systems" onclick="showTab('systems',this)">Systems</button>
   </div>
@@ -238,6 +239,16 @@ tr:hover { background: rgba(200,168,78,0.04); }
   </div>
 
   <!-- PRICES TAB -->
+  <!-- ADS TAB -->
+  <div id="tab-ads" class="tab-content" style="display:none">
+    <div class="card">
+      <h2>Ad Campaigns &mdash; Facebook &amp; Google</h2>
+      <div id="adsSummary" style="margin-bottom:12px;color:var(--muted);font-size:13px;"></div>
+      <table><thead><tr><th>Platform</th><th>Campaign</th><th>Status</th><th>Daily Budget</th><th>Performance</th><th>Updated</th></tr></thead>
+      <tbody id="adsRows"></tbody></table>
+    </div>
+  </div>
+
   <div id="tab-prices" class="tab-content" style="display:none">
     <div class="card" style="margin-bottom:12px;overflow-x:auto;">
       <h2>Price Comparison — ThaiCarbide vs EU (hartmetallschrott24.de)</h2>
@@ -258,6 +269,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
 
   <!-- SYSTEMS TAB -->
   <div id="tab-systems" class="tab-content" style="display:none">
+    <div id="sysUpdated" style="color:var(--muted);font-size:12px;margin-bottom:10px;"></div>
     <div class="grid2">
       <div class="card">
         <h2>Cron Jobs (15 Active)</h2>
@@ -418,8 +430,26 @@ async function loadConversions(){
   if(sum)sum.textContent=`${orders.length} orders · ${kg.toLocaleString()} kg · ฿${thb.toLocaleString()} total`;
 }
 
+async function loadAds(){
+  const e=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const camps=await sbGet('sea_campaigns','select=campaign_name,platform,status,budget_daily,performance,updated_at&order=updated_at.desc&limit=100');
+  const tbody=document.getElementById('adsRows'); if(!tbody)return;
+  const sum=document.getElementById('adsSummary');
+  if(!camps||!camps.length){tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted)">No campaigns synced yet — connect your Facebook / Google Ads accounts and run the ad managers to populate this.</td></tr>';if(sum)sum.textContent='';return;}
+  let budget=0,active=0;
+  tbody.innerHTML=camps.map(c=>{
+    budget+=Number(c.budget_daily)||0; const on=/active|running|enabled|^on$/i.test(c.status||''); if(on)active++;
+    let perf='—'; try{const p=typeof c.performance==='string'?JSON.parse(c.performance):c.performance; if(p&&typeof p==='object')perf=Object.entries(p).slice(0,3).map(([k,v])=>`${e(k)}: ${e(v)}`).join(' · ')||'—';}catch(_){}
+    const plat=/face|fb|meta/i.test(c.platform||'')?'📘 Facebook':(/goog/i.test(c.platform||'')?'🔍 Google':e(c.platform||'—'));
+    const badge=on?'<span class="badge ok">Running</span>':`<span class="badge">${e(c.status||'—')}</span>`;
+    return `<tr><td>${plat}</td><td>${e(c.campaign_name||'—')}</td><td>${badge}</td><td>${c.budget_daily!=null?'฿'+Number(c.budget_daily).toLocaleString()+'/day':'—'}</td><td style="font-size:11px">${perf}</td><td>${fmtDate(c.updated_at)}</td></tr>`;
+  }).join('');
+  if(sum)sum.textContent=`${camps.length} campaigns · ${active} running · ฿${budget.toLocaleString()}/day total budget`;
+}
+
 async function loadAll(){
   loadConversions();
+  loadAds();
   try{
     const[chats,prices,comp,flags]=await Promise.all([
       sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at&line_user_id=neq.BROADCAST&order=created_at.desc&limit=1000'),
@@ -542,6 +572,7 @@ async function loadAll(){
       {n:'Weekly Email',s:'Sun 9:30 AM'}
     ];
     document.getElementById('cronPanel').innerHTML=crons.map(c=>`<div class="sys-row"><span class="name">${c.n}</span><span class="sched">${c.s}</span><span class="badge ok">Active</span></div>`).join('');
+    { const su=document.getElementById('sysUpdated'); if(su)su.textContent='Status as of '+fmtDate(new Date().toISOString())+' (Bangkok)'; }
 
     const funcs=['line-webhook','chat-proxy','fb-webhook','auto-followup','line-broadcast','price-scraper','auto-price-update','email-report','seo-optimizer','blog-generator','sea-orchestrator','sea-engine','sourcing-pipeline','analytics-api','google-ads-manager','fb-ads-manager','send-push-replies','market-data','setup-richmenu','notify-lead'];
     document.getElementById('funcPanel').innerHTML=funcs.map(f=>`<div class="sys-row"><span class="name">${f}</span><span class="badge ok">Deployed</span></div>`).join('');
