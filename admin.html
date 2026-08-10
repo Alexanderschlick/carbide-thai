@@ -89,6 +89,10 @@ tr:hover { background: rgba(200,168,78,0.04); }
 .chat-bubble.bot { background: rgba(200,168,78,0.1); color: var(--dark-text); margin-left: auto; }
 .chat-time { font-size: 9px; color: var(--muted); margin-bottom: 2px; }
 
+.lang-btn { display: inline-block; font-size: 10px; cursor: pointer; color: var(--blue); margin-left: 6px; padding: 1px 5px; border: 1px solid var(--blue); border-radius: 4px; vertical-align: middle; }
+.lang-btn:hover { opacity: 0.8; }
+.lang-btn.translating { color: var(--muted); border-color: var(--muted); cursor: wait; }
+
 @media (max-width: 768px) {
   .kpi-row { grid-template-columns: repeat(3, 1fr); }
   .grid2, .grid3 { grid-template-columns: 1fr; }
@@ -215,7 +219,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
         </div>
       </div>
       <div class="card">
-        <h2>Funnel: Visit → Chat → Quote</h2>
+        <h2>Funnel: Visit &rarr; Chat &rarr; Quote</h2>
         <div id="funnelViz"></div>
       </div>
     </div>
@@ -256,7 +260,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
         <th rowspan="2">Material</th>
         <th colspan="3" style="text-align:center;color:var(--gold);border-bottom:1px solid var(--gold)">ThaiCarbide (THB/kg)</th>
         <th colspan="3" style="text-align:center;color:var(--blue);border-bottom:1px solid var(--blue)">EU — EUR/kg</th>
-        <th colspan="3" style="text-align:center;color:#22c55e;border-bottom:1px solid #22c55e">EU → THB/kg</th>
+        <th colspan="3" style="text-align:center;color:#22c55e;border-bottom:1px solid #22c55e">EU &rarr; THB/kg</th>
       </tr><tr>
         <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
         <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
@@ -289,7 +293,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
       <h3 id="modalTitle" style="margin:0;">Conversation</h3>
-      <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">🌐 Translate all → EN</button>
+      <button class="btn-sm btn-outline" onclick="toggleAllLang()" id="toggleAllBtn" style="font-size:11px;white-space:nowrap;">Show Original</button>
     </div>
     <div id="modalBody"></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
@@ -329,7 +333,7 @@ async function sbGet(tbl,params=''){
 }
 
 function timeAgo(d){const m=Math.floor((Date.now()-new Date(d).getTime())/60000);if(m<1)return'now';if(m<60)return m+'m';if(m<1440)return Math.floor(m/60)+'h';return Math.floor(m/1440)+'d'}
-function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'…':(s||'')}
+function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'...':(s||'')}
 function fmtDate(d){return d?new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Bangkok'}):''}
 
 function showTab(name,el){
@@ -343,24 +347,128 @@ function closeModal(){document.getElementById('chatModal').classList.remove('sho
 let currentModalUid='';
 const ADMIN_API=SB+'/functions/v1/admin-api';
 
-const _chatTexts={};let _tid=0;
+/* ===== TRANSLATION ENGINE (English-by-default) ===== */
+const _chatTexts={};    // key -> original text
+const _translations={}; // key -> English translation (cached)
+let _tid=0;
+let _showingEnglish=true; // default: show English
+
 function storeText(t){const id='_t'+(++_tid);_chatTexts[id]=t;return id}
 
-async function translateEl(el){
-  const key=el.dataset.tkey;
+// Translate a single bubble and cache the result
+async function translateBubble(textEl, btnEl){
+  const key=textEl.dataset.tkey;
   const text=_chatTexts[key];
   if(!text)return;
-  el.textContent='translating...';el.style.color='var(--muted)';
+
+  // Use cache if available
+  if(_translations[key]){
+    textEl.textContent=_translations[key];
+    if(btnEl){btnEl.textContent='Original';btnEl.dataset.state='en';btnEl.classList.remove('translating')}
+    return;
+  }
+
+  // Mark as translating
+  if(btnEl){btnEl.textContent='...';btnEl.classList.add('translating')}
+
   try{
     const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text})});
     const d=await r.json();
-    if(d.translation){el.textContent=d.translation;el.style.color='#93c5fd';el.style.cursor='default'}
-    else{el.textContent='[error]';el.style.color='#ef4444'}
-  }catch(e){el.textContent='[failed]';el.style.color='#ef4444'}
+    if(d.translation){
+      _translations[key]=d.translation;
+      // Only update if we're still showing English
+      if(_showingEnglish){
+        textEl.textContent=d.translation;
+      }
+      if(btnEl){btnEl.textContent='Original';btnEl.dataset.state='en';btnEl.classList.remove('translating')}
+    } else {
+      if(btnEl){btnEl.textContent='EN';btnEl.classList.remove('translating')}
+    }
+  }catch(e){
+    if(btnEl){btnEl.textContent='EN';btnEl.classList.remove('translating')}
+  }
 }
 
-function translateAll(){
-  document.querySelectorAll('#modalBody .en-btn').forEach(b=>{ if(b.style.cursor!=='default') translateEl(b); });
+// Auto-translate all messages in the modal
+async function autoTranslateAll(){
+  const bubbles=document.querySelectorAll('#modalBody .chat-bubble');
+  const promises=[];
+  for(const bubble of bubbles){
+    const textEl=bubble.querySelector('.msg-text');
+    const btnEl=bubble.querySelector('.lang-btn');
+    if(!textEl)continue;
+    const key=textEl.dataset.tkey;
+    if(_translations[key]){
+      // Use cached translation immediately
+      textEl.textContent=_translations[key];
+      if(btnEl){btnEl.textContent='Original';btnEl.dataset.state='en'}
+    } else {
+      // Queue translation (run in parallel, max 5 at a time)
+      promises.push(translateBubble(textEl,btnEl));
+    }
+  }
+  // Run translations in parallel (batches of 5)
+  for(let i=0;i<promises.length;i+=5){
+    await Promise.all(promises.slice(i,i+5));
+  }
+}
+
+// Toggle individual bubble language
+function toggleBubbleLang(btn){
+  const bubble=btn.closest('.chat-bubble');
+  const textEl=bubble.querySelector('.msg-text');
+  if(!textEl)return;
+  const key=textEl.dataset.tkey;
+
+  if(btn.dataset.state==='en'){
+    // Show original
+    textEl.textContent=_chatTexts[key]||'';
+    btn.textContent='EN';
+    btn.dataset.state='orig';
+  } else {
+    // Show English
+    if(_translations[key]){
+      textEl.textContent=_translations[key];
+      btn.textContent='Original';
+      btn.dataset.state='en';
+    } else {
+      translateBubble(textEl,btn);
+    }
+  }
+}
+
+// Toggle ALL bubbles between English and Original
+function toggleAllLang(){
+  const bubbles=document.querySelectorAll('#modalBody .chat-bubble');
+  if(_showingEnglish){
+    // Switch to original
+    for(const bubble of bubbles){
+      const textEl=bubble.querySelector('.msg-text');
+      const btnEl=bubble.querySelector('.lang-btn');
+      if(!textEl)continue;
+      const key=textEl.dataset.tkey;
+      textEl.textContent=_chatTexts[key]||'';
+      if(btnEl){btnEl.textContent='EN';btnEl.dataset.state='orig'}
+    }
+    _showingEnglish=false;
+    document.getElementById('toggleAllBtn').textContent='Show English';
+  } else {
+    // Switch to English
+    for(const bubble of bubbles){
+      const textEl=bubble.querySelector('.msg-text');
+      const btnEl=bubble.querySelector('.lang-btn');
+      if(!textEl)continue;
+      const key=textEl.dataset.tkey;
+      if(_translations[key]){
+        textEl.textContent=_translations[key];
+        if(btnEl){btnEl.textContent='Original';btnEl.dataset.state='en'}
+      } else {
+        translateBubble(textEl,btnEl);
+      }
+    }
+    _showingEnglish=true;
+    document.getElementById('toggleAllBtn').textContent='Show Original';
+  }
 }
 
 async function sendReply(){
@@ -369,22 +477,22 @@ async function sendReply(){
   const btn=document.getElementById('replyBtn');
   const status=document.getElementById('replyStatus');
   status.style.color='var(--muted)';
-  btn.disabled=true;btn.textContent='Translating…';
+  btn.disabled=true;btn.textContent='Translating...';
   try{
-    // 1) English -> Thai
     const tr=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:en,target:'th'})});
     const td=await tr.json();
     const thai=(td.translation||'').trim();
-    if(!thai){status.style.color='#ef4444';status.textContent='Translation failed — not sent';btn.disabled=false;btn.textContent='Send in Thai';return;}
-    // 2) send Thai to the seller
-    btn.textContent='Sending…';
+    if(!thai){status.style.color='#ef4444';status.textContent='Translation failed -- not sent';btn.disabled=false;btn.textContent='Send in Thai';return;}
+    btn.textContent='Sending...';
     const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'reply',user_id:currentModalUid,message:thai})});
     const d=await r.json();
     if(d.success){
       status.innerHTML='✓ Sent in Thai: <span style="color:#93c5fd">'+thai.replace(/</g,'&lt;')+'</span>';
       document.getElementById('replyInput').value='';
       const body=document.getElementById('modalBody');
-      body.innerHTML+=`<div class="chat-time">just now (you wrote: ${en.replace(/</g,'&lt;')})</div><div class="chat-bubble bot">${thai.replace(/</g,'&lt;')}</div>`;
+      const bk=storeText(thai);
+      _translations[bk]=en; // Cache: original=Thai, translation=English (what admin typed)
+      body.innerHTML+=`<div class="chat-time">just now (you wrote: ${en.replace(/</g,'&lt;')})</div><div class="chat-bubble bot"><span class="msg-text" data-tkey="${bk}">${en.replace(/</g,'&lt;')}</span> <span class="lang-btn" data-state="en" onclick="toggleBubbleLang(this)">Original</span></div>`;
       body.scrollTop=body.scrollHeight;
     }else{status.style.color='#ef4444';status.textContent='Error: '+(d.error||'failed')}
   }catch(e){status.style.color='#ef4444';status.textContent='Error: '+e.message}
@@ -393,25 +501,32 @@ async function sendReply(){
 
 async function showConversation(uid,name){
   currentModalUid=uid;
+  _showingEnglish=true;
+  document.getElementById('toggleAllBtn').textContent='Show Original';
   const chats=await sbGet('line_chats',`select=message,bot_reply,created_at&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
   document.getElementById('modalTitle').textContent=name;
   document.getElementById('replyInput').value='';
   document.getElementById('replyStatus').textContent='';
   let html='';
   for(const c of chats){
-    if(!c.message||c.message.includes('[system')||c.message.includes('[followup'))continue;
-    const mk=storeText(c.message);
-    html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
-    html+=`<div class="chat-bubble user">${trunc(c.message,300)} <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
+    if(!c.message&&!c.bot_reply)continue;
+    if(c.message&&(c.message.includes('[system')||c.message.includes('[followup')))continue;
+    if(c.message){
+      const mk=storeText(c.message);
+      html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
+      html+=`<div class="chat-bubble user"><span class="msg-text" data-tkey="${mk}">${trunc(c.message,300)}</span> <span class="lang-btn" data-state="orig" onclick="toggleBubbleLang(this)">...</span></div>`;
+    }
     if(c.bot_reply){
       const bk=storeText(c.bot_reply);
-      html+=`<div class="chat-bubble bot">${trunc(c.bot_reply,400)} <span class="en-btn" data-tkey="${bk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
+      if(!c.message) html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
+      html+=`<div class="chat-bubble bot"><span class="msg-text" data-tkey="${bk}">${trunc(c.bot_reply,400)}</span> <span class="lang-btn" data-state="orig" onclick="toggleBubbleLang(this)">...</span></div>`;
     }
   }
   document.getElementById('modalBody').innerHTML=html||'<p style="color:var(--muted)">No messages</p>';
-  // Attach translate click handlers
-  document.querySelectorAll('.en-btn').forEach(btn=>btn.addEventListener('click',()=>translateEl(btn)));
   document.getElementById('chatModal').classList.add('show');
+
+  // Auto-translate all to English by default
+  if(html) autoTranslateAll();
 }
 
 async function loadConversions(){
@@ -423,11 +538,11 @@ async function loadConversions(){
   let kg=0,thb=0;
   tbody.innerHTML=orders.map(o=>{
     const w=o.weight_received!=null?o.weight_received:o.weight_ordered; kg+=Number(w)||0; thb+=Number(o.total_amount)||0;
-    const deliv=o.delivery_method==='parcel'?'📦 Parcel':(o.delivery_method==='pickup'?'🏭 Self':e(o.delivery_method||'—'));
-    const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'—')+(o.weight_received!=null?' → '+o.weight_received:'');
-    return `<tr><td style="font-family:monospace;color:var(--gold)">${e(o.ref||'—')}</td><td>${e(o.name||'—')}</td><td>${e(o.phone||o.line_id||'—')}</td><td>${e(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td><span class="badge">${e(o.status||'—')}</span></td><td>${fmtDate(o.created_at)}</td></tr>`;
+    const deliv=o.delivery_method==='parcel'?'📦 Parcel':(o.delivery_method==='pickup'?'🏭 Self':e(o.delivery_method||'--'));
+    const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'--')+(o.weight_received!=null?' -> '+o.weight_received:'');
+    return `<tr><td style="font-family:monospace;color:var(--gold)">${e(o.ref||'--')}</td><td>${e(o.name||'--')}</td><td>${e(o.phone||o.line_id||'--')}</td><td>${e(o.material||'--')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'--'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'--'}</td><td>${deliv}</td><td><span class="badge">${e(o.status||'--')}</span></td><td>${fmtDate(o.created_at)}</td></tr>`;
   }).join('');
-  if(sum)sum.textContent=`${orders.length} orders · ${kg.toLocaleString()} kg · ฿${thb.toLocaleString()} total`;
+  if(sum)sum.textContent=`${orders.length} orders | ${kg.toLocaleString()} kg | ฿${thb.toLocaleString()} total`;
 }
 
 async function loadAds(){
@@ -435,16 +550,16 @@ async function loadAds(){
   const camps=await sbGet('sea_campaigns','select=campaign_name,platform,status,budget_daily,performance,updated_at&order=updated_at.desc&limit=100');
   const tbody=document.getElementById('adsRows'); if(!tbody)return;
   const sum=document.getElementById('adsSummary');
-  if(!camps||!camps.length){tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted)">No campaigns synced yet — connect your Facebook / Google Ads accounts and run the ad managers to populate this.</td></tr>';if(sum)sum.textContent='';return;}
+  if(!camps||!camps.length){tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted)">No campaigns synced yet</td></tr>';if(sum)sum.textContent='';return;}
   let budget=0,active=0;
   tbody.innerHTML=camps.map(c=>{
     budget+=Number(c.budget_daily)||0; const on=/active|running|enabled|^on$/i.test(c.status||''); if(on)active++;
-    let perf='—'; try{const p=typeof c.performance==='string'?JSON.parse(c.performance):c.performance; if(p&&typeof p==='object')perf=Object.entries(p).slice(0,3).map(([k,v])=>`${e(k)}: ${e(v)}`).join(' · ')||'—';}catch(_){}
-    const plat=/face|fb|meta/i.test(c.platform||'')?'📘 Facebook':(/goog/i.test(c.platform||'')?'🔍 Google':e(c.platform||'—'));
-    const badge=on?'<span class="badge ok">Running</span>':`<span class="badge">${e(c.status||'—')}</span>`;
-    return `<tr><td>${plat}</td><td>${e(c.campaign_name||'—')}</td><td>${badge}</td><td>${c.budget_daily!=null?'฿'+Number(c.budget_daily).toLocaleString()+'/day':'—'}</td><td style="font-size:11px">${perf}</td><td>${fmtDate(c.updated_at)}</td></tr>`;
+    let perf='--'; try{const p=typeof c.performance==='string'?JSON.parse(c.performance):c.performance; if(p&&typeof p==='object')perf=Object.entries(p).slice(0,3).map(([k,v])=>`${e(k)}: ${e(v)}`).join(' | ')||'--';}catch(_){}
+    const plat=/face|fb|meta/i.test(c.platform||'')?'📘 Facebook':(/goog/i.test(c.platform||'')?'🔍 Google':e(c.platform||'--'));
+    const badge=on?'<span class="badge ok">Running</span>':`<span class="badge">${e(c.status||'--')}</span>`;
+    return `<tr><td>${plat}</td><td>${e(c.campaign_name||'--')}</td><td>${badge}</td><td>${c.budget_daily!=null?'฿'+Number(c.budget_daily).toLocaleString()+'/day':'--'}</td><td style="font-size:11px">${perf}</td><td>${fmtDate(c.updated_at)}</td></tr>`;
   }).join('');
-  if(sum)sum.textContent=`${camps.length} campaigns · ${active} running · ฿${budget.toLocaleString()}/day total budget`;
+  if(sum)sum.textContent=`${camps.length} campaigns | ${active} running | ฿${budget.toLocaleString()}/day total budget`;
 }
 
 async function loadAll(){
@@ -461,7 +576,6 @@ async function loadAll(){
     const buyerIds=new Set(flags.filter(f=>f.user_type==='buyer').map(f=>f.platform_user_id));
     const weekAgo=new Date(Date.now()-7*86400000).toISOString();
 
-    // Build lead map
     const leadMap={};
     for(const c of chats){
       if(!c.line_user_id||c.line_user_id==='BROADCAST')continue;
@@ -479,7 +593,6 @@ async function loadAll(){
       return{cls:'cold',txt:'Cold'};
     }
 
-    // KPIs
     const uids=new Set(chats.map(c=>c.line_user_id));
     const weekChats=chats.filter(c=>c.created_at>weekAgo);
     document.getElementById('kLeads').textContent=uids.size;
@@ -488,43 +601,36 @@ async function loadAll(){
     document.getElementById('kRate').textContent=comp[0]?Number(comp[0].exchange_rate).toFixed(1):'--';
     document.getElementById('kWeek').textContent=new Set(weekChats.map(c=>c.line_user_id)).size;
 
-    // Overview - leads 7d
     const weekLeads=leads.filter(l=>l.last>weekAgo);
     document.getElementById('ovLeads').innerHTML=weekLeads.slice(0,12).map(l=>{
       const s=getStatus(l);
       return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${l.name}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
     }).join('')||'<tr><td colspan="4" style="color:var(--muted)">No leads this week</td></tr>';
 
-    // Actions
     const actions=[];
     for(const l of weekLeads){
       if(buyerIds.has(l.uid))continue;
       const h=(Date.now()-new Date(l.last).getTime())/3600000;
-      if(h>24&&h<72&&l.count>=3)actions.push({p:'urgent',t:`${l.name} — ${l.count} msgs, no reply ${timeAgo(l.last)}. Follow up!`});
+      if(h>24&&h<72&&l.count>=3)actions.push({p:'urgent',t:`${l.name} -- ${l.count} msgs, no reply ${timeAgo(l.last)}. Follow up!`});
     }
     for(const b of flags.filter(f=>f.user_type==='buyer')){
-      actions.push({p:'normal',t:`${b.display_name} (buyer) — ${b.notes||'monitor communications'}`});
+      actions.push({p:'normal',t:`${b.display_name} (buyer) -- ${b.notes||'monitor communications'}`});
     }
     if(!actions.length)actions.push({p:'low',t:'No urgent actions right now'});
     document.getElementById('ovActions').innerHTML=actions.map(a=>`<div class="action-item"><div class="dot ${a.p}"></div><div style="color:var(--dark-text)">${a.t}</div></div>`).join('');
 
-    // Flagged users
-    document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${f.display_name||'—'}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${f.user_type}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
+    document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${f.display_name||'--'}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${f.user_type}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
 
-    // Recent chats (overview)
     const realChats=chats.filter(c=>c.message&&!c.message.includes('[system')&&!c.message.includes('[followup')&&!c.message.includes('[broadcast'));
-    document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.display_name||'—'}</td><td>${trunc(c.message,35)}</td><td>${trunc(c.bot_reply,50)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`).join('');
+    document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.display_name||'--'}</td><td>${trunc(c.message,35)}</td><td>${trunc(c.bot_reply,50)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`).join('');
 
-    // Full chats tab
-    document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.display_name||'—'}</td><td>${trunc(c.message,60)}</td><td>${trunc(c.bot_reply,80)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`).join('');
+    document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.display_name||'--'}</td><td>${trunc(c.message,60)}</td><td>${trunc(c.bot_reply,80)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`).join('');
 
-    // All leads tab
     document.getElementById('allLeads').innerHTML=leads.map(l=>{
       const s=getStatus(l);
       return`<tr><td>${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
     }).join('');
 
-    // Prices comparison table
     const compNames={VHM_BOHRER_FRAESER:'Drills/Endmills',WENDESCHNEIDPLATTEN:'Inserts',HARTMETALL_GEMISCHT:'Mixed Carbide',HARTMETALL_STUECKSCHROTT:'Solid Pieces'};
     const priceMap={carbide_drills:'VHM_BOHRER_FRAESER',carbide_inserts:'WENDESCHNEIDPLATTEN',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
     const rate=comp[0]?Number(comp[0].exchange_rate):38;
@@ -536,14 +642,14 @@ async function loadAll(){
       const eu=euKey?compMap[euKey]:null;
       const tiers=eu&&eu.tier_data?eu.tier_data:[];
       const t10=tiers.find(t=>t.maxKg<=10||t.label?.includes('10'));
-      const t30=tiers.find(t=>t.label?.includes('10–30')||t.label?.includes('10-30'));
-      const t50=tiers.find(t=>t.label?.includes('30–50')||t.label?.includes('30-50'));
-      const e10=t10?t10.price:'—';const e30=t30?t30.price:'—';const e50=t50?t50.price:'—';
-      const thb10=t10?Math.round(t10.price*rate):'—';
-      const thb30=t30?Math.round(t30.price*rate):'—';
-      const thb50=t50?Math.round(t50.price*rate):'—';
+      const t30=tiers.find(t=>t.label?.includes('10-30')||t.label?.includes('10-30'));
+      const t50=tiers.find(t=>t.label?.includes('30-50')||t.label?.includes('30-50'));
+      const e10=t10?t10.price:'--';const e30=t30?t30.price:'--';const e50=t50?t50.price:'--';
+      const thb10=t10?Math.round(t10.price*rate):'--';
+      const thb30=t30?Math.round(t30.price*rate):'--';
+      const thb50=t50?Math.round(t50.price*rate):'--';
       const our10=Number(p.tier_under10||0);const our30=Number(p.tier_10_30||0);const our50=Number(p.tier_30_50||0);
-      function cmp(ours,theirs){if(theirs==='—')return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
+      function cmp(ours,theirs){if(theirs==='--')return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
       compRows+=`<tr>
         <td style="font-weight:600">${p.name_en||p.key}</td>
         <td style="color:var(--gold)">฿${our10.toLocaleString()}</td>
@@ -560,7 +666,6 @@ async function loadAll(){
     document.getElementById('comparisonTable').innerHTML=compRows;
     if(comp[0])document.getElementById('compMeta').textContent=`Source: hartmetallschrott24.de | Rate: €1 = ฿${rate.toFixed(2)} | Scraped: ${fmtDate(comp[0].scraped_at)} | Green = we buy cheaper than EU converts to`;
 
-    // Systems
     const crons=[
       {n:'Price Scraper',s:'Daily 2:00 AM'},{n:'Auto Price Update',s:'Daily 2:15 AM'},
       {n:'Price Snapshot',s:'Daily 2:30 AM'},{n:'Auto Followup',s:'Daily 3:00 AM'},
@@ -577,7 +682,6 @@ async function loadAll(){
     const funcs=['line-webhook','chat-proxy','fb-webhook','auto-followup','line-broadcast','price-scraper','auto-price-update','email-report','seo-optimizer','blog-generator','sea-orchestrator','sea-engine','sourcing-pipeline','analytics-api','google-ads-manager','fb-ads-manager','send-push-replies','market-data','setup-richmenu','notify-lead'];
     document.getElementById('funcPanel').innerHTML=funcs.map(f=>`<div class="sys-row"><span class="name">${f}</span><span class="badge ok">Deployed</span></div>`).join('');
 
-    // Analytics
     await loadAnalytics(chats);
 
     document.getElementById('lastUpdate').textContent='Updated: '+new Date().toLocaleString('en-GB',{timeZone:'Asia/Bangkok'})+' (Bangkok)';
@@ -597,7 +701,6 @@ async function loadAnalytics(lineChats){
   const d7=new Date(now-7*86400000).toISOString();
   const recent=events.filter(e=>e.created_at>d14);
 
-  // KPIs
   const views=recent.filter(e=>e.event_type==='page_view');
   const clicks=recent.filter(e=>e.event_type==='cta_click');
   const sessions=new Set(views.map(e=>e.session_id)).size;
@@ -612,7 +715,6 @@ async function loadAnalytics(lineChats){
   document.getElementById('aMobile').textContent=views.length?Math.round(mobile/views.length*100)+'%':'--';
   document.getElementById('aChats').textContent=weekChats;
 
-  // Daily traffic chart
   const dayMap={};
   for(let i=13;i>=0;i--){
     const d=new Date(now-i*86400000);
@@ -655,7 +757,6 @@ async function loadAnalytics(lineChats){
     });
   }
 
-  // Funnel
   const totalVisitors=sessions;
   const chatUsers=weekChats;
   const quotesGiven=lineChats?lineChats.filter(c=>c.created_at>d7&&c.bot_reply&&(c.bot_reply.includes('฿')||c.bot_reply.includes('ราคา')||c.bot_reply.includes('price')||c.bot_reply.includes('→'))).length:0;
@@ -667,7 +768,7 @@ async function loadAnalytics(lineChats){
   const maxF=Math.max(...funnelSteps.map(s=>s.value),1);
   document.getElementById('funnelViz').innerHTML=funnelSteps.map((s,i)=>{
     const w=Math.max((s.value/maxF)*100,8);
-    const conv=i>0?((s.value/funnelSteps[i-1].value)*100).toFixed(0)+'%':'—';
+    const conv=i>0?((s.value/funnelSteps[i-1].value)*100).toFixed(0)+'%':'--';
     return`<div style="margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
         <span style="color:var(--dark-text)">${s.label}</span>
@@ -681,20 +782,17 @@ async function loadAnalytics(lineChats){
     </div>`;
   }).join('')+`<div style="font-size:10px;color:var(--muted);margin-top:8px">14-day visitors vs 7-day LINE activity. Quotes = bot replies containing price info.</div>`;
 
-  // Top pages
   const pageCount={};
   views.forEach(e=>{pageCount[e.page]=(pageCount[e.page]||0)+1});
   const totalV=views.length||1;
   const sortedPages=Object.entries(pageCount).sort((a,b)=>b[1]-a[1]);
   document.getElementById('topPages').innerHTML=sortedPages.map(([p,c])=>`<tr><td>${p}</td><td>${c}</td><td>${((c/totalV)*100).toFixed(1)}%</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
 
-  // Sources
   const srcCount={};
   views.forEach(e=>{const s=e.utm_source||'(direct/organic)';srcCount[s]=(srcCount[s]||0)+1});
   const sortedSrc=Object.entries(srcCount).sort((a,b)=>b[1]-a[1]);
   document.getElementById('trafficSources').innerHTML=sortedSrc.map(([s,c])=>`<tr><td>${s}</td><td>${c}</td></tr>`).join('');
 
-  // Devices
   const devCount={};
   views.forEach(e=>{const d=e.device||'unknown';devCount[d]=(devCount[d]||0)+1});
   const sortedDev=Object.entries(devCount).sort((a,b)=>b[1]-a[1]);
