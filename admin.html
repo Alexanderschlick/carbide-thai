@@ -88,6 +88,12 @@ tr:hover { background: rgba(200,168,78,0.04); }
 .chat-bubble.user { background: rgba(46,125,247,0.15); color: #93c5fd; margin-right: auto; }
 .chat-bubble.bot { background: rgba(200,168,78,0.1); color: var(--dark-text); margin-left: auto; }
 .chat-time { font-size: 9px; color: var(--muted); margin-bottom: 2px; }
+.chat-image { max-width: 240px; border-radius: 8px; margin: 6px 0; cursor: pointer; }
+.chat-image:hover { opacity: 0.85; }
+.needs-human { background: rgba(239,68,68,0.15); border-left: 3px solid #ef4444; }
+.human-badge { display: inline-block; background: #ef4444; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600; }
+.human-reason { font-size: 10px; color: #ef4444; margin-top: 4px; }
+.human-warning { display: inline-block; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 
 .lang-btn { display: inline-block; font-size: 10px; cursor: pointer; color: var(--blue); margin-left: 6px; padding: 1px 5px; border: 1px solid var(--blue); border-radius: 4px; vertical-align: middle; }
 .lang-btn:hover { opacity: 0.8; }
@@ -503,7 +509,7 @@ async function showConversation(uid,name){
   currentModalUid=uid;
   _showingEnglish=true;
   document.getElementById('toggleAllBtn').textContent='Show Original';
-  const chats=await sbGet('line_chats',`select=message,bot_reply,created_at&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
+  const chats=await sbGet('line_chats',`select=message,bot_reply,created_at,image_url,needs_human,needs_human_reason&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
   document.getElementById('modalTitle').textContent=name;
   document.getElementById('replyInput').value='';
   document.getElementById('replyStatus').textContent='';
@@ -511,15 +517,19 @@ async function showConversation(uid,name){
   for(const c of chats){
     if(!c.message&&!c.bot_reply)continue;
     if(c.message&&(c.message.includes('[system')||c.message.includes('[followup')))continue;
+    const nhClass=c.needs_human?' needs-human':'';
+    const nhBadge=c.needs_human?'<span class="human-badge">ACTION NEEDED</span>':'';
+    const nhReason=c.needs_human&&c.needs_human_reason?`<div class="human-reason">${c.needs_human_reason.replace(/</g,'&lt;')}</div>`:'';
+    const imgTag=c.image_url?`<img class="chat-image" src="${c.image_url}" onclick="window.open(this.src,'_blank')">`:'';
     if(c.message){
       const mk=storeText(c.message);
       html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
-      html+=`<div class="chat-bubble user"><span class="msg-text" data-tkey="${mk}">${trunc(c.message,300)}</span> <span class="lang-btn" data-state="orig" onclick="toggleBubbleLang(this)">...</span></div>`;
+      html+=`<div class="chat-bubble user${nhClass}"><span class="msg-text" data-tkey="${mk}">${trunc(c.message,300)}</span> <span class="lang-btn" data-state="orig" onclick="toggleBubbleLang(this)">...</span>${nhBadge}${imgTag}${nhReason}</div>`;
     }
     if(c.bot_reply){
       const bk=storeText(c.bot_reply);
       if(!c.message) html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
-      html+=`<div class="chat-bubble bot"><span class="msg-text" data-tkey="${bk}">${trunc(c.bot_reply,400)}</span> <span class="lang-btn" data-state="orig" onclick="toggleBubbleLang(this)">...</span></div>`;
+      html+=`<div class="chat-bubble bot${c.message?'':nhClass}"><span class="msg-text" data-tkey="${bk}">${trunc(c.bot_reply,400)}</span> <span class="lang-btn" data-state="orig" onclick="toggleBubbleLang(this)">...</span>${c.message?'':nhBadge}${c.message?'':imgTag}${c.message?'':nhReason}</div>`;
     }
   }
   document.getElementById('modalBody').innerHTML=html||'<p style="color:var(--muted)">No messages</p>';
@@ -567,7 +577,7 @@ async function loadAll(){
   loadAds();
   try{
     const[chats,prices,comp,flags]=await Promise.all([
-      sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at&line_user_id=neq.BROADCAST&order=created_at.desc&limit=1000'),
+      sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human&line_user_id=neq.BROADCAST&order=created_at.desc&limit=1000'),
       sbGet('prices','select=key,name_en,tier_under10,tier_10_30,tier_30_50,teaser_thb,updated_at&order=key'),
       sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=10'),
       sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line')
@@ -577,11 +587,13 @@ async function loadAll(){
     const weekAgo=new Date(Date.now()-7*86400000).toISOString();
 
     const leadMap={};
+    const needsHumanUsers=new Set();
     for(const c of chats){
       if(!c.line_user_id||c.line_user_id==='BROADCAST')continue;
       if(!leadMap[c.line_user_id])leadMap[c.line_user_id]={uid:c.line_user_id,name:c.display_name||'Unknown',count:0,last:c.created_at,first:c.created_at};
       leadMap[c.line_user_id].count++;
       if(c.created_at<leadMap[c.line_user_id].first)leadMap[c.line_user_id].first=c.created_at;
+      if(c.needs_human)needsHumanUsers.add(c.line_user_id);
     }
     const leads=Object.values(leadMap).sort((a,b)=>new Date(b.last)-new Date(a.last));
 
@@ -604,7 +616,8 @@ async function loadAll(){
     const weekLeads=leads.filter(l=>l.last>weekAgo);
     document.getElementById('ovLeads').innerHTML=weekLeads.slice(0,12).map(l=>{
       const s=getStatus(l);
-      return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${l.name}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
+      const hw=needsHumanUsers.has(l.uid)?'<span class="human-warning" title="Action needed"></span>':'';
+      return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${hw}${l.name}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
     }).join('')||'<tr><td colspan="4" style="color:var(--muted)">No leads this week</td></tr>';
 
     const actions=[];
@@ -622,13 +635,14 @@ async function loadAll(){
     document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${f.display_name||'--'}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${f.user_type}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
 
     const realChats=chats.filter(c=>c.message&&!c.message.includes('[system')&&!c.message.includes('[followup')&&!c.message.includes('[broadcast'));
-    document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.display_name||'--'}</td><td>${trunc(c.message,35)}</td><td>${trunc(c.bot_reply,50)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`).join('');
+    document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>{const hw=needsHumanUsers.has(c.line_user_id)?'<span class="human-warning" title="Action needed"></span>':'';return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${hw}${c.display_name||'--'}</td><td>${trunc(c.message,35)}</td><td>${trunc(c.bot_reply,50)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;}).join('');
 
-    document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.display_name||'--'}</td><td>${trunc(c.message,60)}</td><td>${trunc(c.bot_reply,80)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`).join('');
+    document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>{const hw=needsHumanUsers.has(c.line_user_id)?'<span class="human-warning" title="Action needed"></span>':'';return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${hw}${c.display_name||'--'}</td><td>${trunc(c.message,60)}</td><td>${trunc(c.bot_reply,80)}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;}).join('');
 
     document.getElementById('allLeads').innerHTML=leads.map(l=>{
       const s=getStatus(l);
-      return`<tr><td>${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
+      const hw=needsHumanUsers.has(l.uid)?'<span class="human-warning" title="Action needed"></span>':'';
+      return`<tr><td>${hw}${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
     }).join('');
 
     const compNames={VHM_BOHRER_FRAESER:'Drills/Endmills',WENDESCHNEIDPLATTEN:'Inserts',HARTMETALL_GEMISCHT:'Mixed Carbide',HARTMETALL_STUECKSCHROTT:'Solid Pieces'};
