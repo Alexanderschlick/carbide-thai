@@ -174,6 +174,237 @@ body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;fo
 <div class="cta-section">
   <h2>ขายคาร์ไบด์ในกรุงเทพวันนี้!</h2>
   <p>Sell your carbide scrap in Bangkok — free shipping, paid within 48 hours!</p>
+  <a href="/sell.html" class="cta-btn">เช็คราคา — Get a Price</a>
+  <a href="https://line.me/R/ti/p/@280uqpab" class="cta-btn-secondary" target="_blank">💬 LINE Chat</a>
+</div>
+<div class="content-section"><h2>หน้าที่เกี่ยวข้อง — Related Pages</h2><div class="related-pages"><a href="/inserts.html" class="related-link"><h4>เม็ดมีดคาร์ไบด์</h4><p>Carbide Inserts — ราคาสูงสุด</p></a><a href="/drills.html" class="related-link"><h4>ดอกสว่าน & เอ็นด์มิลล์</h4><p>Drills & End Mills</p></a><a href="/mixed.html" class="related-link"><h4>คาร์ไบด์รวม</h4><p>Mixed Carbide</p></a><a href="/sandrills.html" class="related-link"><h4>ทราย & ผงคาร์ไบด์</h4><p>Sand & Rills</p></a><a href="/chonburi.html" class="related-link"><h4>รับซื้อ ชลบุรี</h4><p>Chonburi / Eastern Seaboard</p></a></div></div>
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/sell.html">ขายคาร์ไบด์</a>
+    <a href="/inserts.html">Inserts</a>
+    <a href="/drills.html">Drills</a>
+    <a href="/mixed.html">Mixed</a>
+    <a href="/sandrills.html">Sand & Rills</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/bangkok.html">กรุงเทพ</a>
+    <a href="/chonburi.html">ชลบุรี</a>
+    <a href="/rayong.html">ระยอง</a>
+    <a href="/samutprakan.html">สมุทรปราการ</a>
+    <a href="/pathumthani.html">ปทุมธานี</a>
+  </div>
+  <p class="footer-copy">© 2024-2026 ThaiCarbide.com — รับซื้อเศษคาร์ไบด์ทั่วไทย | Tungsten carbide scrap buyer Thailand</p>
+  <p class="footer-copy" style="margin-top:10px;font-size:11px;line-height:1.7;opacity:.85;">ดำเนินการโดย / Operated by <strong>Arden Holdings Global Limited</strong> (จดทะเบียนในฮ่องกง / incorporated in Hong Kong) · CR 80816708 · BR 80816708-000<br>สำนักงานจดทะเบียน / Registered office: Unit 909, Prosperity Millennia Plaza, 663 King's Road, Quarry Bay, Hong Kong</p>
+  <p class="footer-copy" style="margin-top:4px;">📞 093-696-9935 | 📧 thaicarbide@gmail.com | LINE @280uqpab</p>
+</footer>
+<script>
+(async function(){
+  try {
+    const SB = 'https://ltupwgytuayzopnsdvpc.supabase.co';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
+    const r = await fetch(SB + '/rest/v1/prices?select=*&order=key', {
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+    });
+    const prices = await r.json();
+    prices.forEach(p => {
+      const el = document.querySelector('[data-price-key="'+p.key+'"]');
+      if (el) {
+        el.querySelector('.p-under10').textContent = '฿' + Number(p.tier_under10).toLocaleString();
+        el.querySelector('.p-10-30').textContent = '฿' + Number(p.tier_10_30).toLocaleString();
+        el.querySelector('.p-30-50').textContent = '฿' + Number(p.tier_30_50).toLocaleString();
+      }
+    });
+    // Update all price displays
+    document.querySelectorAll('[data-price-top]').forEach(el => {
+      const key = el.dataset.priceTop;
+      const p = prices.find(x => x.key === key);
+      if (p) el.textContent = '฿' + Number(p.tier_30_50).toLocaleString();
+    });
+  } catch(e) { console.error('Price load err:', e); }
+})();
+// FAQ toggle
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+</script>
+</body></html><!DOCTYPE html>
+<html lang="th" class="notranslate" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รับซื้อคาร์ไบด์กรุงเทพ ราคาสูง | Buy Carbide Scrap Bangkok | ThaiCarbide</title>
+<meta name="description" content="รับซื้อเศษคาร์ไบด์กรุงเทพ ราคาสูงถึง ฿2,250/กก. รับซื้อคาร์ไบด์ทุกเขตในกรุงเทพฯ บริการรับถึงที่สำหรับ 20กก.+ — Buying carbide across all Bangkok districts, free pickup for 20kg+ ส่งฟรี จ่ายภายใน 48 ชม. Buy tungsten carbide scrap Bangkok Thailand.">
+<link rel="canonical" href="https://thaicarbide.com/bangkok.html">
+<link rel="alternate" hreflang="th" href="https://thaicarbide.com/bangkok.html">
+<link rel="alternate" hreflang="en" href="https://thaicarbide.com/bangkok.html">
+<link rel="alternate" hreflang="x-default" href="https://thaicarbide.com/bangkok.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thaicarbide.com/bangkok.html">
+<meta property="og:title" content="รับซื้อคาร์ไบด์กรุงเทพ ราคาสูง | Buy Carbide Scrap Bangkok | ThaiCarbide">
+<meta property="og:description" content="รับซื้อเศษคาร์ไบด์กรุงเทพ ราคาสูงถึง ฿2,250/กก. รับซื้อคาร์ไบด์ทุกเขตในกรุงเทพฯ บริการรับถึงที่สำหรับ 20กก.+ — Buying carbide across all Bangkok districts, free pickup for 20kg+ ส่งฟรี จ่ายภายใน 48 ชม. Buy tungsten carbide scrap Bangkok Thailand.">
+<meta property="og:locale" content="th_TH">
+<meta property="og:site_name" content="ThaiCarbide">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="รับซื้อคาร์ไบด์กรุงเทพ ราคาสูง | Buy Carbide Scrap Bangkok | ThaiCarbide">
+<meta name="twitter:description" content="รับซื้อเศษคาร์ไบด์กรุงเทพ ราคาสูงถึง ฿2,250/กก. รับซื้อคาร์ไบด์ทุกเขตในกรุงเทพฯ บริการรับถึงที่สำหรับ 20กก.+ — Buying carbide across all Bangkok districts, free pickup for 20kg+ ส่งฟรี จ่ายภายใน 48 ชม. Buy tungsten carbide scrap Bangkok Thailand.">
+<meta name="geo.region" content="TH">
+<meta name="keywords" content="รับซื้อคาร์ไบด์กรุงเทพ,ขายคาร์ไบด์กรุงเทพ,carbide scrap bangkok,tungsten carbide bangkok">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "ThaiCarbide — Bangkok", "description": "Buy tungsten carbide scrap in Bangkok, Thailand. Best prices, free shipping, paid within 48 hours.", "url": "https://thaicarbide.com/bangkok.html", "telephone": "+66936969935", "email": "thaicarbide@gmail.com", "areaServed": {"@type": "City", "name": "Bangkok"}, "priceRange": "1700-2250 THB/kg"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1f14; --sur: #0f2a1a; --sur2: #132e1d;
+  --gold: #c9a227; --green: #06C755; --white: #f2ede4;
+  --muted: #a8b8a4; --border: rgba(201,162,39,0.18); --red: #e05555;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Sarabun',sans-serif;font-size:16px;line-height:1.7;min-height:100vh;}
+
+/* ── TOP BAR ─────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(11,31,20,0.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);}
+.topbar-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--white);text-decoration:none;letter-spacing:1px;}
+.topbar-logo span{color:var(--gold);}
+.topbar-line{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;padding:8px 16px;border-radius:4px;text-decoration:none;}
+
+/* ── NAV ─────────────────── */
+.nav{background:var(--sur);border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;}
+.nav a{display:inline-block;padding:12px 16px;color:var(--muted);font-size:14px;font-weight:600;text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;}
+.nav a:hover,.nav a.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── CONTENT ─────────────── */
+.page-wrap{max-width:800px;margin:0 auto;padding:32px 20px 80px;}
+.hero-section{text-align:center;padding:40px 0 32px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+.hero-section h1{font-family:'Sarabun',sans-serif;font-size:clamp(26px,5vw,38px);font-weight:800;line-height:1.3;color:var(--white);margin-bottom:8px;}
+.hero-section h1 em{color:var(--green);font-style:normal;}
+.hero-section .subtitle{font-size:17px;color:var(--muted);max-width:600px;margin:0 auto;}
+
+/* ── PRICE CARDS ─────────── */
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0 32px;}
+.price-card{background:var(--sur);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;transition:border-color 0.2s;}
+.price-card:hover{border-color:var(--gold);}
+.price-card.featured{border-color:var(--green);background:rgba(6,199,85,0.06);}
+.price-card h3{font-size:14px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-family:'Barlow Condensed',sans-serif;}
+.price-card .amount{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--white);line-height:1;}
+.price-card .amount small{font-size:16px;color:var(--muted);font-weight:700;}
+.price-card .tier{font-size:12px;color:var(--muted);margin-top:6px;}
+
+/* ── CONTENT SECTIONS ────── */
+.content-section{margin-bottom:36px;}
+.content-section h2{font-size:22px;font-weight:800;color:var(--white);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--gold);}
+.content-section h3{font-size:17px;font-weight:700;color:var(--gold);margin:20px 0 8px;}
+.content-section p{color:var(--muted);margin-bottom:14px;font-size:15px;}
+.content-section strong{color:var(--white);}
+
+/* ── FEATURE LIST ────────── */
+.feature-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0;}
+.feature-item{background:var(--sur);border:1px solid var(--border);border-radius:6px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
+.feature-item .icon{font-size:24px;flex-shrink:0;}
+.feature-item .text{font-size:14px;color:var(--muted);line-height:1.4;}
+.feature-item .text strong{color:var(--white);display:block;margin-bottom:2px;}
+
+/* ── FAQ ─────────────────── */
+.faq-item{background:var(--sur);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
+.faq-q{padding:16px 20px;cursor:pointer;font-weight:700;color:var(--white);display:flex;justify-content:space-between;align-items:center;font-size:15px;}
+.faq-q::after{content:'+';color:var(--gold);font-size:20px;font-weight:700;transition:transform 0.2s;}
+.faq-item.open .faq-q::after{transform:rotate(45deg);}
+.faq-a{padding:0 20px 16px;color:var(--muted);font-size:14px;display:none;}
+.faq-item.open .faq-a{display:block;}
+
+/* ── CTA ─────────────────── */
+.cta-section{background:rgba(6,199,85,0.08);border:2px solid rgba(6,199,85,0.35);border-radius:12px;padding:32px 24px;text-align:center;margin:36px 0;}
+.cta-section h2{font-size:24px;font-weight:800;color:var(--white);margin-bottom:8px;}
+.cta-section p{color:var(--muted);margin-bottom:20px;font-size:15px;}
+.cta-btn{display:inline-block;background:var(--green);color:#fff;font-size:18px;font-weight:700;padding:16px 40px;border-radius:6px;text-decoration:none;font-family:'Sarabun',sans-serif;transition:transform 0.15s;box-shadow:0 0 20px rgba(6,199,85,0.3);}
+.cta-btn:hover{transform:scale(1.03);}
+.cta-btn-secondary{display:inline-block;background:transparent;color:var(--green);font-size:15px;font-weight:700;padding:12px 24px;border:2px solid var(--green);border-radius:6px;text-decoration:none;margin-left:10px;transition:all 0.15s;}
+.cta-btn-secondary:hover{background:rgba(6,199,85,0.1);}
+
+/* ── BREADCRUMB ──────────── */
+.breadcrumb{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.breadcrumb a{color:var(--gold);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ── FOOTER ──────────────── */
+.footer{background:var(--sur);border-top:1px solid var(--border);padding:32px 20px;text-align:center;}
+.footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-bottom:16px;}
+.footer-links a{color:var(--muted);font-size:14px;text-decoration:none;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-size:12px;color:var(--muted);}
+
+/* ── BLOG CARDS ──────────── */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0;}
+.blog-card{background:var(--sur);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color 0.2s;}
+.blog-card:hover{border-color:var(--gold);}
+.blog-card-body{padding:20px;}
+.blog-card-tag{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.blog-card h3{font-size:17px;font-weight:700;color:var(--white);margin-bottom:8px;line-height:1.3;}
+.blog-card h3 a{color:inherit;text-decoration:none;}
+.blog-card p{font-size:14px;color:var(--muted);line-height:1.5;}
+.blog-card-date{font-size:12px;color:var(--muted);margin-top:12px;}
+
+/* ── INTERNAL LINKS ──────── */
+.related-pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:20px 0;}
+.related-link{display:block;background:var(--sur);border:1px solid var(--border);border-radius:6px;padding:16px;text-decoration:none;transition:border-color 0.2s;}
+.related-link:hover{border-color:var(--gold);}
+.related-link h4{color:var(--white);font-size:15px;font-weight:700;margin-bottom:4px;}
+.related-link p{color:var(--muted);font-size:13px;}
+
+@media(max-width:600px){
+  .page-wrap{padding:20px 16px 60px;}
+  .price-grid{grid-template-columns:1fr 1fr;}
+  .feature-list{grid-template-columns:1fr;}
+  .hero-section{padding:24px 0 20px;}
+}
+</style>
+<!-- Analytics -->
+<script defer data-domain="thaicarbide.com" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <a href="/" class="topbar-logo">Thai<span>Carbide</span></a>
+  <a href="https://line.me/R/ti/p/@280uqpab" class="topbar-line" target="_blank">💬 LINE</a>
+</div><nav class="nav"><a href="/">Home</a><a href="/sell.html">ขายคาร์ไบด์</a><a href="/inserts.html">Inserts</a><a href="/drills.html">Drills</a><a href="/mixed.html">Mixed</a><a href="/sandrills.html">Sand & Rills</a><a href="/blog.html">Blog</a></nav>
+<div class="page-wrap">
+<div class="breadcrumb"><a href="/">Home</a> › <span>รับซื้อคาร์ไบด์กรุงเทพ — Bangkok</span></div>
+<div class="hero-section">
+  <h1>รับซื้อ<em>คาร์ไบด์</em>กรุงเทพ<br>Buy Carbide Scrap in Bangkok</h1>
+  <p class="subtitle">รับซื้อคาร์ไบด์ทุกเขตในกรุงเทพฯ บริการรับถึงที่สำหรับ 20กก.+ — Buying carbide across all Bangkok districts, free pickup for 20kg+</p>
+</div>
+
+<div class="price-grid">
+  <div class="price-card"><h3>Inserts เม็ดมีด</h3><div class="amount" data-price-top="carbide_inserts">฿2,250 <small>/kg</small></div><div class="tier">ราคาสูงสุด</div></div>
+  <div class="price-card"><h3>Drills ดอกสว่าน</h3><div class="amount" data-price-top="carbide_drills">฿2,250 <small>/kg</small></div><div class="tier">ดอกสว่าน/เอ็นด์มิลล์</div></div>
+  <div class="price-card"><h3>Mixed คละ</h3><div class="amount" data-price-top="mixed_carbide">฿2,250 <small>/kg</small></div><div class="tier">รวมทุกประเภท</div></div>
+  <div class="price-card"><h3>Sand ทราย</h3><div class="amount" data-price-top="sand_rills">฿2,050 <small>/kg</small></div><div class="tier">ผง/ทราย</div></div>
+</div>
+
+<div class="content-section">
+  <h2>บริการรับซื้อคาร์ไบด์ในกรุงเทพ</h2>
+  <p>ThaiCarbide ให้บริการรับซื้อคาร์ไบด์ครอบคลุมทุกเขตในกรุงเทพมหานคร ไม่ว่าจะเป็นย่านอุตสาหกรรมบางนา บางพลี ลาดกระบัง หรือย่านธุรกิจสุขุมวิท สาทร สีลม เรามีบริการรับถึงที่สำหรับคาร์ไบด์ 20 กก. ขึ้นไป หรือส่งทาง Kerry/J&T ฟรีสำหรับน้ำหนักน้อยกว่า</p>
+  <h3>บริการรับถึงที่ — Pickup Service</h3>
+  <p>สำหรับโรงงานและร้านกลึงในกรุงเทพฯ ที่มีคาร์ไบด์ 20 กก. ขึ้นไป เราบริการรับถึงที่ฟรี! นัดหมายผ่าน LINE @280uqpab หรือโทร 093-696-9935 เราจะจัดรถไปรับพร้อมชั่งน้ำหนักและจ่ายเงินทันที For factories in Bangkok with 20kg+, we offer free pickup! Schedule via LINE @280uqpab or call 093-696-9935.</p>
+  <h3>โรงงานในพื้นที่ — Local Industry</h3>
+  <p>กรุงเทพเป็นศูนย์กลางอุตสาหกรรมที่ใหญ่ที่สุดของประเทศ มีโรงงาน CNC ร้านกลึง และโรงงานผลิตชิ้นส่วนจำนวนมาก โดยเฉพาะในเขตบางนา ลาดกระบัง มีนบุรี และบางขุนเทียน Bangkok is Thailand's largest industrial hub with numerous CNC shops and precision manufacturing facilities, especially in Bangna, Lat Krabang, Min Buri, and Bang Khun Thian districts.</p>
+</div>
+
+<div class="content-section">
+  <h2>วิธีขายคาร์ไบด์ในกรุงเทพ — How to Sell</h2>
+  <div class="feature-list">
+    <div class="feature-item"><div class="icon">📸</div><div class="text"><strong>1. ถ่ายรูปส่ง LINE</strong>แอด @280uqpab แล้วส่งรูปคาร์ไบด์มา AI จะประเมินราคาให้ทันที</div></div>
+    <div class="feature-item"><div class="icon">⚖️</div><div class="text"><strong>2. ชั่งน้ำหนัก</strong>ชั่งน้ำหนักคร่าวๆ แล้วแจ้งเรา เราจะคำนวณราคาให้</div></div>
+    <div class="feature-item"><div class="icon">🚚</div><div class="text"><strong>3. ส่งพัสดุหรือนัดรับ</strong>ส่งทาง Kerry/J&T ฟรี หรือ 20กก.+ นัดรับถึงที่</div></div>
+    <div class="feature-item"><div class="icon">💰</div><div class="text"><strong>4. รับเงินภายใน 48 ชม.</strong>ตรวจสอบแล้วโอนเงินทันที PromptPay หรือบัญชีธนาคาร</div></div>
+  </div>
+</div>
+
+
+<div class="cta-section">
+  <h2>ขายคาร์ไบด์ในกรุงเทพวันนี้!</h2>
+  <p>Sell your carbide scrap in Bangkok — free shipping, paid within 48 hours!</p>
   <a href="/sell.html" class="cta-btn">ขายเลย — Sell Now</a>
   <a href="https://line.me/R/ti/p/@280uqpab" class="cta-btn-secondary" target="_blank">💬 LINE Chat</a>
 </div>
