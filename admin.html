@@ -502,7 +502,7 @@ async function loadAll(){
   loadAds();
   try{
     const[chats,prices,comp,flags]=await Promise.all([
-      sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human&line_user_id=neq.BROADCAST&order=created_at.desc&limit=1000'),
+      sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human&line_user_id=neq.BROADCAST&order=created_at.desc&limit=10000'),
       sbGet('prices','select=key,name_en,tier_under10,tier_10_30,tier_30_50,teaser_thb,updated_at&order=key'),
       sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=10'),
       sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line')
