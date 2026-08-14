@@ -343,6 +343,14 @@ async function sbGet(tbl,params=''){
   const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}});
   return r.ok?r.json():[];
 }
+async function sbGetAll(tbl,params=''){
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,Prefer:'count=exact',Range:'0-9999'}});
+  if(!r.ok)return{data:[],total:0};
+  const data=await r.json();
+  const range=r.headers.get('content-range');
+  const total=range?parseInt(range.split('/')[1])||data.length:data.length;
+  return{data,total};
+}
 
 function timeAgo(d){const m=Math.floor((Date.now()-new Date(d).getTime())/60000);if(m<1)return'now';if(m<60)return m+'m';if(m<1440)return Math.floor(m/60)+'h';return Math.floor(m/1440)+'d'}
 function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'…':(s||'')}
@@ -501,12 +509,14 @@ async function loadAll(){
   loadConversions();
   loadAds();
   try{
-    const[chats,prices,comp,flags]=await Promise.all([
-      sbGet('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human&line_user_id=neq.BROADCAST&order=created_at.desc&limit=10000'),
+    const[chatsResult,prices,comp,flags]=await Promise.all([
+      sbGetAll('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human&line_user_id=neq.BROADCAST&order=created_at.desc'),
       sbGet('prices','select=key,name_en,tier_under10,tier_10_30,tier_30_50,teaser_thb,updated_at&order=key'),
       sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=10'),
       sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line')
     ]);
+    const chats=chatsResult.data;
+    const totalMessages=chatsResult.total;
 
     const buyerIds=new Set(flags.filter(f=>f.user_type==='buyer').map(f=>f.platform_user_id));
     const weekAgo=new Date(Date.now()-7*86400000).toISOString();
@@ -534,7 +544,7 @@ async function loadAll(){
     const uids=new Set(chats.map(c=>c.line_user_id));
     const weekChats=chats.filter(c=>c.created_at>weekAgo);
     document.getElementById('kLeads').textContent=uids.size;
-    document.getElementById('kMsgs').textContent=chats.length;
+    document.getElementById('kMsgs').textContent=totalMessages;
     document.getElementById('kBuyers').textContent=flags.filter(f=>f.user_type==='buyer').length;
     document.getElementById('kRate').textContent=comp[0]?Number(comp[0].exchange_rate).toFixed(1):'--';
     document.getElementById('kWeek').textContent=new Set(weekChats.map(c=>c.line_user_id)).size;
