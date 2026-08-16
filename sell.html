@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0c1526;--panel:#111d33;--panel2:#16233d;--gold:#c9a35c;--gold-soft:#e0c48c;--royal:#5b74e0;--green:#3fbf87;--steel:#9fb0c6;--ink:#eef1f6;--muted:#8493ab;--hair:rgba(159,176,210,.15);--r:10px}
+:root{--bg:#0c1526;--panel:#111d33;--panel2:#16233d;--gold:#c9a35c;--gold-soft:#e0c48c;--royal:#5b74e0;--green:#3fbf87;--line:#06c755;--steel:#9fb0c6;--ink:#eef1f6;--muted:#8493ab;--hair:rgba(159,176,210,.15);--r:10px}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:'Inter','Sarabun',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
@@ -31,10 +31,17 @@ body.lang-th .en{display:none!important}body.lang-en .th{display:none!important}
 .lang{display:flex;gap:4px}
 .lang button{font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--hair);color:var(--muted);font-size:12px;padding:6px 9px;border-radius:8px;cursor:pointer}
 .lang button.on{border-color:var(--gold);color:var(--gold)}
-.line{font-family:'IBM Plex Mono',monospace;border:1px solid rgba(201,163,92,.5);color:var(--gold);padding:7px 13px;border-radius:8px;font-size:12px;text-decoration:none}
-.wrap{max-width:520px;margin:0 auto;padding:26px 18px 80px}
+.linetag{font-family:'IBM Plex Mono',monospace;border:1px solid rgba(201,163,92,.5);color:var(--gold);padding:7px 13px;border-radius:8px;font-size:12px;text-decoration:none}
+.wrap{max-width:520px;margin:0 auto;padding:22px 18px 80px}
 .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-align:center;display:block;margin-bottom:16px}
 h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7vw,38px);line-height:1.12;letter-spacing:-.02em;text-align:center;margin-bottom:20px}
+h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text-align:center;margin-bottom:6px}
+.steps{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:24px}
+.steps .s{display:flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.steps .s .n{width:22px;height:22px;border-radius:50%;border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font-size:11px}
+.steps .s.on{color:var(--gold)}.steps .s.on .n{border-color:var(--gold);color:var(--gold)}
+.steps .s.done{color:var(--green)}.steps .s.done .n{background:var(--green);border-color:var(--green);color:#0c1526}
+.steps .bar{width:18px;height:1px;background:var(--hair)}
 .quote{border:1px solid var(--hair);border-radius:14px;background:var(--panel);padding:20px 26px;text-align:center;margin-bottom:14px}
 .quote .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .quote .amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(40px,11vw,58px);color:var(--gold-soft);line-height:1.05;margin:4px 0}
@@ -69,23 +76,46 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7
 .dinfo.show{display:block}
 .field{margin-bottom:12px}
 .field label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
-.field input,.field select{width:100%;background:var(--panel);border:1px solid var(--hair);color:var(--ink);padding:13px 15px;border-radius:10px;font-size:15px;font-family:inherit;outline:none}
-.field input:focus,.field select:focus{border-color:var(--gold)}
+.field input{width:100%;background:var(--panel);border:1px solid var(--hair);color:var(--ink);padding:13px 15px;border-radius:10px;font-size:16px;font-family:inherit;outline:none}
+.field input:focus{border-color:var(--gold)}
 .submit{width:100%;background:var(--gold);color:#0c1526;border:none;border-radius:10px;padding:17px;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;cursor:pointer;margin-top:10px;transition:.15s}
 .submit:hover{background:var(--gold-soft)}
 .submit:disabled{background:var(--muted);cursor:default}
+.ghost{width:100%;background:transparent;color:var(--muted);border:1px solid var(--hair);border-radius:10px;padding:13px;font-family:'Space Grotesk',sans-serif;font-size:14px;cursor:pointer;margin-top:10px}
+.ghost:hover{border-color:var(--gold);color:var(--gold)}
 .err{display:none;margin-top:10px;border:1px solid rgba(224,90,90,.4);background:rgba(224,90,90,.08);color:#f0a0a0;border-radius:10px;padding:11px 14px;font-size:13px}
 .foot-note{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
 .trust{display:flex;flex-direction:column;gap:8px;margin-top:22px;border-top:1px solid var(--hair);padding-top:20px}
 .trust div{display:flex;gap:10px;font-size:13px;color:var(--muted);align-items:center}
 .trust svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.6;flex-shrink:0}
-.success{display:none;text-align:center;padding:30px 0}
-.success .ok{width:56px;height:56px;border-radius:50%;border:1px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-.success .ok svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:2}
-.success h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;margin-bottom:6px}
-.refbox{font-family:'IBM Plex Mono',monospace;font-size:20px;letter-spacing:2px;color:var(--gold);background:var(--panel);border:1px dashed var(--gold);border-radius:10px;padding:14px;margin:18px 0;display:inline-block}
+.cart{border:1px solid var(--hair);border-radius:14px;background:var(--panel);overflow:hidden;margin-bottom:14px}
+.cart .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:14px 18px;border-bottom:1px solid var(--hair);font-size:14px}
+.cart .row:last-child{border-bottom:0}
+.cart .row .k{color:var(--muted);flex-shrink:0}
+.cart .row .v{font-weight:500;text-align:right}
+.cart .total{background:var(--panel2)}
+.cart .total .k{align-self:center}
+.cart .total .v{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:var(--gold-soft)}
+.locknote{border:1px solid rgba(201,163,92,.3);background:rgba(201,163,92,.06);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--ink);line-height:1.65;margin-bottom:16px;display:flex;gap:10px}
+.locknote svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.6;flex-shrink:0;margin-top:1px}
+.editlink{display:inline-block;color:var(--gold);font-size:13px;text-decoration:none;margin:0 0 16px;cursor:pointer;border-bottom:1px dashed rgba(201,163,92,.5)}
+.consent{font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6}
+.success{display:none;text-align:center;padding:24px 0}
+.success .ok{width:60px;height:60px;border-radius:50%;border:1px solid var(--green);background:rgba(63,191,135,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.success .ok svg{width:28px;height:28px;stroke:var(--green);fill:none;stroke-width:2}
+.success h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;margin-bottom:6px}
+.refbox{font-family:'IBM Plex Mono',monospace;font-size:22px;letter-spacing:2px;color:var(--gold);background:var(--panel);border:1px dashed var(--gold);border-radius:10px;padding:14px;margin:16px 0;display:inline-block}
+.savehint{font-size:12px;color:var(--muted);margin:0 0 18px}
+.linebtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--line);color:#fff;border:none;border-radius:10px;padding:16px;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;text-decoration:none;text-align:center;margin:6px 0}
+.linebtn svg{width:20px;height:20px;fill:#fff}
+.linehint{font-size:12px;color:var(--muted);margin:8px 0 18px;line-height:1.5}
 .scard{text-align:left;border:1px solid var(--hair);background:var(--panel);border-radius:12px;padding:20px;margin-top:8px;font-size:14px;line-height:1.7}
 .scard b{color:var(--ink)}
+.timeline{text-align:left;border:1px solid var(--hair);background:var(--panel);border-radius:12px;padding:18px 20px;margin-top:14px}
+.timeline .hd{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:block}
+.timeline .ti{display:flex;gap:12px;padding:7px 0;font-size:13px;color:var(--muted);align-items:flex-start}
+.timeline .ti b{color:var(--ink);font-weight:500}
+.timeline .num{width:22px;height:22px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
 </style>
 </head>
 <body class="lang-th">
@@ -94,11 +124,21 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7
   <a class="logo" href="/">Carbide<b>Thai</b></a>
   <div style="display:flex;gap:10px;align-items:center">
     <div class="lang"><button id="lb-th" class="on" onclick="setLang('th')">TH</button><button id="lb-en" onclick="setLang('en')">EN</button></div>
-    <a class="line" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE</a>
+    <a class="linetag" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE</a>
   </div>
 </header>
 
 <div class="wrap">
+
+  <div class="steps" id="steps">
+    <div class="s on" id="st1"><span class="n">1</span><span class="th">รายละเอียด</span><span class="en">Details</span></div>
+    <div class="bar"></div>
+    <div class="s" id="st2"><span class="n">2</span><span class="th">ตรวจสอบ</span><span class="en">Review</span></div>
+    <div class="bar"></div>
+    <div class="s" id="st3"><span class="n">3</span><span class="th">ยืนยันแล้ว</span><span class="en">Confirmed</span></div>
+  </div>
+
+  <!-- ===== STEP 1: DETAILS ===== -->
   <div id="form">
     <span class="eyebrow">[ <span class="th">รับซื้อทังสเตนคาร์ไบด์</span><span class="en">Tungsten carbide buyers</span> ]</span>
     <h1 class="gk"><span class="th">ขายคาร์ไบด์เก่า<br>รับราคาทันที</span><span class="en">Sell your carbide<br>get an instant price</span></h1>
@@ -113,7 +153,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7
       <span class="spec"><span class="th">จ่ายทันที</span><span class="en">INSTANT PAY</span></span>
     </div>
 
-    <div class="step-label">STEP 01 · <span class="th">เลือกประเภท</span><span class="en">Select type</span></div>
+    <div class="step-label">01 · <span class="th">เลือกประเภท</span><span class="en">Select type</span></div>
     <div class="matgrid">
       <button class="mat" id="m-carbide_inserts" onclick="pickMat('carbide_inserts','Carbide Insert',this)"><div class="nm"><span class="th">อินเสิร์ท</span><span class="en">Inserts</span></div><div class="sb">CNMG / TNMG / APMT</div></button>
       <button class="mat" id="m-carbide_drills" onclick="pickMat('carbide_drills','Carbide Drills',this)"><div class="nm"><span class="th">ดอกสว่าน / เอ็นมิล</span><span class="en">Drills / End mills</span></div><div class="sb">Solid carbide (VHM)</div></button>
@@ -121,11 +161,11 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7
       <button class="mat" id="m-sand_rills" onclick="pickMat('sand_rills','Sand Rills',this)"><div class="nm"><span class="th">แซนด์ริล / อื่นๆ</span><span class="en">Sand rills / other</span></div><div class="sb"><span class="th">แซนด์ริล ผง อะไหล่</span><span class="en">Dies / powder / parts</span></div></button>
     </div>
 
-    <div class="step-label">STEP 02 · <span class="th">ใส่น้ำหนัก</span><span class="en">Enter weight</span></div>
-    <div class="weight"><input type="number" id="weight" min="1" step="0.5" placeholder="e.g. 10" oninput="calcPrice()"><div class="u">kg</div></div>
+    <div class="step-label">02 · <span class="th">ใส่น้ำหนัก</span><span class="en">Enter weight</span></div>
+    <div class="weight"><input type="number" id="weight" min="1" step="0.5" inputmode="decimal" placeholder="e.g. 10" oninput="calcPrice()"><div class="u">kg</div></div>
     <div class="pbox" id="pbox"><div class="l"><span class="th">ราคาประเมิน</span><span class="en">Estimated price</span></div><div class="v" id="pv">฿0</div><div class="t" id="pt"></div></div>
 
-    <div class="step-label">STEP 03 · <span class="th">วิธีส่งของ</span><span class="en">Delivery</span></div>
+    <div class="step-label">03 · <span class="th">วิธีส่งของ</span><span class="en">Delivery</span></div>
     <div class="delivery">
       <button class="dbtn" id="d-parcel" onclick="pickDelivery('parcel',this)">
         <svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8"/></svg>
@@ -137,32 +177,83 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7
         <svg viewBox="0 0 24 24"><path d="M5 16l1.5-5h11L19 16M6 16h12"/><circle cx="8" cy="17.5" r="1.4"/><circle cx="16" cy="17.5" r="1.4"/></svg>
         <div class="nm">Grab</div><div class="sb">BKK+</div></button>
     </div>
-    <div class="dinfo" id="i-parcel"><span class="th">📦 <b>ส่งพัสดุฟรี</b> — เราออกค่าส่งให้ (Kerry / J&T / ไปรษณีย์ไทย) ที่อยู่จัดส่งจะแสดงหลังยืนยันการขาย พร้อมหมายเลขอ้างอิง</span><span class="en">📦 <b>Free parcel</b> — we pay the shipping (Kerry / J&T / Thailand Post). The ship-to address appears right after you sell, with your reference number.</span></div>
-    <div class="dinfo" id="i-self"><span class="th">🏭 <b>มาส่งเองที่ลานพาร์ทเนอร์</b> — พื้นที่ หนองจอก กรุงเทพฯ (ไปรษณีย์ 10530) ที่อยู่แน่นอน + เวลาทำการจะแสดงทันทีหลังยืนยันการขาย</span><span class="en">🏭 <b>Self-delivery to our partner yard</b> — area Nong Chok, Bangkok (10530). Exact address + hours shown right after you sell.</span></div>
-    <div class="dinfo" id="i-grab"><span class="th">🛵 <b>ส่งด้วย Grab</b> — เรียก GrabExpress ส่งของถึงเรา วันเดียวถึง ในกรุงเทพฯ และเมืองใหญ่ที่มี Grab (เชียงใหม่ ขอนแก่น ฯลฯ) เราคืนค่าส่งให้ ที่อยู่แสดงหลังยืนยันการขาย</span><span class="en">🛵 <b>Send by Grab</b> — GrabExpress same-day in Bangkok &amp; major cities where Grab operates (Chiang Mai, Khon Kaen and more). We reimburse the fare. Address shown after you sell.</span></div>
+    <div class="dinfo" id="i-parcel"><span class="th">📦 <b>ส่งพัสดุฟรี</b> — เราออกค่าส่งให้ (Kerry / J&T / ไปรษณีย์ไทย) ที่อยู่จัดส่งจะแสดงหลังยืนยันการขาย พร้อมหมายเลขอ้างอิง</span><span class="en">📦 <b>Free parcel</b> — we pay the shipping (Kerry / J&T / Thailand Post). The ship-to address appears right after you confirm, with your reference number.</span></div>
+    <div class="dinfo" id="i-self"><span class="th">🏭 <b>มาส่งเองที่ลานพาร์ทเนอร์</b> — พื้นที่ หนองจอก กรุงเทพฯ (ไปรษณีย์ 10530) ที่อยู่แน่นอน + เวลาทำการจะแสดงทันทีหลังยืนยันการขาย</span><span class="en">🏭 <b>Self-delivery to our partner yard</b> — area Nong Chok, Bangkok (10530). Exact address + hours shown right after you confirm.</span></div>
+    <div class="dinfo" id="i-grab"><span class="th">🛵 <b>ส่งด้วย Grab</b> — เรียก GrabExpress ส่งของถึงเรา วันเดียวถึง ในกรุงเทพฯ และเมืองใหญ่ที่มี Grab (เชียงใหม่ ขอนแก่น ฯลฯ) เราคืนค่าส่งให้ ที่อยู่แสดงหลังยืนยันการขาย</span><span class="en">🛵 <b>Send by Grab</b> — GrabExpress same-day in Bangkok &amp; major cities where Grab operates (Chiang Mai, Khon Kaen and more). We reimburse the fare. Address shown after you confirm.</span></div>
 
-    <div class="step-label">STEP 04 · <span class="th">ข้อมูลติดต่อ</span><span class="en">Contact</span></div>
+    <div class="step-label">04 · <span class="th">ข้อมูลติดต่อ</span><span class="en">Contact</span></div>
+    <div class="field"><label><span class="th">ชื่อ-นามสกุล *</span><span class="en">Full name *</span></label><input type="text" id="fullName" autocomplete="name" placeholder="Full name"></div>
+    <div class="field"><label><span class="th">เบอร์โทร *</span><span class="en">Phone *</span></label><input type="tel" id="phone" inputmode="tel" autocomplete="tel" placeholder="08X-XXX-XXXX"></div>
     <div class="field"><label>LINE ID <span class="th">(ไม่บังคับ)</span><span class="en">(optional)</span></label><input type="text" id="lineId" placeholder="@yourlineid"></div>
-    <div class="field"><label><span class="th">ชื่อ-นามสกุล *</span><span class="en">Full name *</span></label><input type="text" id="fullName" placeholder="Full name"></div>
-    <div class="field"><label><span class="th">เบอร์โทร</span><span class="en">Phone</span></label><input type="tel" id="phone" placeholder="08X-XXX-XXXX"></div>
-    <div class="field"><label>Email <span class="th">(ไม่บังคับ)</span><span class="en">(optional)</span></label><input type="email" id="email" placeholder="you@email.com"></div>
 
-    <button class="submit gk" id="submitBtn" onclick="submitLead()"><span class="th">รับราคา + จ่ายทันที</span><span class="en">Get my price · paid instantly</span></button>
+    <button class="submit gk" id="reviewBtn" onclick="showReview()"><span class="th">ตรวจสอบรายการขาย</span><span class="en">Review my sale</span> →</button>
     <div class="err" id="err"></div>
-    <div class="foot-note"><span class="th">🔒 ข้อมูลปลอดภัย · จ่ายทันทีพร้อมรายงานน้ำหนัก</span><span class="en">🔒 Secure · instant payment with full weight report</span></div>
+    <div class="foot-note"><span class="th">🔒 ข้อมูลปลอดภัย · ยังไม่มีข้อผูกมัดจนกว่าคุณจะส่งของ</span><span class="en">🔒 Secure · no obligation until you send the material</span></div>
 
     <div class="trust">
-      <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">จ่ายเงินทันทีหลังชั่งและตรวจสอบ</span><span class="en">Instant payment after weigh &amp; check</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">จ่ายเงินทันทีหลังชั่งและตรวจสอบ พร้อมรายงานน้ำหนัก</span><span class="en">Instant payment after weigh &amp; check, with a full weight report</span></div>
       <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">ส่งฟรี · มาส่งเอง · หรือ Grab</span><span class="en">Free parcel · self-delivery · or Grab</span></div>
       <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">ราคาอัปเดตทุกวันตามตลาดโลก</span><span class="en">Daily prices · global tungsten market</span></div>
     </div>
   </div>
 
+  <!-- ===== STEP 2: REVIEW ===== -->
+  <div id="review" style="display:none">
+    <span class="eyebrow">[ <span class="th">ตรวจสอบก่อนยืนยัน</span><span class="en">Review before you confirm</span> ]</span>
+    <h2 class="rt gk"><span class="th">ตรวจสอบรายการขาย</span><span class="en">Review your sale</span></h2>
+    <p style="text-align:center;color:var(--muted);font-size:13px;margin-bottom:20px"><span class="th">ตรวจสอบรายละเอียดก่อนล็อกราคาและยืนยัน</span><span class="en">Check the details before you lock the price and confirm.</span></p>
+
+    <div class="cart">
+      <div class="row"><span class="k"><span class="th">ประเภท</span><span class="en">Item</span></span><span class="v" id="r-mat"></span></div>
+      <div class="row"><span class="k"><span class="th">น้ำหนัก (โดยประมาณ)</span><span class="en">Weight (approx.)</span></span><span class="v" id="r-weight"></span></div>
+      <div class="row"><span class="k"><span class="th">ราคาวันนี้</span><span class="en">Price today</span></span><span class="v" id="r-ppk"></span></div>
+      <div class="row"><span class="k"><span class="th">วิธีส่งของ</span><span class="en">Delivery</span></span><span class="v" id="r-deliv"></span></div>
+      <div class="row"><span class="k"><span class="th">ผู้ขาย</span><span class="en">Seller</span></span><span class="v" id="r-contact"></span></div>
+      <div class="row total"><span class="k"><span class="th">รวมโดยประมาณ</span><span class="en">Estimated total</span></span><span class="v" id="r-total"></span></div>
+    </div>
+
+    <a class="editlink" onclick="editDetails()"><span class="th">✎ แก้ไขรายละเอียด</span><span class="en">✎ Edit details</span></a>
+
+    <div class="locknote">
+      <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <span class="th"><b>ราคานี้ล็อกไว้ตามราคาตลาดของวันนี้</b> ยอดสุดท้ายยืนยันหลังเราชั่งและตรวจสอบจริง จ่ายทันทีผ่านพร้อมเพย์ · ราคายึดตามหมายเลขอ้างอิงของคุณเมื่อของมาถึงเรา</span>
+      <span class="en"><b>This price is locked at today's market rate.</b> The final amount is confirmed after we weigh &amp; inspect the material, and paid instantly by PromptPay · we honor this rate against your reference when the material reaches us.</span>
+    </div>
+
+    <div class="trust" style="margin-top:0;border-top:0;padding-top:0;margin-bottom:16px">
+      <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">จ่ายทันทีหลังชั่ง · รายงานน้ำหนักครบถ้วน</span><span class="en">Instant pay after weighing · full weight report</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">ไม่มีข้อผูกมัดจนกว่าคุณจะส่งของ</span><span class="en">No obligation until you send the material</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span class="th">ดำเนินการโดย Arden Holdings Global Limited (ฮ่องกง)</span><span class="en">Operated by Arden Holdings Global Limited (Hong Kong)</span></div>
+    </div>
+
+    <button class="submit gk" id="confirmBtn" onclick="confirmSale()">🔒 <span class="th">ล็อกราคา · ยืนยันการขาย</span><span class="en">Lock price &amp; confirm sale</span></button>
+    <button class="ghost gk" onclick="editDetails()"><span class="th">ย้อนกลับ</span><span class="en">Back</span></button>
+    <div class="err" id="err2"></div>
+    <div class="consent"><span class="th">เมื่อยืนยัน เราจะบันทึกราคานี้ไว้กับหมายเลขอ้างอิงของคุณ · ยังไม่มีข้อผูกมัดจนกว่าคุณจะส่งของ</span><span class="en">By confirming, we record this price against your reference · you are not obligated until you send the material.</span></div>
+  </div>
+
+  <!-- ===== STEP 3: CONFIRMED / RECEIPT ===== -->
   <div class="success" id="success">
     <div class="ok"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
-    <h2 class="gk"><span class="th">รับข้อมูลแล้ว!</span><span class="en">Order received!</span></h2>
+    <h2 class="gk"><span class="th">ยืนยันการขายแล้ว!</span><span class="en">Sale confirmed!</span></h2>
     <div style="color:var(--muted);font-size:14px"><span class="th">หมายเลขอ้างอิงของคุณ</span><span class="en">Your reference number</span></div>
     <div class="refbox" id="refbox"></div>
+    <div class="savehint"><span class="th">📸 บันทึกหน้านี้ไว้ (สกรีนช็อต) เพื่อใช้อ้างอิง</span><span class="en">📸 Save / screenshot this page for your records</span></div>
+
+    <a class="linebtn gk" id="lineConfirm" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 5.6 2 10.1c0 4 3.6 7.4 8.5 8 .3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6s5.9-3.5 8-6c1.5-1.6 2.1-3.2 2.1-5C22 5.6 17.5 2 12 2z"/></svg>
+      <span class="th">รับใบยืนยันทาง LINE</span><span class="en">Get your confirmation on LINE</span>
+    </a>
+    <div class="linehint"><span class="th">แตะปุ่มด้านบน แล้วกด <b>ส่ง</b> — หมายเลขอ้างอิงถูกกรอกไว้ให้แล้ว ทีมงานจะยืนยันกลับทาง LINE</span><span class="en">Tap above, then press <b>send</b> — your reference is pre-filled. Our team confirms back to you on LINE.</span></div>
+
+    <div class="cart" style="text-align:left">
+      <div class="row"><span class="k"><span class="th">ประเภท</span><span class="en">Item</span></span><span class="v" id="rc-mat"></span></div>
+      <div class="row"><span class="k"><span class="th">น้ำหนัก</span><span class="en">Weight</span></span><span class="v" id="rc-weight"></span></div>
+      <div class="row"><span class="k"><span class="th">ราคา/กก.</span><span class="en">Price/kg</span></span><span class="v" id="rc-ppk"></span></div>
+      <div class="row"><span class="k"><span class="th">วิธีส่งของ</span><span class="en">Delivery</span></span><span class="v" id="rc-deliv"></span></div>
+      <div class="row total"><span class="k"><span class="th">รวมโดยประมาณ</span><span class="en">Estimated total</span></span><span class="v" id="rc-total"></span></div>
+    </div>
+
     <div class="scard" id="s-parcel" style="display:none">
       <span class="th">📦 <b>ส่งพัสดุมาที่:</b><br>ThaiCarbide (ลานพาร์ทเนอร์)<br>92/78 หมู่ 9 ถนนฉลองกรุง แขวงลำผักชี เขตหนองจอก กรุงเทพฯ 10530<br>โทร 093-696-9935<br><br>📝 เขียน "ThaiCarbide" + หมายเลขอ้างอิงบนกล่อง · ส่ง Kerry / J&T / ไปรษณีย์ไทย (เราออกค่าส่ง)</span>
       <span class="en">📦 <b>Send your parcel to:</b><br>ThaiCarbide (partner yard)<br>92/78 Moo 9, Chalong Krung Rd, Lampakchee, Nong Chok, Bangkok 10530<br>Tel 093-696-9935<br><br>📝 Write "ThaiCarbide" + your reference on the box · ship Kerry / J&T / Thailand Post (we pay).</span>
@@ -175,48 +266,89 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,7
       <span class="th">🛵 <b>เรียก Grab ส่งมาที่:</b><br>ThaiCarbide (ลานพาร์ทเนอร์) 92/78 หมู่ 9 ถนนฉลองกรุง เขตหนองจอก กรุงเทพฯ 10530<br><br>เก็บใบเสร็จ Grab ไว้ เราคืนค่าส่งให้ · เขียนหมายเลขอ้างอิงบนพัสดุ</span>
       <span class="en">🛵 <b>Send via Grab to:</b><br>ThaiCarbide (partner yard) 92/78 Moo 9, Chalong Krung Rd, Nong Chok, Bangkok 10530<br><br>Keep the Grab receipt — we reimburse the fare · write your reference on the package.</span>
     </div>
-    <a class="line" style="display:inline-block;margin-top:20px;padding:12px 22px" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">💚 LINE @ThaiCarbide</a>
+
+    <div class="timeline">
+      <span class="hd"><span class="th">ขั้นตอนต่อไป</span><span class="en">What happens next</span></span>
+      <div class="ti"><span class="num">1</span><span><b><span class="th">ส่งหรือนำคาร์ไบด์มาให้เรา</span><span class="en">Send or bring your carbide</span></b> — <span class="th">ตามวิธีด้านบน พร้อมหมายเลขอ้างอิง</span><span class="en">using the method above, with your reference.</span></span></div>
+      <div class="ti"><span class="num">2</span><span><b><span class="th">เราชั่งและตรวจสอบ</span><span class="en">We weigh &amp; inspect</span></b> — <span class="th">พร้อมรายงานน้ำหนักให้คุณ</span><span class="en">and share a full weight report with you.</span></span></div>
+      <div class="ti"><span class="num">3</span><span><b><span class="th">รับเงินทันทีผ่านพร้อมเพย์</span><span class="en">Get paid instantly by PromptPay</span></b> — <span class="th">ในราคาที่ล็อกไว้</span><span class="en">at your locked rate.</span></span></div>
+    </div>
   </div>
 </div>
 
 <script>
 const SB_URL='https://ltupwgytuayzopnsdvpc.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
+const LINE_OA='@280uqpab';
 let PRICES={carbide_inserts:{tier_under10:1790,tier_10_30:1960,tier_30_50:2135,teaser_thb:2135},carbide_drills:{tier_under10:1825,tier_10_30:1995,tier_30_50:2170,teaser_thb:2170},mixed_carbide:{tier_under10:1790,tier_10_30:1960,tier_30_50:2135,teaser_thb:2135},sand_rills:{tier_under10:1650,tier_10_30:1825,tier_30_50:1995,teaser_thb:1995}};
 let selKey=null,selName=null,selDeliv=null;
 const fmt=n=>'฿'+Number(n).toLocaleString('en-US');
+const MATLBL={carbide_inserts:{th:'อินเสิร์ท',en:'Inserts'},carbide_drills:{th:'ดอกสว่าน / เอ็นมิล',en:'Drills / End mills'},mixed_carbide:{th:'คาร์ไบด์ผสม',en:'Mixed carbide'},sand_rills:{th:'แซนด์ริล / อื่นๆ',en:'Sand rills / other'}};
+const DELIVLBL={parcel:{th:'ส่งพัสดุฟรี (Kerry / J&T / ไปรษณีย์ไทย)',en:'Free parcel (Kerry / J&T / Thailand Post)'},self:{th:'มาส่งเอง — ลานหนองจอก',en:'Self-delivery — Nong Chok yard'},grab:{th:'GrabExpress (เราคืนค่าส่ง)',en:'GrabExpress (we reimburse)'}};
+function L(o){return document.body.classList.contains('lang-en')?o.en:o.th;}
 async function loadPrices(){try{const r=await fetch(SB_URL+'/rest/v1/prices?select=*',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}});if(r.ok){(await r.json()).forEach(p=>{if(PRICES[p.key])PRICES[p.key]={tier_under10:+p.tier_under10,tier_10_30:+p.tier_10_30,tier_30_50:+p.tier_30_50,teaser_thb:+p.teaser_thb};});document.getElementById('teaser').innerHTML=fmt(PRICES.carbide_inserts.teaser_thb)+'<u>/kg</u>';calcPrice();}}catch(e){}}
 function pickMat(k,n,el){selKey=k;selName=n;document.querySelectorAll('.mat').forEach(b=>b.classList.remove('on'));el.classList.add('on');calcPrice();}
 function pickDelivery(m,el){selDeliv=m;document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('on'));el.classList.add('on');['parcel','self','grab'].forEach(x=>document.getElementById('i-'+x).classList.toggle('show',x===m));}
 function tierPrice(p,w){if(w<=10)return p.tier_under10;if(w<=30)return p.tier_10_30;return p.tier_30_50;}
-function calcPrice(){const w=parseFloat(document.getElementById('weight').value);const box=document.getElementById('pbox');if(!selKey||!w||w<=0){box.classList.remove('show');return;}const p=PRICES[selKey];const ppk=tierPrice(p,w);document.getElementById('pv').textContent=fmt(Math.round(w*ppk));const tl=w<=10?'≤10kg':w<=30?'10–30kg':'30–50kg';document.getElementById('pt').textContent=fmt(ppk)+'/kg · '+tl;box.classList.add('show');gtag('event','price_calculated',{material:selKey,weight_kg:w});}
-function showErr(m){const e=document.getElementById('err');e.textContent=m;e.style.display='block';}
-async function submitLead(){
+function tierLabel(w){return w<=10?'≤10kg':w<=30?'10–30kg':'30–50kg';}
+function calcPrice(){const w=parseFloat(document.getElementById('weight').value);const box=document.getElementById('pbox');if(!selKey||!w||w<=0){box.classList.remove('show');return;}const p=PRICES[selKey];const ppk=tierPrice(p,w);document.getElementById('pv').textContent=fmt(Math.round(w*ppk));document.getElementById('pt').textContent=fmt(ppk)+'/kg · '+tierLabel(w);box.classList.add('show');gtag('event','price_calculated',{material:selKey,weight_kg:w});}
+function showErr(id,m){const e=document.getElementById(id);e.textContent=m;e.style.display='block';}
+function setStep(n){document.getElementById('st1').className='s'+(n>1?' done':n===1?' on':'');document.getElementById('st2').className='s'+(n>2?' done':n===2?' on':'');document.getElementById('st3').className='s'+(n===3?' on':'');}
+function showReview(){
+  const isEn=document.body.classList.contains('lang-en');
+  const w=parseFloat(document.getElementById('weight').value)||0;
+  const fullName=document.getElementById('fullName').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  document.getElementById('err').style.display='none';
+  if(!selKey)return showErr('err',isEn?'Please select a carbide type.':'กรุณาเลือกประเภทคาร์ไบด์ครับ');
+  if(!w||w<1)return showErr('err',isEn?'Please enter the weight (from 1 kg).':'กรุณาใส่น้ำหนัก (ตั้งแต่ 1 กก.) ครับ');
+  if(!selDeliv)return showErr('err',isEn?'Please choose a delivery method.':'กรุณาเลือกวิธีส่งครับ');
+  if(!fullName)return showErr('err',isEn?'Please enter your full name.':'กรุณาใส่ชื่อ-นามสกุลครับ');
+  if(!phone)return showErr('err',isEn?'Please enter a phone number.':'กรุณาใส่เบอร์โทรครับ');
+  const p=PRICES[selKey];const ppk=tierPrice(p,w);const total=Math.round(w*ppk);
+  document.getElementById('r-mat').textContent=L(MATLBL[selKey]);
+  document.getElementById('r-weight').textContent=w+' kg';
+  document.getElementById('r-ppk').textContent=fmt(ppk)+'/kg · '+tierLabel(w);
+  document.getElementById('r-deliv').textContent=L(DELIVLBL[selDeliv]);
+  document.getElementById('r-contact').textContent=fullName+' · '+phone;
+  document.getElementById('r-total').textContent=fmt(total);
+  document.getElementById('form').style.display='none';
+  document.getElementById('review').style.display='block';
+  setStep(2);window.scrollTo(0,0);
+  gtag('event','begin_checkout',{value:total,currency:'THB'});
+}
+function editDetails(){document.getElementById('review').style.display='none';document.getElementById('form').style.display='block';setStep(1);window.scrollTo(0,0);}
+async function confirmSale(){
   const isEn=document.body.classList.contains('lang-en');
   const lineId=document.getElementById('lineId').value.trim();const fullName=document.getElementById('fullName').value.trim();
-  const phone=document.getElementById('phone').value.trim();const email=document.getElementById('email').value.trim();
-  const w=parseFloat(document.getElementById('weight').value)||null;const btn=document.getElementById('submitBtn');
-  document.getElementById('err').style.display='none';
-  if(!selKey)return showErr(isEn?'Please select a carbide type.':'กรุณาเลือกประเภทคาร์ไบด์ครับ');
-  if(!selDeliv)return showErr(isEn?'Please choose a delivery method.':'กรุณาเลือกวิธีส่งครับ');
-  if(!fullName)return showErr(isEn?'Please enter your full name.':'กรุณาใส่ชื่อ-นามสกุลครับ');
-  if(!phone&&!lineId&&!email)return showErr(isEn?'Enter a phone, LINE ID or email.':'กรุณาใส่เบอร์ LINE หรืออีเมลครับ');
-  btn.disabled=true;btn.textContent=isEn?'Sending…':'กำลังส่ง…';
+  const phone=document.getElementById('phone').value.trim();
+  const w=parseFloat(document.getElementById('weight').value)||null;const btn=document.getElementById('confirmBtn');
+  document.getElementById('err2').style.display='none';
+  btn.disabled=true;btn.textContent=isEn?'Locking price…':'กำลังล็อกราคา…';
   const p=PRICES[selKey]||{};const ppk=w?tierPrice(p,w):null;const total=(ppk&&w)?Math.round(w*ppk):null;
   const ref='TC-'+Date.now().toString(36).toUpperCase();
   try{
-    await fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({line_id:lineId||null,display_name:fullName,phone:phone||null,email:email||null,material_type:selName,weight_kg:w,price_shown:total,quoted_price:total,status:'new',source:'sell-lp',notes:'Ref: '+ref+' | Delivery: '+selDeliv})});
-    await fetch(SB_URL+'/rest/v1/orders',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({name:fullName,phone:phone||null,email:email||null,line_id:lineId,ref:ref,material:selName,weight_ordered:w,price_per_kg:ppk,total_amount:total,status:'neu',delivery_method:selDeliv,parcel_status:selDeliv==='self'?null:'waiting',notes:'Source: sell-lp | Ref: '+ref+' | Delivery: '+selDeliv})});
-    gtag('event','conversion',{send_to:'AW-18001691387'});gtag('event','generate_lead',{currency:'THB',value:total||0});if(typeof fbq!=='undefined')fbq('track','Lead',{value:total||0,currency:'THB'});
+    await fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({line_id:lineId||null,display_name:fullName,phone:phone||null,material_type:selName,weight_kg:w,price_shown:total,quoted_price:total,status:'new',source:'sell-lp',notes:'Ref: '+ref+' | Delivery: '+selDeliv})});
+    await fetch(SB_URL+'/rest/v1/orders',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({name:fullName,phone:phone||null,line_id:lineId,ref:ref,material:selName,weight_ordered:w,price_per_kg:ppk,total_amount:total,status:'neu',delivery_method:selDeliv,parcel_status:selDeliv==='self'?null:'waiting',notes:'Source: sell-lp | Ref: '+ref+' | Delivery: '+selDeliv})});
+    gtag('event','conversion',{send_to:'AW-18001691387'});gtag('event','purchase',{transaction_id:ref,currency:'THB',value:total||0});if(typeof fbq!=='undefined')fbq('track','Lead',{value:total||0,currency:'THB'});
     const tg='🆕 NEUER LEAD\\n👤 '+fullName+'\\n📱 '+(phone||'—')+'\\nLINE: '+(lineId||'—')+'\\n📦 '+selName+' · '+(w||'—')+'kg\\n💰 ฿'+(total!=null?total.toLocaleString():'—')+'\\n🚚 '+selDeliv+'\\n🔗 '+ref;
     fetch('https://api.telegram.org/bot8653052939:AAE1450o0j2JpNsf2sMdIWroLHuKRA6QTqA/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'697775946',text:tg})}).catch(()=>{});
-    document.getElementById('form').style.display='none';
+    // receipt
     document.getElementById('refbox').textContent=ref;
+    document.getElementById('rc-mat').textContent=L(MATLBL[selKey]);
+    document.getElementById('rc-weight').textContent=(w||'—')+' kg';
+    document.getElementById('rc-ppk').textContent=ppk!=null?fmt(ppk)+'/kg':'—';
+    document.getElementById('rc-deliv').textContent=L(DELIVLBL[selDeliv]);
+    document.getElementById('rc-total').textContent=total!=null?fmt(total):'—';
+    // LINE confirmation deep link (pre-filled with reference — seller taps send, bot replies)
+    const dmsg='ยืนยันการขาย / Confirm sale\\nRef: '+ref+'\\n'+selName+' · '+(w||'—')+'kg · '+(total!=null?fmt(total):'—')+'\\nDelivery: '+selDeliv;
+    document.getElementById('lineConfirm').href='https://line.me/R/oaMessage/'+LINE_OA+'/?'+encodeURIComponent(dmsg);
     document.getElementById('s-parcel').style.display=selDeliv==='parcel'?'block':'none';
     document.getElementById('s-self').style.display=selDeliv==='self'?'block':'none';
     document.getElementById('s-grab').style.display=selDeliv==='grab'?'block':'none';
-    document.getElementById('success').style.display='block';window.scrollTo(0,0);
-  }catch(e){btn.disabled=false;btn.textContent=isEn?'Get my price · paid instantly':'รับราคา + จ่ายทันที';showErr(isEn?'Something went wrong. Try again or contact LINE @280uqpab':'เกิดข้อผิดพลาด ลองใหม่ หรือติดต่อ LINE @280uqpab');}
+    document.getElementById('review').style.display='none';
+    document.getElementById('success').style.display='block';setStep(3);window.scrollTo(0,0);
+  }catch(e){btn.disabled=false;btn.textContent=isEn?'🔒 Lock price & confirm sale':'🔒 ล็อกราคา · ยืนยันการขาย';showErr('err2',isEn?'Something went wrong. Try again or contact LINE @280uqpab':'เกิดข้อผิดพลาด ลองใหม่ หรือติดต่อ LINE @280uqpab');}
 }
 function setLang(l){document.body.classList.remove('lang-th','lang-en');document.body.classList.add('lang-'+l);document.getElementById('lb-th').classList.toggle('on',l==='th');document.getElementById('lb-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc-lang',l)}catch(e){}}
 (function(){try{setLang(localStorage.getItem('tc-lang')||'th')}catch(e){setLang('th')}})();
