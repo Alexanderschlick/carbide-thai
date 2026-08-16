@@ -322,7 +322,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
-const PASS_HASH='fffab0fc573f81fbd3c565fc2ddc4f117338ff5780930d5cf26884064f896583';
+const PASS_HASH='7a78d9d7f11009b40927f3acbbd41b9f1e29c2b8538e8ec748aef92e3f299088';
 
 async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 
