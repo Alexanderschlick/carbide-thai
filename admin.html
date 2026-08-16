@@ -120,9 +120,10 @@ tr:hover { background: rgba(200,168,78,0.04); }
   <div class="login-box">
     <h1>ThaiCarbide</h1>
     <p>Admin Backoffice</p>
-    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="email" id="emailInput" placeholder="Email" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="password" id="pwInput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">Login</button>
-    <div class="login-error" id="loginErr">Invalid password</div>
+    <div class="login-error" id="loginErr">Invalid email or password</div>
   </div>
 </div>
 
@@ -322,31 +323,65 @@ tr:hover { background: rgba(200,168,78,0.04); }
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
-const PASS_HASH='7a78d9d7f11009b40927f3acbbd41b9f1e29c2b8538e8ec748aef92e3f299088';
+// --- Supabase Auth (real login; JWT used for all authenticated reads) ---
+let ACCESS=null;
+function authToken(){return ACCESS||KEY;}
 
-async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
-
-async function doLogin(){
-  const pw=document.getElementById('pwInput').value;
-  const h=await sha256(pw);
-  if(h===PASS_HASH){
-    sessionStorage.setItem('tc_auth','1');
-    document.getElementById('loginGate').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    loadAll();
-  } else {
-    document.getElementById('loginErr').style.display='block';
-  }
+function setSession(d){
+  ACCESS=d.access_token;
+  const sess={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Date.now()+((d.expires_in||3600)*1000)};
+  try{localStorage.setItem('tc_session',JSON.stringify(sess));}catch(_){}
 }
-function doLogout(){sessionStorage.removeItem('tc_auth');location.reload()}
-function checkAuth(){if(sessionStorage.getItem('tc_auth')){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';loadAll()}}
+function showDashboard(){
+  document.getElementById('loginGate').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  loadAll();
+  if(!window.__tcRefresh){window.__tcRefresh=setInterval(async()=>{
+    let raw=null;try{raw=localStorage.getItem('tc_session');}catch(_){}
+    if(!raw)return; let sess; try{sess=JSON.parse(raw);}catch(_){return;}
+    if(sess.refresh_token)await refreshSession(sess.refresh_token);
+  },45*60*1000);}
+}
+async function refreshSession(rt){
+  try{
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
+    const d=await r.json();
+    if(r.ok&&d.access_token){setSession(d);return true;}
+  }catch(_){}
+  return false;
+}
+async function doLogin(){
+  const email=(document.getElementById('emailInput').value||'').trim();
+  const pw=document.getElementById('pwInput').value;
+  const err=document.getElementById('loginErr'); err.style.display='none';
+  const btn=document.querySelector('.login-box button'); if(btn){btn.disabled=true;btn.textContent='Signing in…';}
+  try{
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
+    const d=await r.json();
+    if(!r.ok||!d.access_token){err.textContent=d.error_description||d.msg||'Invalid email or password';err.style.display='block';return;}
+    setSession(d); showDashboard();
+  }catch(e){err.textContent='Network error — try again';err.style.display='block';}
+  finally{if(btn){btn.disabled=false;btn.textContent='Login';}}
+}
+async function doLogout(){
+  try{await fetch(`${SB}/auth/v1/logout`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+authToken()}});}catch(_){}
+  ACCESS=null; try{localStorage.removeItem('tc_session');}catch(_){}
+  location.reload();
+}
+async function checkAuth(){
+  let raw=null;try{raw=localStorage.getItem('tc_session');}catch(_){}
+  if(!raw)return;
+  let sess;try{sess=JSON.parse(raw);}catch(_){return;}
+  if(sess.access_token&&sess.expires_at&&sess.expires_at-Date.now()>60000){ACCESS=sess.access_token;showDashboard();return;}
+  if(sess.refresh_token&&await refreshSession(sess.refresh_token)){showDashboard();}
+}
 
 async function sbGet(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`}});
   return r.ok?r.json():[];
 }
 async function sbGetAll(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,Prefer:'count=exact',Range:'0-9999'}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`,Prefer:'count=exact',Range:'0-9999'}});
   if(!r.ok)return{data:[],total:0};
   const data=await r.json();
   const range=r.headers.get('content-range');
@@ -638,7 +673,7 @@ async function loadAll(){
       {n:'Weekly Email',s:'Sun 9:30 AM'}
     ];
     document.getElementById('cronPanel').innerHTML=crons.map(c=>`<div class="sys-row"><span class="name">${c.n}</span><span class="sched">${c.s}</span><span class="badge ok">Active</span></div>`).join('');
-    { const su=document.getElementById('sysUpdated'); if(su)su.textContent='Status as of '+fmtDate(new Date().toISOString())' (Bangkok)'; }
+    { const su=document.getElementById('sysUpdated'); if(su)su.textContent='Status as of '+fmtDate(new Date().toISOString())+' (Bangkok)'; }
 
     const funcs=['line-webhook','chat-proxy','fb-webhook','auto-followup','line-broadcast','price-scraper','auto-price-update','email-report','seo-optimizer','blog-generator','sea-orchestrator','sea-engine','sourcing-pipeline','analytics-api','google-ads-manager','fb-ads-manager','send-push-replies','market-data','setup-richmenu','notify-lead','admin-api','create-order'];
     document.getElementById('funcPanel').innerHTML=funcs.map(f=>`<div class="sys-row"><span class="name">${f}</span><span class="badge ok">Deployed</span></div>`).join('');
