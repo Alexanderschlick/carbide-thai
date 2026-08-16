@@ -312,7 +312,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     </div>
     <div id="modalBody"></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
-      <input type="text" id="replyInput" placeholder="Type your reply in English â sent to the seller in Thai" onkeydown="if(event.key==='Enter')sendReply()" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;">
+      <input type="text" id="replyInput" placeholder="Type your reply in English — sent to the seller in Thai" onkeydown="if(event.key==='Enter')sendReply()" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;">
       <button class="btn-sm btn-gold" onclick="sendReply()" id="replyBtn">Send in Thai</button>
     </div>
     <div id="replyStatus" style="font-size:11px;color:var(--muted);margin-top:6px;"></div>
@@ -390,7 +390,7 @@ async function sbGetAll(tbl,params=''){
 }
 
 function timeAgo(d){const m=Math.floor((Date.now()-new Date(d).getTime())/60000);if(m<1)return'now';if(m<60)return m+'m';if(m<1440)return Math.floor(m/60)+'h';return Math.floor(m/1440)+'d'}
-function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'â¦':(s||'')}
+function trunc(s,n){return s&&s.length>n?s.slice(0,n)+'…':(s||'')}
 function esc(s){return(s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function fmtDate(d){return d?new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Bangkok'}):''}
 
@@ -440,13 +440,13 @@ async function sendReply(){
   const btn=document.getElementById('replyBtn');
   const status=document.getElementById('replyStatus');
   status.style.color='var(--muted)';
-  btn.disabled=true;btn.textContent='Translatingâ¦';
+  btn.disabled=true;btn.textContent='Translating…';
   try{
     const tr=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:en,target:'th'})});
     const td=await tr.json();
     const thai=(td.translation||'').trim();
-    if(!thai){status.style.color='#ef4444';status.textContent='Translation failed â not sent';btn.disabled=false;btn.textContent='Send in Thai';return;}
-    btn.textContent='Sendingâ¦';
+    if(!thai){status.style.color='#ef4444';status.textContent='Translation failed — not sent';btn.disabled=false;btn.textContent='Send in Thai';return;}
+    btn.textContent='Sending…';
     const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'reply',user_id:currentModalUid,message:thai})});
     const d=await r.json();
     if(d.success){
@@ -477,7 +477,7 @@ async function showConversation(uid,name){
     html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
 
     if(isAdmin){
-      // Admin message â show on right side with green "YOU" label
+      // Admin message — show on right side with green "YOU" label
       const adminText=c.message.replace(/^\[admin\]\s*/,'');
       html+=`<div style="text-align:right"><span class="admin-label">YOU</span></div>`;
       html+=`<div class="chat-bubble admin">${esc(adminText)}`;
@@ -487,9 +487,9 @@ async function showConversation(uid,name){
       }
       html+=`</div>`;
     } else {
-      // Customer message â show on left
+      // Customer message — show on left
       const mk=storeText(c.message);
-      const nhBadge = c.needs_human ? ` <span style="background:#ef4444;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px">ð ACTION NEEDED</span>` : '';
+      const nhBadge = c.needs_human ? ` <span style="background:#ef4444;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px">🔔 ACTION NEEDED</span>` : '';
       const nhReason = c.needs_human && c.needs_human_reason ? `<div style="font-size:10px;color:#fbbf24;font-style:italic;margin-top:3px">${c.needs_human_reason}</div>` : '';
       const imgHtml = c.image_url ? `<div style="margin-top:6px"><img src="${c.image_url}" style="max-width:240px;max-height:240px;border-radius:8px;cursor:pointer" onclick="window.open('${c.image_url}','_blank')" onerror="this.style.display='none'"></div>` : '';
       html+=`<div class="chat-bubble user" ${c.needs_human ? 'style="border:1px solid #ef4444;background:rgba(239,68,68,0.1)"' : ''}>${trunc(c.message,300)}${nhBadge} <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span>${nhReason}${imgHtml}</div>`;
@@ -514,27 +514,27 @@ async function loadConversions(){
   let kg=0,thb=0;
   tbody.innerHTML=orders.map(o=>{
     const w=o.weight_received!=null?o.weight_received:o.weight_ordered; kg+=Number(w)||0; thb+=Number(o.total_amount)||0;
-    const deliv=o.delivery_method==='parcel'?'ð¦ Parcel':(o.delivery_method==='pickup'?'ð­ Self':esc(o.delivery_method||'â'));
-    const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'â')+(o.weight_received!=null?' â '+o.weight_received:'');
-    return `<tr><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'â')}</td><td>${esc(o.name||'â')}</td><td>${esc(o.phone||o.line_id||'â')}</td><td>${esc(o.material||'â')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'à¸¿'+Number(o.price_per_kg).toLocaleString():'â'}</td><td>${o.total_amount!=null?'à¸¿'+Number(o.total_amount).toLocaleString():'â'}</td><td>${deliv}</td><td><span class="badge">${esc(o.status||'â')}</span></td><td>${fmtDate(o.created_at)}</td></tr>`;
+    const deliv=o.delivery_method==='parcel'?'📦 Parcel':(o.delivery_method==='pickup'?'🏭 Self':esc(o.delivery_method||'—'));
+    const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'—')+(o.weight_received!=null?' → '+o.weight_received:'');
+    return `<tr><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td><span class="badge">${esc(o.status||'—')}</span></td><td>${fmtDate(o.created_at)}</td></tr>`;
   }).join('');
-  if(sum)sum.textContent=`${orders.length} orders Â· ${kg.toLocaleString()} kg Â· à¸¿${thb.toLocaleString()} total`;
+  if(sum)sum.textContent=`${orders.length} orders · ${kg.toLocaleString()} kg · ฿${thb.toLocaleString()} total`;
 }
 
 async function loadAds(){
   const camps=await sbGet('sea_campaigns','select=campaign_name,platform,status,budget_daily,performance,updated_at&order=updated_at.desc&limit=100');
   const tbody=document.getElementById('adsRows'); if(!tbody)return;
   const sum=document.getElementById('adsSummary');
-  if(!camps||!camps.length){tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted)">No campaigns synced yet â connect your Facebook / Google Ads accounts and run the ad managers to populate this.</td></tr>';if(sum)sum.textContent='';return;}
+  if(!camps||!camps.length){tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted)">No campaigns synced yet — connect your Facebook / Google Ads accounts and run the ad managers to populate this.</td></tr>';if(sum)sum.textContent='';return;}
   let budget=0,active=0;
   tbody.innerHTML=camps.map(c=>{
     budget+=Number(c.budget_daily)||0; const on=/active|running|enabled|^on$/i.test(c.status||''); if(on)active++;
-    let perf='â'; try{const p=typeof c.performance==='string'?JSON.parse(c.performance):c.performance; if(p&&typeof p==='object')perf=Object.entries(p).slice(0,3).map(([k,v])=>`${esc(k)}: ${esc(v)}`).join(' Â· ')||'â';}catch(_){}
-    const plat=/face|fb|meta/i.test(c.platform||'')?'ð Facebook':(/goog/i.test(c.platform||'')?'ð Google':esc(c.platform||'â'));
-    const badge=on?'<span class="badge ok">Running</span>':`<span class="badge">${esc(c.status||'â')}</span>`;
-    return `<tr><td>${plat}</td><td>${esc(c.campaign_name||'â')}</td><td>${badge}</td><td>${c.budget_daily!=null?'à¸¿'+Number(c.budget_daily).toLocaleString()+'/day':'â'}</td><td style="font-size:11px">${perf}</td><td>${fmtDate(c.updated_at)}</td></tr>`;
+    let perf='—'; try{const p=typeof c.performance==='string'?JSON.parse(c.performance):c.performance; if(p&&typeof p==='object')perf=Object.entries(p).slice(0,3).map(([k,v])=>`${esc(k)}: ${esc(v)}`).join(' · ')||'—';}catch(_){}
+    const plat=/face|fb|meta/i.test(c.platform||'')?'📘 Facebook':(/goog/i.test(c.platform||'')?'🔍 Google':esc(c.platform||'—'));
+    const badge=on?'<span class="badge ok">Running</span>':`<span class="badge">${esc(c.status||'—')}</span>`;
+    return `<tr><td>${plat}</td><td>${esc(c.campaign_name||'—')}</td><td>${badge}</td><td>${c.budget_daily!=null?'฿'+Number(c.budget_daily).toLocaleString()+'/day':'—'}</td><td style="font-size:11px">${perf}</td><td>${fmtDate(c.updated_at)}</td></tr>`;
   }).join('');
-  if(sum)sum.textContent=`${camps.length} campaigns Â· ${active} running Â· à¸¿${budget.toLocaleString()}/day total budget`;
+  if(sum)sum.textContent=`${camps.length} campaigns · ${active} running · ฿${budget.toLocaleString()}/day total budget`;
 }
 
 async function loadAll(){
@@ -585,44 +585,44 @@ async function loadAll(){
     const weekLeads=leads.filter(l=>l.last>weekAgo);
     document.getElementById('ovLeads').innerHTML=weekLeads.slice(0,12).map(l=>{
       const s=getStatus(l);
-      return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">ð </span>' : ''}${l.name}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${l.name}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
     }).join('')||'<tr><td colspan="4" style="color:var(--muted)">No leads this week</td></tr>';
 
     // Actions
     const actions=[];
     // Needs-human actions first
     for(const l of leads){
-      if(l.needsHuman)actions.push({p:'urgent',t:`${l.name} â needs human attention`});
+      if(l.needsHuman)actions.push({p:'urgent',t:`${l.name} — needs human attention`});
     }
     for(const l of weekLeads){
       if(buyerIds.has(l.uid))continue;
       const h=(Date.now()-new Date(l.last).getTime())/3600000;
-      if(h>24&&h<72&&l.count>=3)actions.push({p:'urgent',t:`${l.name} â ${l.count} msgs, no reply ${timeAgo(l.last)}. Follow up!`});
+      if(h>24&&h<72&&l.count>=3)actions.push({p:'urgent',t:`${l.name} — ${l.count} msgs, no reply ${timeAgo(l.last)}. Follow up!`});
     }
     for(const b of flags.filter(f=>f.user_type==='buyer')){
-      actions.push({p:'normal',t:`${b.display_name} (buyer) â ${b.notes||'monitor communications'}`});
+      actions.push({p:'normal',t:`${b.display_name} (buyer) — ${b.notes||'monitor communications'}`});
     }
     if(!actions.length)actions.push({p:'low',t:'No urgent actions right now'});
     document.getElementById('ovActions').innerHTML=actions.map(a=>`<div class="action-item"><div class="dot ${a.p}"></div><div style="color:var(--dark-text)">${esc(a.t)}</div></div>`).join('');
 
     // Flagged users
-    document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${esc(f.display_name||'â')}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${esc(f.user_type)}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
+    document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${esc(f.display_name||'—')}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${esc(f.user_type)}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
 
-    // Recent chats (overview) â skip admin/system/followup/broadcast
+    // Recent chats (overview) — skip admin/system/followup/broadcast
     const realChats=chats.filter(c=>c.message&&!c.message.includes('[system')&&!c.message.includes('[followup')&&!c.message.includes('[broadcast')&&!c.message.startsWith('[admin]'));
     document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>{
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? 'ð ' : ''}${c.display_name||'â'}</td><td>${esc(trunc(c.message,35))}</td><td>${esc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${esc(trunc(c.message,35))}</td><td>${esc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
     // Full chats tab
     document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>{
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? 'ð ' : ''}${c.display_name||'â'}</td><td>${esc(trunc(c.message,60))}</td><td>${esc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${esc(trunc(c.message,60))}</td><td>${esc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
     // All leads tab
     document.getElementById('allLeads').innerHTML=leads.map(l=>{
       const s=getStatus(l);
-      return`<tr><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">ð </span>' : ''}${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
+      return`<tr><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
     }).join('');
 
     // Prices comparison table
@@ -637,29 +637,29 @@ async function loadAll(){
       const eu=euKey?compMap[euKey]:null;
       const tiers=eu&&eu.tier_data?eu.tier_data:[];
       const t10=tiers.find(t=>t.maxKg<=10||t.label?.includes('10'));
-      const t30=tiers.find(t=>t.label?.includes('10â30')||t.label?.includes('10-30'));
-      const t50=tiers.find(t=>t.label?.includes('30â50')||t.label?.includes('30-50'));
-      const e10=t10?t10.price:'â';const e30=t30?t30.price:'â';const e50=t50?t50.price:'â';
-      const thb10=t10?Math.round(t10.price*rate):'â';
-      const thb30=t30?Math.round(t30.price*rate):'â';
-      const thb50=t50?Math.round(t50.price*rate):'â';
+      const t30=tiers.find(t=>t.label?.includes('10–30')||t.label?.includes('10-30'));
+      const t50=tiers.find(t=>t.label?.includes('30–50')||t.label?.includes('30-50'));
+      const e10=t10?t10.price:'—';const e30=t30?t30.price:'—';const e50=t50?t50.price:'—';
+      const thb10=t10?Math.round(t10.price*rate):'—';
+      const thb30=t30?Math.round(t30.price*rate):'—';
+      const thb50=t50?Math.round(t50.price*rate):'—';
       const our10=Number(p.tier_under10||0);const our30=Number(p.tier_10_30||0);const our50=Number(p.tier_30_50||0);
-      function cmp(ours,theirs){if(theirs==='â')return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
+      function cmp(ours,theirs){if(theirs==='—')return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
       compRows+=`<tr>
         <td style="font-weight:600">${esc(p.name_en||p.key)}</td>
-        <td style="color:var(--gold)">à¸¿${our10.toLocaleString()}</td>
-        <td style="color:var(--gold)">à¸¿${our30.toLocaleString()}</td>
-        <td style="color:var(--gold)">à¸¿${our50.toLocaleString()}</td>
-        <td style="color:var(--blue)">â¬${e10}</td>
-        <td style="color:var(--blue)">â¬${e30}</td>
-        <td style="color:var(--blue)">â¬${e50}</td>
-        <td style="${cmp(our10,thb10)}">à¸¿${typeof thb10==='number'?thb10.toLocaleString():thb10}</td>
-        <td style="${cmp(our30,thb30)}">à¸¿${typeof thb30==='number'?thb30.toLocaleString():thb30}</td>
-        <td style="${cmp(our50,thb50)}">à¸¿${typeof thb50==='number'?thb50.toLocaleString():thb50}</td>
+        <td style="color:var(--gold)">฿${our10.toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${our30.toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${our50.toLocaleString()}</td>
+        <td style="color:var(--blue)">€${e10}</td>
+        <td style="color:var(--blue)">€${e30}</td>
+        <td style="color:var(--blue)">€${e50}</td>
+        <td style="${cmp(our10,thb10)}">฿${typeof thb10==='number'?thb10.toLocaleString():thb10}</td>
+        <td style="${cmp(our30,thb30)}">฿${typeof thb30==='number'?thb30.toLocaleString():thb30}</td>
+        <td style="${cmp(our50,thb50)}">฿${typeof thb50==='number'?thb50.toLocaleString():thb50}</td>
       </tr>`;
     }
     document.getElementById('comparisonTable').innerHTML=compRows;
-    if(comp[0])document.getElementById('compMeta').textContent=`Source: hartmetallschrott24.de | Rate: â¬1 = à¸¿${rate.toFixed(2)} | Scraped: ${fmtDate(comp[0].scraped_at)} | Green = we buy cheaper than EU converts to`;
+    if(comp[0])document.getElementById('compMeta').textContent=`Source: hartmetallschrott24.de | Rate: €1 = ฿${rate.toFixed(2)} | Scraped: ${fmtDate(comp[0].scraped_at)} | Green = we buy cheaper than EU converts to`;
 
     // Systems
     const crons=[
@@ -756,7 +756,7 @@ async function loadAnalytics(lineChats){
 
   const totalVisitors=sessions;
   const chatUsers=weekChats;
-  const quotesGiven=lineChats?lineChats.filter(c=>c.created_at>d7&&c.bot_reply&&(c.bot_reply.includes('à¸¿')||c.bot_reply.includes('à¸£à¸²à¸à¸²')||c.bot_reply.includes('price')||c.bot_reply.includes('â'))).length:0;
+  const quotesGiven=lineChats?lineChats.filter(c=>c.created_at>d7&&c.bot_reply&&(c.bot_reply.includes('฿')||c.bot_reply.includes('ราคา')||c.bot_reply.includes('price')||c.bot_reply.includes('→'))).length:0;
   const funnelSteps=[
     {label:'Website Visitors',value:totalVisitors,color:'var(--blue)'},
     {label:'LINE Chats Started',value:chatUsers,color:'var(--gold)'},
@@ -765,7 +765,7 @@ async function loadAnalytics(lineChats){
   const maxF=Math.max(...funnelSteps.map(s=>s.value),1);
   document.getElementById('funnelViz').innerHTML=funnelSteps.map((s,i)=>{
     const w=Math.max((s.value/maxF)*100,8);
-    const conv=i>0?((s.value/funnelSteps[i-1].value)*100).toFixed(0)+'%':'â';
+    const conv=i>0?((s.value/funnelSteps[i-1].value)*100).toFixed(0)+'%':'—';
     return`<div style="margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
         <span style="color:var(--dark-text)">${s.label}</span>
