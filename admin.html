@@ -661,7 +661,6 @@ async function loadAll(){
     }).join('');
 
     // Prices comparison table
-    const compNames={VHM_BOHRER_FRAESER:'Drills/Endmills',WENDESCHNEIDPLATTEN:'Inserts',HARTMETALL_GEMISCHT:'Mixed Carbide',HARTMETALL_STUECKSCHROTT:'Solid Pieces'};
     const priceMap={carbide_drills:'VHM_PLAETTCHEN_MAX',carbide_inserts:'WENDESCHNEIDPLATTEN',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
     const rate=comp[0]?Number(comp[0].exchange_rate):38;
     const compMap={};comp.forEach(c=>{if(!compMap[c.material_key])compMap[c.material_key]=c});
