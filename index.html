@@ -54,6 +54,7 @@ a{color:inherit}
 .nav{display:flex;gap:28px;align-items:center}
 .nav a{color:var(--muted);text-decoration:none;font-size:14px}
 .nav a:hover{color:var(--ink)}
+.nav a.active{color:var(--gold)}
 .lang{display:flex;gap:4px}
 .lang button{font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--hair);color:var(--muted);font-size:12px;padding:6px 9px;border-radius:8px;cursor:pointer}
 .lang button.on{border-color:var(--gold);color:var(--gold)}
@@ -137,6 +138,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:24px;padding-top:20px
   <nav class="nav">
     <a class="navlink" href="#how">How it works</a>
     <a class="navlink" href="#buy"><span class="th">รับซื้อ</span><span class="en">What we buy</span></a>
+    <a class="navlink" href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Prices</span></a>
     <a class="navlink" href="#business"><span class="th">ธุรกิจ</span><span class="en">Business</span></a>
     <div class="lang"><button id="lb-th" class="on" onclick="setLang('th')">TH</button><button id="lb-en" onclick="setLang('en')">EN</button></div>
     <a class="pill" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE</a>
@@ -313,7 +315,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:24px;padding-top:20px
   <div class="wrap">
     <div class="cols">
       <div><a class="logo" href="/" style="font-size:18px">Carbide<b>Thai</b></a><div style="margin-top:8px"><span class="th">รับซื้อทังสเตนคาร์ไบด์ทั่วประเทศไทย</span><span class="en">Buying tungsten carbide across Thailand</span></div></div>
-      <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="#buy"><span class="th">รับซื้อ</span><span class="en">What we buy</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
+      <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="#buy"><span class="th">รับซื้อ</span><span class="en">What we buy</span></a> · <a href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
     </div>
     <div class="legal">ThaiCarbide is operated by <b style="color:var(--steel)">Arden Holdings Global Limited</b> (Hong Kong · CR 80816708), Unit 909, Prosperity Millennia Plaza, 663 King's Road, Quarry Bay, Hong Kong. © 2026 ThaiCarbide. <span class="th">ราคาทั้งหมดเป็นราคาโดยประมาณ ยืนยันหลังชั่งน้ำหนักและตรวจสอบ</span><span class="en">All prices are estimates, confirmed after weighing and inspection.</span></div>
   </div>

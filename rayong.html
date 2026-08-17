@@ -18,7 +18,7 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:'Inter','Sarabun',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.65}
 body.lang-th{font-family:'Sarabun','Inter',sans-serif}
 body.lang-th .en{display:none!important}body.lang-en .th{display:none!important}
-.gk{font-family:'Space Grotesk',sans-serif}body.lang-th .gk{font-family:'Space Grotesk','Sarabun',sans-serif}
+.grkfont-family:'Space Grotesk',sans-serif}body.lang-th .gk{font-family:'Space Grotesk','Sarabun',sans-serif}
 .mono{font-family:'IBM Plex Mono',monospace}
 a{color:inherit}
 .wrap{max-width:1000px;margin:0 auto;padding:0 40px}
@@ -28,7 +28,7 @@ a{color:inherit}
 .top{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(12,21,38,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
 .logo{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;text-decoration:none;color:var(--ink)}.logo b{color:var(--gold)}
 .nav{display:flex;gap:22px;align-items:center}
-.nav a{color:var(--muted);text-decoration:none;font-size:14px}.nav a:hover{color:var(--ink)}
+.nav a{color:var(--muted);text-decoration:none;font-size:14px}.nav a:hover{color:var(--ink)}.nav a.active{color:var(--gold)}
 .lang{display:flex;gap:4px}
 .lang button{font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--hair);color:var(--muted);font-size:12px;padding:6px 9px;border-radius:8px;cursor:pointer}
 .lang button.on{border-color:var(--gold);color:var(--gold)}
@@ -76,6 +76,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <header class="top">
   <a class="logo" href="/">Carbide<b>Thai</b></a>
   <nav class="nav">
+    <a class="navlink" href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a>
     <a class="navlink" href="/#how"><span class="th">ขั้นตอน</span><span class="en">How it works</span></a>
     <a class="navlink" href="/#buy"><span class="th">รับซื้อ</span><span class="en">What we buy</span></a>
     <div class="lang"><button id="lb-th" class="on" onclick="setLang('th')">TH</button><button id="lb-en" onclick="setLang('en')">EN</button></div>
@@ -85,8 +86,8 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <section class="hero" style="text-align:center;padding:82px 0 44px;background:linear-gradient(180deg,rgba(12,21,38,.75),rgba(12,21,38,.94)),url(https://thaicarbide.com/img/hero-bg.jpg) center/cover no-repeat;border-bottom:1px solid var(--hair)"><div class="wrap">
   <span class="eyebrow">[ <span class="th">รับซื้อคาร์ไบด์ · ระยอง</span><span class="en">Carbide buyers · Rayong</span> ]</span>
   <h1 class="gk"><span class="th">รับซื้อเศษคาร์ไบด์ใน<span class="g">ระยอง</span></span><span class="en">Sell carbide scrap in <span class="g">Rayong</span></span></h1>
-  <p class="lead"><span class="th">มาบตาพุดและนิคมอีสเทิร์นซีบอร์ด — ขายเศษคาร์ไบด์ได้ราคาสูงสุด ส่งพัสดุฟรี เราออกค่าส่งให้</span><span class="en">Map Ta Phut and the Eastern Seaboard estates — sell carbide scrap at the best price. Free parcel, we pay the shipping.</span></p>
-  <div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿0<u>/kg</u></div></div>
+  <p class="lead"><span class="th">มาบตาพุดและนิคมอีสเทิร์นซีบอร์ด — ขายเศษคาร์ไบด้ได้ราคาสูงสุด ส่งพัสดุฟรี เราออกค่าส่งให้</span><span class="en">Map Ta Phut and the Eastern Seaboard estates — sell carbide scrap at the best price. Free parcel, we pay the shipping.</span></p>
+  <div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿2,135<u>/kg</u></div></div>
   <div class="chips">
     <span class="chip"><span class="th">ส่งฟรี</span><span class="en">FREE PARCEL</span></span>
     <span class="chip"><span class="th">มาส่งเอง</span><span class="en">SELF-DELIVERY</span></span>
@@ -105,7 +106,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <section class="wrap"><div class="sec-head"><span class="idx">/ 02</span><h2 class="gk"><span class="th">3 วิธีส่งของ</span><span class="en">Three ways to deliver</span></h2></div>
   <div class="grid3">
     <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8"/></svg><h3 class="gk"><span class="th">ส่งพัสดุ</span><span class="en">Free parcel</span></h3><p><span class="th">ส่ง Kerry / J&T — เราออกค่าส่ง</span><span class="en">Kerry / J&T — we pay shipping.</span></p><span class="free"><span class="th">ฟรีทั่วไทย</span><span class="en">FREE NATIONWIDE</span></span></div>
-    <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6"/></svg><h3 class="gk"><span class="th">มาส่งเอง</span><span class="en">Self-delivery</span></h3><p><span class="th">ลานพาร์ทเนอร์ หนองจอก กทม.</span><span class="en">Our partner yard, Nong Chok, Bangkok.</span></p><span class="free">NONG CHOK · 10530</span></div>
+    <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 >1v-6h6v6"/></svg><h3 class="gk"><span class="th">มาส่งเอง</span><span class="en">Self-delivery</span></h3><p><span class="th">ลานพาร์ทเนอร์ หนองจอก กทม.</span><span class="en">Our partner yard, Nong Chok, Bangkok.</span></p><span class="free">NONG CHCK · 10530</span></div>
     <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M5 16l1.5-5h11L19 16M6 16h12"/><circle cx="8" cy="17.5" r="1.4"/><circle cx="16" cy="17.5" r="1.4"/></svg><h3 class="gk">GrabExpress</h3><p><span class="th">เรียก Grab ในกรุงเทพฯ วันเดียวถึง</span><span class="en">Grab within Bangkok, same-day.</span></p><span class="free"><span class="th">คืนค่าส่ง</span><span class="en">FARE REIMBURSED</span></span></div>
   </div>
 </section>
@@ -116,7 +117,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 </div></section>
 <footer><div class="wrap"><div class="cols">
   <div><a class="logo" href="/" style="font-size:18px">Carbide<b>Thai</b></a></div>
-  <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
+  <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
 </div><div class="legal">ThaiCarbide is operated by <b style="color:var(--steel)">Arden Holdings Global Limited</b> (Hong Kong · CR 80816708). © 2026 ThaiCarbide. <span class="th">ราคาโดยประมาณ ยืนยันหลังชั่งน้ำหนัก</span><span class="en">Prices are estimates, confirmed after weighing.</span></div></div></footer>
 <script>
 const SB_URL='https://ltupwgytuayzopnsdvpc.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
