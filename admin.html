@@ -662,7 +662,7 @@ async function loadAll(){
 
     // Prices comparison table
     const compNames={VHM_BOHRER_FRAESER:'Drills/Endmills',WENDESCHNEIDPLATTEN:'Inserts',HARTMETALL_GEMISCHT:'Mixed Carbide',HARTMETALL_STUECKSCHROTT:'Solid Pieces'};
-    const priceMap={carbide_drills:'VHM_BOHRER_FRAESER',carbide_inserts:'WENDESCHNEIDPLATTEN',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
+    const priceMap={carbide_drills:'VHM_PLAETTCHEN_MAX',carbide_inserts:'WENDESCHNEIDPLATTEN',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
     const rate=comp[0]?Number(comp[0].exchange_rate):38;
     const compMap={};comp.forEach(c=>{if(!compMap[c.material_key])compMap[c.material_key]=c});
 
@@ -670,27 +670,29 @@ async function loadAll(){
     for(const p of prices){
       const euKey=priceMap[p.key];
       const eu=euKey?compMap[euKey]:null;
-      const tiers=eu&&eu.tier_data?eu.tier_data:[];
-      const t10=tiers.find(t=>t.maxKg<=10||t.label?.includes('10'));
-      const t30=tiers.find(t=>t.label?.includes('10–30')||t.label?.includes('10-30'));
-      const t50=tiers.find(t=>t.label?.includes('30–50')||t.label?.includes('30-50'));
-      const e10=t10?t10.price:'—';const e30=t30?t30.price:'—';const e50=t50?t50.price:'—';
-      const thb10=t10?Math.round(t10.price*rate):'—';
-      const thb30=t30?Math.round(t30.price*rate):'—';
-      const thb50=t50?Math.round(t50.price*rate):'—';
+      const tiers=eu&&Array.isArray(eu.tier_data)?eu.tier_data:[];
+      const flatEur=eu&&eu.price_eur!=null?Number(eu.price_eur):null;
+      const pick=(m)=>{const t=tiers.find(m);return t?Number(t.price):flatEur;};
+      const e10=pick(t=>t.maxKg<=10||(t.label&&t.label.includes('10')));
+      const e30=pick(t=>t.label&&(t.label.includes('10–30')||t.label.includes('10-30')));
+      const e50=pick(t=>t.label&&(t.label.includes('30–50')||t.label.includes('30-50')));
+      const thb10=e10!=null?Math.round(e10*rate):null;
+      const thb30=e30!=null?Math.round(e30*rate):null;
+      const thb50=e50!=null?Math.round(e50*rate):null;
       const our10=Number(p.tier_under10||0);const our30=Number(p.tier_10_30||0);const our50=Number(p.tier_30_50||0);
-      function cmp(ours,theirs){if(theirs==='—')return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
+      const eurCell=(e)=>e!=null?'€'+e:'€—';
+      function cmp(ours,theirs){if(theirs==null)return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
       compRows+=`<tr>
         <td style="font-weight:600">${esc(p.name_en||p.key)}</td>
         <td style="color:var(--gold)">฿${our10.toLocaleString()}</td>
         <td style="color:var(--gold)">฿${our30.toLocaleString()}</td>
         <td style="color:var(--gold)">฿${our50.toLocaleString()}</td>
-        <td style="color:var(--blue)">€${e10}</td>
-        <td style="color:var(--blue)">€${e30}</td>
-        <td style="color:var(--blue)">€${e50}</td>
-        <td style="${cmp(our10,thb10)}">฿${typeof thb10==='number'?thb10.toLocaleString():thb10}</td>
-        <td style="${cmp(our30,thb30)}">฿${typeof thb30==='number'?thb30.toLocaleString():thb30}</td>
-        <td style="${cmp(our50,thb50)}">฿${typeof thb50==='number'?thb50.toLocaleString():thb50}</td>
+        <td style="color:var(--blue)">${eurCell(e10)}</td>
+        <td style="color:var(--blue)">${eurCell(e30)}</td>
+        <td style="color:var(--blue)">${eurCell(e50)}</td>
+        <td style="${cmp(our10,thb10)}">${thb10!=null?'฿'+thb10.toLocaleString():'฿—'}</td>
+        <td style="${cmp(our30,thb30)}">${thb30!=null?'฿'+thb30.toLocaleString():'฿—'}</td>
+        <td style="${cmp(our50,thb50)}">${thb50!=null?'฿'+thb50.toLocaleString():'฿—'}</td>
       </tr>`;
     }
     document.getElementById('comparisonTable').innerHTML=compRows;
