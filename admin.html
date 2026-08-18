@@ -120,10 +120,9 @@ tr:hover { background: rgba(200,168,78,0.04); }
   <div class="login-box">
     <h1>ThaiCarbide</h1>
     <p>Admin Backoffice</p>
-    <input type="email" id="emailInput" placeholder="Email" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
-    <input type="password" id="pwInput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">Login</button>
-    <div class="login-error" id="loginErr">Invalid email or password</div>
+    <div class="login-error" id="loginErr">Invalid password</div>
   </div>
 </div>
 
@@ -269,20 +268,49 @@ tr:hover { background: rgba(200,168,78,0.04); }
 
   <!-- PRICES TAB -->
   <div id="tab-prices" class="tab-content" style="display:none">
+    <!-- Price Alerts -->
+    <div id="priceAlerts" style="display:none;margin-bottom:12px;padding:12px 16px;border-radius:10px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-size:16px;">&#9888;</span>
+        <span style="font-weight:600;color:#fbbf24;font-size:13px;">Price Change Alerts</span>
+      </div>
+      <div id="alertList" style="font-size:12px;color:var(--dark-text);"></div>
+    </div>
+
+    <!-- Benchmark Comparison -->
     <div class="card" style="margin-bottom:12px;overflow-x:auto;">
-      <h2>Price Comparison &mdash; ThaiCarbide vs EU (hartmetallschrott24.de)</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">
+        <h2 style="margin:0;border:0;padding:0;">ThaiCarbide vs European Benchmarks</h2>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate from EU</button>
+        </div>
+      </div>
       <table><thead><tr>
-        <th rowspan="2">Material</th>
-        <th colspan="3" style="text-align:center;color:var(--gold);border-bottom:1px solid var(--gold)">ThaiCarbide (THB/kg)</th>
-        <th colspan="3" style="text-align:center;color:var(--blue);border-bottom:1px solid var(--blue)">EU &mdash; EUR/kg</th>
-        <th colspan="3" style="text-align:center;color:#22c55e;border-bottom:1px solid #22c55e">EU &rarr; THB/kg</th>
-      </tr><tr>
-        <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
-        <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
-        <th>&lt;10kg</th><th>10-30</th><th>30-50</th>
+        <th>Material</th>
+        <th style="color:var(--gold)">Teaser</th>
+        <th style="color:var(--gold)">&lt;10kg</th>
+        <th style="color:var(--gold)">10-30</th>
+        <th style="color:var(--gold)">30-50</th>
+        <th style="color:var(--blue)">EU Avg (EUR)</th>
+        <th style="color:var(--blue)">EU &rarr; THB</th>
+        <th>Discount</th>
+        <th>Gap</th>
       </tr></thead>
-      <tbody id="comparisonTable"></tbody></table>
-      <div id="compMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
+      <tbody id="benchmarkTable"></tbody></table>
+      <div id="benchMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
+    </div>
+
+    <!-- Benchmark Sources -->
+    <div class="grid2">
+      <div class="card">
+        <h2>Benchmark Sources</h2>
+        <table><thead><tr><th>Material</th><th>Source</th><th>EUR/kg</th><th>Discount</th><th>Updated</th></tr></thead>
+        <tbody id="sourceTable"></tbody></table>
+      </div>
+      <div class="card">
+        <h2>Recent Price Changes</h2>
+        <div id="historyList" style="max-height:280px;overflow-y:auto;"></div>
+      </div>
     </div>
   </div>
 
@@ -308,10 +336,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
       <h3 id="modalTitle" style="margin:0;">Conversation</h3>
-      <div style="display:flex;gap:6px;">
-        <button class="btn-sm btn-outline" onclick="toggleBotPause()" id="botPauseBtn" style="font-size:11px;white-space:nowrap;">⏸ Pause bot</button>
-        <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">Show Original</button>
-      </div>
+      <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">Show Original</button>
     </div>
     <div id="modalBody"></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
@@ -326,65 +351,31 @@ tr:hover { background: rgba(200,168,78,0.04); }
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
-// --- Supabase Auth (real login; JWT used for all authenticated reads) ---
-let ACCESS=null;
-function authToken(){return ACCESS||KEY;}
+const PASS_HASH='fffab0fc573f81fbd3c565fc2ddc4f117338ff5780930d5cf26884064f896583';
 
-function setSession(d){
-  ACCESS=d.access_token;
-  const sess={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Date.now()+((d.expires_in||3600)*1000)};
-  try{localStorage.setItem('tc_session',JSON.stringify(sess));}catch(_){}
-}
-function showDashboard(){
-  document.getElementById('loginGate').style.display='none';
-  document.getElementById('dashboard').style.display='block';
-  loadAll();
-  if(!window.__tcRefresh){window.__tcRefresh=setInterval(async()=>{
-    let raw=null;try{raw=localStorage.getItem('tc_session');}catch(_){}
-    if(!raw)return; let sess; try{sess=JSON.parse(raw);}catch(_){return;}
-    if(sess.refresh_token)await refreshSession(sess.refresh_token);
-  },45*60*1000);}
-}
-async function refreshSession(rt){
-  try{
-    const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
-    const d=await r.json();
-    if(r.ok&&d.access_token){setSession(d);return true;}
-  }catch(_){}
-  return false;
-}
+async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+
 async function doLogin(){
-  const email=(document.getElementById('emailInput').value||'').trim();
   const pw=document.getElementById('pwInput').value;
-  const err=document.getElementById('loginErr'); err.style.display='none';
-  const btn=document.querySelector('.login-box button'); if(btn){btn.disabled=true;btn.textContent='Signing in…';}
-  try{
-    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
-    const d=await r.json();
-    if(!r.ok||!d.access_token){err.textContent=d.error_description||d.msg||'Invalid email or password';err.style.display='block';return;}
-    setSession(d); showDashboard();
-  }catch(e){err.textContent='Network error — try again';err.style.display='block';}
-  finally{if(btn){btn.disabled=false;btn.textContent='Login';}}
+  const h=await sha256(pw);
+  if(h===PASS_HASH){
+    sessionStorage.setItem('tc_auth','1');
+    document.getElementById('loginGate').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    loadAll();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
 }
-async function doLogout(){
-  try{await fetch(`${SB}/auth/v1/logout`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+authToken()}});}catch(_){}
-  ACCESS=null; try{localStorage.removeItem('tc_session');}catch(_){}
-  location.reload();
-}
-async function checkAuth(){
-  let raw=null;try{raw=localStorage.getItem('tc_session');}catch(_){}
-  if(!raw)return;
-  let sess;try{sess=JSON.parse(raw);}catch(_){return;}
-  if(sess.access_token&&sess.expires_at&&sess.expires_at-Date.now()>60000){ACCESS=sess.access_token;showDashboard();return;}
-  if(sess.refresh_token&&await refreshSession(sess.refresh_token)){showDashboard();}
-}
+function doLogout(){sessionStorage.removeItem('tc_auth');location.reload()}
+function checkAuth(){if(sessionStorage.getItem('tc_auth')){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';loadAll()}}
 
 async function sbGet(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}});
   return r.ok?r.json():[];
 }
 async function sbGetAll(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`,Prefer:'count=exact',Range:'0-9999'}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,Prefer:'count=exact',Range:'0-9999'}});
   if(!r.ok)return{data:[],total:0};
   const data=await r.json();
   const range=r.headers.get('content-range');
@@ -463,40 +454,8 @@ async function sendReply(){
   btn.disabled=false;btn.textContent='Send in Thai';
 }
 
-let _botPaused=false;
-function setPauseBtn(){
-  const b=document.getElementById('botPauseBtn'); if(!b)return;
-  b.textContent=_botPaused?'\u25B6 Resume bot':'\u23F8 Pause bot';
-  b.style.color=_botPaused?'#f59e0b':'';
-  b.style.borderColor=_botPaused?'#f59e0b':'';
-}
-async function loadPauseState(uid){
-  _botPaused=false; setPauseBtn();
-  const rows=await sbGet('user_flags',`select=bot_paused&platform=eq.line&platform_user_id=eq.${uid}`);
-  _botPaused=!!(rows&&rows[0]&&rows[0].bot_paused);
-  setPauseBtn();
-}
-async function toggleBotPause(){
-  if(!currentModalUid)return;
-  const b=document.getElementById('botPauseBtn');
-  const st=document.getElementById('replyStatus');
-  const next=!_botPaused;
-  if(b)b.disabled=true;
-  try{
-    const r=await fetch(`${SB}/rest/v1/user_flags?on_conflict=platform,platform_user_id`,{
-      method:'POST',
-      headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},
-      body:JSON.stringify({platform:'line',platform_user_id:currentModalUid,display_name:(document.getElementById('modalTitle').textContent||null),bot_paused:next,updated_at:new Date().toISOString()})
-    });
-    if(r.ok){_botPaused=next;setPauseBtn();
-      if(st){st.style.color='var(--muted)';st.textContent=next?'Bot paused for this chat \u2014 you are handling it. Resume when done.':'Bot resumed for this chat.';}
-    }else{ if(st){st.style.color='#ef4444';st.textContent='Could not update bot state ('+r.status+')';} }
-  }catch(e){ if(st){st.style.color='#ef4444';st.textContent='Error: '+e.message;} }
-  if(b)b.disabled=false;
-}
 async function showConversation(uid,name){
   currentModalUid=uid;
-  loadPauseState(uid);
   _showOriginal=false;
   document.getElementById('translateAllBtn').textContent='Show Original';
   const chats=await sbGet('line_chats',`select=message,bot_reply,created_at,image_url,needs_human,needs_human_reason&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
@@ -576,11 +535,13 @@ async function loadAll(){
   loadConversions();
   loadAds();
   try{
-    const[chatsResult,prices,comp,flags]=await Promise.all([
+    const[chatsResult,prices,comp,flags,benchmarks,priceHistory]=await Promise.all([
       sbGetAll('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human,needs_human_reason,image_url&line_user_id=neq.BROADCAST&order=created_at.desc'),
       sbGet('prices','select=key,name_en,tier_under10,tier_10_30,tier_30_50,teaser_thb,updated_at&order=key'),
       sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=10'),
-      sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line')
+      sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line'),
+      sbGet('price_benchmarks','select=id,price_key,source,benchmark_eur_kg,discount_pct,notes,updated_at&order=price_key,source'),
+      sbGet('price_history','select=id,price_key,old_teaser,new_teaser,old_tiers,new_tiers,change_source,changed_at&order=changed_at.desc&limit=20')
     ]);
     const chats=chatsResult.data;
     const totalMessages=chatsResult.total;
@@ -660,42 +621,85 @@ async function loadAll(){
       return`<tr><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
     }).join('');
 
-    // Prices comparison table
-    const priceMap={carbide_drills:'VHM_PLAETTCHEN_MAX',carbide_inserts:'WENDESCHNEIDPLATTEN',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
-    const rate=comp[0]?Number(comp[0].exchange_rate):38;
-    const compMap={};comp.forEach(c=>{if(!compMap[c.material_key])compMap[c.material_key]=c});
+    // European Benchmark Comparison
+    const rate=comp[0]?Number(comp[0].exchange_rate):38.43;
+    window._benchmarks=benchmarks;window._prices=prices;window._rate=rate;
 
-    let compRows='';
+    // Group benchmarks by price_key, calculate avg EUR
+    const bmByKey={};
+    for(const b of benchmarks){
+      if(!bmByKey[b.price_key])bmByKey[b.price_key]={sources:[],avgEur:0,discount:50};
+      bmByKey[b.price_key].sources.push(b);
+      bmByKey[b.price_key].discount=Number(b.discount_pct)||50;
+    }
+    for(const k in bmByKey){
+      const s=bmByKey[k].sources;
+      bmByKey[k].avgEur=s.reduce((a,b)=>a+Number(b.benchmark_eur_kg),0)/s.length;
+    }
+
+    let bmRows='';
     for(const p of prices){
-      const euKey=priceMap[p.key];
-      const eu=euKey?compMap[euKey]:null;
-      const tiers=eu&&Array.isArray(eu.tier_data)?eu.tier_data:[];
-      const flatEur=eu&&eu.price_eur!=null?Number(eu.price_eur):null;
-      const pick=(m)=>{const t=tiers.find(m);return t?Number(t.price):flatEur;};
-      const e10=pick(t=>t.maxKg<=10||(t.label&&t.label.includes('10')));
-      const e30=pick(t=>t.label&&(t.label.includes('10–30')||t.label.includes('10-30')));
-      const e50=pick(t=>t.label&&(t.label.includes('30–50')||t.label.includes('30-50')));
-      const thb10=e10!=null?Math.round(e10*rate):null;
-      const thb30=e30!=null?Math.round(e30*rate):null;
-      const thb50=e50!=null?Math.round(e50*rate):null;
-      const our10=Number(p.tier_under10||0);const our30=Number(p.tier_10_30||0);const our50=Number(p.tier_30_50||0);
-      const eurCell=(e)=>e!=null?'€'+e:'€—';
-      function cmp(ours,theirs){if(theirs==null)return'';return ours<theirs?'color:#22c55e':'color:#ef4444'}
-      compRows+=`<tr>
+      const bm=bmByKey[p.key];
+      const avgEur=bm?bm.avgEur:null;
+      const avgThb=avgEur?Math.round(avgEur*rate):null;
+      const disc=bm?bm.discount:50;
+      const teaser=Number(p.teaser_thb||0);
+      const gap=avgThb?((1-teaser/avgThb)*100).toFixed(1):null;
+      const gapColor=gap?(Number(gap)>0?'#22c55e':'#ef4444'):'var(--muted)';
+      bmRows+=`<tr>
         <td style="font-weight:600">${esc(p.name_en||p.key)}</td>
-        <td style="color:var(--gold)">฿${our10.toLocaleString()}</td>
-        <td style="color:var(--gold)">฿${our30.toLocaleString()}</td>
-        <td style="color:var(--gold)">฿${our50.toLocaleString()}</td>
-        <td style="color:var(--blue)">${eurCell(e10)}</td>
-        <td style="color:var(--blue)">${eurCell(e30)}</td>
-        <td style="color:var(--blue)">${eurCell(e50)}</td>
-        <td style="${cmp(our10,thb10)}">${thb10!=null?'฿'+thb10.toLocaleString():'฿—'}</td>
-        <td style="${cmp(our30,thb30)}">${thb30!=null?'฿'+thb30.toLocaleString():'฿—'}</td>
-        <td style="${cmp(our50,thb50)}">${thb50!=null?'฿'+thb50.toLocaleString():'฿—'}</td>
+        <td style="color:var(--gold)">฿${teaser.toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${Number(p.tier_under10||0).toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${Number(p.tier_10_30||0).toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${Number(p.tier_30_50||0).toLocaleString()}</td>
+        <td style="color:var(--blue)">${avgEur?'€'+avgEur.toFixed(1):'—'}</td>
+        <td style="color:var(--blue)">${avgThb?'฿'+avgThb.toLocaleString():'—'}</td>
+        <td><span class="badge ok">${disc}%</span></td>
+        <td style="color:${gapColor};font-weight:600">${gap?gap+'%':'—'}</td>
       </tr>`;
     }
-    document.getElementById('comparisonTable').innerHTML=compRows;
-    if(comp[0])document.getElementById('compMeta').textContent=`Source: hartmetallschrott24.de | Rate: €1 = ฿${rate.toFixed(2)} | Scraped: ${fmtDate(comp[0].scraped_at)} | Green = we buy cheaper than EU converts to`;
+    document.getElementById('benchmarkTable').innerHTML=bmRows;
+    document.getElementById('benchMeta').textContent=`Exchange rate: €1 = ฿${rate.toFixed(2)} | Discount = gap kept below EU level (50% = halfway) | Gap = how much below EU in THB`;
+
+    // Benchmark Sources table
+    const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
+    document.getElementById('sourceTable').innerHTML=benchmarks.map(b=>`<tr>
+      <td>${esc(nameMap[b.price_key]||b.price_key)}</td>
+      <td><a href="https://${esc(b.source)}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none">${esc(b.source)}</a></td>
+      <td style="color:var(--blue)">€${Number(b.benchmark_eur_kg).toFixed(1)}</td>
+      <td>${Number(b.discount_pct)}%</td>
+      <td>${fmtDate(b.updated_at)}</td>
+    </tr>`).join('')||'<tr><td colspan="5" style="color:var(--muted)">No benchmarks configured</td></tr>';
+
+    // Price Change History
+    const histEl=document.getElementById('historyList');
+    if(priceHistory.length){
+      // Show alerts for changes in last 48h
+      const recent48h=priceHistory.filter(h=>Date.now()-new Date(h.changed_at).getTime()<48*3600000);
+      if(recent48h.length){
+        document.getElementById('priceAlerts').style.display='block';
+        document.getElementById('alertList').innerHTML=recent48h.map(h=>{
+          const dir=Number(h.new_teaser)>Number(h.old_teaser)?'&#9650;':'&#9660;';
+          const clr=Number(h.new_teaser)>Number(h.old_teaser)?'#22c55e':'#ef4444';
+          return`<div style="margin-bottom:4px"><span style="color:${clr}">${dir}</span> <strong>${esc(nameMap[h.price_key]||h.price_key)}</strong>: ฿${Number(h.old_teaser).toLocaleString()} → ฿${Number(h.new_teaser).toLocaleString()} <span style="color:var(--muted);font-size:10px">(${timeAgo(h.changed_at)} — ${esc(h.change_source||'manual')})</span></div>`;
+        }).join('');
+      } else {
+        document.getElementById('priceAlerts').style.display='none';
+      }
+      histEl.innerHTML=priceHistory.map(h=>{
+        const dir=Number(h.new_teaser)>Number(h.old_teaser)?'&#9650;':'&#9660;';
+        const clr=Number(h.new_teaser)>Number(h.old_teaser)?'#22c55e':'#ef4444';
+        return`<div class="sys-row" style="gap:8px">
+          <span style="color:${clr};font-size:14px">${dir}</span>
+          <span class="name" style="flex:1">${esc(nameMap[h.price_key]||h.price_key)}: ฿${Number(h.old_teaser).toLocaleString()} → ฿${Number(h.new_teaser).toLocaleString()}</span>
+          <span class="sched">${esc(h.change_source||'—')}</span>
+          <span class="sched">${fmtDate(h.changed_at)}</span>
+        </div>`;
+      }).join('');
+    } else {
+      document.getElementById('priceAlerts').style.display='none';
+      histEl.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px 0">No price changes recorded yet</div>';
+    }
 
     // Systems
     const crons=[
@@ -776,7 +780,7 @@ async function loadAnalytics(lineChats){
         datasets:[
           {label:'Views',data:viewData,backgroundColor:'rgba(46,125,247,0.6)',borderRadius:3,order:2},
           {label:'Sessions',data:sessionData,backgroundColor:'rgba(200,168,78,0.6)',borderRadius:3,order:3},
-          {label:'CTA Clicks',data:clickData,type:'line',borrderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.1)',pointRadius:3,tension:0.3,order:1}
+          {label:'CTA Clicks',data:clickData,type:'line',borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.1)',pointRadius:3,tension:0.3,order:1}
         ]
       },
       options:{
@@ -830,6 +834,53 @@ async function loadAnalytics(lineChats){
   views.forEach(e=>{const d=e.device||'unknown';devCount[d]=(devCount[d]||0)+1});
   const sortedDev=Object.entries(devCount).sort((a,b)=>b[1]-a[1]);
   document.getElementById('deviceSplit').innerHTML=sortedDev.map(([d,c])=>`<tr><td style="text-transform:capitalize">${esc(d)}</td><td>${c}</td><td>${((c/totalV)*100).toFixed(0)}%</td></tr>`).join('');
+}
+
+async function recalcFromBenchmarks(){
+  if(!confirm('Recalculate ThaiCarbide prices from European benchmarks at configured discount?\n\nThis will update all prices keeping the current discount % below EU level.'))return;
+  const btn=document.getElementById('recalcBtn');
+  btn.disabled=true;btn.textContent='Calculating...';
+  try{
+    const benchmarks=window._benchmarks||[];
+    const prices=window._prices||[];
+    const rate=window._rate||38.43;
+    // Group benchmarks by price_key
+    const bmByKey={};
+    for(const b of benchmarks){
+      if(!bmByKey[b.price_key])bmByKey[b.price_key]={sources:[],discount:Number(b.discount_pct)||50};
+      bmByKey[b.price_key].sources.push(b);
+    }
+    let updates=[];
+    for(const p of prices){
+      const bm=bmByKey[p.key];
+      if(!bm)continue;
+      const avgEur=bm.sources.reduce((a,b)=>a+Number(b.benchmark_eur_kg),0)/bm.sources.length;
+      const euThb=avgEur*rate;
+      const disc=bm.discount/100;
+      // Apply discount: price = EU_THB * (1 - discount)
+      // discount=50 means halfway between 0 and EU price
+      const newTeaser=Math.round(euThb*(1-disc));
+      // Tiers: under10 = teaser * 0.85, 10_30 = teaser * 0.925, 30_50 = teaser
+      const newU10=Math.round(newTeaser*0.85);
+      const new1030=Math.round(newTeaser*0.925);
+      const new3050=newTeaser;
+      updates.push({key:p.key,teaser:newTeaser,u10:newU10,t1030:new1030,t3050:new3050});
+    }
+    if(!updates.length){alert('No benchmarks found to recalculate from.');btn.disabled=false;btn.textContent='Recalculate from EU';return}
+    // Execute updates via Supabase REST
+    for(const u of updates){
+      await fetch(`${SB}/rest/v1/prices?key=eq.${u.key}`,{
+        method:'PATCH',
+        headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},
+        body:JSON.stringify({teaser_thb:u.teaser,tier_under10:u.u10,tier_10_30:u.t1030,tier_30_50:u.t3050})
+      });
+    }
+    btn.textContent='Done! Reloading...';
+    setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate from EU'},1000);
+  }catch(e){
+    alert('Error: '+e.message);
+    btn.disabled=false;btn.textContent='Recalculate from EU';
+  }
 }
 
 document.getElementById('chatModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});

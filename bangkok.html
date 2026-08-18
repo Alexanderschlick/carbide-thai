@@ -88,7 +88,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <span class="eyebrow">[ <span class="th">รับซื้อคาร์ไบด์ · กรุงเทพฯ</span><span class="en">Carbide buyers · Bangkok</span> ]</span>
 <h1 class="gk"><span class="th">รับซื้อเศษคาร์ไบด์ใน<span class="g">กรุงเทพฯ</span></span><span class="en">Sell carbide scrap in <span class="g">Bangkok</span></span></h1>
 <p class="lead"><span class="th">โรงงาน CNC และร้านเครื่องมือทั่วกรุงเทพฯ ขายเศษคาร์ไบด์ได้ราคาสูงสุด จ่ายทันทีหลังตรวจสอบ</span><span class="en">CNC shops and tool rooms across Bangkok — sell your carbide scrap at the best price, paid instantly.</span></p>
-<div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿2,135<u>/kg</u></div></div>
+<div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿2,320<u>/kg</u></div></div>
 <div class="chips">
 <span class="chip"><span class="th">ส่งฟรี</span><span class="en">FREE PARCEL</span></span>
 <span class="chip"><span class="th">มาส่งเอง</span><span class="en">SELF-DELIVERY</span></span>
@@ -123,7 +123,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <script>
 const SB_URL='https://ltupwgytuayzopnsdvpc.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
 function setTeaser(v){document.getElementById('teaser').innerHTML='฿'+Number(v).toLocaleString('en-US')+'<u>/kg</u>';}
-setTeaser(2135);
+setTeaser(2320);
 fetch(SB_URL+'/rest/v1/prices?key=eq.carbide_inserts&select=teaser_thb',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}}).then(r=>r.json()).then(d=>{if(d&&d[0])setTeaser(d[0].teaser_thb);}).catch(()=>{});
 function setLang(l){document.body.classList.remove('lang-th','lang-en');document.body.classList.add('lang-'+l);document.getElementById('lb-th').classList.toggle('on',l==='th');document.getElementById('lb-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc-lang',l)}catch(e){}}
 (function(){try{setLang(localStorage.getItem('tc-lang')||'th')}catch(e){setLang('th')}})();

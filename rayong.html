@@ -11,72 +11,35 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ThaiCarbide — shared v4 design system (soft industrial) */
 :root{--bg:#0c1526;--panel:#111d33;--panel2:#16233d;--gold:#c9a35c;--gold-soft:#e0c48c;--royal:#5b74e0;--steel:#9fb0c6;--ink:#eef1f6;--muted:#8493ab;--hair:rgba(159,176,210,.15);--r:10px}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:'Inter','Sarabun',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.65}
-body.lang-th{font-family:'Sarabun','Inter',sans-serif}
-body.lang-th .en{display:none!important}body.lang-en .th{display:none!important}
-.grkfont-family:'Space Grotesk',sans-serif}body.lang-th .gk{font-family:'Space Grotesk','Sarabun',sans-serif}
-.mono{font-family:'IBM Plex Mono',monospace}
-a{color:inherit}
-.wrap{max-width:1000px;margin:0 auto;padding:0 40px}
-.hr{height:1px;background:var(--hair);max-width:1000px;margin:0 auto}
-.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
-.eyebrow.roy{color:var(--royal)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--ink);font-family:'Inter','Sarabun',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.65}
+body.lang-th{font-family:'Sarabun','Inter',sans-serif}body.lang-th .en{display:none!important}body.lang-en .th{display:none!important}
+.gk{font-family:'Space Grotesk',sans-serif}body.lang-th .gk{font-family:'Space Grotesk','Sarabun',sans-serif}.mono{font-family:'IBM Plex Mono',monospace}a{color:inherit}
+.wrap{max-width:1000px;margin:0 auto;padding:0 40px}.hr{height:1px;background:var(--hair);max-width:1000px;margin:0 auto}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}.eyebrow.roy{color:var(--royal)}
 .top{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(12,21,38,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
 .logo{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;text-decoration:none;color:var(--ink)}.logo b{color:var(--gold)}
-.nav{display:flex;gap:22px;align-items:center}
-.nav a{color:var(--muted);text-decoration:none;font-size:14px}.nav a:hover{color:var(--ink)}.nav a.active{color:var(--gold)}
-.lang{display:flex;gap:4px}
-.lang button{font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--hair);color:var(--muted);font-size:12px;padding:6px 9px;border-radius:8px;cursor:pointer}
-.lang button.on{border-color:var(--gold);color:var(--gold)}
+.nav{display:flex;gap:22px;align-items:center}.nav a{color:var(--muted);text-decoration:none;font-size:14px}.nav a:hover{color:var(--ink)}
+.lang{display:flex;gap:4px}.lang button{font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--hair);color:var(--muted);font-size:12px;padding:6px 9px;border-radius:8px;cursor:pointer}.lang button.on{border-color:var(--gold);color:var(--gold)}
 .pill{font-family:'IBM Plex Mono',monospace;border:1px solid rgba(201,163,92,.5);color:var(--gold);padding:7px 13px;border-radius:8px;font-size:12px;text-decoration:none}
-.hero .eyebrow{margin-bottom:22px;display:inline-block}
-.hero h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(32px,5.4vw,56px);line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}
-.hero h1 .g{color:var(--gold)}
+.hero .eyebrow{margin-bottom:22px;display:inline-block}.hero h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(32px,5.4vw,56px);line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}.hero h1 .g{color:var(--gold)}
 .hero .lead{color:var(--muted);font-size:17px;max-width:620px;margin:0 auto 26px}
-.quote{display:inline-block;border:1px solid var(--hair);border-radius:14px;background:var(--panel);padding:16px 30px;margin-bottom:26px}
-.quote .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.quote .amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:44px;color:var(--gold-soft);line-height:1.05}
-.quote .amt u{font-family:'IBM Plex Mono',monospace;text-decoration:none;font-size:18px;color:var(--muted)}
-.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:500;padding:13px 26px;border-radius:var(--r);text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:.18s;cursor:pointer;border:none}
-.btn-primary{background:var(--gold);color:#0c1526}.btn-primary:hover{background:var(--gold-soft)}
-.btn-ghost{background:transparent;color:var(--ink);border:1px solid rgba(238,241,246,.18)}.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-royal{background:var(--royal);color:#fff}.btn-royal:hover{background:#6f85e8}
-.sec-head{display:flex;align-items:baseline;gap:14px;padding:52px 0 26px}
-.sec-head .idx{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:.1em}
-.sec-head h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em}
-.prose{color:var(--muted);font-size:16px;line-height:1.8;max-width:760px}
-.prose b{color:var(--ink);font-weight:500}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.card{border:1px solid var(--hair);border-radius:14px;background:var(--panel);padding:22px 20px}
-.card .ic{width:24px;height:24px;stroke:var(--gold);fill:none;stroke-width:1.4;margin-bottom:12px;display:block}
-.card h3{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:17px;margin-bottom:6px}
-.card p{font-size:13px;color:var(--muted)}
-.card .free{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.05em;margin-top:10px;display:inline-block}
-.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0 0}
-.chip{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--steel);border:1px solid var(--hair);border-radius:8px;padding:6px 11px}
-.final{text-align:center;padding:64px 0}
-.final h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,4vw,38px);margin-bottom:10px}
-.final p{color:var(--muted);margin-bottom:24px}
-footer{border-top:1px solid var(--hair);padding:38px 0 56px;margin-top:36px}
-footer .cols{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap;color:var(--muted);font-size:13px}
-footer a{color:var(--muted);text-decoration:none}footer a:hover{color:var(--ink)}
-footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px;border-top:1px solid var(--hair);line-height:1.7}
-@media(max-width:820px){.nav .navlink{display:none}.grid3,.grid4{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.grid3,.grid4{grid-template-columns:1fr}}
-
+.quote{display:inline-block;border:1px solid var(--hair);border-radius:14px;background:var(--panel);padding:16px 30px;margin-bottom:26px}.quote .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}.quote .amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:44px;color:var(--gold-soft);line-height:1.05}.quote .amt u{font-family:'IBM Plex Mono',monospace;text-decoration:none;font-size:18px;color:var(--muted)}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.btn{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:500;padding:13px 26px;border-radius:var(--r);text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:.18s;cursor:pointer;border:none}
+.btn-primary{background:var(--gold);color:#0c1526}.btn-primary:hover{background:var(--gold-soft)}.btn-ghost{background:transparent;color:var(--ink);border:1px solid rgba(238,241,246,.18)}.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.sec-head{display:flex;align-items:baseline;gap:14px;padding:52px 0 26px}.sec-head .idx{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:.1em}.sec-head h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em}
+.prose{color:var(--muted);font-size:16px;line-height:1.8;max-width:760px}.prose b{color:var(--ink);font-weight:500}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{border:1px solid var(--hair);border-radius:14px;background:var(--panel);padding:22px 20px}.card .ic{width:24px;height:24px;stroke:var(--gold);fill:none;stroke-width:1.4;margin-bottom:12px;display:block}.card h3{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:17px;margin-bottom:6px}.card p{font-size:13px;color:var(--muted)}.card .free{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.05em;margin-top:10px;display:inline-block}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0 0}.chip{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--steel);border:1px solid var(--hair);border-radius:8px;padding:6px 11px}
+.final{text-align:center;padding:64px 0}.final h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,4vw,38px);margin-bottom:10px}.final p{color:var(--muted);margin-bottom:24px}
+footer{border-top:1px solid var(--hair);padding:38px 0 56px;margin-top:36px}footer .cols{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap;color:var(--muted);font-size:13px}footer a{color:var(--muted);text-decoration:none}footer a:hover{color:var(--ink)}footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px;border-top:1px solid var(--hair);line-height:1.7}
+@media(max-width:820px){.nav .navlink{display:none}.grid3{grid-template-columns:1fr 1fr}}@media(max-width:520px){.grid3{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="lang-th">
 <header class="top">
   <a class="logo" href="/">Carbide<b>Thai</b></a>
   <nav class="nav">
-    <a class="navlink" href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a>
     <a class="navlink" href="/#how"><span class="th">ขั้นตอน</span><span class="en">How it works</span></a>
     <a class="navlink" href="/#buy"><span class="th">รับซื้อ</span><span class="en">What we buy</span></a>
     <div class="lang"><button id="lb-th" class="on" onclick="setLang('th')">TH</button><button id="lb-en" onclick="setLang('en')">EN</button></div>
@@ -86,8 +49,8 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <section class="hero" style="text-align:center;padding:82px 0 44px;background:linear-gradient(180deg,rgba(12,21,38,.75),rgba(12,21,38,.94)),url(https://thaicarbide.com/img/hero-bg.jpg) center/cover no-repeat;border-bottom:1px solid var(--hair)"><div class="wrap">
   <span class="eyebrow">[ <span class="th">รับซื้อคาร์ไบด์ · ระยอง</span><span class="en">Carbide buyers · Rayong</span> ]</span>
   <h1 class="gk"><span class="th">รับซื้อเศษคาร์ไบด์ใน<span class="g">ระยอง</span></span><span class="en">Sell carbide scrap in <span class="g">Rayong</span></span></h1>
-  <p class="lead"><span class="th">มาบตาพุดและนิคมอีสเทิร์นซีบอร์ด — ขายเศษคาร์ไบด้ได้ราคาสูงสุด ส่งพัสดุฟรี เราออกค่าส่งให้</span><span class="en">Map Ta Phut and the Eastern Seaboard estates — sell carbide scrap at the best price. Free parcel, we pay the shipping.</span></p>
-  <div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿2,135<u>/kg</u></div></div>
+  <p class="lead"><span class="th">มาบตาพุดและนิคมอีสเทิร์นซีบอร์ด — ขายเศษคาร์ไบด์ได้ราคาสูงสุด ส่งพัสดุฟรี เราออกค่าส่งให้</span><span class="en">Map Ta Phut and the Eastern Seaboard estates — sell carbide scrap at the best price. Free parcel, we pay the shipping.</span></p>
+  <div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿0<u>/kg</u></div></div>
   <div class="chips">
     <span class="chip"><span class="th">ส่งฟรี</span><span class="en">FREE PARCEL</span></span>
     <span class="chip"><span class="th">มาส่งเอง</span><span class="en">SELF-DELIVERY</span></span>
@@ -106,7 +69,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <section class="wrap"><div class="sec-head"><span class="idx">/ 02</span><h2 class="gk"><span class="th">3 วิธีส่งของ</span><span class="en">Three ways to deliver</span></h2></div>
   <div class="grid3">
     <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8"/></svg><h3 class="gk"><span class="th">ส่งพัสดุ</span><span class="en">Free parcel</span></h3><p><span class="th">ส่ง Kerry / J&T — เราออกค่าส่ง</span><span class="en">Kerry / J&T — we pay shipping.</span></p><span class="free"><span class="th">ฟรีทั่วไทย</span><span class="en">FREE NATIONWIDE</span></span></div>
-    <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 >1v-6h6v6"/></svg><h3 class="gk"><span class="th">มาส่งเอง</span><span class="en">Self-delivery</span></h3><p><span class="th">ลานพาร์ทเนอร์ หนองจอก กทม.</span><span class="en">Our partner yard, Nong Chok, Bangkok.</span></p><span class="free">NONG CHCK · 10530</span></div>
+    <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6"/></svg><h3 class="gk"><span class="th">มาส่งเอง</span><span class="en">Self-delivery</span></h3><p><span class="th">ลานพาร์ทเนอร์ หนองจอก กทม.</span><span class="en">Our partner yard, Nong Chok, Bangkok.</span></p><span class="free">NONG CHOK · 10530</span></div>
     <div class="card"><svg class="ic" viewBox="0 0 24 24"><path d="M5 16l1.5-5h11L19 16M6 16h12"/><circle cx="8" cy="17.5" r="1.4"/><circle cx="16" cy="17.5" r="1.4"/></svg><h3 class="gk">GrabExpress</h3><p><span class="th">เรียก Grab ในกรุงเทพฯ วันเดียวถึง</span><span class="en">Grab within Bangkok, same-day.</span></p><span class="free"><span class="th">คืนค่าส่ง</span><span class="en">FARE REIMBURSED</span></span></div>
   </div>
 </section>
@@ -117,12 +80,12 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 </div></section>
 <footer><div class="wrap"><div class="cols">
   <div><a class="logo" href="/" style="font-size:18px">Carbide<b>Thai</b></a></div>
-  <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
+  <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
 </div><div class="legal">ThaiCarbide is operated by <b style="color:var(--steel)">Arden Holdings Global Limited</b> (Hong Kong · CR 80816708). © 2026 ThaiCarbide. <span class="th">ราคาโดยประมาณ ยืนยันหลังชั่งน้ำหนัก</span><span class="en">Prices are estimates, confirmed after weighing.</span></div></div></footer>
 <script>
 const SB_URL='https://ltupwgytuayzopnsdvpc.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
 function setTeaser(v){document.getElementById('teaser').innerHTML='฿'+Number(v).toLocaleString('en-US')+'<u>/kg</u>';}
-setTeaser(2135);
+setTeaser(2320);
 fetch(SB_URL+'/rest/v1/prices?key=eq.carbide_inserts&select=teaser_thb',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}}).then(r=>r.json()).then(d=>{if(d&&d[0])setTeaser(d[0].teaser_thb);}).catch(()=>{});
 function setLang(l){document.body.classList.remove('lang-th','lang-en');document.body.classList.add('lang-'+l);document.getElementById('lb-th').classList.toggle('on',l==='th');document.getElementById('lb-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc-lang',l)}catch(e){}}
 (function(){try{setLang(localStorage.getItem('tc-lang')||'th')}catch(e){setLang('th')}})();

@@ -29,7 +29,6 @@ a{color:inherit}
 .logo{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;text-decoration:none;color:var(--ink)}.logo b{color:var(--gold)}
 .nav{display:flex;gap:22px;align-items:center}
 .nav a{color:var(--muted);text-decoration:none;font-size:14px}.nav a:hover{color:var(--ink)}
-.nav a.active{color:var(--gold)}
 .lang{display:flex;gap:4px}
 .lang button{font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--hair);color:var(--muted);font-size:12px;padding:6px 9px;border-radius:8px;cursor:pointer}
 .lang button.on{border-color:var(--gold);color:var(--gold)}
@@ -77,7 +76,6 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 <header class="top">
   <a class="logo" href="/">Carbide<b>Thai</b></a>
   <nav class="nav">
-    <a class="navlink" href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a>
     <a class="navlink" href="/#how"><span class="th">ขั้นตอน</span><span class="en">How it works</span></a>
     <a class="navlink" href="/#buy"><span class="th">รับซื้อ</span><span class="en">What we buy</span></a>
     <div class="lang"><button id="lb-th" class="on" onclick="setLang('th')">TH</button><button id="lb-en" onclick="setLang('en')">EN</button></div>
@@ -88,7 +86,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
   <span class="eyebrow">[ <span class="th">รับซื้อคาร์ไบด์ · ชลบุรี</span><span class="en">Carbide buyers · Chonburi</span> ]</span>
   <h1 class="gk"><span class="th">รับซื้อเศษคาร์ไบด์ใน<span class="g">ชลบุรี</span></span><span class="en">Sell carbide scrap in <span class="g">Chonburi</span></span></h1>
   <p class="lead"><span class="th">อมตะซิตี้และแหลมฉบัง — ขายเศษคาร์ไบด์ได้ราคาสูงสุด ส่งพัสดุฟรีทั่วประเทศ เราออกค่าส่งให้</span><span class="en">Amata City and Laem Chabang — sell carbide scrap at the best price. Free nationwide parcel, we pay the shipping.</span></p>
-  <div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿2,135<u>/kg</u></div></div>
+  <div class="quote"><div class="lbl"><span class="th">รับซื้อสูงสุด</span><span class="en">We pay up to</span></div><div class="amt gk" id="teaser">฿0<u>/kg</u></div></div>
   <div class="chips">
     <span class="chip"><span class="th">ส่งฟรี</span><span class="en">FREE PARCEL</span></span>
     <span class="chip"><span class="th">มาส่งเอง</span><span class="en">SELF-DELIVERY</span></span>
@@ -118,12 +116,12 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:22px;padding-top:18px
 </div></section>
 <footer><div class="wrap"><div class="cols">
   <div><a class="logo" href="/" style="font-size:18px">Carbide<b>Thai</b></a></div>
-  <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="/price.html"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
+  <div><a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">LINE @280uqpab</a> · <a href="mailto:thaicarbide@gmail.com">thaicarbide@gmail.com</a></div>
 </div><div class="legal">ThaiCarbide is operated by <b style="color:var(--steel)">Arden Holdings Global Limited</b> (Hong Kong · CR 80816708). © 2026 ThaiCarbide. <span class="th">ราคาโดยประมาณ ยืนยันหลังชั่งน้ำหนัก</span><span class="en">Prices are estimates, confirmed after weighing.</span></div></div></footer>
 <script>
 const SB_URL='https://ltupwgytuayzopnsdvpc.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
 function setTeaser(v){document.getElementById('teaser').innerHTML='฿'+Number(v).toLocaleString('en-US')+'<u>/kg</u>';}
-setTeaser(2135);
+setTeaser(2320);
 fetch(SB_URL+'/rest/v1/prices?key=eq.carbide_inserts&select=teaser_thb',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}}).then(r=>r.json()).then(d=>{if(d&&d[0])setTeaser(d[0].teaser_thb);}).catch(()=>{});
 function setLang(l){document.body.classList.remove('lang-th','lang-en');document.body.classList.add('lang-'+l);document.getElementById('lb-th').classList.toggle('on',l==='th');document.getElementById('lb-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc-lang',l)}catch(e){}}
 (function(){try{setLang(localStorage.getItem('tc-lang')||'th')}catch(e){setLang('th')}})();
