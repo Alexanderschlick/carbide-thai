@@ -17,7 +17,7 @@ jobs:
       - name: Generate and send daily report
         env:
           SUPABASE_URL: https://ltupwgytuayzopnsdvpc.supabase.co
-          SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           GMAIL_USER: thaicarbide@gmail.com
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           REPORT_EMAIL: schlick@metaloop.com
