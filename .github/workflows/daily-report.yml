@@ -1,9 +1,7 @@
 name: Daily Business Report
 
 on:
-  schedule:
-    - cron: '0 1 * * *'   # 8:00 AM Bangkok (UTC+7)
-  workflow_dispatch: {}    # Manual trigger button
+  workflow_dispatch: {}    # Manual only — daily email consolidated into Supabase email-report function
 
 jobs:
   report:
