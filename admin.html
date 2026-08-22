@@ -347,7 +347,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
       <h3 id="modalTitle" style="margin:0;">Conversation</h3>
       <div style="display:flex;gap:6px;">
         <button class="btn-sm btn-outline" onclick="toggleBotPause()" id="botPauseBtn" style="font-size:11px;white-space:nowrap;">⏸ Pause bot</button>
-        <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">Show Original</button>
+        <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">Show Thai</button>
       </div>
     </div>
     <div id="modalBody"></div>
@@ -451,9 +451,16 @@ let _showOriginal=false;
 function toggleOriginal(){
   _showOriginal=!_showOriginal;
   const btn=document.getElementById('translateAllBtn');
-  btn.textContent=_showOriginal?'Show Translated':'Show Original';
-  document.querySelectorAll('#modalBody .orig-text').forEach(el=>{el.style.display=_showOriginal?'block':'none'});
-  document.querySelectorAll('#modalBody .trans-text').forEach(el=>{el.style.display=_showOriginal?'none':'block'});
+  btn.textContent=_showOriginal?'Show English':'Show Thai';
+  document.querySelectorAll('#modalBody .bubtext').forEach(sp=>{ sp.textContent=_showOriginal?(sp.dataset.th||sp.textContent):(sp.dataset.en||sp.dataset.th||sp.textContent); });
+}
+async function autoTranslateChat(){
+  const spans=[...document.querySelectorAll('#modalBody .bubtext')];
+  await Promise.all(spans.map(async sp=>{
+    const key=sp.dataset.tkey; const th=_chatTexts[key]; if(!th) return;
+    sp.dataset.th=th;
+    try{ const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:th})}); const d=await r.json(); if(d.translation){ sp.dataset.en=d.translation; if(!_showOriginal) sp.textContent=d.translation; } }catch(_){}
+  }));
 }
 
 async function translateEl(el){
@@ -529,26 +536,26 @@ async function showConversation(uid,name){
   currentModalUid=uid;
   loadPauseState(uid);
   _showOriginal=false;
-  document.getElementById('translateAllBtn').textContent='Show Original';
+  document.getElementById('translateAllBtn').textContent='Show Thai';
   const chats=await sbGet('line_chats',`select=message,bot_reply,created_at,image_url,needs_human,needs_human_reason&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
   document.getElementById('modalTitle').textContent=name;
   document.getElementById('replyInput').value='';
   document.getElementById('replyStatus').textContent='';
   let html='';
   for(const c of chats){
-    if(!c.message||c.message.includes('[system')||c.message.includes('[followup')||c.message.includes('[broadcast'))continue;
+    if(c.message&&(c.message.includes('[system')||c.message.includes('[followup')||c.message.includes('[broadcast')))continue;
 
-    const isAdmin=c.message.startsWith('[admin]');
+    const isAdmin=(c.message&&c.message.startsWith('[admin]'))||(!c.message&&!!c.bot_reply);
 
     html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
 
     if(isAdmin){
       // Admin message — show on right side with green "YOU" label
-      const adminText=c.message.replace(/^\[admin\]\s*/,'');
+      const adminText=c.message?c.message.replace(/^\[admin\]\s*/,''):(c.bot_reply||'');
       html+=`<div style="text-align:right"><span class="admin-label">YOU</span></div>`;
       html+=`<div class="chat-bubble admin">${esc(adminText)}`;
       // Show the Thai translation (bot_reply) as subtitle
-      if(c.bot_reply && c.bot_reply !== adminText){
+      if(c.message && c.bot_reply && c.bot_reply !== adminText){
         html+=`<br><span style="font-size:10px;color:var(--muted);margin-top:4px;display:block">Thai: ${esc(trunc(c.bot_reply,300))}</span>`;
       }
       html+=`</div>`;
@@ -558,17 +565,18 @@ async function showConversation(uid,name){
       const nhBadge = c.needs_human ? ` <span style="background:#ef4444;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px">🔔 ACTION NEEDED</span>` : '';
       const nhReason = c.needs_human && c.needs_human_reason ? `<div style="font-size:10px;color:#fbbf24;font-style:italic;margin-top:3px">${c.needs_human_reason}</div>` : '';
       const imgHtml = c.image_url ? `<div style="margin-top:6px"><img src="${c.image_url}" style="max-width:240px;max-height:240px;border-radius:8px;cursor:pointer" onclick="window.open('${c.image_url}','_blank')" onerror="this.style.display='none'"></div>` : '';
-      html+=`<div class="chat-bubble user" ${c.needs_human ? 'style="border:1px solid #ef4444;background:rgba(239,68,68,0.1)"' : ''}>${trunc(c.message,300)}${nhBadge} <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span>${nhReason}${imgHtml}</div>`;
+      html+=`<div class="chat-bubble user" ${c.needs_human ? 'style="border:1px solid #ef4444;background:rgba(239,68,68,0.1)"' : ''}><span class="bubtext" data-tkey="${mk}">${trunc(c.message,300)}</span>${nhBadge} <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span>${nhReason}${imgHtml}</div>`;
 
       // Bot reply
       if(c.bot_reply){
         const bk=storeText(c.bot_reply);
-        html+=`<div class="chat-bubble bot">${esc(trunc(c.bot_reply,400))} <span class="en-btn" data-tkey="${bk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
+        html+=`<div class="chat-bubble bot"><span class="bubtext" data-tkey="${bk}">${esc(trunc(c.bot_reply,400))}</span> <span class="en-btn" data-tkey="${bk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
       }
     }
   }
   document.getElementById('modalBody').innerHTML=html||'<p style="color:var(--muted)">No messages</p>';
   document.querySelectorAll('.en-btn').forEach(btn=>btn.addEventListener('click',()=>translateEl(btn)));
+  autoTranslateChat();
   document.getElementById('chatModal').classList.add('show');
 }
 
