@@ -446,6 +446,16 @@ const ADMIN_API=SB+'/functions/v1/admin-api';
 
 const _chatTexts={};let _tid=0;
 function storeText(t){const id='_t'+(++_tid);_chatTexts[id]=t;return id}
+const _tx={};
+function xc(t){return '<span class="xlate" data-th="'+encodeURIComponent(t||'')+'">'+esc(t||'')+'</span>';}
+async function translateCells(){
+  const spans=[...document.querySelectorAll('.xlate')];
+  const need={};
+  spans.forEach(sp=>{const th=decodeURIComponent(sp.dataset.th||'');if(th&&!(th in _tx))need[th]=1;});
+  const texts=Object.keys(need).slice(0,60);
+  await Promise.all(texts.map(async th=>{try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:th})});const d=await r.json();_tx[th]=(d&&d.translation)||th;}catch(_){_tx[th]=th;}}));
+  spans.forEach(sp=>{const th=decodeURIComponent(sp.dataset.th||'');if(_tx[th])sp.textContent=_tx[th];});
+}
 
 let _showOriginal=false;
 function toggleOriginal(){
@@ -688,14 +698,15 @@ async function loadAll(){
     // Recent chats (overview) — skip admin/system/followup/broadcast
     const realChats=chats.filter(c=>c.message&&!c.message.includes('[system')&&!c.message.includes('[followup')&&!c.message.includes('[broadcast')&&!c.message.startsWith('[admin]'));
     document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>{
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${esc(trunc(c.message,35))}</td><td>${esc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${xc(trunc(c.message,35))}</td><td>${xc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
     // Full chats tab
     document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>{
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${esc(trunc(c.message,60))}</td><td>${esc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${xc(trunc(c.message,60))}</td><td>${xc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
+    try{translateCells();}catch(_){}
     // All leads tab
     document.getElementById('allLeads').innerHTML=leads.map(l=>{
       const s=getStatus(l);
