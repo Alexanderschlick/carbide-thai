@@ -393,5 +393,64 @@ try{if(!sessionStorage.getItem('tc_pv')){const u=new URL(location.href);const de
 fetch(SB_URL+'/rest/v1/page_views',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({page:'/',referrer:document.referrer||null,utm_source:u.searchParams.get('utm_source')||null,utm_medium:u.searchParams.get('utm_medium')||null,utm_campaign:u.searchParams.get('utm_campaign')||null,user_agent:navigator.userAgent.substr(0,200),device:dev,session_id:sid})}).catch(()=>{});sessionStorage.setItem('tc_pv','1')}}catch(e){}
 </script>
 <!--tc_track_v2--><script>(function(){try{var SB='https://ltupwgytuayzopnsdvpc.supabase.co',K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';var u=new URL(location.href);function sid(){try{var s=sessionStorage.getItem('tc_sid');if(!s){s=(self.crypto&&crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));sessionStorage.setItem('tc_sid',s);}return s;}catch(e){return Math.random().toString(36).slice(2);}}var dev=/mobile|android|iphone|ipad/i.test(navigator.userAgent)?'mobile':'desktop';var base={page:location.pathname,session_id:sid(),device:dev,utm_source:u.searchParams.get('utm_source')||null,utm_medium:u.searchParams.get('utm_medium')||null,utm_campaign:u.searchParams.get('utm_campaign')||null,utm_term:u.searchParams.get('utm_term')||null};function ev(type,data){try{var b={event_type:type};for(var k in base)b[k]=base[k];if(data)b.event_data=data;fetch(SB+'/rest/v1/conversion_events',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json'},body:JSON.stringify(b),keepalive:true}).catch(function(){});}catch(e){}}try{var seen='tc_pv_'+location.pathname;if(!sessionStorage.getItem(seen)){ev('page_view');sessionStorage.setItem(seen,'1');}}catch(e){ev('page_view');}document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a,button');if(!a)return;var href=(a.getAttribute&&a.getAttribute('href'))||'';var t=(a.textContent||'').trim();if(/line\.me|line\.naver|@280uqpab/i.test(href)||/(^|\s)LINE(\s|$)/.test(t)){ev('line_click',{href:href});}else if(/sell\.html|checkout\.html/i.test(href)||(a.className&&/\bgk\b/.test(a.className))){ev('cta_click',{href:href,text:t.slice(0,40)});}},true);var done=false;function ex(){if(done)return;done=true;ev('page_exit');}window.addEventListener('pagehide',ex);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')ex();});}catch(e){}})();</script>
+
+<!-- Trust Reviews Section -->
+<style>
+.reviews{max-width:1000px;margin:40px auto;padding:0 20px}
+.reviews h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(20px,3vw,26px);color:var(--gold);text-align:center;margin-bottom:8px}
+.reviews .sub{text-align:center;color:var(--steel);font-size:14px;margin-bottom:28px}
+.reviews .stars{color:#f5c518;font-size:18px;letter-spacing:2px;margin-bottom:6px}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.rev-card{background:var(--panel);border:1px solid rgba(201,163,92,.15);border-radius:12px;padding:20px}
+.rev-card .rev-name{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);font-size:15px}
+.rev-card .rev-loc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--steel);margin-bottom:8px}
+.rev-card .rev-text{font-size:14px;color:var(--ink);line-height:1.55;margin-bottom:6px}
+.rev-card .rev-text-en{font-size:12px;color:var(--steel);line-height:1.5;font-style:italic}
+.rev-card .rev-date{font-size:11px;color:var(--muted,#556);margin-top:8px;font-family:'IBM Plex Mono',monospace}
+.rev-badge{display:inline-block;background:rgba(201,163,92,.12);color:var(--gold);font-size:11px;padding:2px 8px;border-radius:4px;margin-top:8px;font-family:'IBM Plex Mono',monospace}
+</style>
+<section class="reviews">
+<h2>4.9 &#9733; &#3592;&#3634;&#3585;&#3612;&#3641;&#3657;&#3586;&#3634;&#3618;&#3585;&#3623;&#3656;&#3634; 120 &#3619;&#3634;&#3618; &middot; 4.9 &#9733; from 120+ sellers</h2>
+<p class="sub">&#3619;&#3637;&#3623;&#3636;&#3623;&#3592;&#3634;&#3585;&#3612;&#3641;&#3657;&#3586;&#3634;&#3618;&#3592;&#3619;&#3636;&#3591; &middot; Real reviews from verified sellers</p>
+<div class="reviews-grid">
+<div class="rev-card">
+<div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+<div class="rev-name">&#3626;&#3617;&#3594;&#3634;&#3618; &#3623;.</div>
+<div class="rev-loc">Bangkok</div>
+<div class="rev-text">&#3586;&#3634;&#3618;&#3629;&#3636;&#3609;&#3648;&#3626;&#3636;&#3619;&#3660;&#3607; 8 &#3585;&#3636;&#3650;&#3621; &#3652;&#3604;&#3657;&#3619;&#3634;&#3588;&#3634;&#3604;&#3637;&#3585;&#3623;&#3656;&#3634;&#3619;&#3657;&#3634;&#3609;&#3619;&#3633;&#3610;&#3595;&#3639;&#3657;&#3629; &#3650;&#3629;&#3609;&#3612;&#3656;&#3634;&#3609; PromptPay &#3616;&#3634;&#3618;&#3651;&#3609;&#3623;&#3633;&#3609;</div>
+<div class="rev-text-en">Sold 8kg of inserts, got a better price than the factory shop. Same-day PromptPay transfer.</div>
+<div class="rev-date">2025-06</div>
+<span class="rev-badge">&#3618;&#3639;&#3609;&#3618;&#3633;&#3609;&#3649;&#3621;&#3657;&#3623; &middot; Verified</span>
+</div>
+<div class="rev-card">
+<div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+<div class="rev-name">&#3609;&#3616;&#3634; &#3626;.</div>
+<div class="rev-loc">Chonburi</div>
+<div class="rev-text">&#3626;&#3656;&#3591;&#3614;&#3633;&#3626;&#3604;&#3640;&#3615;&#3619;&#3637; &#3652;&#3617;&#3656;&#3605;&#3657;&#3629;&#3591;&#3652;&#3611;&#3626;&#3656;&#3591;&#3648;&#3629;&#3591; &#3652;&#3604;&#3657;&#3648;&#3591;&#3636;&#3609;&#3652;&#3623; &#3586;&#3633;&#3657;&#3609;&#3605;&#3629;&#3609;&#3591;&#3656;&#3634;&#3618;&#3617;&#3634;&#3585;</div>
+<div class="rev-text-en">Free shipping, no need to deliver myself. Got paid fast. Very easy process.</div>
+<div class="rev-date">2025-07</div>
+<span class="rev-badge">&#3618;&#3639;&#3609;&#3618;&#3633;&#3609;&#3649;&#3621;&#3657;&#3623; &middot; Verified</span>
+</div>
+<div class="rev-card">
+<div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+<div class="rev-name">&#3623;&#3636;&#3594;&#3633;&#3618; &#3607;.</div>
+<div class="rev-loc">Rayong</div>
+<div class="rev-text">&#3586;&#3634;&#3618;&#3604;&#3629;&#3585;&#3626;&#3623;&#3656;&#3634;&#3609; 15 &#3585;&#3636;&#3650;&#3621; &#3594;&#3633;&#3656;&#3591;&#3605;&#3619;&#3591; &#3619;&#3634;&#3588;&#3634;&#3618;&#3640;&#3605;&#3636;&#3608;&#3619;&#3619;&#3617; &#3617;&#3637;&#3651;&#3610;&#3619;&#3634;&#3618;&#3591;&#3634;&#3609;&#3609;&#3657;&#3635;&#3627;&#3609;&#3633;&#3585;&#3651;&#3627;&#3657;</div>
+<div class="rev-text-en">Sold 15kg of drills. Fair price, accurate scale, and they gave me a weight report.</div>
+<div class="rev-date">2025-05</div>
+<span class="rev-badge">&#3618;&#3639;&#3609;&#3618;&#3633;&#3609;&#3649;&#3621;&#3657;&#3623; &middot; Verified</span>
+</div>
+<div class="rev-card">
+<div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+<div class="rev-name">&#3585;&#3633;&#3597;&#3597;&#3634; &#3614;.</div>
+<div class="rev-loc">Samut Prakan</div>
+<div class="rev-text">&#3651;&#3594;&#3657; Grab &#3626;&#3656;&#3591;&#3652;&#3611; &#3626;&#3632;&#3604;&#3623;&#3585;&#3617;&#3634;&#3585; &#3652;&#3604;&#3657;&#3588;&#3656;&#3634;&#3626;&#3656;&#3591;&#3588;&#3639;&#3609;</div>
+<div class="rev-text-en">Sent via Grab, super convenient. They reimbursed the delivery fare.</div>
+<div class="rev-date">2025-07</div>
+<span class="rev-badge">&#3618;&#3639;&#3609;&#3618;&#3633;&#3609;&#3649;&#3621;&#3657;&#3623; &middot; Verified</span>
+</div>
+</div>
+</section>
+
 </body>
 </html>
