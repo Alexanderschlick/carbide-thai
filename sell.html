@@ -51,10 +51,13 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
 .spec{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--steel);border:1px solid var(--hair);border-radius:7px;padding:5px 9px}
 .step-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:22px 0 10px}
 .matgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mat{background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:15px 14px;cursor:pointer;text-align:left;transition:.15s}
-.mat:hover{border-color:rgba(201,163,92,.5)}
-.mat.on{border-color:var(--gold);background:var(--panel2)}
-.mat .nm{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:15px}
+.mat{display:flex;align-items:center;gap:12px;background:var(--panel2,#16233c);border:1.5px solid rgba(159,176,210,.30);border-radius:12px;padding:11px 12px;cursor:pointer;text-align:left;transition:.15s;color:var(--ink)}
+.mat:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.28)}
+.mat.on{border-color:var(--gold);background:var(--panel2);box-shadow:0 0 0 2px rgba(201,163,92,.35)}
+.mat .mth{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;border:1px solid var(--hair);background:#0c1526}
+.mat .txt{flex:1;min-width:0}
+.mat .chev{color:var(--gold);font-size:20px;font-weight:700;flex:none;opacity:.75;line-height:1}
+.mat .nm{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--ink)}
 .mat .sb{font-size:11px;color:var(--muted);margin-top:2px}
 .weight{display:flex;gap:10px;margin-bottom:6px}
 .weight input{flex:1;background:var(--panel);border:1px solid var(--hair);color:var(--ink);padding:14px 16px;border-radius:10px;font-size:20px;font-family:'Space Grotesk',sans-serif;outline:none}
@@ -152,13 +155,20 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
       <span class="spec"><span class="th">รับตั้งแต่ 1 กก.</span><span class="en">FROM 1 KG</span></span>
       <span class="spec"><span class="th">จ่ายทันที</span><span class="en">INSTANT PAY</span></span>
     </div>
+    <div class="paynote" style="margin:14px 0;padding:12px 14px;border:1px solid #c9a35c;border-radius:12px;background:rgba(201,163,92,.10);display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:20px;line-height:1">💰</span>
+      <span style="font-size:13px;line-height:1.5">
+        <span class="th"><b>เราจ่ายเงินให้คุณ</b> — คุณไม่ต้องจ่ายอะไรเลย ไม่มีค่าธรรมเนียม ไม่มีมัดจำ เราออกค่าส่งให้ด้วย · จ่ายผ่านพร้อมเพย์เข้าเบอร์ของคุณภายใน 48 ชม. หลังเราได้รับและตรวจสอบสินค้า</span>
+        <span class="en"><b>We pay you</b> — you never pay us. No fees, no deposit. We even cover shipping · paid by PromptPay to your phone number within 48h after we receive &amp; check your material.</span>
+      </span>
+    </div>
 
-    <div class="step-label">01 · <span class="th">เลือกประเภท</span><span class="en">Select type</span></div>
+    <div class="step-label">01 · <span class="th">เลือกประเภท</span><span class="en">Select type</span> <span style="color:var(--muted);font-weight:400;font-size:11px">· <span class="th">แตะเพื่อเลือก</span><span class="en">tap to choose</span></span></div>
     <div class="matgrid">
-      <button class="mat" id="m-carbide_inserts" onclick="pickMat('carbide_inserts','Carbide Insert',this)"><div class="nm"><span class="th">อินเสิร์ท</span><span class="en">Inserts</span></div><div class="sb">CNMG / TNMG / APMT</div></button>
-      <button class="mat" id="m-carbide_drills" onclick="pickMat('carbide_drills','Carbide Drills',this)"><div class="nm"><span class="th">ดอกสว่าน / เอ็นมิล</span><span class="en">Drills / End mills</span></div><div class="sb">Solid carbide (VHM)</div></button>
-      <button class="mat" id="m-mixed_carbide" onclick="pickMat('mixed_carbide','Mixed Carbide',this)"><div class="nm"><span class="th">คาร์ไบด์ผสม</span><span class="en">Mixed carbide</span></div><div class="sb"><span class="th">ทุกชนิดรวมกัน</span><span class="en">All mixed</span></div></button>
-      <button class="mat" id="m-sand_rills" onclick="pickMat('sand_rills','Sand Rills',this)"><div class="nm"><span class="th">แซนด์ริล / อื่นๆ</span><span class="en">Sand rills / other</span></div><div class="sb"><span class="th">แซนด์ริล ผง อะไหล่</span><span class="en">Dies / powder / parts</span></div></button>
+      <button class="mat" id="m-carbide_inserts" onclick="pickMat('carbide_inserts','Carbide Insert',this)"><img class="mth" loading="lazy" src="https://images.weserv.nl/?url=ssl:ltupwgytuayzopnsdvpc.supabase.co/storage/v1/object/public/website/gallery/inserts.jpg&amp;w=130&amp;h=130&amp;fit=cover&amp;q=72&amp;output=jpg" alt="Carbide inserts"><div class="txt"><div class="nm"><span class="th">อินเสิร์ท</span><span class="en">Inserts</span></div><div class="sb">CNMG / TNMG / APMT</div></div><span class="chev">&rsaquo;</span></button>
+      <button class="mat" id="m-carbide_drills" onclick="pickMat('carbide_drills','Carbide Drills',this)"><img class="mth" loading="lazy" src="https://images.weserv.nl/?url=ssl:ltupwgytuayzopnsdvpc.supabase.co/storage/v1/object/public/website/gallery/drills.jpg&amp;w=130&amp;h=130&amp;fit=cover&amp;q=72&amp;output=jpg" alt="Carbide drills and end mills"><div class="txt"><div class="nm"><span class="th">ดอกสว่าน / เอ็นมิล</span><span class="en">Drills / End mills</span></div><div class="sb">Solid carbide (VHM)</div></div><span class="chev">&rsaquo;</span></button>
+      <button class="mat" id="m-mixed_carbide" onclick="pickMat('mixed_carbide','Mixed Carbide',this)"><img class="mth" loading="lazy" src="https://images.weserv.nl/?url=ssl:ltupwgytuayzopnsdvpc.supabase.co/storage/v1/object/public/website/gallery/mixed.jpg&amp;w=130&amp;h=130&amp;fit=cover&amp;q=72&amp;output=jpg" alt="Mixed carbide scrap"><div class="txt"><div class="nm"><span class="th">คาร์ไบด์ผสม</span><span class="en">Mixed carbide</span></div><div class="sb"><span class="th">ทุกชนิดรวมกัน</span><span class="en">All mixed</span></div></div><span class="chev">&rsaquo;</span></button>
+      <button class="mat" id="m-sand_rills" onclick="pickMat('sand_rills','Sand Rills',this)"><img class="mth" loading="lazy" src="https://images.weserv.nl/?url=ssl:ltupwgytuayzopnsdvpc.supabase.co/storage/v1/object/public/website/gallery/wearparts.jpg&amp;w=130&amp;h=130&amp;fit=cover&amp;q=72&amp;output=jpg" alt="Sand rills and wear parts"><div class="txt"><div class="nm"><span class="th">แซนด์ริล / อื่นๆ</span><span class="en">Sand rills / other</span></div><div class="sb"><span class="th">แซนด์ริล ผง อะไหล่</span><span class="en">Dies / powder / parts</span></div></div><span class="chev">&rsaquo;</span></button>
     </div>
 
     <div class="step-label">02 · <span class="th">ใส่น้ำหนัก</span><span class="en">Enter weight</span></div>
@@ -183,7 +193,7 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
 
     <div class="step-label">04 · <span class="th">ข้อมูลติดต่อ</span><span class="en">Contact</span></div>
     <div class="field"><label><span class="th">ชื่อ-นามสกุล *</span><span class="en">Full name *</span></label><input type="text" id="fullName" autocomplete="name" placeholder="Full name"></div>
-    <div class="field"><label><span class="th">เบอร์โทร *</span><span class="en">Phone *</span></label><input type="tel" id="phone" inputmode="tel" autocomplete="tel" placeholder="08X-XXX-XXXX"></div>
+    <div class="field"><label><span class="th">เบอร์โทร / พร้อมเพย์ *</span><span class="en">Phone / PromptPay *</span></label><input type="tel" id="phone" inputmode="tel" autocomplete="tel" placeholder="08X-XXX-XXXX"><div style="font-size:11px;color:var(--muted);margin-top:4px"><span class="th">💰 เราโอนเงินให้คุณผ่านพร้อมเพย์ที่ผูกกับเบอร์นี้</span><span class="en">💰 We pay you by PromptPay linked to this number</span></div></div>
     <div class="field"><label>LINE ID <span class="th">(ไม่บังคับ)</span><span class="en">(optional)</span></label><input type="text" id="lineId" placeholder="@yourlineid"></div>
 
     <button class="submit gk" id="reviewBtn" onclick="showReview()"><span class="th">ตรวจสอบรายการขาย</span><span class="en">Review my sale</span> →</button>
@@ -212,6 +222,7 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
       <div class="row total"><span class="k"><span class="th">รวมโดยประมาณ</span><span class="en">Estimated total</span></span><span class="v" id="r-total"></span></div>
     </div>
 
+    <div style="text-align:center;font-size:12px;color:#c9a35c;margin:-4px 0 14px"><span class="th">💰 ยอดนี้คือเงินที่ <b>เราจ่ายให้คุณ</b> — คุณไม่ต้องจ่ายอะไร</span><span class="en">💰 This is what <b>we pay you</b> — you pay nothing</span></div>
     <a class="editlink" onclick="editDetails()"><span class="th">✎ แก้ไขรายละเอียด</span><span class="en">✎ Edit details</span></a>
 
     <div class="locknote">
