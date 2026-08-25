@@ -511,6 +511,7 @@ async function sendReply(){
       const body=document.getElementById('modalBody');
       body.innerHTML+=`<div class="chat-time"><span class="admin-label">YOU</span> just now</div><div class="chat-bubble admin">${esc(en)}<br><span style="font-size:10px;color:var(--muted);margin-top:4px;display:block">Thai: ${esc(thai)}</span></div>`;
       body.scrollTop=body.scrollHeight;
+      try{loadAll();}catch(_){}
     }else{status.style.color='#ef4444';status.textContent='Error: '+(d.error||'failed')}
   }catch(e){status.style.color='#ef4444';status.textContent='Error: '+e.message}
   btn.disabled=false;btn.textContent='Send in Thai';
@@ -644,7 +645,7 @@ async function loadAll(){
     const leadMap={};
     for(const c of chats){
       if(!c.line_user_id||c.line_user_id==='BROADCAST')continue;
-      if(!leadMap[c.line_user_id])leadMap[c.line_user_id]={uid:c.line_user_id,name:c.display_name||'Unknown',count:0,last:c.created_at,first:c.created_at};
+      if(!leadMap[c.line_user_id])leadMap[c.line_user_id]={uid:c.line_user_id,name:c.display_name||'Unknown',count:0,last:c.created_at,first:c.created_at,awaitingReply:(!c.message&&!!c.bot_reply)};
       leadMap[c.line_user_id].count++;
       if(c.created_at<leadMap[c.line_user_id].first)leadMap[c.line_user_id].first=c.created_at;
       if(c.needs_human) { leadMap[c.line_user_id].needsHuman = true; leadMap[c.line_user_id].humanReason = c.needs_human_reason || ''; }
@@ -654,6 +655,7 @@ async function loadAll(){
     function getStatus(l){
       if(buyerIds.has(l.uid))return{cls:'buyer',txt:'Buyer'};
       const h=(Date.now()-new Date(l.last).getTime())/3600000;
+      if(l.awaitingReply)return{cls:'warm',txt:'⏳ You replied'};
       if(h<24)return{cls:'hot',txt:'Hot'};
       if(h<72)return{cls:'warm',txt:'Warm'};
       return{cls:'cold',txt:'Cold'};
