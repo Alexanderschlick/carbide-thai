@@ -10,8 +10,8 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","name":"ThaiCarbide","legalName":"Arden Holdings Global Limited","description":"We buy used tungsten carbide scrap in Thailand. Best prices, paid instantly after weighing.","url":"https://thaicarbide.com","email":"thaicarbide@gmail.com","priceRange":"1650-2170 THB/kg","paymentAccepted":"PromptPay, Bank Transfer"}
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18001691387"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18001691387');</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18407290389"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18407290389');</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RNXH6EX220"></script>
 <script>gtag('config','G-RNXH6EX220');</script>
 <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('track','PageView');</script>
@@ -341,7 +341,7 @@ async function confirmSale(){
   try{
     await fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({line_id:lineId||null,display_name:fullName,phone:phone||null,material_type:selName,weight_kg:w,price_shown:total,quoted_price:total,status:'new',source:'sell-lp',notes:'Ref: '+ref+' | Delivery: '+selDeliv})});
     await fetch(SB_URL+'/rest/v1/orders',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({name:fullName,phone:phone||null,line_id:lineId,ref:ref,material:selName,weight_ordered:w,price_per_kg:ppk,total_amount:total,status:'neu',delivery_method:selDeliv,parcel_status:selDeliv==='self'?null:'waiting',notes:'Source: sell-lp | Ref: '+ref+' | Delivery: '+selDeliv})});
-    gtag('event','conversion',{send_to:'AW-18001691387'});gtag('event','purchase',{transaction_id:ref,currency:'THB',value:total||0});if(typeof fbq!=='undefined')fbq('track','Lead',{value:total||0,currency:'THB'});
+    gtag('event','conversion',{send_to:'AW-18407290389'});gtag('event','purchase',{transaction_id:ref,currency:'THB',value:total||0});if(typeof fbq!=='undefined')fbq('track','Lead',{value:total||0,currency:'THB'});
     const tg='🆕 NEUER LEAD\\n👤 '+fullName+'\\n📱 '+(phone||'—')+'\\nLINE: '+(lineId||'—')+'\\n📦 '+selName+' · '+(w||'—')+'kg\\n💰 ฿'+(total!=null?total.toLocaleString():'—')+'\\n🚚 '+selDeliv+'\\n🔗 '+ref;
     fetch('https://api.telegram.org/bot8653052939:AAE1450o0j2JpNsf2sMdIWroLHuKRA6QTqA/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'697775946',text:tg})}).catch(()=>{});
     // receipt
