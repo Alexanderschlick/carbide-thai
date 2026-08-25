@@ -825,11 +825,10 @@ async function loadAll(){
 let trafficChartInstance=null;
 
 async function loadAnalytics(lineChats){
-  const events=await sbGet('conversion_events','select=event_type,page,utm_source,device,session_id,created_at&order=created_at.desc&limit=2000');
-
   const now=Date.now();
   const d14=new Date(now-14*86400000).toISOString();
   const d7=new Date(now-7*86400000).toISOString();
+  const events=await sbGet('conversion_events',`select=event_type,page,utm_source,device,session_id,created_at&created_at=gte.${d14}&event_type=in.(page_view,cta_click,line_click)&order=created_at.desc&limit=50000`);
   const recent=events.filter(e=>e.created_at>d14);
 
   const views=recent.filter(e=>e.event_type==='page_view');
