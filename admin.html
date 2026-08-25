@@ -751,7 +751,7 @@ async function loadAll(){
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('benchMeta').textContent=`Exchange rate: €1 = ฿${rate.toFixed(2)} | Discount = gap kept below EU level (50% = halfway) | Gap = how much below EU in THB`;
+    document.getElementById('benchMeta').textContent=`Exchange rate: €1 = ฿${rate.toFixed(2)} | Policy: pay 95-100% of EU (about 3% below, leaves margin for Archi) | Gap = how much below EU in THB`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
