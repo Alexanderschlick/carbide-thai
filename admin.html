@@ -351,27 +351,44 @@ tr:hover { background: rgba(200,168,78,0.04); }
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
-const PASS_HASH='fffab0fc573f81fbd3c565fc2ddc4f117338ff5780930d5cf26884064f896583';
+const ADMIN_EMAIL='thaicarbide@gmail.com';
+let TOKEN=sessionStorage.getItem('tc_token')||'';
+let RTOKEN=sessionStorage.getItem('tc_rtoken')||'';
 
-async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function _saveTokens(d){TOKEN=d.access_token;RTOKEN=d.refresh_token||RTOKEN;sessionStorage.setItem('tc_token',TOKEN);sessionStorage.setItem('tc_rtoken',RTOKEN);sessionStorage.setItem('tc_auth','1');}
 
 async function doLogin(){
   const pw=document.getElementById('pwInput').value;
-  const h=await sha256(pw);
-  if(h===PASS_HASH){
-    sessionStorage.setItem('tc_auth','1');
-    document.getElementById('loginGate').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    loadAll();
-  } else {
-    document.getElementById('loginErr').style.display='block';
-  }
+  try{
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:ADMIN_EMAIL,password:pw})});
+    const d=await r.json();
+    if(r.ok&&d.access_token){
+      _saveTokens(d);
+      document.getElementById('loginErr').style.display='none';
+      document.getElementById('loginGate').style.display='none';
+      document.getElementById('dashboard').style.display='block';
+      loadAll();
+    } else {
+      document.getElementById('loginErr').style.display='block';
+    }
+  }catch(e){ document.getElementById('loginErr').style.display='block'; }
 }
-function doLogout(){sessionStorage.removeItem('tc_auth');location.reload()}
-function checkAuth(){if(sessionStorage.getItem('tc_auth')){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';loadAll()}}
+function doLogout(){sessionStorage.removeItem('tc_auth');sessionStorage.removeItem('tc_token');sessionStorage.removeItem('tc_rtoken');TOKEN='';RTOKEN='';location.reload()}
+async function refreshToken(){
+  if(!RTOKEN)return false;
+  try{
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:RTOKEN})});
+    const d=await r.json();
+    if(r.ok&&d.access_token){_saveTokens(d);return true;}
+  }catch(e){}
+  return false;
+}
+function checkAuth(){if(sessionStorage.getItem('tc_auth')&&TOKEN){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';loadAll()}}
 
 async function sbGet(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}});
+  const hdr=()=>({apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`});
+  let r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:hdr()});
+  if(r.status===401&&await refreshToken()){r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:hdr()});}
   return r.ok?r.json():[];
 }
 async function sbGetAll(tbl,params=''){
@@ -741,11 +758,10 @@ async function loadAll(){
 let trafficChartInstance=null;
 
 async function loadAnalytics(lineChats){
-  const events=await sbGet('conversion_events','select=event_type,page,utm_source,device,session_id,created_at&order=created_at.desc&limit=2000');
-
   const now=Date.now();
   const d14=new Date(now-14*86400000).toISOString();
   const d7=new Date(now-7*86400000).toISOString();
+  const events=await sbGet('conversion_events',`select=event_type,page,utm_source,device,session_id,created_at&created_at=gte.${d14}&event_type=in.(page_view,cta_click,line_click)&order=created_at.desc&limit=50000`);
   const recent=events.filter(e=>e.created_at>d14);
 
   const views=recent.filter(e=>e.event_type==='page_view');
