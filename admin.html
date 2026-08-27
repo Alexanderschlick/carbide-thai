@@ -120,10 +120,9 @@ tr:hover { background: rgba(200,168,78,0.04); }
   <div class="login-box">
     <h1>ThaiCarbide</h1>
     <p>Admin Backoffice</p>
-    <input type="email" id="emailInput" placeholder="Email" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
-    <input type="password" id="pwInput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">Login</button>
-    <div class="login-error" id="loginErr">Invalid email or password</div>
+    <div class="login-error" id="loginErr">Invalid password</div>
   </div>
 </div>
 
@@ -159,7 +158,6 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="tab" data-tab="ads" onclick="showTab('ads',this)">Ads</button>
     <button class="tab" data-tab="prices" onclick="showTab('prices',this)">Prices</button>
     <button class="tab" data-tab="systems" onclick="showTab('systems',this)">Systems</button>
-    <button class="tab" data-tab="payment" onclick="showTab('payment',this)">Payment</button>
   </div>
 
   <!-- OVERVIEW TAB -->
@@ -330,13 +328,6 @@ tr:hover { background: rgba(200,168,78,0.04); }
       </div>
     </div>
   </div>
-  <!-- PAYMENT TAB -->
-  <div id="tab-payment" class="tab-content" style="display:none">
-    <div class="card" style="max-width:600px">
-      <h2>Company Payment Details (Airwallex)</h2>
-      <div id="bankPanel" style="color:var(--muted);font-size:13px">Loading…</div>
-    </div>
-  </div>
 </div>
 
 <!-- CHAT MODAL -->
@@ -345,10 +336,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
       <h3 id="modalTitle" style="margin:0;">Conversation</h3>
-      <div style="display:flex;gap:6px;">
-        <button class="btn-sm btn-outline" onclick="toggleBotPause()" id="botPauseBtn" style="font-size:11px;white-space:nowrap;">⏸ Pause bot</button>
-        <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">Show Thai</button>
-      </div>
+      <button class="btn-sm btn-outline" onclick="translateAll()" id="translateAllBtn" style="font-size:11px;white-space:nowrap;">Show Original</button>
     </div>
     <div id="modalBody"></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
@@ -363,64 +351,31 @@ tr:hover { background: rgba(200,168,78,0.04); }
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
-// --- Supabase Auth (real login; JWT used for all authenticated reads) ---
-let ACCESS=null;
-function authToken(){return ACCESS||KEY;}
-function setSession(d){
-  ACCESS=d.access_token;
-  const sess={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Date.now()+((d.expires_in||3600)*1000)};
-  try{localStorage.setItem('tc_session',JSON.stringify(sess));}catch(_){}
-}
-function showDashboard(){
-  document.getElementById('loginGate').style.display='none';
-  document.getElementById('dashboard').style.display='block';
-  loadAll();
-  if(!window.__tcRefresh){window.__tcRefresh=setInterval(async()=>{
-    let raw=null;try{raw=localStorage.getItem('tc_session');}catch(_){}
-    if(!raw)return; let sess; try{sess=JSON.parse(raw);}catch(_){return;}
-    if(sess.refresh_token)await refreshSession(sess.refresh_token);
-  },45*60*1000);}
-}
-async function refreshSession(rt){
-  try{
-    const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
-    const d=await r.json();
-    if(r.ok&&d.access_token){setSession(d);return true;}
-  }catch(_){}
-  return false;
-}
+const PASS_HASH='fffab0fc573f81fbd3c565fc2ddc4f117338ff5780930d5cf26884064f896583';
+
+async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+
 async function doLogin(){
-  const email=(document.getElementById('emailInput').value||'').trim();
   const pw=document.getElementById('pwInput').value;
-  const err=document.getElementById('loginErr'); err.style.display='none';
-  const btn=document.querySelector('.login-box button'); if(btn){btn.disabled=true;btn.textContent='Signing in\u2026';}
-  try{
-    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
-    const d=await r.json();
-    if(!r.ok||!d.access_token){err.textContent=d.error_description||d.msg||'Invalid email or password';err.style.display='block';return;}
-    setSession(d); showDashboard();
-  }catch(e){err.textContent='Network error \u2014 try again';err.style.display='block';}
-  finally{if(btn){btn.disabled=false;btn.textContent='Login';}}
+  const h=await sha256(pw);
+  if(h===PASS_HASH){
+    sessionStorage.setItem('tc_auth','1');
+    document.getElementById('loginGate').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    loadAll();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
 }
-async function doLogout(){
-  try{await fetch(`${SB}/auth/v1/logout`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+authToken()}});}catch(_){}
-  ACCESS=null; try{localStorage.removeItem('tc_session');}catch(_){}
-  location.reload();
-}
-async function checkAuth(){
-  let raw=null;try{raw=localStorage.getItem('tc_session');}catch(_){}
-  if(!raw)return;
-  let sess;try{sess=JSON.parse(raw);}catch(_){return;}
-  if(sess.access_token&&sess.expires_at&&sess.expires_at-Date.now()>60000){ACCESS=sess.access_token;showDashboard();return;}
-  if(sess.refresh_token&&await refreshSession(sess.refresh_token)){showDashboard();}
-}
+function doLogout(){sessionStorage.removeItem('tc_auth');location.reload()}
+function checkAuth(){if(sessionStorage.getItem('tc_auth')){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';loadAll()}}
 
 async function sbGet(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`}});
   return r.ok?r.json():[];
 }
 async function sbGetAll(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`,Prefer:'count=exact',Range:'0-9999'}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,Prefer:'count=exact',Range:'0-9999'}});
   if(!r.ok)return{data:[],total:0};
   const data=await r.json();
   const range=r.headers.get('content-range');
@@ -446,31 +401,14 @@ const ADMIN_API=SB+'/functions/v1/admin-api';
 
 const _chatTexts={};let _tid=0;
 function storeText(t){const id='_t'+(++_tid);_chatTexts[id]=t;return id}
-const _tx={};
-function xc(t){return '<span class="xlate" data-th="'+encodeURIComponent(t||'')+'">'+esc(t||'')+'</span>';}
-async function translateCells(){
-  const spans=[...document.querySelectorAll('.xlate')];
-  const need={};
-  spans.forEach(sp=>{const th=decodeURIComponent(sp.dataset.th||'');if(th&&!(th in _tx))need[th]=1;});
-  const texts=Object.keys(need).slice(0,60);
-  await Promise.all(texts.map(async th=>{try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:th})});const d=await r.json();_tx[th]=(d&&d.translation)||th;}catch(_){_tx[th]=th;}}));
-  spans.forEach(sp=>{const th=decodeURIComponent(sp.dataset.th||'');if(_tx[th])sp.textContent=_tx[th];});
-}
 
 let _showOriginal=false;
 function toggleOriginal(){
   _showOriginal=!_showOriginal;
   const btn=document.getElementById('translateAllBtn');
-  btn.textContent=_showOriginal?'Show English':'Show Thai';
-  document.querySelectorAll('#modalBody .bubtext').forEach(sp=>{ sp.textContent=_showOriginal?(sp.dataset.th||sp.textContent):(sp.dataset.en||sp.dataset.th||sp.textContent); });
-}
-async function autoTranslateChat(){
-  const spans=[...document.querySelectorAll('#modalBody .bubtext')];
-  await Promise.all(spans.map(async sp=>{
-    const key=sp.dataset.tkey; const th=_chatTexts[key]; if(!th) return;
-    sp.dataset.th=th;
-    try{ const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'translate',text:th})}); const d=await r.json(); if(d.translation){ sp.dataset.en=d.translation; if(!_showOriginal) sp.textContent=d.translation; } }catch(_){}
-  }));
+  btn.textContent=_showOriginal?'Show Translated':'Show Original';
+  document.querySelectorAll('#modalBody .orig-text').forEach(el=>{el.style.display=_showOriginal?'block':'none'});
+  document.querySelectorAll('#modalBody .trans-text').forEach(el=>{el.style.display=_showOriginal?'none':'block'});
 }
 
 async function translateEl(el){
@@ -511,83 +449,62 @@ async function sendReply(){
       const body=document.getElementById('modalBody');
       body.innerHTML+=`<div class="chat-time"><span class="admin-label">YOU</span> just now</div><div class="chat-bubble admin">${esc(en)}<br><span style="font-size:10px;color:var(--muted);margin-top:4px;display:block">Thai: ${esc(thai)}</span></div>`;
       body.scrollTop=body.scrollHeight;
-      try{loadAll();}catch(_){}
     }else{status.style.color='#ef4444';status.textContent='Error: '+(d.error||'failed')}
   }catch(e){status.style.color='#ef4444';status.textContent='Error: '+e.message}
   btn.disabled=false;btn.textContent='Send in Thai';
 }
 
-let _botPaused=false;
-function setPauseBtn(){
-  const b=document.getElementById('botPauseBtn'); if(!b)return;
-  b.textContent=_botPaused?'\u25B6 Resume bot':'\u23F8 Pause bot';
-  b.style.color=_botPaused?'#f59e0b':''; b.style.borderColor=_botPaused?'#f59e0b':'';
-}
-async function loadPauseState(uid){
-  _botPaused=false; setPauseBtn();
-  const rows=await sbGet('user_flags',`select=bot_paused&platform=eq.line&platform_user_id=eq.${uid}`);
-  _botPaused=!!(rows&&rows[0]&&rows[0].bot_paused); setPauseBtn();
-}
-async function toggleBotPause(){
-  if(!currentModalUid)return;
-  const b=document.getElementById('botPauseBtn'); const st=document.getElementById('replyStatus');
-  const next=!_botPaused; if(b)b.disabled=true;
-  try{
-    const r=await fetch(`${SB}/rest/v1/user_flags?on_conflict=platform,platform_user_id`,{
-      method:'POST',
-      headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},
-      body:JSON.stringify({platform:'line',platform_user_id:currentModalUid,display_name:(document.getElementById('modalTitle').textContent||null),bot_paused:next,updated_at:new Date().toISOString()})
-    });
-    if(r.ok){_botPaused=next;setPauseBtn(); if(st){st.style.color='var(--muted)';st.textContent=next?'Bot paused for this chat \u2014 you are handling it. Resume when done.':'Bot resumed for this chat.';}}
-    else{ if(st){st.style.color='#ef4444';st.textContent='Could not update bot state ('+r.status+')';} }
-  }catch(e){ if(st){st.style.color='#ef4444';st.textContent='Error: '+e.message;} }
-  if(b)b.disabled=false;
-}
 async function showConversation(uid,name){
   currentModalUid=uid;
-  loadPauseState(uid);
   _showOriginal=false;
-  document.getElementById('translateAllBtn').textContent='Show Thai';
+  document.getElementById('translateAllBtn').textContent='Show Original';
   const chats=await sbGet('line_chats',`select=message,bot_reply,created_at,image_url,needs_human,needs_human_reason&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
   document.getElementById('modalTitle').textContent=name;
   document.getElementById('replyInput').value='';
   document.getElementById('replyStatus').textContent='';
   let html='';
   for(const c of chats){
-    if(c.message&&(c.message.includes('[system')||c.message.includes('[followup')||c.message.includes('[broadcast')))continue;
+    if(!c.message||c.message.includes('[system')||c.message.includes('[followup')||c.message.includes('[broadcast'))continue;
 
-    const isAdmin=(c.message&&c.message.startsWith('[admin]'))||(!c.message&&!!c.bot_reply);
+    const isAdmin=c.message.startsWith('[admin]');
 
     html+=`<div class="chat-time">${fmtDate(c.created_at)}</div>`;
 
     if(isAdmin){
       // Admin message — show on right side with green "YOU" label
-      const adminText=c.message?c.message.replace(/^\[admin\]\s*/,''):(c.bot_reply||'');
+      const adminText=c.message.replace(/^\[admin\]\s*/,'');
       html+=`<div style="text-align:right"><span class="admin-label">YOU</span></div>`;
       html+=`<div class="chat-bubble admin">${esc(adminText)}`;
       // Show the Thai translation (bot_reply) as subtitle
-      if(c.message && c.bot_reply && c.bot_reply !== adminText){
+      if(c.bot_reply && c.bot_reply !== adminText){
         html+=`<br><span style="font-size:10px;color:var(--muted);margin-top:4px;display:block">Thai: ${esc(trunc(c.bot_reply,300))}</span>`;
       }
       html+=`</div>`;
     } else {
       // Customer message — show on left
+      const isPhoto = c.message && c.message.startsWith('[photo]');
+      const displayMsg = isPhoto ? '' : trunc(c.message,300);
       const mk=storeText(c.message);
       const nhBadge = c.needs_human ? ` <span style="background:#ef4444;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px">🔔 ACTION NEEDED</span>` : '';
       const nhReason = c.needs_human && c.needs_human_reason ? `<div style="font-size:10px;color:#fbbf24;font-style:italic;margin-top:3px">${c.needs_human_reason}</div>` : '';
-      const imgHtml = c.image_url ? `<div style="margin-top:6px"><img src="${c.image_url}" style="max-width:240px;max-height:240px;border-radius:8px;cursor:pointer" onclick="window.open('${c.image_url}','_blank')" onerror="this.style.display='none'"></div>` : '';
-      html+=`<div class="chat-bubble user" ${c.needs_human ? 'style="border:1px solid #ef4444;background:rgba(239,68,68,0.1)"' : ''}><span class="bubtext" data-tkey="${mk}">${trunc(c.message,300)}</span>${nhBadge} <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span>${nhReason}${imgHtml}</div>`;
+      let imgHtml = '';
+      if (c.image_url) {
+        imgHtml = `<div style="margin-top:${isPhoto?'0':'6'}px"><img src="${c.image_url}" style="max-width:240px;max-height:240px;border-radius:8px;cursor:pointer;border:1px solid var(--border)" onclick="window.open('${c.image_url}','_blank')" onerror="this.outerHTML='<div style=\\'padding:12px;background:rgba(46,125,247,0.08);border-radius:8px;color:var(--muted);font-size:11px\\'>⚠️ Image failed to load — <a href=\\'${c.image_url}\\' target=\\'_blank\\' style=\\'color:var(--blue)\\'>open link</a></div>'"></div>`;
+      } else if (isPhoto) {
+        imgHtml = `<div style="padding:12px;background:rgba(46,125,247,0.08);border-radius:8px;color:var(--muted);font-size:11px;display:flex;align-items:center;gap:6px"><span style="font-size:18px">📷</span> Photo (sent before image storage was enabled)</div>`;
+      }
+      const enBtn = isPhoto && !displayMsg ? '' : ` <span class="en-btn" data-tkey="${mk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span>`;
+      html+=`<div class="chat-bubble user" ${c.needs_human ? 'style="border:1px solid #ef4444;background:rgba(239,68,68,0.1)"' : ''}>${displayMsg}${nhBadge}${enBtn}${nhReason}${imgHtml}</div>`;
 
       // Bot reply
       if(c.bot_reply){
         const bk=storeText(c.bot_reply);
-        html+=`<div class="chat-bubble bot"><span class="bubtext" data-tkey="${bk}">${esc(trunc(c.bot_reply,400))}</span> <span class="en-btn" data-tkey="${bk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
+        html+=`<div class="chat-bubble bot">${esc(trunc(c.bot_reply,400))} <span class="en-btn" data-tkey="${bk}" style="display:inline-block;font-size:10px;cursor:pointer;color:var(--blue);margin-left:6px;padding:1px 5px;border:1px solid var(--blue);border-radius:4px">EN</span></div>`;
       }
     }
   }
   document.getElementById('modalBody').innerHTML=html||'<p style="color:var(--muted)">No messages</p>';
   document.querySelectorAll('.en-btn').forEach(btn=>btn.addEventListener('click',()=>translateEl(btn)));
-  autoTranslateChat();
   document.getElementById('chatModal').classList.add('show');
 }
 
@@ -623,7 +540,6 @@ async function loadAds(){
 }
 
 async function loadAll(){
-  try{loadBankAccounts();}catch(_){}
   loadConversions();
   loadAds();
   try{
@@ -645,7 +561,7 @@ async function loadAll(){
     const leadMap={};
     for(const c of chats){
       if(!c.line_user_id||c.line_user_id==='BROADCAST')continue;
-      if(!leadMap[c.line_user_id])leadMap[c.line_user_id]={uid:c.line_user_id,name:c.display_name||'Unknown',count:0,last:c.created_at,first:c.created_at,awaitingReply:(!c.message&&!!c.bot_reply)};
+      if(!leadMap[c.line_user_id])leadMap[c.line_user_id]={uid:c.line_user_id,name:c.display_name||'Unknown',count:0,last:c.created_at,first:c.created_at};
       leadMap[c.line_user_id].count++;
       if(c.created_at<leadMap[c.line_user_id].first)leadMap[c.line_user_id].first=c.created_at;
       if(c.needs_human) { leadMap[c.line_user_id].needsHuman = true; leadMap[c.line_user_id].humanReason = c.needs_human_reason || ''; }
@@ -655,7 +571,6 @@ async function loadAll(){
     function getStatus(l){
       if(buyerIds.has(l.uid))return{cls:'buyer',txt:'Buyer'};
       const h=(Date.now()-new Date(l.last).getTime())/3600000;
-      if(l.awaitingReply)return{cls:'warm',txt:'⏳ You replied'};
       if(h<24)return{cls:'hot',txt:'Hot'};
       if(h<72)return{cls:'warm',txt:'Warm'};
       return{cls:'cold',txt:'Cold'};
@@ -700,15 +615,16 @@ async function loadAll(){
     // Recent chats (overview) — skip admin/system/followup/broadcast
     const realChats=chats.filter(c=>c.message&&!c.message.includes('[system')&&!c.message.includes('[followup')&&!c.message.includes('[broadcast')&&!c.message.startsWith('[admin]'));
     document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>{
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${xc(trunc(c.message,35))}</td><td>${xc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      const msgDisplay = c.message && c.message.startsWith('[photo]') ? '📷 Photo' : esc(trunc(c.message,35));
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${msgDisplay}</td><td>${esc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
     // Full chats tab
     document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>{
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${xc(trunc(c.message,60))}</td><td>${xc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      const msgDisplay = c.message && c.message.startsWith('[photo]') ? '📷 Photo' : esc(trunc(c.message,60));
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${msgDisplay}</td><td>${esc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
-    try{translateCells();}catch(_){}
     // All leads tab
     document.getElementById('allLeads').innerHTML=leads.map(l=>{
       const s=getStatus(l);
@@ -753,7 +669,7 @@ async function loadAll(){
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('benchMeta').textContent=`Exchange rate: €1 = ฿${rate.toFixed(2)} | Policy: pay 95-100% of EU (about 3% below, leaves margin for Archi) | Gap = how much below EU in THB`;
+    document.getElementById('benchMeta').textContent=`Exchange rate: €1 = ฿${rate.toFixed(2)} | Discount = gap kept below EU level (50% = halfway) | Gap = how much below EU in THB`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
@@ -825,10 +741,11 @@ async function loadAll(){
 let trafficChartInstance=null;
 
 async function loadAnalytics(lineChats){
+  const events=await sbGet('conversion_events','select=event_type,page,utm_source,device,session_id,created_at&order=created_at.desc&limit=2000');
+
   const now=Date.now();
   const d14=new Date(now-14*86400000).toISOString();
   const d7=new Date(now-7*86400000).toISOString();
-  const events=await sbGet('conversion_events',`select=event_type,page,utm_source,device,session_id,created_at&created_at=gte.${d14}&event_type=in.(page_view,cta_click,line_click)&order=created_at.desc&limit=50000`);
   const recent=events.filter(e=>e.created_at>d14);
 
   const views=recent.filter(e=>e.event_type==='page_view');
@@ -964,7 +881,7 @@ async function recalcFromBenchmarks(){
     for(const u of updates){
       await fetch(`${SB}/rest/v1/prices?key=eq.${u.key}`,{
         method:'PATCH',
-        headers:{apikey:KEY,Authorization:`Bearer ${authToken()}`,'Content-Type':'application/json',Prefer:'return=minimal'},
+        headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},
         body:JSON.stringify({teaser_thb:u.teaser,tier_under10:u.u10,tier_10_30:u.t1030,tier_30_50:u.t3050})
       });
     }
@@ -977,29 +894,6 @@ async function recalcFromBenchmarks(){
 }
 
 document.getElementById('chatModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
-async function loadBankAccounts(){
-  var el=document.getElementById("bankPanel"); if(!el) return;
-  var rows=[];
-  try{ rows=await sbGet("company_bank_accounts","select=*&order=is_primary.desc"); }catch(e){ el.textContent="Could not load payment details."; return; }
-  if(!rows||!rows.length){ el.textContent="No payment accounts on file."; return; }
-  function row(k,v){ return v ? ("<tr><td style='padding:6px 10px;color:var(--muted);white-space:nowrap'>"+esc(k)+"</td><td style='padding:6px 10px;color:var(--text);font-weight:600'>"+esc(v)+"</td><td><button class='btn-sm btn-outline bcopy' data-copy='"+encodeURIComponent(v)+"' style='font-size:10px;padding:1px 6px'>copy</button></td></tr>") : ""; }
-  el.innerHTML = rows.map(function(b){
-    var pairs=[["Account name",b.account_name],["Bank",b.bank_name],["Account number",b.account_number],["Bank code",b.bank_code],["Branch code",b.branch_code],["SWIFT",b.swift_code],["Location",b.location]];
-    var msg=pairs.filter(function(x){return x[1];}).map(function(x){return x[0]+": "+x[1];}).join("\n");
-    var h="<div style='border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px'>";
-    h+="<div style='font-weight:700;color:#c9a35c;margin-bottom:6px'>"+esc(b.label||"Account")+(b.is_primary?" \u00b7 primary":"")+"</div>";
-    h+="<table style='width:100%;border-collapse:collapse;font-size:13px'>"+row("Account name",b.account_name)+row("Bank",b.bank_name)+row("Account number",b.account_number)+row("Bank code",b.bank_code)+row("Branch code",b.branch_code)+row("SWIFT",b.swift_code)+row("Location",b.location)+row("Currencies",b.currencies)+"</table>";
-    if(b.notes){ h+="<div style='font-size:11px;color:var(--muted);margin-top:8px'>"+esc(b.notes)+"</div>"; }
-    h+="<button class='btn-sm btn-gold bcopy' data-copy='"+encodeURIComponent(msg)+"' style='margin-top:10px;font-size:11px'>Copy all for invoice</button>";
-    h+="</div>";
-    return h;
-  }).join("");
-  el.querySelectorAll(".bcopy").forEach(function(btn){ btn.addEventListener("click",function(){
-    var tx=decodeURIComponent(btn.getAttribute("data-copy")||"");
-    navigator.clipboard.writeText(tx).then(function(){ var o=btn.textContent; btn.textContent="\u2713 copied"; setTimeout(function(){btn.textContent=o;},1200); }).catch(function(){});
-  }); });
-}
-
 checkAuth();
 </script>
 </body>
