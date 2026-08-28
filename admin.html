@@ -392,7 +392,7 @@ async function sbGet(tbl,params=''){
   return r.ok?r.json():[];
 }
 async function sbGetAll(tbl,params=''){
-  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,Prefer:'count=exact',Range:'0-9999'}});
+  const r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:{apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`,Prefer:'count=exact',Range:'0-9999'}});
   if(!r.ok)return{data:[],total:0};
   const data=await r.json();
   const range=r.headers.get('content-range');
@@ -897,7 +897,7 @@ async function recalcFromBenchmarks(){
     for(const u of updates){
       await fetch(`${SB}/rest/v1/prices?key=eq.${u.key}`,{
         method:'PATCH',
-        headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},
+        headers:{apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},
         body:JSON.stringify({teaser_thb:u.teaser,tier_under10:u.u10,tier_10_30:u.t1030,tier_30_50:u.t3050})
       });
     }
