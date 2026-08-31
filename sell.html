@@ -302,7 +302,7 @@ function pickMat(k,n,el){selKey=k;selName=n;document.querySelectorAll('.mat').fo
 function pickDelivery(m,el){selDeliv=m;document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('on'));el.classList.add('on');['parcel','self','grab'].forEach(x=>document.getElementById('i-'+x).classList.toggle('show',x===m));}
 function tierPrice(p,w){if(w<=10)return p.tier_under10;if(w<=30)return p.tier_10_30;return p.tier_30_50;}
 function tierLabel(w){return w<=10?'≤10kg':w<=30?'10–30kg':'30–50kg';}
-function calcPrice(){const w=parseFloat(document.getElementById('weight').value);const box=document.getElementById('pbox');if(!selKey||!w||w<=0){box.classList.remove('show');return;}const p=PRICES[selKey];const ppk=tierPrice(p,w);document.getElementById('pv').textContent=fmt(Math.round(w*ppk));document.getElementById('pt').textContent=fmt(ppk)+'/kg · '+tierLabel(w);box.classList.add('show');gtag('event','price_calculated',{material:selKey,weight_kg:w});}
+function calcPrice(){const w=parseFloat(document.getElementById('weight').value);const box=document.getElementById('pbox');if(!selKey||!w||w<=0){box.classList.remove('show');return;}const p=PRICES[selKey];const ppk=tierPrice(p,w);document.getElementById('pv').textContent=fmt(Math.round(w*ppk));document.getElementById('pt').textContent=fmt(ppk)+'/kg · '+tierLabel(w);box.classList.add('show');if(!sessionStorage.getItem('tc_pc')){sessionStorage.setItem('tc_pc','1');gtag('event','price_calculated',{material:selKey,weight_kg:w});}}
 function showErr(id,m){const e=document.getElementById(id);e.textContent=m;e.style.display='block';}
 function setStep(n){document.getElementById('st1').className='s'+(n>1?' done':n===1?' on':'');document.getElementById('st2').className='s'+(n>2?' done':n===2?' on':'');document.getElementById('st3').className='s'+(n===3?' on':'');}
 function showReview(){
@@ -425,5 +425,6 @@ loadPrices();
 </div>
 </div>
 
+<script>document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a.linetag,a[href*="line.me"],a[href*="280uqpab"]');if(a){try{gtag('event','generate_lead',{method:'LINE'});}catch(_){}}} ,true);</script>
 </body>
 </html>
