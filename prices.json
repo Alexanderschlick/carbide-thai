@@ -1,8 +1,8 @@
 {
-  "updated": "2026-09-01T16:59:54.000Z",
-  "updated_display": "01 Sep 2026",
+  "updated": "2026-09-02T05:27:59.000Z",
+  "updated_display": "02 Sep 2026",
   "source": "hartmetallschrott24.de",
-  "eur_thb_rate": 38.4935,
+  "eur_thb_rate": 38.5704,
   "buy_ratio": 0.667,
   "hm24_prices": {
     "carbide_inserts": {
@@ -22,7 +22,7 @@
       "name": "Stückschrott"
     }
   },
-  "teaser_price": 1750,
+  "teaser_price": 1800,
   "teaser_material": "carbide_inserts",
   "prices": {
     "sand_rills": {
@@ -62,15 +62,15 @@
       }
     },
     "carbide_inserts": {
-      "thb_per_kg": 1750,
+      "thb_per_kg": 1800,
       "name_en": "Carbide Inserts",
       "name_th": "คาร์ไบด์อินเสิร์ท",
       "hm24_eur": 60.0,
       "buy_eur": 46.02,
       "tiers": {
-        "tier_under20": 1500,
-        "tier_mid": 1650,
-        "tier_over50": 1750
+        "tier_under20": 1550,
+        "tier_mid": 1700,
+        "tier_over50": 1800
       }
     }
   }
