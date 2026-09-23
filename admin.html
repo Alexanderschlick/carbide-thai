@@ -690,13 +690,10 @@ async function loadAll(){
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
-    document.getElementById('sourceTable').innerHTML=benchmarks.map(b=>`<tr>
-      <td>${esc(nameMap[b.price_key]||b.price_key)}</td>
-      <td><a href="https://${esc(b.source)}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none">${esc(b.source)}</a></td>
-      <td style="color:var(--blue)">€${Number(b.benchmark_eur_kg).toFixed(1)}</td>
-      <td>${Number(b.discount_pct)}%</td>
-      <td>${fmtDate(b.updated_at)}</td>
-    </tr>`).join('')||'<tr><td colspan="5" style="color:var(--muted)">No benchmarks configured</td></tr>';
+    var __fbSeen={};
+var __euRows=benchmarks.map(function(b){return '<tr><td>'+esc(nameMap[b.price_key]||b.price_key)+'</td><td><a href="https://'+esc(b.source)+'" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none">'+esc(b.source)+'</a></td><td style="color:var(--blue)">\u20AC'+Number(b.benchmark_eur_kg).toFixed(1)+'</td><td>'+Number(b.discount_pct)+'%</td><td>'+fmtDate(b.updated_at)+'</td></tr>';}).join('');
+var __fbRows=(comp||[]).filter(function(c){if(__fbSeen[c.material_key])return false;__fbSeen[c.material_key]=1;return true;}).map(function(c){return '<tr><td>'+esc(nameMap[c.material_key]||c.material_key)+'</td><td><a href="https://www.facebook.com/groups/841296028964646" target="_blank" rel="noopener" style="color:#1877f2;text-decoration:none">Facebook (Carbide Trading)</a></td><td style="color:#1877f2;font-weight:600">\u0E3F'+Number(c.price_thb).toLocaleString()+'</td><td>THB</td><td>'+fmtDate(c.scraped_at)+'</td></tr>';}).join('');
+document.getElementById('sourceTable').innerHTML=(__euRows+__fbRows)||'<tr><td colspan="5" style="color:var(--muted)">No benchmarks configured</td></tr>';
 
     // Price Change History
     const histEl=document.getElementById('historyList');
