@@ -496,5 +496,37 @@ loadPrices();
   }catch(e){console.error('mapbtn3',e);}});
 })();
 </script>
+
+<script>
+/* === ThaiCarbide confirmation copy-address v1 (BizDev): make the yard address prominent + one-tap copyable on the confirmation cards, so sellers who close the page still have it. Address shown ONLY on confirmation (post-checkout). === */
+(function(){
+  function ready(fn){if(document.readyState!=='loading')fn();else document.addEventListener('DOMContentLoaded',fn);}
+  var ADDR_COPY='ThaiCarbide, 92/78 Moo 9, Chalong Krung Rd, Lampakchee, Nong Chok, Bangkok 10530 (Tel 093-696-9935)';
+  var L_COPY='<span class="th">คัดลอกที่อยู่</span><span class="en">Copy address</span><span class="zh">复制地址</span>';
+  var L_DONE='<span class="th">คัดลอกแล้ว ✓</span><span class="en">Copied ✓</span><span class="zh">已复制 ✓</span>';
+  function doCopy(btn){
+    function ok(){btn.innerHTML=L_DONE;btn.style.background='#0a7d33';setTimeout(function(){btn.innerHTML=L_COPY;btn.style.background='#111827';},2000);}
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ADDR_COPY).then(ok,function(){fallback();});}
+      else fallback();
+    }catch(e){fallback();}
+    function fallback(){try{var t=document.createElement('textarea');t.value=ADDR_COPY;t.setAttribute('readonly','');t.style.position='absolute';t.style.left='-9999px';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);ok();}catch(e){}}
+  }
+  ready(function(){try{
+    ['s-self','s-grab','s-parcel'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el||el.querySelector('.tc-copybtn'))return;
+      el.style.border='2px solid #1a73e8';el.style.borderRadius='14px';el.style.padding='16px';el.style.background='#f4f8ff';
+      var b=document.createElement('button');
+      b.type='button';b.className='tc-copybtn';b.innerHTML=L_COPY;
+      b.style.cssText='display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#111827;color:#fff;border:0;padding:14px;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer;margin-top:12px;';
+      b.addEventListener('click',function(){doCopy(b);});
+      var mb=el.querySelector('.tc-mapbtn');
+      if(mb)el.insertBefore(b,mb);else el.appendChild(b);
+    });
+  }catch(e){console.error('copyaddr1',e);}});
+})();
+</script>
+
 </body>
 </html>
