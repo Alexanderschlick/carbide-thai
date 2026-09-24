@@ -606,46 +606,46 @@ async function loadAll(){
     const weekLeads=leads.filter(l=>l.last>weekAgo);
     document.getElementById('ovLeads').innerHTML=weekLeads.slice(0,12).map(l=>{
       const s=getStatus(l);
-      return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${l.name}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')"><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${dispName(l.name)}</td><td>${l.count}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td>${timeAgo(l.last)}</td></tr>`;
     }).join('')||'<tr><td colspan="4" style="color:var(--muted)">No leads this week</td></tr>';
 
     // Actions
     const actions=[];
     // Needs-human actions first
     for(const l of leads){
-      if(l.needsHuman)actions.push({p:'urgent',t:`${l.name} — needs human attention`});
+      if(l.needsHuman)actions.push({p:'urgent',t:`${dispName(l.name)} — needs human attention`});
     }
     for(const l of weekLeads){
       if(buyerIds.has(l.uid))continue;
       const h=(Date.now()-new Date(l.last).getTime())/3600000;
-      if(h>24&&h<72&&l.count>=3)actions.push({p:'urgent',t:`${l.name} — ${l.count} msgs, no reply ${timeAgo(l.last)}. Follow up!`});
+      if(h>24&&h<72&&l.count>=3)actions.push({p:'urgent',t:`${dispName(l.name)} — ${l.count} msgs, no reply ${timeAgo(l.last)}. Follow up!`});
     }
     for(const b of flags.filter(f=>f.user_type==='buyer')){
-      actions.push({p:'normal',t:`${b.display_name} (buyer) — ${b.notes||'monitor communications'}`});
+      actions.push({p:'normal',t:`${dispName(b.display_name)} (buyer) — ${b.notes||'monitor communications'}`});
     }
     if(!actions.length)actions.push({p:'low',t:'No urgent actions right now'});
     document.getElementById('ovActions').innerHTML=actions.map(a=>`<div class="action-item"><div class="dot ${a.p}"></div><div style="color:var(--dark-text)">${esc(a.t)}</div></div>`).join('');
 
     // Flagged users
-    document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${esc(f.display_name||'—')}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${esc(f.user_type)}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
+    document.getElementById('ovFlags').innerHTML=flags.map(f=>`<tr><td>${esc(dispName(f.display_name||'—'))}</td><td><span class="badge ${f.user_type==='buyer'?'buyer':'ok'}">${esc(f.user_type)}</span></td><td>${f.skip_followup?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">None</td></tr>';
 
     // Recent chats (overview) — skip admin/system/followup/broadcast
     const realChats=chats.filter(c=>c.message&&!c.message.includes('[system')&&!c.message.includes('[followup')&&!c.message.includes('[broadcast')&&!c.message.startsWith('[admin]'));
     document.getElementById('ovChats').innerHTML=realChats.slice(0,12).map(c=>{
       const msgDisplay = c.message && c.message.startsWith('[photo]') ? '📷 Photo' : esc(trunc(c.message,35));
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${msgDisplay}</td><td>${esc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${dispName(c.display_name||'—')}</td><td>${msgDisplay}</td><td>${esc(trunc(c.bot_reply,50))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
     // Full chats tab
     document.getElementById('fullChats').innerHTML=realChats.slice(0,100).map(c=>{
       const msgDisplay = c.message && c.message.startsWith('[photo]') ? '📷 Photo' : esc(trunc(c.message,60));
-      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${c.display_name||'—'}</td><td>${msgDisplay}</td><td>${esc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
+      return`<tr style="cursor:pointer" onclick="showConversation('${c.line_user_id}','${(c.display_name||'').replace(/'/g,"\\'")}')"><td style="white-space:nowrap">${c.needs_human ? '🔔 ' : ''}${dispName(c.display_name||'—')}</td><td>${msgDisplay}</td><td>${esc(trunc(c.bot_reply,80))}</td><td style="white-space:nowrap">${timeAgo(c.created_at)}</td></tr>`;
     }).join('');
 
     // All leads tab
     document.getElementById('allLeads').innerHTML=leads.map(l=>{
       const s=getStatus(l);
-      return`<tr><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${l.name}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
+      return`<tr><td>${l.needsHuman ? '<span title="'+((l.humanReason||'Needs your input').replace(/"/g,'&quot;'))+'" style="cursor:help">🔔 </span>' : ''}${dispName(l.name)}</td><td>${l.count}</td><td>${fmtDate(l.first)}</td><td>${fmtDate(l.last)}</td><td><span class="badge ${s.cls}">${s.txt}</span></td><td><button class="btn-sm btn-outline" onclick="showConversation('${l.uid}','${(l.name||'').replace(/'/g,"\\'")}')">Chat</button></td></tr>`;
     }).join('');
 
     // European Benchmark Comparison
@@ -817,9 +817,10 @@ async function loadAnalytics(lineChats){
     });
   }
 
-  const totalVisitors=sessions;
+  const weekVisitors=(function(){try{var s={};(views||[]).forEach(function(e){if(e.created_at>d7&&e.session_id)s[e.session_id]=1;});var n=Object.keys(s).length;return n||sessions;}catch(_){return sessions;}})();
+  const totalVisitors=weekVisitors;
   const chatUsers=weekChats;
-  const quotesGiven=lineChats?lineChats.filter(c=>c.created_at>d7&&c.bot_reply&&(c.bot_reply.includes('฿')||c.bot_reply.includes('ราคา')||c.bot_reply.includes('price')||c.bot_reply.includes('→'))).length:0;
+  const quotesGiven=(function(){try{var u={};(lineChats||[]).forEach(function(c){if(c.created_at>d7&&c.bot_reply&&(c.bot_reply.includes('฿')||c.bot_reply.includes('ราคา')||c.bot_reply.includes('price')||c.bot_reply.includes('→'))&&c.line_user_id)u[c.line_user_id]=1;});return Math.min(Object.keys(u).length,chatUsers);}catch(_){return 0;}})();
   const funnelSteps=[
     {label:'Website Visitors',value:totalVisitors,color:'var(--blue)'},
     {label:'LINE Chats Started',value:chatUsers,color:'var(--gold)'},
@@ -840,7 +841,7 @@ async function loadAnalytics(lineChats){
         </div>
       </div>
     </div>`;
-  }).join('')+`<div style="font-size:10px;color:var(--muted);margin-top:8px">14-day visitors vs 7-day LINE activity. Quotes = bot replies containing price info.</div>`;
+  }).join('')+`<div style="font-size:10px;color:var(--muted);margin-top:8px">Last 7 days. Quotes = unique sellers who received a price reply.</div>`;
 
   const pageCount={};
   views.forEach(e=>{pageCount[e.page]=(pageCount[e.page]||0)+1});
@@ -906,6 +907,9 @@ async function recalcFromBenchmarks(){
   }
 }
 
+function _thMap(){return {"ก":"k","ข":"kh","ฃ":"kh","ค":"kh","ฅ":"kh","ฆ":"kh","ง":"ng","จ":"ch","ฉ":"ch","ช":"ch","ซ":"s","ฌ":"ch","ญ":"y","ฎ":"d","ฏ":"t","ฐ":"th","ฑ":"th","ฒ":"th","ณ":"n","ด":"d","ต":"t","ถ":"th","ท":"th","ธ":"th","น":"n","บ":"b","ป":"p","ผ":"ph","ฝ":"f","พ":"ph","ฟ":"f","ภ":"ph","ม":"m","ย":"y","ร":"r","ฤ":"rue","ล":"l","ว":"w","ศ":"s","ษ":"s","ส":"s","ห":"h","ฬ":"l","อ":"","ฮ":"h","ะ":"a","ั":"a","า":"a","ำ":"am","ิ":"i","ี":"i","ึ":"ue","ื":"ue","ุ":"u","ู":"u","ฺ":"","เ":"e","แ":"ae","โ":"o","ใ":"ai","ไ":"ai","ๅ":"a","ๆ":"","็":"","่":"","้":"","๊":"","๋":"","์":"","ํ":""};}
+function roman(s){if(!s)return s;if(!/[ก-๛]/.test(s))return s;var M=_thMap();var a=s.split('');for(var i=0;i<a.length-1;i++){if('เแโใไ'.indexOf(a[i])>=0&&a[i+1]>='ก'&&a[i+1]<='ฮ'){var t=a[i];a[i]=a[i+1];a[i+1]=t;i++;}}var out='';for(var j2=0;j2<a.length;j2++){var ch=a[j2];if(M[ch]!==undefined)out+=M[ch];else if(ch===' ')out+=' ';else if(/[0-9A-Za-z]/.test(ch))out+=ch;}out=out.replace(/\s+/g,' ').trim();if(!out)return s;out=out.replace(/(^|\s)([a-z])/g,function(m,p,c){return p+c.toUpperCase();});return out;}
+function dispName(s){if(!s)return s;if(!/[ก-๛]/.test(s))return s;var r=roman(s);return r+' ('+s+')';}
 document.getElementById('chatModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
 checkAuth();
 </script>
