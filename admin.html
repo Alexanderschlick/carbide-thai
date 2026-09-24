@@ -917,9 +917,10 @@ checkAuth();
   var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';
   function getRT(){var rt=localStorage.getItem('tc_rtoken');if(rt)return rt;try{var s=JSON.parse(localStorage.getItem('tc_session')||'{}');if(s&&s.refresh_token)return s.refresh_token;}catch(e){}return null;}
   async function refresh(){var rt=getRT();if(!rt)return false;try{var r=await fetch(SBU+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:ANON,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});if(!r.ok)return false;var j=await r.json();if(j&&j.access_token){localStorage.setItem('tc_token',j.access_token);if(j.refresh_token)localStorage.setItem('tc_rtoken',j.refresh_token);localStorage.setItem('tc_auth','1');return true;}}catch(e){}return false;}
-  async function boot(){try{var ok=await refresh();if(ok){try{if(typeof checkAuth==='function')checkAuth();}catch(e){}try{if(typeof loadAll==='function')loadAll();}catch(e){}}}catch(e){}}
+  function bridge(){try{var t=localStorage.getItem('tc_token'),rt=localStorage.getItem('tc_rtoken');if(t){try{TOKEN=t;}catch(e){}sessionStorage.setItem('tc_token',t);sessionStorage.setItem('tc_auth','1');}if(rt){try{RTOKEN=rt;}catch(e){}sessionStorage.setItem('tc_rtoken',rt);}}catch(e){}}
+  async function boot(){try{await refresh();}catch(e){}bridge();try{if(typeof checkAuth==='function')checkAuth();}catch(e){}}
   if(document.readyState!=='loading')boot();else document.addEventListener('DOMContentLoaded',boot);
-  setInterval(function(){refresh();},20*60*1000);
+  setInterval(function(){try{refresh().then(function(){bridge();});}catch(e){}},20*60*1000);
 })();
 </script>
 </body>
