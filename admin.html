@@ -201,7 +201,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <div class="card">
       <h2>Conversions &mdash; Actual Orders</h2>
       <div id="convSummary" style="margin-bottom:12px;color:var(--muted);font-size:13px;"></div>
-      <table><thead><tr><th>Ref</th><th>Name</th><th>Contact</th><th>Material</th><th>Weight</th><th>&#3647;/kg</th><th>Total</th><th>Delivery</th><th>Status</th><th>Date</th></tr></thead>
+      <table><thead><tr><th>Ref</th><th>Name</th><th>Contact</th><th>Material</th><th>Weight</th><th>&#3647;/kg</th><th>Total</th><th>Delivery</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
       <tbody id="convRows"></tbody></table>
     </div>
   </div>
@@ -347,6 +347,27 @@ tr:hover { background: rgba(200,168,78,0.04); }
   </div>
 </div>
 
+<div class="modal-overlay" id="paidModal">
+  <div class="modal" style="max-width:420px">
+    <button class="close-btn" onclick="closePaidModal()">&times;</button>
+    <h3>Confirm delivered &amp; paid</h3>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px">Enter what the yard actually weighed and paid. Confirms the sale and feeds the weekly 10% partner invoice + concierge commission.</p>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Reference</div>
+    <div id="paidRef" style="font-family:monospace;color:var(--gold);margin-bottom:12px"></div>
+    <label style="font-size:12px;color:var(--muted)">Weight received (kg)</label>
+    <input type="number" id="paidWeight" step="0.1" style="width:100%;padding:10px;margin:4px 0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px">
+    <label style="font-size:12px;color:var(--muted)">Amount paid (฿)</label>
+    <input type="number" id="paidAmount" step="1" style="width:100%;padding:10px;margin:4px 0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px">
+    <label style="font-size:12px;color:var(--muted)">Confirmed by</label>
+    <select id="paidBy" style="width:100%;padding:10px;margin:4px 0 16px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px">
+      <option value="muay">Muay</option>
+      <option value="nuni">Nuni (yard)</option>
+      <option value="alex">Alex</option>
+    </select>
+    <button class="btn-sm btn-gold" style="width:100%;padding:11px;font-size:13px" onclick="submitPaid()" id="paidSubmitBtn">Confirm paid</button>
+    <div id="paidStatus" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
 const SB='https://ltupwgytuayzopnsdvpc.supabase.co';
@@ -526,18 +547,33 @@ async function showConversation(uid,name){
 }
 
 async function loadConversions(){
-  const orders=await sbGet('orders','select=ref,name,phone,line_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,created_at&order=created_at.desc&limit=300');
+  const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const orders=await sbGet('orders','select=id,ref,name,phone,line_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,paid_at,confirmed_by,created_at&order=created_at.desc&limit=300');
   const tbody=document.getElementById('convRows'); if(!tbody)return;
   const sum=document.getElementById('convSummary');
-  if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="10" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
-  let kg=0,thb=0;
+  if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="11" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
+  let kg=0,thb=0; const weekAgo=Date.now()-7*86400000; let paidCount=0,paidThb=0;
   tbody.innerHTML=orders.map(o=>{
     const w=o.weight_received!=null?o.weight_received:o.weight_ordered; kg+=Number(w)||0; thb+=Number(o.total_amount)||0;
-    const deliv=o.delivery_method==='parcel'?'📦 Parcel':(o.delivery_method==='pickup'?'🏭 Self':esc(o.delivery_method||'—'));
+    const deliv=o.delivery_method==='parcel'?'📦 Parcel':((o.delivery_method==='pickup'||o.delivery_method==='self')?'🏭 Self':esc(o.delivery_method||'—'));
     const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'—')+(o.weight_received!=null?' → '+o.weight_received:'');
-    return `<tr><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(dispName(o.name||'—'))}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td><span class="badge">${esc(o.status||'—')}</span></td><td>${fmtDate(o.created_at)}</td></tr>`;
+    const isPaid=o.status==='paid'||!!o.paid_at;
+    if(isPaid&&o.paid_at&&new Date(o.paid_at).getTime()>weekAgo){paidCount++;paidThb+=Number(o.total_amount)||0;}
+    const rid=esc(o.ref||''),oid=esc(o.id||'');
+    let statusCell,actionCell;
+    if(isPaid){
+      statusCell=`<span class="badge buyer">✓ Paid</span>`+(o.paid_at?`<div style="font-size:9px;color:var(--muted)">${fmtDate(o.paid_at)}${o.confirmed_by?' · '+esc(o.confirmed_by):''}</div>`:'');
+      actionCell=`<button class="btn-sm btn-outline" onclick="undoPaid('${rid}','${oid}')">Undo</button>`;
+    }else{
+      statusCell=`<span class="badge">${esc(o.status||'—')}</span>`;
+      actionCell=`<button class="btn-sm btn-gold" onclick="openPaidModal('${rid}','${oid}',${Number(o.weight_ordered)||0},${Number(o.total_amount)||0})">✓ Mark paid</button>`;
+    }
+    return `<tr><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td>${statusCell}</td><td>${fmtDate(o.created_at)}</td><td>${actionCell}</td></tr>`;
   }).join('');
-  if(sum)sum.textContent=`${orders.length} orders · ${kg.toLocaleString()} kg · ฿${thb.toLocaleString()} total`;
+  if(sum){
+    const invoice=Math.round(paidThb*0.10),commission=paidCount*250;
+    sum.innerHTML=`${orders.length} orders · ${kg.toLocaleString()} kg · ฿${thb.toLocaleString()} total`+`<div style="margin-top:8px;padding:8px 10px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);border-radius:8px;font-size:12px;color:var(--dark-text)"><b style="color:#22c55e">Confirmed paid — last 7 days:</b> ${paidCount} sales · ฿${paidThb.toLocaleString()} bought &nbsp;→&nbsp; <b>Partner invoice (10%): ฿${invoice.toLocaleString()}</b> &nbsp;·&nbsp; Concierge commission: ฿${commission.toLocaleString()} (${paidCount}×250)</div>`;
+  }
 }
 
 async function loadAds(){
@@ -911,6 +947,12 @@ function _thMap(){return {"ก":"k","ข":"kh","ฃ":"kh","ค":"kh","ฅ":"kh",
 function roman(s){if(!s)return s;if(!/[ก-๛]/.test(s))return s;var M=_thMap();var a=s.split('');for(var i=0;i<a.length-1;i++){if('เแโใไ'.indexOf(a[i])>=0&&a[i+1]>='ก'&&a[i+1]<='ฮ'){var t=a[i];a[i]=a[i+1];a[i+1]=t;i++;}}var out='';for(var j2=0;j2<a.length;j2++){var ch=a[j2];if(M[ch]!==undefined)out+=M[ch];else if(ch===' ')out+=' ';else if(/[0-9A-Za-z]/.test(ch))out+=ch;}out=out.replace(/\s+/g,' ').trim();if(!out)return s;out=out.replace(/(^|\s)([a-z])/g,function(m,p,c){return p+c.toUpperCase();});return out;}
 var NAME_MAP={"แจ็ค":"Jack","บิ๊ก .จ๊ะ":"Big Ja","พรเทพ ดวงจันทร์":"Phonthep Duangchan","Best Buttons จัดซื้อ":"Best Buttons (Jatsue)","เฟิร์น คณิฏฐ์ฯ":"Fern Kanit","ศิราณี โย":"Siranee Yo","🧌🍄\"ปอ\"ตัวแสบ🍄🧌":"Po Tuasaep","โอ๊ฟเอง":"Of Eng","Fang_เดอะพีค วัลเลย์":"Fang The Peak Valley","พีพีเจค้าของเก่า":"PPJ (used goods)","รับซื้อคาไบด์ทุกชนิด":"Rapsue Carbide Thukchanit","ประพจน์ วายุโชติ":"Praphot Wayuchot","🥰**มู่**🥰":"Mu","เบ้นซ์ 🐲มังกร":"Benz Mangkon","รับซื้อคาร์ไบด์":"Rapsue Carbide","วัชรินทร์":"Watcharin","รับซื้อเศษคาร์ไบด์":"Rapsue Set Carbide","กระๆๆๆผม  ดช T.O.P":"Kra Phom D.Ch T.O.P","คุณเอกมงคล":"Khun Ekmongkhon","ยูร":"Yur","ด.ช นน":"D.Ch Non","วีระวัตท์ พามขุนทด":"Werawat Phamkhunthot","แอม":"Am","เนม จิรวัฒน์":"Nem Jirawat","ไชยวัฒน์ โอม":"Chaiyawat Om","หรั่ง นวนคร":"Rang Nawanakhon","ออมมมม":"Om","สา'คร":"Sakhon","ปิยมาภรณ์ วัญญาโน":"Piyamaphon Wanyano","สังคมอยู่อยาก":"Sangkhom Yuyak","🌿ฮา-ลอง-เบย์🌴🍾(ToEy)":"Ha-Long-Bay (ToEy)","กิจการค้าร่วม WT-BT":"JV WT-BT","นัฎฐา 🌟":"Nattha","อาทิตย์656":"Athit656","อิน":"In","รักษ์พงษ์  ธรรมภารา":"Rakphong Thammaphara","อนงนาฎ  ชอบกล้า":"Anongnat Chopkla","แดงชัยณรงค์เบอร์ 1":"Daeng Chainarong No.1","สิทธิพร":"Sitthiphon","อนุภัทร เตปัง":"Anuphat Tepang","เอ๋ เอ๋":"Ae Ae","อาทิตย์ ศรีวงค์":"Athit Siwong","พิษนุ":"Phitsanu","เจ้าคุณ":"Chaokhun","เหมราช20":"Hemarat20","คิน":"Kin","สมาน":"Saman","อ่าง":"Ang","อนุชา":"Anucha","ดช T.O.P":"D.Ch T.O.P","บูมมินมด":"Boomminmot","โจโจ้'มึงมันดื้อ":"Jojo"};Object.assign(NAME_MAP,{"คณิฏฐ์ษา บุญวัง":"Kanittha Bunwang","โจ้ เดอะมูฟวี่":"Jo The Movie","ชญารัตม์":"Chayarat","ธนาวัฒน์ มโนรัตน์":"Thanawat Manorat","ธัญญารัตน์ เพ็ชรินทร์":"Thanyarat Phetcharin","นายธน จันทร์เจ็ก":"Mr Thon Chanjek","นายภาคิน คล้ายสี":"Mr Phakhin Khlaisi","ปฏิภาณ ศรีวงศ์":"Patiphan Siwong","ปวริศร":"Pawarit","ฝฝฝฝฝฝใใใใใฝฝใฝ":"(unclear)","ฟ้า":"Fa","ภาณุวัฒน์ ครินชัย":"Phanuwat Khrinchai","ภานุวัฒน์ บุญปก":"Phanuwat Bunpok","วฃว":"(unclear)","สดายุ เชยชม":"Sadayu Choeichom","สถาพร วรรัมย์":"Sathaphon Woraram","สมจิตต์ ศิริวัฒน์":"Somjit Siriwat","สิรินดา  มัชมี":"Sirinda Matchmi","สุรชัย ตุ่นทิพย์":"Surachai Tunthip","หีหมา ดำปิ้ด":"Hima Dampit","อุสมาน มีนาคิน":"Usman Minakhin","แอ๋ม":"Aem","啦啦啦":"Lalala","嘎子":"Gazi","张三":"Zhang San","张杰":"Zhang Jie","张飞":"Zhang Fei"});function dispName(s){if(!s)return s;var k=(''+s).trim();if(NAME_MAP[k])return NAME_MAP[k]+' ('+s+')';if(!/[ก-๛]/.test(s))return s;var r=roman(s);return r+' ('+s+')';}
 document.getElementById('chatModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+let _paidRef='',_paidId='';
+function openPaidModal(ref,id,w,a){_paidRef=ref;_paidId=id;document.getElementById('paidRef').textContent=ref||id;document.getElementById('paidWeight').value=w||'';document.getElementById('paidAmount').value=a||'';document.getElementById('paidStatus').textContent='';document.getElementById('paidModal').classList.add('show');}
+function closePaidModal(){document.getElementById('paidModal').classList.remove('show');}
+async function submitPaid(){const btn=document.getElementById('paidSubmitBtn'),st=document.getElementById('paidStatus');const w=document.getElementById('paidWeight').value,a=document.getElementById('paidAmount').value,by=document.getElementById('paidBy').value;btn.disabled=true;btn.textContent='Saving…';st.style.color='var(--muted)';st.textContent='';try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref:_paidRef,id:_paidId,weight_received:w,total_amount:a,confirmed_by:by})});const d=await r.json();if(d.success){st.style.color='#22c55e';st.textContent='✓ Marked paid';setTimeout(()=>{closePaidModal();loadConversions();},600);}else{st.style.color='#ef4444';st.textContent='Error: '+(d.error||'failed');}}catch(e){st.style.color='#ef4444';st.textContent='Error: '+e.message;}btn.disabled=false;btn.textContent='Confirm paid';}
+async function undoPaid(ref,id){if(!confirm('Undo the paid confirmation for '+(ref||id)+'?'))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref,id,undo:true})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
+document.getElementById('paidModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closePaidModal();});
 checkAuth();
 </script>
 
