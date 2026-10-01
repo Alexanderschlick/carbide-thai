@@ -496,7 +496,7 @@ async function showConversation(uid,name){
   currentModalUid=uid;
   _showOriginal=false;
   document.getElementById('translateAllBtn').textContent='Show Original';
-  const chats=await sbGet('line_chats',`select=message,bot_reply,created_at,image_url,needs_human,needs_human_reason&line_user_id=eq.${uid}&order=created_at.asc&limit=60`);
+  const chats=(await sbGet('line_chats',`select=message,bot_reply,created_at,image_url,needs_human,needs_human_reason&line_user_id=eq.${uid}&order=created_at.desc&limit=60`)).reverse();
   document.getElementById('modalTitle').textContent=name;
   document.getElementById('replyInput').value='';
   document.getElementById('replyStatus').textContent='';
