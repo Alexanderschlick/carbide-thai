@@ -554,21 +554,25 @@ async function loadConversions(){
   if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="11" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
   let kg=0,thb=0; const weekAgo=Date.now()-7*86400000; let paidCount=0,paidThb=0;
   tbody.innerHTML=orders.map(o=>{
-    const w=o.weight_received!=null?o.weight_received:o.weight_ordered; kg+=Number(w)||0; thb+=Number(o.total_amount)||0;
+    const isVoid=o.status==='voided';
+    const w=o.weight_received!=null?o.weight_received:o.weight_ordered; if(!isVoid){kg+=Number(w)||0; thb+=Number(o.total_amount)||0;}
     const deliv=o.delivery_method==='parcel'?'📦 Parcel':((o.delivery_method==='pickup'||o.delivery_method==='self')?'🏭 Self':esc(o.delivery_method||'—'));
     const wt=(o.weight_ordered!=null?o.weight_ordered+' kg':'—')+(o.weight_received!=null?' → '+o.weight_received:'');
     const isPaid=o.status==='paid'||!!o.paid_at;
     if(isPaid&&o.paid_at&&new Date(o.paid_at).getTime()>weekAgo){paidCount++;paidThb+=Number(o.total_amount)||0;}
     const rid=esc(o.ref||''),oid=esc(o.id||'');
     let statusCell,actionCell;
-    if(isPaid){
+    if(isVoid){
+      statusCell=`<span class="badge" style="color:#ef4444;background:rgba(239,68,68,0.12)">✕ Void</span>`;
+      actionCell=`<button class="btn-sm btn-outline" onclick="voidOrder('${rid}','${oid}',true)">Restore</button>`;
+    }else if(isPaid){
       statusCell=`<span class="badge buyer">✓ Paid</span>`+(o.paid_at?`<div style="font-size:9px;color:var(--muted)">${fmtDate(o.paid_at)}${o.confirmed_by?' · '+esc(o.confirmed_by):''}</div>`:'');
       actionCell=`<button class="btn-sm btn-outline" onclick="undoPaid('${rid}','${oid}')">Undo</button>`;
     }else{
       statusCell=`<span class="badge">${esc(o.status||'—')}</span>`;
-      actionCell=`<button class="btn-sm btn-gold" onclick="openPaidModal('${rid}','${oid}',${Number(o.weight_ordered)||0},${Number(o.total_amount)||0})">✓ Mark paid</button>`;
+      actionCell=`<button class="btn-sm btn-gold" onclick="openPaidModal('${rid}','${oid}',${Number(o.weight_ordered)||0},${Number(o.total_amount)||0})">✓ Mark paid</button> <button class="btn-sm btn-outline" title="Mark as duplicate / void" style="color:#ef4444" onclick="voidOrder('${rid}','${oid}',false)">✕</button>`;
     }
-    return `<tr><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td>${statusCell}</td><td>${fmtDate(o.created_at)}</td><td>${actionCell}</td></tr>`;
+    return `<tr${isVoid?' style="opacity:0.45"':''}><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td>${statusCell}</td><td>${fmtDate(o.created_at)}</td><td>${actionCell}</td></tr>`;
   }).join('');
   if(sum){
     const invoice=Math.round(paidThb*0.10),commission=paidCount*250;
@@ -952,6 +956,7 @@ function openPaidModal(ref,id,w,a){_paidRef=ref;_paidId=id;document.getElementBy
 function closePaidModal(){document.getElementById('paidModal').classList.remove('show');}
 async function submitPaid(){const btn=document.getElementById('paidSubmitBtn'),st=document.getElementById('paidStatus');const w=document.getElementById('paidWeight').value,a=document.getElementById('paidAmount').value,by=document.getElementById('paidBy').value;btn.disabled=true;btn.textContent='Saving…';st.style.color='var(--muted)';st.textContent='';try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref:_paidRef,id:_paidId,weight_received:w,total_amount:a,confirmed_by:by})});const d=await r.json();if(d.success){st.style.color='#22c55e';st.textContent='✓ Marked paid';setTimeout(()=>{closePaidModal();loadConversions();},600);}else{st.style.color='#ef4444';st.textContent='Error: '+(d.error||'failed');}}catch(e){st.style.color='#ef4444';st.textContent='Error: '+e.message;}btn.disabled=false;btn.textContent='Confirm paid';}
 async function undoPaid(ref,id){if(!confirm('Undo the paid confirmation for '+(ref||id)+'?'))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref,id,undo:true})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
+async function voidOrder(ref,id,undo){const msg=undo?('Restore order '+(ref||id)+'?'):('Mark order '+(ref||id)+' as duplicate / void? It will be hidden from totals — reversible with Restore.');if(!confirm(msg))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'void',ref,id,undo:!!undo})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
 document.getElementById('paidModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closePaidModal();});
 checkAuth();
 </script>
