@@ -603,7 +603,7 @@ async function loadAll(){
     const[chatsResult,prices,comp,flags,benchmarks,priceHistory]=await Promise.all([
       sbGetAll('line_chats','select=line_user_id,display_name,message,bot_reply,created_at,needs_human,needs_human_reason,image_url&line_user_id=neq.BROADCAST&order=created_at.desc'),
       sbGet('prices','select=key,name_en,tier_under10,tier_10_30,tier_30_50,teaser_thb,updated_at&order=key'),
-      sbGet('competitor_prices','select=material_key,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=10'),
+      sbGet('competitor_prices','select=material_key,source,price_eur,price_thb,exchange_rate,tier_data,scraped_at&order=scraped_at.desc&limit=60'),
       sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line'),
       sbGet('price_benchmarks','select=id,price_key,source,benchmark_eur_kg,discount_pct,notes,updated_at&order=price_key,source'),
       sbGet('price_history','select=id,price_key,old_teaser,new_teaser,old_tiers,new_tiers,change_source,changed_at&order=changed_at.desc&limit=20')
