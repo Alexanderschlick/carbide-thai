@@ -287,14 +287,14 @@ tr:hover { background: rgba(200,168,78,0.04); }
       </div>
       <table><thead><tr>
         <th>Material</th>
-        <th style="color:var(--gold)">Teaser</th>
+        <th style="color:var(--gold)">We pay ฿ (€)</th>
         <th style="color:var(--gold)">&lt;10kg</th>
         <th style="color:var(--gold)">10-30</th>
         <th style="color:var(--gold)">30-50</th>
-        <th style="color:var(--blue)">EU Avg (EUR)</th>
-        <th style="color:var(--blue)">EU &rarr; THB</th>
-        <th>Discount</th>
-        <th>Gap</th>
+        <th style="color:var(--blue)">Best EU €/kg</th>
+        <th style="color:var(--blue)">EU in THB</th>
+        <th>Target disc.</th>
+        <th>Our price vs EU</th>
       </tr></thead>
       <tbody id="benchmarkTable"></tbody></table>
       <div id="benchMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
@@ -689,7 +689,7 @@ async function loadAll(){
     }).join('');
 
     // European Benchmark Comparison
-    const rate=comp[0]?Number(comp[0].exchange_rate):38.43;
+    const _ers=(comp||[]).map(c=>Number(c.exchange_rate)).filter(x=>x>30&&x<50);const rate=_ers.length?_ers[0]:37.77;
     window._benchmarks=benchmarks;window._prices=prices;window._rate=rate;
 
     // Group benchmarks by price_key, calculate avg EUR
@@ -715,7 +715,7 @@ async function loadAll(){
       const gapColor=gap?(Number(gap)>0?'#22c55e':'#ef4444'):'var(--muted)';
       bmRows+=`<tr>
         <td style="font-weight:600">${esc(p.name_en||p.key)}</td>
-        <td style="color:var(--gold)">฿${teaser.toLocaleString()}</td>
+        <td style="color:var(--gold)">฿${teaser.toLocaleString()}<div style="font-size:10px;color:var(--muted)">€${(rate?(teaser/rate):0).toFixed(1)}</div></td>
         <td style="color:var(--gold)">฿${Number(p.tier_under10||0).toLocaleString()}</td>
         <td style="color:var(--gold)">฿${Number(p.tier_10_30||0).toLocaleString()}</td>
         <td style="color:var(--gold)">฿${Number(p.tier_30_50||0).toLocaleString()}</td>
@@ -726,13 +726,13 @@ async function loadAll(){
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('benchMeta').textContent=`Exchange rate: €1 = ฿${rate.toFixed(2)} | Discount = gap kept below EU level (50% = halfway) | Gap = how much below EU in THB`;
+    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · "Our price vs EU": + = we buy cheaper than Europe (margin), − = we pay more than Europe · Best EU = hartmetallschrott24.de`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
     var __fbSeen={};
 var __euRows=benchmarks.map(function(b){return '<tr><td>'+esc(nameMap[b.price_key]||b.price_key)+'</td><td><a href="https://'+esc(b.source)+'" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none">'+esc(b.source)+'</a></td><td style="color:var(--blue)">\u20AC'+Number(b.benchmark_eur_kg).toFixed(1)+'</td><td>'+Number(b.discount_pct)+'%</td><td>'+fmtDate(b.updated_at)+'</td></tr>';}).join('');
-var __fbRows=(comp||[]).filter(function(c){if(__fbSeen[c.material_key])return false;__fbSeen[c.material_key]=1;return true;}).map(function(c){return '<tr><td>'+esc(nameMap[c.material_key]||c.material_key)+'</td><td><a href="https://www.facebook.com/groups/841296028964646" target="_blank" rel="noopener" style="color:#1877f2;text-decoration:none">Facebook (Carbide Trading)</a></td><td style="color:#1877f2;font-weight:600">\u0E3F'+Number(c.price_thb).toLocaleString()+'</td><td>THB</td><td>'+fmtDate(c.scraped_at)+'</td></tr>';}).join('');
+var __fbRows=(comp||[]).filter(function(c){return /^fb:/.test(String(c.source||''));}).filter(function(c){if(__fbSeen[c.material_key])return false;__fbSeen[c.material_key]=1;return true;}).map(function(c){return '<tr><td>'+esc(nameMap[c.material_key]||c.material_key)+'</td><td><a href="https://www.facebook.com/groups/841296028964646" target="_blank" rel="noopener" style="color:#1877f2;text-decoration:none">Facebook (Carbide Trading)</a></td><td style="color:#1877f2;font-weight:600">\u0E3F'+Number(c.price_thb).toLocaleString()+'</td><td>THB</td><td>'+fmtDate(c.scraped_at)+'</td></tr>';}).join('');
 document.getElementById('sourceTable').innerHTML=(__euRows+__fbRows)||'<tr><td colspan="5" style="color:var(--muted)">No benchmarks configured</td></tr>';
 
     // Price Change History
