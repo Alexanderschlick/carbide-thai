@@ -434,6 +434,7 @@ function showTab(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).style.display='block';
   if(el)el.classList.add('active');
+  if(name==='prices'&&window._trendChart)setTimeout(()=>{try{_trendChart.resize();}catch(e){}},60);
 }
 function closeModal(){document.getElementById('chatModal').classList.remove('show')}
 
@@ -970,12 +971,12 @@ async function renderPriceTrend(){
     const colors={carbide_drills:'#c8a84e',carbide_inserts:'#2e7df7',mixed_carbide:'#22c55e',sand_rills:'#a78bfa'};
     const cutoff=_trendDays?Date.now()-_trendDays*86400000:0;
     const byGrade={};
-    for(const r of rows){const t=new Date(r.recorded_at).getTime();if(t<cutoff)continue;const d=r.recorded_at.slice(0,10);(byGrade[r.grade_key]=byGrade[r.grade_key]||{})[d]=Number(r.tier_over50);}
-    const days=[...new Set(rows.filter(r=>new Date(r.recorded_at).getTime()>=cutoff).map(r=>r.recorded_at.slice(0,10)))].sort();
+    for(const r of rows){const t=new Date(r.recorded_at).getTime();if(t<cutoff)continue;const d=r.recorded_at.slice(0,10);(byGrade[r.grade_key]=byGrade[r.grade_key]||{})[d]=(Number(r.tier_over50)>0?Number(r.tier_over50):null);}
+    const days=[...new Set(rows.filter(r=>new Date(r.recorded_at).getTime()>=cutoff&&Number(r.tier_over50)>0).map(r=>r.recorded_at.slice(0,10)))].sort();
     const datasets=Object.keys(names).filter(g=>byGrade[g]).map(g=>({label:names[g],data:days.map(d=>byGrade[g][d]!=null?Math.round(byGrade[g][d]):null),borderColor:colors[g],backgroundColor:colors[g],pointRadius:0,borderWidth:2,tension:0.25,spanGaps:true}));
     const ctx=document.getElementById('priceTrendChart'); if(!ctx||typeof Chart==='undefined')return;
     if(_trendChart)_trendChart.destroy();
-    _trendChart=new Chart(ctx,{type:'line',data:{labels:days.map(d=>d.slice(5)),datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': ฿'+(c.parsed.y||0).toLocaleString()}}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:10},grid:{color:'rgba(26,58,92,0.3)'}},y:{ticks:{color:'#94a3b8',font:{size:9},callback:v=>'฿'+Number(v).toLocaleString()},grid:{color:'rgba(26,58,92,0.3)'}}}}});
+    _trendChart=new Chart(ctx,{type:'line',data:{labels:days.map(d=>d.slice(5)),datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': ฿'+(c.parsed.y||0).toLocaleString()}}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:10},grid:{color:'rgba(26,58,92,0.3)'}},y:{beginAtZero:false,ticks:{color:'#94a3b8',font:{size:9},callback:v=>'฿'+Number(v).toLocaleString()},grid:{color:'rgba(26,58,92,0.3)'}}}}});
     const changes=[];
     for(const g of Object.keys(byGrade)){let prev=null;for(const d of days){const v=byGrade[g][d];if(v==null)continue;const rv=Math.round(v);if(prev!=null&&rv!==prev)changes.push({g,day:d,from:prev,to:rv});prev=rv;}}
     changes.sort((a,b)=>b.day.localeCompare(a.day));
