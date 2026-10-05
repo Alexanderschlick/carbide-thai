@@ -308,8 +308,11 @@ tr:hover { background: rgba(200,168,78,0.04); }
         <tbody id="sourceTable"></tbody></table>
       </div>
       <div class="card">
-        <h2>Recent Price Changes</h2>
-        <div id="historyList" style="max-height:280px;overflow-y:auto;"></div>
+        <h2>Price Trend &amp; Recent Changes</h2>
+        <div id="trendRange" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap"><button class="btn-sm btn-outline" onclick="setTrendRange(30)">30d</button><button class="btn-sm btn-gold" onclick="setTrendRange(90)">90d</button><button class="btn-sm btn-outline" onclick="setTrendRange(0)">All</button></div>
+        <div style="position:relative;height:220px;width:100%;margin-bottom:10px"><canvas id="priceTrendChart"></canvas></div>
+        <div id="trendChanges" style="max-height:200px;overflow-y:auto;"></div>
+        <div id="historyList" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -736,7 +739,7 @@ var __fbRows=(comp||[]).filter(function(c){return /^fb:/.test(String(c.source||'
 document.getElementById('sourceTable').innerHTML=(__euRows+__fbRows)||'<tr><td colspan="5" style="color:var(--muted)">No benchmarks configured</td></tr>';
 
     // Price Change History
-    const histEl=document.getElementById('historyList');
+    const histEl=document.getElementById('historyList'); renderPriceTrend();
     if(priceHistory.length){
       // Show alerts for changes in last 48h
       const recent48h=priceHistory.filter(h=>Date.now()-new Date(h.changed_at).getTime()<48*3600000);
@@ -958,6 +961,29 @@ async function submitPaid(){const btn=document.getElementById('paidSubmitBtn'),s
 async function undoPaid(ref,id){if(!confirm('Undo the paid confirmation for '+(ref||id)+'?'))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref,id,undo:true})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
 async function voidOrder(ref,id,undo){const msg=undo?('Restore order '+(ref||id)+'?'):('Mark order '+(ref||id)+' as duplicate / void? It will be hidden from totals — reversible with Restore.');if(!confirm(msg))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'void',ref,id,undo:!!undo})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
 document.getElementById('paidModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closePaidModal();});
+let _trendChart=null,_trendRows=null,_trendDays=90;
+async function renderPriceTrend(){
+  try{
+    if(!_trendRows){_trendRows=await sbGet('price_history','select=grade_key,tier_over50,recorded_at&order=recorded_at.asc&limit=2000');}
+    const rows=_trendRows||[]; if(!rows.length)return;
+    const names={carbide_drills:'Drills',carbide_inserts:'Inserts',mixed_carbide:'Mixed',sand_rills:'Sand Rills'};
+    const colors={carbide_drills:'#c8a84e',carbide_inserts:'#2e7df7',mixed_carbide:'#22c55e',sand_rills:'#a78bfa'};
+    const cutoff=_trendDays?Date.now()-_trendDays*86400000:0;
+    const byGrade={};
+    for(const r of rows){const t=new Date(r.recorded_at).getTime();if(t<cutoff)continue;const d=r.recorded_at.slice(0,10);(byGrade[r.grade_key]=byGrade[r.grade_key]||{})[d]=Number(r.tier_over50);}
+    const days=[...new Set(rows.filter(r=>new Date(r.recorded_at).getTime()>=cutoff).map(r=>r.recorded_at.slice(0,10)))].sort();
+    const datasets=Object.keys(names).filter(g=>byGrade[g]).map(g=>({label:names[g],data:days.map(d=>byGrade[g][d]!=null?Math.round(byGrade[g][d]):null),borderColor:colors[g],backgroundColor:colors[g],pointRadius:0,borderWidth:2,tension:0.25,spanGaps:true}));
+    const ctx=document.getElementById('priceTrendChart'); if(!ctx||typeof Chart==='undefined')return;
+    if(_trendChart)_trendChart.destroy();
+    _trendChart=new Chart(ctx,{type:'line',data:{labels:days.map(d=>d.slice(5)),datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': ฿'+(c.parsed.y||0).toLocaleString()}}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9},maxTicksLimit:10},grid:{color:'rgba(26,58,92,0.3)'}},y:{ticks:{color:'#94a3b8',font:{size:9},callback:v=>'฿'+Number(v).toLocaleString()},grid:{color:'rgba(26,58,92,0.3)'}}}}});
+    const changes=[];
+    for(const g of Object.keys(byGrade)){let prev=null;for(const d of days){const v=byGrade[g][d];if(v==null)continue;const rv=Math.round(v);if(prev!=null&&rv!==prev)changes.push({g,day:d,from:prev,to:rv});prev=rv;}}
+    changes.sort((a,b)=>b.day.localeCompare(a.day));
+    const el=document.getElementById('trendChanges'); if(!el)return;
+    el.innerHTML=changes.length?changes.slice(0,12).map(c=>{const up=c.to>c.from;const clr=up?'#22c55e':'#ef4444';return `<div class="sys-row" style="gap:8px"><span style="color:${clr};font-size:13px">${up?'&#9650;':'&#9660;'}</span><span class="name" style="flex:1">${names[c.g]||c.g}: ฿${c.from.toLocaleString()} → ฿${c.to.toLocaleString()} <span style="color:${clr};font-size:11px">(${up?'+':''}${c.to-c.from})</span></span><span class="sched">${c.day}</span></div>`;}).join(''):'<div style="color:var(--muted);font-size:12px;padding:8px 0">No price changes in this period</div>';
+  }catch(e){console.error('trend',e);}
+}
+function setTrendRange(d){_trendDays=d;document.querySelectorAll('#trendRange button').forEach(b=>{const t=b.textContent;b.className='btn-sm '+(((t==='30d'&&d===30)||(t==='90d'&&d===90)||(t==='All'&&d===0))?'btn-gold':'btn-outline');});renderPriceTrend();}
 checkAuth();
 </script>
 
