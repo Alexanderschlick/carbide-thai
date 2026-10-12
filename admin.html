@@ -350,6 +350,18 @@ tr:hover { background: rgba(200,168,78,0.04); }
   </div>
 </div>
 
+<!-- LINK ORDER ↔ LINE CHAT MODAL -->
+<div class="modal-overlay" id="linkModal">
+  <div class="modal" style="max-width:460px">
+    <button class="close-btn" onclick="closeLinkModal()">&times;</button>
+    <h3>Link order to LINE chat</h3>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:10px">No LINE conversation was matched automatically for <span id="linkRef" style="font-family:monospace;color:var(--gold)"></span>. Pick the seller's LINE chat below — it is saved on the order.</p>
+    <input type="text" id="linkSearch" placeholder="Search LINE name…" oninput="renderLinkList()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;margin-bottom:8px">
+    <div id="linkList" style="max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:8px"></div>
+    <div id="linkStatus" style="font-size:11px;color:var(--muted);margin-top:8px"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="paidModal">
   <div class="modal" style="max-width:420px">
     <button class="close-btn" onclick="closePaidModal()">&times;</button>
@@ -393,12 +405,29 @@ async function doLogin(){
       document.getElementById('dashboard').style.display='block';
       loadAll();
     } else {
-      document.getElementById('loginErr').style.display='block';
+      const err=document.getElementById('loginErr');
+      err.textContent=r.status===429?'Too many login attempts — wait 5 minutes and try again':'Invalid password';
+      err.style.display='block';
     }
-  }catch(e){ document.getElementById('loginErr').style.display='block'; }
+  }catch(e){ const err=document.getElementById('loginErr');err.textContent='Login failed — network error';err.style.display='block'; }
+}
+let _expiredShown=false;
+function sessionExpired(){
+  if(_expiredShown)return;_expiredShown=true;
+  sessionStorage.removeItem('tc_auth');sessionStorage.removeItem('tc_token');sessionStorage.removeItem('tc_rtoken');TOKEN='';RTOKEN='';
+  const err=document.getElementById('loginErr');if(err){err.textContent='Session expired — please log in again';err.style.display='block';}
+  document.getElementById('dashboard').style.display='none';document.getElementById('loginGate').style.display='';
 }
 function doLogout(){sessionStorage.removeItem('tc_auth');sessionStorage.removeItem('tc_token');sessionStorage.removeItem('tc_rtoken');TOKEN='';RTOKEN='';location.reload()}
+let _refreshing=null;
 async function refreshToken(){
+  // single-flight: loadAll fires ~20 reads at once; if all 401, only ONE refresh call may run.
+  // Parallel refreshes rotate the token, Supabase flags "refresh_token_already_used" (abuse) and revokes the session.
+  if(_refreshing)return _refreshing;
+  _refreshing=_refreshTokenOnce().finally(()=>{_refreshing=null;});
+  return _refreshing;
+}
+async function _refreshTokenOnce(){
   if(!RTOKEN)return false;
   try{
     const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:RTOKEN})});
@@ -412,7 +441,10 @@ function checkAuth(){if(sessionStorage.getItem('tc_auth')&&TOKEN){document.getEl
 async function sbGet(tbl,params=''){
   const hdr=()=>({apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`});
   let r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:hdr()});
-  if(r.status===401&&await refreshToken()){r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:hdr()});}
+  if(r.status===401){
+    if(await refreshToken()){r=await fetch(`${SB}/rest/v1/${tbl}?${params}`,{headers:hdr()});}
+    else if(TOKEN){ /* session expired and refresh failed → back to login instead of showing empty dashboard */ sessionExpired(); return []; }
+  }
   return r.ok?r.json():[];
 }
 async function sbGetAll(tbl,params=''){
@@ -552,7 +584,7 @@ async function showConversation(uid,name){
 
 async function loadConversions(){
   const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const orders=await sbGet('orders','select=id,ref,name,phone,line_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,paid_at,confirmed_by,created_at&order=created_at.desc&limit=300');
+  const orders=await sbGet('orders','select=id,ref,name,phone,line_id,line_user_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,paid_at,confirmed_by,created_at&order=created_at.desc&limit=300');
   const tbody=document.getElementById('convRows'); if(!tbody)return;
   const sum=document.getElementById('convSummary');
   if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="11" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
@@ -576,6 +608,11 @@ async function loadConversions(){
       statusCell=`<span class="badge">${esc(o.status||'—')}</span>`;
       actionCell=`<button class="btn-sm btn-gold" onclick="openPaidModal('${rid}','${oid}',${Number(o.weight_ordered)||0},${Number(o.total_amount)||0})">✓ Mark paid</button> <button class="btn-sm btn-outline" title="Mark as duplicate / void" style="color:#ef4444" onclick="voidOrder('${rid}','${oid}',false)">✕</button>`;
     }
+    const nm=esc(o.name||'');const luid=esc(o.line_user_id||'');
+    const chatBtn=luid
+      ?`<button class="btn-sm btn-outline" title="Open LINE conversation" onclick="showConversation('${luid}','${nm.replace(/'/g,"\\'")}')">💬 Chat</button>`
+      :`<button class="btn-sm btn-outline" title="No LINE chat linked yet — click to link" style="opacity:0.55" onclick="openLinkChat('${oid}','${rid}','${nm.replace(/'/g,"\\'")}','${esc(o.phone||'')}')">💬 Link</button>`;
+    actionCell=chatBtn+' '+actionCell;
     return `<tr${isVoid?' style="opacity:0.45"':''}><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td>${statusCell}</td><td>${fmtDate(o.created_at)}</td><td>${actionCell}</td></tr>`;
   }).join('');
   if(sum){
@@ -959,6 +996,42 @@ let _paidRef='',_paidId='';
 function openPaidModal(ref,id,w,a){_paidRef=ref;_paidId=id;document.getElementById('paidRef').textContent=ref||id;document.getElementById('paidWeight').value=w||'';document.getElementById('paidAmount').value=a||'';document.getElementById('paidStatus').textContent='';document.getElementById('paidModal').classList.add('show');}
 function closePaidModal(){document.getElementById('paidModal').classList.remove('show');}
 async function submitPaid(){const btn=document.getElementById('paidSubmitBtn'),st=document.getElementById('paidStatus');const w=document.getElementById('paidWeight').value,a=document.getElementById('paidAmount').value,by=document.getElementById('paidBy').value;btn.disabled=true;btn.textContent='Saving…';st.style.color='var(--muted)';st.textContent='';try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref:_paidRef,id:_paidId,weight_received:w,total_amount:a,confirmed_by:by})});const d=await r.json();if(d.success){st.style.color='#22c55e';st.textContent='✓ Marked paid';setTimeout(()=>{closePaidModal();loadConversions();},600);}else{st.style.color='#ef4444';st.textContent='Error: '+(d.error||'failed');}}catch(e){st.style.color='#ef4444';st.textContent='Error: '+e.message;}btn.disabled=false;btn.textContent='Confirm paid';}
+// ---- Link order ↔ LINE chat (manual fallback when auto-match by ref/phone/name found nothing) ----
+let _linkOid='',_linkRef='',_linkName='',_linkUsers=[];
+function closeLinkModal(){document.getElementById('linkModal').classList.remove('show')}
+async function openLinkChat(oid,ref,name,phone){
+  _linkOid=oid;_linkRef=ref;_linkName=name;
+  document.getElementById('linkRef').textContent=ref||oid;
+  document.getElementById('linkSearch').value=name||'';
+  document.getElementById('linkStatus').textContent='';
+  document.getElementById('linkList').innerHTML='<div style="padding:12px;color:var(--muted);font-size:12px">Loading LINE users…</div>';
+  document.getElementById('linkModal').classList.add('show');
+  if(!_linkUsers.length){
+    const rows=await sbGet('line_chats','select=line_user_id,display_name,created_at&order=created_at.desc&limit=2000')||[];
+    const m=new Map();
+    for(const r of rows){const u=m.get(r.line_user_id);if(u){u.n++;if(!u.name&&r.display_name)u.name=r.display_name;}else m.set(r.line_user_id,{uid:r.line_user_id,name:r.display_name||'',last:r.created_at,n:1});}
+    _linkUsers=[...m.values()];
+  }
+  renderLinkList();
+}
+function renderLinkList(){
+  const q=(document.getElementById('linkSearch').value||'').trim().toLowerCase();
+  const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let list=_linkUsers;
+  if(q)list=list.filter(u=>(u.name||'').toLowerCase().includes(q)||u.uid.toLowerCase().includes(q));
+  list=list.slice(0,60);
+  document.getElementById('linkList').innerHTML=list.length?list.map(u=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer" onclick="linkChat('${esc(u.uid)}','${esc(u.name).replace(/'/g,"\\'")}')" onmouseover="this.style.background='rgba(46,125,247,0.08)'" onmouseout="this.style.background=''"><div><div style="font-size:13px">${esc(u.name)||'<span style=color:var(--muted)>(no name)</span>'}</div><div style="font-size:10px;color:var(--muted)">${u.n} msgs · last ${timeAgo(u.last)}</div></div><span class="btn-sm btn-outline" style="font-size:11px">Link</span></div>`).join('')
+    :'<div style="padding:12px;color:var(--muted);font-size:12px">No LINE user matches. Try fewer letters — LINE names often differ from the order name.</div>';
+}
+async function linkChat(uid,lineName){
+  const st=document.getElementById('linkStatus');st.style.color='var(--muted)';st.textContent='Saving…';
+  try{
+    const r=await fetch(`${SB}/rest/v1/orders?id=eq.${_linkOid}`,{method:'PATCH',headers:{apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({line_user_id:uid})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    st.style.color='#22c55e';st.textContent='✓ Linked to '+lineName;
+    setTimeout(()=>{closeLinkModal();loadConversions();showConversation(uid,_linkName||lineName);},400);
+  }catch(e){st.style.color='#ef4444';st.textContent='Error: '+e.message;}
+}
 async function undoPaid(ref,id){if(!confirm('Undo the paid confirmation for '+(ref||id)+'?'))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark_paid',ref,id,undo:true})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
 async function voidOrder(ref,id,undo){const msg=undo?('Restore order '+(ref||id)+'?'):('Mark order '+(ref||id)+' as duplicate / void? It will be hidden from totals — reversible with Restore.');if(!confirm(msg))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'void',ref,id,undo:!!undo})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
 document.getElementById('paidModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closePaidModal();});
