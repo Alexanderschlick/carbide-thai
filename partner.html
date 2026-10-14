@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ThaiCarbide · ราคาประจำวัน / Daily price</title>
+<style>
+:root{--bg:#0f1b2d;--card:#162338;--gold:#d4a73a;--text:#eef2f7;--muted:#8a94a6;--green:#22c55e;--red:#ef4444;--border:#243247}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;font-size:16px;line-height:1.45}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:20px;margin:0;color:var(--gold)}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{color:var(--muted);font-weight:600;font-size:12px;text-align:right;padding:6px 4px;border-bottom:1px solid var(--border)}
+th:first-child,td:first-child{text-align:left}
+td{padding:9px 4px;text-align:right;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.grade{font-weight:600}.grade small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+.btns{display:flex;gap:10px;margin-top:6px}
+button{flex:1;padding:16px;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;color:#fff}
+.ok{background:var(--green)}.no{background:var(--red)}
+button:disabled{opacity:.5;cursor:default}
+.status{margin-top:12px;padding:12px;border-radius:10px;font-size:14px;display:none}
+.status.ok{display:block;background:rgba(34,197,94,.12);border:1px solid var(--green)}
+.status.no{display:block;background:rgba(239,68,68,.12);border:1px solid var(--red)}
+.status.err{display:block;background:rgba(239,68,68,.12);border:1px solid var(--red)}
+#noForm{display:none;margin-top:12px}
+#noForm label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
+#noForm input,#noForm textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:16px}
+.rule{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.55}
+.rule b{color:var(--text)}
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ThaiCarbide · ราคาประจำวัน</h1>
+  <div class="sub" id="sub">กำลังโหลด… / Loading…</div>
+
+  <div class="card">
+    <table>
+      <thead><tr><th>เกรด / Grade</th><th>&lt;10 กก.</th><th>10–30</th><th>30–50</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="4" style="text-align:center;color:var(--muted)">…</td></tr></tbody>
+    </table>
+    <div class="rule">บาท/กก. ที่จ่ายผู้ขายตอนชั่ง · THB per kg paid to the seller at weigh-in</div>
+  </div>
+
+  <div class="card" id="actionCard">
+    <div class="btns">
+      <button class="ok" id="btnOk" onclick="decide('ok')">✓ OK ตกลง</button>
+      <button class="no" id="btnNo" onclick="showNo()">✕ NO ไม่ตกลง</button>
+    </div>
+    <div id="noForm">
+      <label>ราคาของคุณ (บาท/กก.) · Your price per kg — leave empty if same</label>
+      <div id="counterFields"></div>
+      <label>หมายเหตุ / Note</label>
+      <textarea id="note" rows="2" placeholder="เช่น ตลาดลง / market down"></textarea>
+      <div class="btns"><button class="no" id="btnSendNo" onclick="decide('no')">ส่ง NO · Send NO</button></div>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="rule">
+      <b>ไม่ตอบ = ตกลง</b> · No answer = OK<br>
+      <b>NO + ราคาของคุณ ก่อน 09:00</b> → ใช้ตั้งแต่วันถัดไป · applies from tomorrow<br>
+      ผู้ขายที่ล็อกราคาวันนี้แล้ว ยังได้ราคาวันนี้ (สูงสุด 48 ชม.) · Today's locked prices are honoured (max 48 h)
+    </div>
+  </div>
+
+  <div class="foot">ThaiCarbide · LINE @280uqpab · thaicarbide@gmail.com</div>
+</div>
+
+<script>
+const API='https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/partner-api';
+const T=new URLSearchParams(location.search).get('t')||'';
+let GRID=[];
+const fmt=n=>Number(n).toLocaleString('en-US');
+async function load(){
+  if(!T){document.getElementById('sub').textContent='ลิงก์ไม่ถูกต้อง / Invalid link';document.getElementById('actionCard').style.display='none';return;}
+  try{
+    const r=await fetch(API+'?t='+encodeURIComponent(T));const d=await r.json();
+    if(d.error){document.getElementById('sub').textContent='ลิงก์ไม่ถูกต้อง / Invalid link';document.getElementById('actionCard').style.display='none';return;}
+    GRID=d.grid;
+    document.getElementById('sub').textContent=d.partner+' · '+d.date;
+    document.getElementById('rows').innerHTML=d.grid.map(g=>`<tr><td class="grade">${g.name_th}<small>${g.name_en}</small></td><td>${fmt(g.under10)}</td><td>${fmt(g.t10_30)}</td><td>${fmt(g.t30_50)}</td></tr>`).join('');
+    document.getElementById('counterFields').innerHTML=d.grid.map(g=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1;font-size:14px">${g.name_th}</div><input type="number" inputmode="numeric" data-key="${g.key}" placeholder="${fmt(g.under10)}" style="width:120px"></div>`).join('');
+    if(d.decision){showStatus(d.decision,d.decision==='ok'?'✓ ตกลงแล้ววันนี้ · Confirmed today':'✕ ส่ง NO แล้ววันนี้ · NO sent today',true);}
+  }catch(e){document.getElementById('sub').textContent='โหลดไม่สำเร็จ ลองใหม่ / Could not load, retry';}
+}
+function showNo(){document.getElementById('noForm').style.display='block';}
+function showStatus(cls,msg,lock){const s=document.getElementById('status');s.className='status '+cls;s.textContent=msg;if(lock){document.getElementById('btnOk').disabled=true;document.getElementById('btnNo').disabled=true;document.getElementById('noForm').style.display='none';}}
+async function decide(action){
+  const btn=action==='ok'?document.getElementById('btnOk'):document.getElementById('btnSendNo');btn.disabled=true;
+  const counter={};document.querySelectorAll('#counterFields input').forEach(i=>{if(i.value)counter[i.dataset.key]=Number(i.value);});
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:T,action,counter:action==='no'?counter:null,note:document.getElementById('note').value})});
+    const d=await r.json();
+    if(d.ok){showStatus(action,action==='ok'?'✓ ขอบคุณครับ ราคาวันนี้ตกลง · Thank you, today\'s price confirmed':'✕ รับทราบ ThaiCarbide จะติดต่อกลับ · Noted, ThaiCarbide will contact you',true);}
+    else{showStatus('err','ผิดพลาด: '+(d.error||'')+' · Error, try again');btn.disabled=false;}
+  }catch(e){showStatus('err','ส่งไม่สำเร็จ ลองใหม่ · Could not send, retry');btn.disabled=false;}
+}
+load();
+</script>
+</body>
+</html>
