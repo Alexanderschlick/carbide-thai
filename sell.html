@@ -184,14 +184,14 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
         <div class="nm"><span class="th">ส่งพัสดุ</span><span class="en">Parcel</span></div><div class="sb"><span class="th">ส่งฟรี</span><span class="en">Free</span></div></button>
       <button class="dbtn" id="d-self" onclick="pickDelivery('self',this)">
         <svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6"/></svg>
-        <div class="nm"><span class="th">ส่งเอง</span><span class="en">Self</span></div><div class="sb">Nong Chok</div></button>
+        <div class="nm"><span class="th">ส่งเอง</span><span class="en">Self</span></div><div class="sb"><span class="th">นัดหมาย</span><span class="en">By appt.</span></div></button>
       <button class="dbtn" id="d-grab" onclick="pickDelivery('grab',this)">
         <svg viewBox="0 0 24 24"><path d="M5 16l1.5-5h11L19 16M6 16h12"/><circle cx="8" cy="17.5" r="1.4"/><circle cx="16" cy="17.5" r="1.4"/></svg>
         <div class="nm">Grab</div><div class="sb">BKK+</div></button>
     </div>
-    <div class="dinfo" id="i-parcel"><span class="th">📦 <b>ส่งพัสดุฟรี</b> — เราออกค่าส่งให้ (Kerry / J&T / ไปรษณีย์ไทย) ที่อยู่จัดส่งจะแสดงหลังยืนยันการขาย พร้อมหมายเลขอ้างอิง</span><span class="en">📦 <b>Free parcel</b> — we pay the shipping (Kerry / J&T / Thailand Post). The ship-to address appears right after you confirm, with your reference number.</span></div>
-    <div class="dinfo" id="i-self"><span class="th">🏭 <b>มาส่งเองที่ลานพาร์ทเนอร์</b> — พื้นที่ หนองจอก กรุงเทพฯ (ไปรษณีย์ 10530) ที่อยู่แน่นอน + เวลาทำการจะแสดงทันทีหลังยืนยันการขาย</span><span class="en">🏭 <b>Self-delivery to our partner yard</b> — area Nong Chok, Bangkok (10530). Exact address + hours shown right after you confirm.</span></div>
-    <div class="dinfo" id="i-grab"><span class="th">🛵 <b>ส่งด้วย Grab</b> — เรียก GrabExpress ส่งของถึงเรา วันเดียวถึง ในกรุงเทพฯ และเมืองใหญ่ที่มี Grab (เชียงใหม่ ขอนแก่น ฯลฯ) เราคืนค่าส่งให้ ที่อยู่แสดงหลังยืนยันการขาย</span><span class="en">🛵 <b>Send by Grab</b> — GrabExpress same-day in Bangkok &amp; major cities where Grab operates (Chiang Mai, Khon Kaen and more). We reimburse the fare. Address shown after you confirm.</span></div>
+    <div class="dinfo" id="i-parcel"><span class="th">📦 <b>ส่งพัสดุฟรี</b> — เราออกค่าส่งให้ (Kerry / J&T / ไปรษณีย์ไทย) หลังยืนยันการขาย ทีมงานจะติดต่อคุณภายใน 24 ชม. เพื่อแจ้งที่อยู่จัดส่ง กรุณาอย่าส่งก่อนได้รับการยืนยัน</span><span class="en">📦 <b>Free parcel</b> — we pay the shipping (Kerry / J&T / Thailand Post). After you confirm, our team contacts you within 24 h with the ship-to address. Please don't ship before we confirm.</span></div>
+    <div class="dinfo" id="i-self"><span class="th">🏭 <b>มาส่งเอง (นัดหมายล่วงหน้า)</b> — หลังยืนยันการขาย ทีมงานจะติดต่อคุณภายใน 24 ชม. เพื่อนัดวัน เวลา และจุดรับซื้อที่ใกล้คุณที่สุด</span><span class="en">🏭 <b>Self-delivery (by appointment)</b> — after you confirm, our team contacts you within 24 h to agree day, time and the nearest receiving point.</span></div>
+    <div class="dinfo" id="i-grab"><span class="th">🛵 <b>ส่งด้วย Grab</b> — เราคืนค่าส่งให้ หลังยืนยันการขาย ทีมงานจะติดต่อคุณภายใน 24 ชม. เพื่อแจ้งที่อยู่ กรุณาอย่าเรียก Grab ก่อนได้รับการยืนยัน</span><span class="en">🛵 <b>Send by Grab</b> — we reimburse the fare. After you confirm, our team contacts you within 24 h with the address. Please don't book a Grab before we confirm.</span></div>
 
     <div class="step-label">04 · <span class="th">ข้อมูลติดต่อ</span><span class="en">Contact</span></div>
     <div class="field"><label><span class="th">ชื่อ-นามสกุล *</span><span class="en">Full name *</span></label><input type="text" id="fullName" autocomplete="name" placeholder="Full name"></div>
@@ -268,16 +268,19 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
     </div>
 
     <div class="scard" id="s-parcel" style="display:none">
-      <span class="th">📦 <b>ส่งพัสดุมาที่:</b><br>ThaiCarbide (ลานพาร์ทเนอร์)<br>92/78 หมู่ 9 ถนนฉลองกรุง แขวงลำผักชี เขตหนองจอก กรุงเทพฯ 10530<br>โทร 082-589-3023<br><br>📝 เขียน "ThaiCarbide" + หมายเลขอ้างอิงบนกล่อง · ส่ง Kerry / J&T / ไปรษณีย์ไทย (เราออกค่าส่ง)</span>
-      <span class="en">📦 <b>Send your parcel to:</b><br>ThaiCarbide (partner yard)<br>92/78 Moo 9, Chalong Krung Rd, Lampakchee, Nong Chok, Bangkok 10530<br>Tel 082-589-3023<br><br>📝 Write "ThaiCarbide" + your reference on the box · ship Kerry / J&T / Thailand Post (we pay).</span>
+      <span class="th">📞 <b>ขั้นตอนต่อไป:</b> ทีม ThaiCarbide จะติดต่อคุณทาง LINE หรือโทรศัพท์ภายใน 24 ชั่วโมง เพื่อนัดวันเข้ารับของหรือแจ้งจุดรับซื้อที่ใกล้คุณที่สุด<br><br>⚠️ <b>กรุณาอย่าส่งพัสดุก่อนได้รับการยืนยันจากเรา</b> ราคาที่ล็อกไว้ยังใช้ได้ตามหมายเลขอ้างอิงของคุณ</span>
+      <span class="en">📞 <b>Next step:</b> The ThaiCarbide team contacts you by LINE or phone within 24 hours to arrange pickup or tell you the nearest receiving point.<br><br>⚠️ <b>Please do not ship anything before we confirm.</b> Your locked price stays valid under your reference number.</span>
+      <span class="zh">📞 <b>下一步：</b>ThaiCarbide 团队将在 24 小时内通过 LINE 或电话联系您，安排上门取货或告知最近的收货点。<br><br>⚠️ <b>在我们确认之前请勿寄出任何货物。</b>您锁定的价格在您的参考编号下仍然有效。</span>
     </div>
     <div class="scard" id="s-self" style="display:none">
-      <span class="th">🏭 <b>มาส่งเองที่ลานพาร์ทเนอร์:</b><br>92/78 หมู่ 9 ถนนฉลองกรุง แขวงลำผักชี เขตหนองจอก กรุงเทพฯ 10530<br>เวลาทำการ จ.–ส. 08:00–17:00 · โทร 082-589-3023<br><br>📄 นำหมายเลขอ้างอิงมาแสดงตอนส่งของ</span>
-      <span class="en">🏭 <b>Bring it to our partner yard:</b><br>92/78 Moo 9, Chalong Krung Rd, Lampakchee, Nong Chok, Bangkok 10530<br>Hours Mon–Sat 08:00–17:00 · Tel 082-589-3023<br><br>📄 Show this reference number when you drop off.</span>
+      <span class="th">📞 <b>ขั้นตอนต่อไป:</b> ทีม ThaiCarbide จะติดต่อคุณทาง LINE หรือโทรศัพท์ภายใน 24 ชั่วโมง เพื่อนัดวัน เวลา และจุดรับซื้อสำหรับการนำของมาส่งเอง<br><br>⚠️ <b>กรุณาอย่าเดินทางมาก่อนได้รับการยืนยันจากเรา</b> ราคาที่ล็อกไว้ยังใช้ได้ตามหมายเลขอ้างอิงของคุณ</span>
+      <span class="en">📞 <b>Next step:</b> The ThaiCarbide team contacts you by LINE or phone within 24 hours to agree the day, time and receiving point for your self-delivery.<br><br>⚠️ <b>Please do not drive anywhere before we confirm.</b> Your locked price stays valid under your reference number.</span>
+      <span class="zh">📞 <b>下一步：</b>ThaiCarbide 团队将在 24 小时内通过 LINE 或电话联系您，约定自送的日期、时间和收货点。<br><br>⚠️ <b>在我们确认之前请勿前往。</b>您锁定的价格在您的参考编号下仍然有效。</span>
     </div>
     <div class="scard" id="s-grab" style="display:none">
-      <span class="th">🛵 <b>เรียก Grab ส่งมาที่:</b><br>ThaiCarbide (ลานพาร์ทเนอร์) 92/78 หมู่ 9 ถนนฉลองกรุง เขตหนองจอก กรุงเทพฯ 10530<br><br>เก็บใบเสร็จ Grab ไว้ เราคืนค่าส่งให้ · เขียนหมายเลขอ้างอิงบนพัสดุ</span>
-      <span class="en">🛵 <b>Send via Grab to:</b><br>ThaiCarbide (partner yard) 92/78 Moo 9, Chalong Krung Rd, Nong Chok, Bangkok 10530<br><br>Keep the Grab receipt — we reimburse the fare · write your reference on the package.</span>
+      <span class="th">📞 <b>ขั้นตอนต่อไป:</b> ทีม ThaiCarbide จะติดต่อคุณทาง LINE หรือโทรศัพท์ภายใน 24 ชั่วโมง เพื่อแจ้งที่อยู่สำหรับส่ง Grab หรือนัดเข้ารับของ<br><br>⚠️ <b>กรุณาอย่าเรียก Grab ก่อนได้รับการยืนยันจากเรา</b> ราคาที่ล็อกไว้ยังใช้ได้ตามหมายเลขอ้างอิงของคุณ</span>
+      <span class="en">📞 <b>Next step:</b> The ThaiCarbide team contacts you by LINE or phone within 24 hours with the Grab delivery address or to arrange pickup.<br><br>⚠️ <b>Please do not book a Grab before we confirm.</b> Your locked price stays valid under your reference number.</span>
+      <span class="zh">📞 <b>下一步：</b>ThaiCarbide 团队将在 24 小时内通过 LINE 或电话联系您，告知 Grab 送货地址或安排取货。<br><br>⚠️ <b>在我们确认之前请勿叫 Grab。</b>您锁定的价格在您的参考编号下仍然有效。</span>
     </div>
 
     <div class="timeline">
@@ -297,7 +300,7 @@ let PRICES={carbide_inserts:{tier_under10:1790,tier_10_30:1960,tier_30_50:2135,t
 let selKey=null,selName=null,selDeliv=null;
 const fmt=n=>'฿'+Number(n).toLocaleString('en-US');
 const MATLBL={carbide_inserts:{th:'อินเสิร์ท',en:'Inserts'},carbide_drills:{th:'ดอกสว่าน / เอ็นมิล',en:'Drills / End mills'},mixed_carbide:{th:'คาร์ไบด์ผสม',en:'Mixed carbide'},sand_rills:{th:'แซนด์ริล / อื่นๆ',en:'Sand rills / other'}};
-const DELIVLBL={parcel:{th:'ส่งพัสดุฟรี (Kerry / J&T / ไปรษณีย์ไทย)',en:'Free parcel (Kerry / J&T / Thailand Post)'},self:{th:'มาส่งเอง — ลานหนองจอก',en:'Self-delivery — Nong Chok yard'},grab:{th:'GrabExpress (เราคืนค่าส่ง)',en:'GrabExpress (we reimburse)'}};
+const DELIVLBL={parcel:{th:'ส่งพัสดุฟรี (Kerry / J&T / ไปรษณีย์ไทย)',en:'Free parcel (Kerry / J&T / Thailand Post)'},self:{th:'มาส่งเอง (นัดหมาย)',en:'Self-delivery (by appointment)'},grab:{th:'GrabExpress (เราคืนค่าส่ง)',en:'GrabExpress (we reimburse)'}};
 function L(o){return document.body.classList.contains('lang-en')?o.en:o.th;}
 async function loadPrices(){try{const r=await fetch(SB_URL+'/rest/v1/prices?select=*',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}});if(r.ok){(await r.json()).forEach(p=>{if(PRICES[p.key])PRICES[p.key]={tier_under10:+p.tier_under10,tier_10_30:+p.tier_10_30,tier_30_50:+p.tier_30_50,teaser_thb:+p.teaser_thb};});document.getElementById('teaser').innerHTML=fmt(PRICES.carbide_inserts.teaser_thb)+'<u>/kg</u>';calcPrice();}}catch(e){}}
 function pickMat(k,n,el){selKey=k;selName=n;document.querySelectorAll('.mat').forEach(b=>b.classList.remove('on'));el.classList.add('on');calcPrice();try{gtag('event','select_item',{item_category:k});}catch(_){}var _wf=document.getElementById('weight');if(_wf){setTimeout(function(){try{_wf.scrollIntoView({behavior:'smooth',block:'center'});_wf.focus();}catch(_){}},140);}}
@@ -485,49 +488,9 @@ loadPrices();
 
 
 
-<script>
-/* === ThaiCarbide checkout map-button v3 (BizDev): Google Maps ONLY on the confirmation (after order, with the sale ID). Do NOT reveal the exact yard address before checkout \u2014 sellers must complete the sale online first. === */
-(function(){
-  function ready(fn){if(document.readyState!=='loading')fn();else document.addEventListener('DOMContentLoaded',fn);}
-  ready(function(){try{
-    var ADDR='ThaiCarbide, 92/78 Moo 9, Chalong Krung Rd, Lampakchee, Nong Chok, Bangkok 10530';
-    var MAP='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(ADDR);
-    var mapBtn='<a href="'+MAP+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#1a73e8;color:#fff;padding:15px 14px;border-radius:12px;font-weight:800;font-size:16px;text-decoration:none;margin-top:14px;box-shadow:0 4px 14px rgba(26,115,232,.35);">\uD83D\uDCCD <span class="th">\u0E19\u0E33\u0E17\u0E32\u0E07 Google Maps</span><span class="en">Open in Google Maps</span><span class="zh">\u5728 Google \u5730\u56FE\u4E2D\u6253\u5F00</span></a>';
-    ['s-self','s-grab','s-parcel'].forEach(function(id){var el=document.getElementById(id);if(el&&!el.querySelector('.tc-mapbtn')){var d=document.createElement('div');d.className='tc-mapbtn';d.innerHTML=mapBtn;el.appendChild(d);}});
-  }catch(e){console.error('mapbtn3',e);}});
-})();
-</script>
 
-<script>
-/* === ThaiCarbide confirmation copy-address v1 (BizDev): make the yard address prominent + one-tap copyable on the confirmation cards, so sellers who close the page still have it. Address shown ONLY on confirmation (post-checkout). === */
-(function(){
-  function ready(fn){if(document.readyState!=='loading')fn();else document.addEventListener('DOMContentLoaded',fn);}
-  var ADDR_COPY='ThaiCarbide, 92/78 Moo 9, Chalong Krung Rd, Lampakchee, Nong Chok, Bangkok 10530 (Tel 082-589-3023)';
-  var L_COPY='<span class="th">คัดลอกที่อยู่</span><span class="en">Copy address</span><span class="zh">复制地址</span>';
-  var L_DONE='<span class="th">คัดลอกแล้ว ✓</span><span class="en">Copied ✓</span><span class="zh">已复制 ✓</span>';
-  function doCopy(btn){
-    function ok(){btn.innerHTML=L_DONE;btn.style.background='#0a7d33';setTimeout(function(){btn.innerHTML=L_COPY;btn.style.background='#111827';},2000);}
-    try{
-      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ADDR_COPY).then(ok,function(){fallback();});}
-      else fallback();
-    }catch(e){fallback();}
-    function fallback(){try{var t=document.createElement('textarea');t.value=ADDR_COPY;t.setAttribute('readonly','');t.style.position='absolute';t.style.left='-9999px';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);ok();}catch(e){}}
-  }
-  ready(function(){try{
-    ['s-self','s-grab','s-parcel'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(!el||el.querySelector('.tc-copybtn'))return;
-      el.style.border='2px solid #1a73e8';el.style.borderRadius='14px';el.style.padding='16px';el.style.background='#f4f8ff';
-      var b=document.createElement('button');
-      b.type='button';b.className='tc-copybtn';b.innerHTML=L_COPY;
-      b.style.cssText='display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#111827;color:#fff;border:0;padding:14px;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer;margin-top:12px;';
-      b.addEventListener('click',function(){doCopy(b);});
-      var mb=el.querySelector('.tc-mapbtn');
-      if(mb)el.insertBefore(b,mb);else el.appendChild(b);
-    });
-  }catch(e){console.error('copyaddr1',e);}});
-})();
-</script>
+
+
 
 </body>
 </html>
