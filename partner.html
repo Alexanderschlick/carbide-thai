@@ -35,8 +35,8 @@ input,textarea{width:100%;padding:12px;border:1px solid var(--border);border-rad
 .lang{position:absolute;right:16px;top:16px;display:flex;gap:4px}
 .lang span{padding:4px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted)}
 .lang span.on{background:var(--gold);color:#0f1b2d;border-color:var(--gold)}
-.th,.en{display:none}body.th .th{display:block}body.en .en{display:block}
-span.th,span.en{display:none}body.th span.th{display:inline}body.en span.en{display:inline}
+.th,.en{display:none}body.lang-th .th{display:block}body.lang-en .en{display:block}
+span.th,span.en{display:none}body.lang-th span.th{display:inline}body.lang-en span.en{display:inline}
 .step{display:flex;gap:12px;margin:12px 0}
 .num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--gold);color:#0f1b2d;font-weight:800;display:flex;align-items:center;justify-content:center}
 .step b{display:block}
@@ -50,7 +50,7 @@ span.th,span.en{display:none}body.th span.th{display:inline}body.en span.en{disp
 a{color:var(--gold)}
 </style>
 </head>
-<body class="th">
+<body class="lang-th">
 <div class="wrap" style="position:relative">
   <div class="lang"><span id="l-th" class="on" onclick="setLang('th')">ไทย</span><span id="l-en" onclick="setLang('en')">EN</span></div>
   <h1>ThaiCarbide · Partner</h1>
@@ -165,7 +165,7 @@ let T=new URLSearchParams(location.search).get('t')||'';
 try{ if(T) localStorage.setItem('tc_partner',T); else T=localStorage.getItem('tc_partner')||''; }catch(e){}
 let GRID=[], MODE='yard';
 const fmt=n=>Number(n).toLocaleString('en-US');
-function setLang(l){document.body.className=l;document.getElementById('l-th').classList.toggle('on',l==='th');document.getElementById('l-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc_lang',l)}catch(e){}}
+function setLang(l){document.body.className='lang-'+l;document.getElementById('l-th').classList.toggle('on',l==='th');document.getElementById('l-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc_lang',l)}catch(e){}}
 try{const l=localStorage.getItem('tc_lang');if(l)setLang(l);}catch(e){}
 function tab(p){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.p===p));document.querySelectorAll('.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p));window.scrollTo(0,0);}
 function status(id,cls,msg){const s=document.getElementById(id);s.className='status '+cls;s.textContent=msg;}
