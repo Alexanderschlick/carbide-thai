@@ -4,14 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>ThaiCarbide · ราคาประจำวัน / Daily price</title>
+<title>ThaiCarbide · Partner</title>
 <style>
 :root{--bg:#0f1b2d;--card:#162338;--gold:#d4a73a;--text:#eef2f7;--muted:#8a94a6;--green:#22c55e;--red:#ef4444;--border:#243247}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;font-size:16px;line-height:1.45}
-.wrap{max-width:520px;margin:0 auto;padding:20px 16px 60px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 70px}
 h1{font-size:20px;margin:0;color:var(--gold)}
-.sub{color:var(--muted);font-size:13px;margin:4px 0 18px}
+h2{font-size:17px;margin:22px 0 10px;color:var(--gold)}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 14px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
 table{width:100%;border-collapse:collapse;font-size:15px}
 th{color:var(--muted);font-weight:600;font-size:12px;text-align:right;padding:6px 4px;border-bottom:1px solid var(--border)}
@@ -20,52 +21,139 @@ td{padding:9px 4px;text-align:right;border-bottom:1px solid var(--border);font-v
 tr:last-child td{border-bottom:none}
 .grade{font-weight:600}.grade small{display:block;color:var(--muted);font-weight:400;font-size:12px}
 .btns{display:flex;gap:10px;margin-top:6px}
-button{flex:1;padding:16px;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;color:#fff}
-.ok{background:var(--green)}.no{background:var(--red)}
+button{flex:1;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:#2a3b57}
+.ok{background:var(--green)}.no{background:var(--red)}.gold{background:var(--gold);color:#0f1b2d}
 button:disabled{opacity:.5;cursor:default}
+input,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:16px}
 .status{margin-top:12px;padding:12px;border-radius:10px;font-size:14px;display:none}
 .status.ok{display:block;background:rgba(34,197,94,.12);border:1px solid var(--green)}
-.status.no{display:block;background:rgba(239,68,68,.12);border:1px solid var(--red)}
-.status.err{display:block;background:rgba(239,68,68,.12);border:1px solid var(--red)}
-#noForm{display:none;margin-top:12px}
-#noForm label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
-#noForm input,#noForm textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:16px}
-.rule{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.55}
-.rule b{color:var(--text)}
+.status.no,.status.err{display:block;background:rgba(239,68,68,.12);border:1px solid var(--red)}
+.rule{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.55}.rule b{color:var(--text)}
+.tabs{display:flex;gap:6px;margin:14px 0}
+.tab{flex:1;text-align:center;padding:10px 4px;border-radius:10px;background:var(--card);border:1px solid var(--border);font-size:14px;font-weight:600;cursor:pointer;color:var(--muted)}
+.tab.on{background:var(--gold);color:#0f1b2d;border-color:var(--gold)}
+.lang{position:absolute;right:16px;top:16px;display:flex;gap:4px}
+.lang span{padding:4px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted)}
+.lang span.on{background:var(--gold);color:#0f1b2d;border-color:var(--gold)}
+.th,.en{display:none}body.th .th{display:block}body.en .en{display:block}
+span.th,span.en{display:none}body.th span.th{display:inline}body.en span.en{display:inline}
+.step{display:flex;gap:12px;margin:12px 0}
+.num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--gold);color:#0f1b2d;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step b{display:block}
+.yes{background:rgba(34,197,94,.12);border:1px solid var(--green);border-radius:10px;padding:10px 12px;margin:8px 0}
+.nope{background:rgba(239,68,68,.12);border:1px solid var(--red);border-radius:10px;padding:10px 12px;margin:8px 0}
+.big{font-size:18px;font-weight:700;color:var(--gold);text-align:center;padding:14px;border:1px dashed var(--gold);border-radius:12px;margin-top:12px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.flow div{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px}
 .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
+.pane{display:none}.pane.on{display:block}
+a{color:var(--gold)}
 </style>
 </head>
-<body>
-<div class="wrap">
-  <h1>ThaiCarbide · ราคาประจำวัน</h1>
-  <div class="sub" id="sub">กำลังโหลด… / Loading…</div>
+<body class="th">
+<div class="wrap" style="position:relative">
+  <div class="lang"><span id="l-th" class="on" onclick="setLang('th')">ไทย</span><span id="l-en" onclick="setLang('en')">EN</span></div>
+  <h1>ThaiCarbide · Partner</h1>
+  <div class="sub" id="sub"><span class="th">พาร์ทเนอร์จุดรับซื้อ</span><span class="en">Receiving partner portal</span></div>
 
-  <div class="card">
-    <table>
-      <thead><tr><th>เกรด / Grade</th><th>&lt;10 กก.</th><th>10–30</th><th>30–50</th></tr></thead>
-      <tbody id="rows"><tr><td colspan="4" style="text-align:center;color:var(--muted)">…</td></tr></tbody>
-    </table>
-    <div class="rule">บาท/กก. ที่จ่ายผู้ขายตอนชั่ง · THB per kg paid to the seller at weigh-in</div>
+  <!-- LOGIN -->
+  <div id="login" class="card">
+    <b><span class="th">เข้าสู่ระบบด้วยรหัสพาร์ทเนอร์</span><span class="en">Sign in with your partner code</span></b>
+    <div class="rule" style="margin:6px 0 12px"><span class="th">รหัสได้รับจาก ThaiCarbide ทาง LINE หรือ WhatsApp</span><span class="en">You received the code from ThaiCarbide by LINE or WhatsApp.</span></div>
+    <input id="code" placeholder="Partner code" autocomplete="off">
+    <div class="btns"><button class="gold" onclick="login()"><span class="th">เข้าสู่ระบบ</span><span class="en">Sign in</span></button></div>
+    <div class="status" id="lstatus"></div>
   </div>
 
-  <div class="card" id="actionCard">
-    <div class="btns">
-      <button class="ok" id="btnOk" onclick="decide('ok')">✓ OK ตกลง</button>
-      <button class="no" id="btnNo" onclick="showNo()">✕ NO ไม่ตกลง</button>
+  <!-- APP -->
+  <div id="app" style="display:none">
+    <div class="tabs">
+      <div class="tab on" data-p="tut" onclick="tab('tut')"><span class="th">เริ่มต้น</span><span class="en">Start here</span></div>
+      <div class="tab" data-p="sop" onclick="tab('sop')"><span class="th">วิธีรับของ</span><span class="en">How to receive</span></div>
+      <div class="tab" data-p="price" onclick="tab('price')"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></div>
     </div>
-    <div id="noForm">
-      <label>ราคาของคุณ (บาท/กก.) · Your price per kg — leave empty if same</label>
-      <div id="counterFields"></div>
-      <label>หมายเหตุ / Note</label>
-      <textarea id="note" rows="2" placeholder="เช่น ตลาดลง / market down"></textarea>
-      <div class="btns"><button class="no" id="btnSendNo" onclick="decide('no')">ส่ง NO · Send NO</button></div>
+
+    <!-- TUTORIAL -->
+    <div class="pane on" id="p-tut">
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">ThaiCarbide คืออะไร</span><span class="en">What is ThaiCarbide?</span></h2>
+        <div class="th">โรงกลึงและโรงงานทั่วประเทศใช้เครื่องมือตัดที่ทำจาก "ทังสเตนคาร์ไบด์" เช่น เม็ดมีด (อินเสิร์ท) ดอกสว่าน และเอ็นมิล เมื่อใช้จนทื่อ เครื่องมือเหล่านี้ยังมีมูลค่าสูงมาก เพราะทังสเตนเป็นโลหะหายาก ซื้อขายกันเป็นกิโลกรัม ราคาหลายพันบาทต่อกิโล<br><br>ThaiCarbide (thaicarbide.com) เป็นเว็บไซต์ที่รับซื้อคาร์ไบด์ใช้แล้วจากโรงงานเหล่านี้ ผู้ขายเช็คราคาออนไลน์ กดสั่งขาย ได้หมายเลขอ้างอิง (TC-XXXXXXXX) แล้วนำของมาส่งที่จุดรับซื้อ เราจ่ายเงินทันทีหลังชั่ง</div>
+        <div class="en">Machine shops and factories all over Thailand use cutting tools made of "tungsten carbide": inserts, drills, end mills. When they are worn out they are still worth a lot, because tungsten is a rare metal that trades by the kilo at several thousand baht per kg.<br><br>ThaiCarbide (thaicarbide.com) is a website that buys this used carbide from those factories. The seller checks the price online, places a sell order, gets a reference number (TC-XXXXXXXX) and brings the material to a receiving point. We pay right after weighing.</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">เงินไหลอย่างไร</span><span class="en">How the money flows</span></h2>
+        <div class="flow">
+          <div><span class="th">ผู้ขาย</span><span class="en">Seller</span></div><div>→</div>
+          <div><span class="th">จุดรับซื้อ (คุณ)</span><span class="en">Receiving point (you)</span></div><div>→</div>
+          <div>ThaiCarbide</div><div>→</div>
+          <div><span class="th">ผู้ซื้อ / ส่งออก</span><span class="en">Buyer / export</span></div>
+        </div>
+        <div class="th">1. ผู้ขายนำคาร์ไบด์มาที่จุดรับซื้อ คุณชั่งและถ่ายรูป<br>2. ThaiCarbide ยืนยันจำนวนเงินในกลุ่ม LINE<br>3. คุณโอนเงินให้ผู้ขายจากบัญชีบริษัท (PromptPay)<br>4. คาร์ไบด์เก็บไว้ที่จุดรับซื้อจนกว่าจะรวมเป็นล็อตใหญ่<br>5. ThaiCarbide ขายล็อตให้ผู้ซื้อรายใหญ่หรือส่งออก แล้วแบ่งกำไรกับคุณ<br><br><b>สำคัญ:</b> ราคาที่จ่ายผู้ขายมาจาก ThaiCarbide เท่านั้น คุณไม่ต้องต่อรอง ไม่ต้องตัดสินใจเรื่องราคา</div>
+        <div class="en">1. The seller brings carbide to the receiving point; you weigh it and take photos.<br>2. ThaiCarbide confirms the amount in the LINE group.<br>3. You transfer the money to the seller from the company account (PromptPay).<br>4. The carbide stays at the receiving point until it adds up to a bigger lot.<br>5. ThaiCarbide sells the lot to a large buyer or for export and shares the profit with you.<br><br><b>Important:</b> the price paid to the seller comes only from ThaiCarbide. You never negotiate and never decide on a price.</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">เรารับอะไร</span><span class="en">What we take</span></h2>
+        <div class="yes"><b><span class="th">รับ:</span><span class="en">YES:</span></b> <span class="th">เม็ดมีดคาร์ไบด์ (อินเสิร์ท) · ดอกสว่าน เอ็นมิล ก้านคาร์ไบด์</span><span class="en">carbide inserts (small plates) · solid carbide drills, end mills, rods</span></div>
+        <div class="nope"><b><span class="th">ไม่รับ:</span><span class="en">NO:</span></b> <span class="th">ชิ้นผสม แซนด์ริล ชิ้นส่วนสึกหรอ ผง ตะกอน เปื้อนน้ำมัน เหล็ก/HSS — ไม่แน่ใจ: ถ่ายรูปส่งกลุ่ม LINE แล้วรอ</span><span class="en">mixed pieces, sand rills, wear parts, powder, sludge, oily, steel/HSS — unsure: photo to the LINE group and wait</span></div>
+        <div class="rule"><span class="th">เช็คง่ายๆ: คาร์ไบด์หนักมากเมื่อเทียบกับขนาด และแม่เหล็กดูดแทบไม่ติด เหล็ก/HSS เบากว่าและแม่เหล็กดูดติด</span><span class="en">Quick check: carbide is very heavy for its size and almost not magnetic. Steel/HSS is lighter and sticks to a magnet.</span></div>
+      </div>
+      <div class="big"><span class="th">ชั่ง → ถ่ายรูป → กลุ่ม LINE → รอ OK → จ่าย → สลิป</span><span class="en">Weigh → photos → LINE group → wait for OK → pay → slip</span></div>
+      <div class="btns" style="margin-top:14px"><button class="gold" onclick="tab('sop')"><span class="th">ดูขั้นตอนรับของ →</span><span class="en">See the receiving steps →</span></button></div>
     </div>
-    <div class="status" id="status"></div>
-    <div class="rule">
-      <b>ไม่ตอบ = ตกลง</b> · No answer = OK<br>
-      <b>NO + ราคาของคุณ ก่อน 09:00</b> → ใช้ตั้งแต่วันถัดไป · applies from tomorrow<br>
-      ผู้ขายที่ล็อกราคาวันนี้แล้ว ยังได้ราคาวันนี้ (สูงสุด 48 ชม.) · Today's locked prices are honoured (max 48 h)
+
+    <!-- SOP -->
+    <div class="pane" id="p-sop">
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">เมื่อผู้ขายมา (หรือพัสดุมาถึง)</span><span class="en">When a seller comes (or a parcel arrives)</span></h2>
+        <div class="step"><div class="num">1</div><div><b><span class="th">หมายเลขอ้างอิง</span><span class="en">Reference number</span></b><span class="th">ผู้ขายแสดงหมายเลขแบบ TC-XXXXXXXX ไม่มีหมายเลข = ไม่รับของ ให้ติดต่อ LINE @280uqpab ก่อน</span><span class="en">Seller shows a number like TC-XXXXXXXX. No number = do not take the material; send them to LINE @280uqpab first.</span></div></div>
+        <div class="step"><div class="num">2</div><div><b><span class="th">ชั่งน้ำหนัก</span><span class="en">Weigh</span></b><span class="th">วางของบนตาชั่งต่อหน้าผู้ขาย เฉพาะคาร์ไบด์ ไม่รวมกล่อง ไม่มีน้ำมัน</span><span class="en">On the scale in front of the seller. Only carbide, no box, no oil.</span></div></div>
+        <div class="step"><div class="num">3</div><div><b><span class="th">ถ่ายรูป 3 รูป</span><span class="en">3 photos</span></b><span class="th">หน้าจอตาชั่งที่เห็นน้ำหนัก · ของระยะใกล้ · ของในกล่อง/ถุง</span><span class="en">Scale display with the weight · material close-up · material in the box/bag.</span></div></div>
+        <div class="step"><div class="num">4</div><div><b><span class="th">ส่งในกลุ่ม LINE</span><span class="en">Send to the LINE group</span></b><span class="th">พิมพ์: หมายเลขอ้างอิง ชื่อผู้ขาย น้ำหนัก แนบรูป</span><span class="en">Write: reference number, seller name, weight. Attach the photos.</span></div></div>
+        <div class="step"><div class="num">5</div><div><b><span class="th">รอ OK</span><span class="en">Wait for OK</span></b><span class="th">ThaiCarbide ตอบในกลุ่มว่า OK + จำนวนเงินบาท ห้ามจ่ายก่อนได้ OK</span><span class="en">ThaiCarbide replies in the group with OK + amount in baht. Do not pay before that.</span></div></div>
+        <div class="step"><div class="num">6</div><div><b><span class="th">จ่ายเงิน</span><span class="en">Pay</span></b><span class="th">โอนตามจำนวนให้ผู้ขายทาง PromptPay / โอนธนาคาร จากบัญชีบริษัท</span><span class="en">Transfer the amount to the seller by PromptPay / bank transfer from the company account.</span></div></div>
+        <div class="step"><div class="num">7</div><div><b><span class="th">สลิป</span><span class="en">Slip</span></b><span class="th">ส่งสลิปการโอนในกลุ่ม LINE</span><span class="en">Send the payment slip to the LINE group.</span></div></div>
+        <div class="step"><div class="num">8</div><div><b><span class="th">เก็บของ</span><span class="en">Store</span></b><span class="th">เขียนหมายเลขอ้างอิงบนถุง/กล่อง แยกแต่ละล็อต ห้ามรวมกัน</span><span class="en">Write the reference number on the bag/box. Keep each lot separate.</span></div></div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">กฎ</span><span class="en">Rules</span></h2>
+        <div class="th">• ห้ามจ่ายเงินก่อนได้ OK จาก ThaiCarbide<br>• ห้ามคุยหรือเปลี่ยนราคา ถ้าผู้ขายต่อรอง: "ThaiCarbide เป็นผู้กำหนด กรุณาติดต่อ LINE @280uqpab"<br>• ห้ามบอกว่าเราขายของต่อราคาเท่าไร<br>• พัสดุ (Kerry / J&T): ทำเหมือนกัน แค่ไม่มีผู้ขาย เปิด ชั่ง ถ่ายรูป ส่ง รอ<br>• ผู้ขายมาตามนัดเท่านั้น คุณมวย (ทีม ThaiCarbide) จะยืนยันเวลากับคุณล่วงหน้าหนึ่งวัน</div>
+        <div class="en">• Never pay before the OK from ThaiCarbide.<br>• Never discuss or change the price. If the seller argues: "ThaiCarbide decides, please contact LINE @280uqpab."<br>• Never say what we sell the material for.<br>• Parcels (Kerry / J&T): same steps, just without the seller. Open, weigh, photos, send, wait.<br>• Sellers come by appointment only. Khun Muay (ThaiCarbide team) confirms the time with you the day before.</div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">ติดต่อ</span><span class="en">Contacts</span></h2>
+        <div class="th"><b>กลุ่ม LINE "ThaiCarbide Ops"</b> – ทุกอย่างส่งที่นี่ (รูป น้ำหนัก OK สลิป)<br><b>คุณมวย</b> (ทีมกรุงเทพ) – นัดหมายและคำถามภาษาไทย<br><b>Alexander</b> (ThaiCarbide) – ให้ OK และจำนวนเงิน<br>LINE ทางการ: @280uqpab · thaicarbide@gmail.com</div>
+        <div class="en"><b>LINE group "ThaiCarbide Ops"</b> – everything goes here (photos, weight, OK, slip)<br><b>Khun Muay</b> (Bangkok team) – appointments and questions in Thai<br><b>Alexander</b> (ThaiCarbide) – gives the OK and the amount<br>Official LINE: @280uqpab · thaicarbide@gmail.com</div>
+      </div>
+      <div class="big"><span class="th">ชั่ง → ถ่ายรูป → กลุ่ม LINE → รอ OK → จ่าย → สลิป</span><span class="en">Weigh → photos → LINE group → wait for OK → pay → slip</span></div>
     </div>
+
+    <!-- PRICES -->
+    <div class="pane" id="p-price">
+      <div class="card">
+        <div class="sub" id="pdate" style="margin:0 0 10px"></div>
+        <table>
+          <thead><tr><th><span class="th">เกรด</span><span class="en">Grade</span></th><th>&lt;10 kg</th><th>10–30</th><th>30–50</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="4" style="text-align:center;color:var(--muted)">…</td></tr></tbody>
+        </table>
+        <div class="rule"><span class="th">บาท/กก. ที่ ThaiCarbide จ่ายผู้ขาย · ราคาที่ต้องจ่ายจริงของแต่ละล็อตจะยืนยันในกลุ่ม LINE เสมอ</span><span class="en">THB per kg ThaiCarbide pays the seller. The exact amount for each lot is always confirmed in the LINE group.</span></div>
+      </div>
+      <div class="card" id="actionCard" style="display:none">
+        <div class="btns">
+          <button class="ok" id="btnOk" onclick="decide('ok')">✓ OK</button>
+          <button class="no" id="btnNo" onclick="showNo()">✕ NO</button>
+        </div>
+        <div id="noForm" style="display:none;margin-top:12px">
+          <label class="rule"><span class="th">ราคาของคุณ (บาท/กก.) – เว้นว่างถ้าเท่ากัน</span><span class="en">Your price per kg – leave empty if same</span></label>
+          <div id="counterFields"></div>
+          <textarea id="note" rows="2" placeholder="Note"></textarea>
+          <div class="btns"><button class="no" id="btnSendNo" onclick="decide('no')">Send NO</button></div>
+        </div>
+        <div class="status" id="status"></div>
+        <div class="rule"><b><span class="th">ไม่ตอบ = ตกลง</span><span class="en">No answer = OK</span></b> · <span class="th">NO + ราคาของคุณ ก่อน 09:00 ใช้ตั้งแต่วันถัดไป</span><span class="en">NO + your price before 09:00 applies from tomorrow</span></div>
+      </div>
+    </div>
+
+    <div class="btns"><button onclick="logout()" style="background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:500;font-size:13px"><span class="th">ออกจากระบบ</span><span class="en">Sign out</span></button></div>
   </div>
 
   <div class="foot">ThaiCarbide · LINE @280uqpab · thaicarbide@gmail.com</div>
@@ -73,32 +161,44 @@ button:disabled{opacity:.5;cursor:default}
 
 <script>
 const API='https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/partner-api';
-const T=new URLSearchParams(location.search).get('t')||'';
-let GRID=[];
+let T=new URLSearchParams(location.search).get('t')||'';
+try{ if(T) localStorage.setItem('tc_partner',T); else T=localStorage.getItem('tc_partner')||''; }catch(e){}
+let GRID=[], MODE='yard';
 const fmt=n=>Number(n).toLocaleString('en-US');
+function setLang(l){document.body.className=l;document.getElementById('l-th').classList.toggle('on',l==='th');document.getElementById('l-en').classList.toggle('on',l==='en');try{localStorage.setItem('tc_lang',l)}catch(e){}}
+try{const l=localStorage.getItem('tc_lang');if(l)setLang(l);}catch(e){}
+function tab(p){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.p===p));document.querySelectorAll('.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p));window.scrollTo(0,0);}
+function status(id,cls,msg){const s=document.getElementById(id);s.className='status '+cls;s.textContent=msg;}
+async function login(){const c=document.getElementById('code').value.trim();if(!c)return;T=c;try{localStorage.setItem('tc_partner',T)}catch(e){}await load();}
+function logout(){T='';try{localStorage.removeItem('tc_partner')}catch(e){}document.getElementById('app').style.display='none';document.getElementById('login').style.display='block';}
 async function load(){
-  if(!T){document.getElementById('sub').textContent='ลิงก์ไม่ถูกต้อง / Invalid link';document.getElementById('actionCard').style.display='none';return;}
+  if(!T){document.getElementById('login').style.display='block';return;}
   try{
     const r=await fetch(API+'?t='+encodeURIComponent(T));const d=await r.json();
-    if(d.error){document.getElementById('sub').textContent='ลิงก์ไม่ถูกต้อง / Invalid link';document.getElementById('actionCard').style.display='none';return;}
-    GRID=d.grid;
-    document.getElementById('sub').textContent=d.partner+' · '+d.date;
-    document.getElementById('rows').innerHTML=d.grid.map(g=>`<tr><td class="grade">${g.name_th}<small>${g.name_en}</small></td><td>${fmt(g.under10)}</td><td>${fmt(g.t10_30)}</td><td>${fmt(g.t30_50)}</td></tr>`).join('');
-    document.getElementById('counterFields').innerHTML=d.grid.map(g=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1;font-size:14px">${g.name_th}</div><input type="number" inputmode="numeric" data-key="${g.key}" placeholder="${fmt(g.under10)}" style="width:120px"></div>`).join('');
-    if(d.decision){showStatus(d.decision,d.decision==='ok'?'✓ ตกลงแล้ววันนี้ · Confirmed today':'✕ ส่ง NO แล้ววันนี้ · NO sent today',true);}
-  }catch(e){document.getElementById('sub').textContent='โหลดไม่สำเร็จ ลองใหม่ / Could not load, retry';}
+    if(d.error){status('lstatus','err','รหัสไม่ถูกต้อง / Invalid code');document.getElementById('login').style.display='block';return;}
+    GRID=d.grid;MODE=d.mode||'buyer';
+    document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';
+    document.getElementById('sub').textContent=d.partner;
+    document.getElementById('pdate').textContent=d.date;
+    document.getElementById('rows').innerHTML=d.grid.filter(g=>g.accepted!==false).map(g=>`<tr><td class="grade">${g.name_th}<small>${g.name_en}</small></td><td>${fmt(g.under10)}</td><td>${fmt(g.t10_30)}</td><td>${fmt(g.t30_50)}</td></tr>`).join('');
+    if(MODE==='buyer'){
+      document.getElementById('actionCard').style.display='block';
+      document.getElementById('counterFields').innerHTML=d.grid.map(g=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1;font-size:14px">${g.name_th}</div><input type="number" inputmode="numeric" data-key="${g.key}" placeholder="${fmt(g.under10)}" style="width:120px"></div>`).join('');
+      if(d.decision){lock(d.decision,d.decision==='ok'?'✓ Confirmed today':'✕ NO sent today');}
+    }
+  }catch(e){status('lstatus','err','โหลดไม่สำเร็จ ลองใหม่ / Could not load, retry');document.getElementById('login').style.display='block';}
 }
 function showNo(){document.getElementById('noForm').style.display='block';}
-function showStatus(cls,msg,lock){const s=document.getElementById('status');s.className='status '+cls;s.textContent=msg;if(lock){document.getElementById('btnOk').disabled=true;document.getElementById('btnNo').disabled=true;document.getElementById('noForm').style.display='none';}}
+function lock(cls,msg){status('status',cls,msg);document.getElementById('btnOk').disabled=true;document.getElementById('btnNo').disabled=true;document.getElementById('noForm').style.display='none';}
 async function decide(action){
   const btn=action==='ok'?document.getElementById('btnOk'):document.getElementById('btnSendNo');btn.disabled=true;
   const counter={};document.querySelectorAll('#counterFields input').forEach(i=>{if(i.value)counter[i.dataset.key]=Number(i.value);});
   try{
     const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:T,action,counter:action==='no'?counter:null,note:document.getElementById('note').value})});
     const d=await r.json();
-    if(d.ok){showStatus(action,action==='ok'?'✓ ขอบคุณครับ ราคาวันนี้ตกลง · Thank you, today\'s price confirmed':'✕ รับทราบ ThaiCarbide จะติดต่อกลับ · Noted, ThaiCarbide will contact you',true);}
-    else{showStatus('err','ผิดพลาด: '+(d.error||'')+' · Error, try again');btn.disabled=false;}
-  }catch(e){showStatus('err','ส่งไม่สำเร็จ ลองใหม่ · Could not send, retry');btn.disabled=false;}
+    if(d.ok){lock(action,action==='ok'?'✓ Thank you, confirmed':'✕ Noted, ThaiCarbide will contact you');}
+    else{status('status','err','Error: '+(d.error||''));btn.disabled=false;}
+  }catch(e){status('status','err','Could not send, retry');btn.disabled=false;}
 }
 load();
 </script>
