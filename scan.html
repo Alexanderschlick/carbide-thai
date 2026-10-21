@@ -143,7 +143,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:24px;padding-top:20px
       <div><img src="/img/identify_bulk_inserts.jpg" loading="lazy" alt="Carbide inserts"><div class="c"><span class="th">อินเสิร์ท (เม็ดมีด)</span><span class="en">Inserts</span></div></div>
       <div><img src="/img/identify_bulk_drills.jpg" loading="lazy" alt="Solid carbide drills and end mills"><div class="c"><span class="th">ดอกสว่าน / เอ็นมิล / ก้านคาร์ไบด์</span><span class="en">Solid carbide drills / end mills / rods</span></div></div>
     </div>
-    <p class="note"><span class="th">ตอนนี้ยังไม่รับ: คาร์ไบด์ผสม แซนด์ริล ชิ้นส่วนสึกหรอ (แหวน ดาย) เหล็ก/HSS และเครื่องมือเหล็กที่มีปลายคาร์ไบด์บัดกรี · ขั้นต่ำ 1 กก.</span><span class="en">Not accepted at the moment: mixed carbide, sand rills, wear parts (rings, dies), steel/HSS, and steel tools with brazed carbide tips · minimum 1 kg</span></p>
+    <p class="note"><span class="th">ตอนนี้ยังไม่รับ: เม็ดมีดเซรามิก (สีเหลือง/ขาว ไม่มีรู) คาร์ไบด์ผสม แซนด์ริล ชิ้นส่วนสึกหรอ (แหวน ดาย) เหล็ก/HSS และเครื่องมือเหล็กที่มีปลายคาร์ไบด์บัดกรี · ขั้นต่ำ 1 กก.</span><span class="en">Not accepted at the moment: ceramic inserts (yellow/white, no hole), mixed carbide, sand rills, wear parts (rings, dies), steel/HSS, and steel tools with brazed carbide tips · minimum 1 kg</span></p>
   </div>
 </div>
 
@@ -165,7 +165,7 @@ function setLang(l){document.body.classList.remove('lang-th','lang-en');document
 const TH=()=>document.body.classList.contains('lang-th');
 const fmt=n=>'฿'+Number(n).toLocaleString('en-US');
 const $=id=>document.getElementById(id);
-const CAT={inserts:{th:'อินเสิร์ทคาร์ไบด์',en:'Carbide inserts'},drills:{th:'ดอกสว่าน / เอ็นมิลคาร์ไบด์',en:'Solid carbide drills / end mills'},mixed:{th:'คาร์ไบด์ผสม',en:'Mixed carbide'},wear_parts:{th:'ชิ้นส่วนสึกหรอ (แหวน/ดาย)',en:'Wear parts (rings / dies)'},brazed:{th:'เครื่องมือเหล็กปลายคาร์ไบด์',en:'Steel tool with brazed carbide tip'},hss_steel:{th:'เหล็ก / HSS',en:'Steel / HSS'},coated:{th:'ชิ้นงานเคลือบ',en:'Coated steel part'},other:{th:'ไม่ชัดเจน',en:'Unclear'}};
+const CAT={ceramic:{th:'เม็ดมีดเซรามิก (ไม่ใช่คาร์ไบด์)',en:'Ceramic inserts (not carbide)'},inserts:{th:'อินเสิร์ทคาร์ไบด์',en:'Carbide inserts'},drills:{th:'ดอกสว่าน / เอ็นมิลคาร์ไบด์',en:'Solid carbide drills / end mills'},mixed:{th:'คาร์ไบด์ผสม',en:'Mixed carbide'},wear_parts:{th:'ชิ้นส่วนสึกหรอ (แหวน/ดาย)',en:'Wear parts (rings / dies)'},brazed:{th:'เครื่องมือเหล็กปลายคาร์ไบด์',en:'Steel tool with brazed carbide tip'},hss_steel:{th:'เหล็ก / HSS',en:'Steel / HSS'},coated:{th:'ชิ้นงานเคลือบ',en:'Coated steel part'},other:{th:'ไม่ชัดเจน',en:'Unclear'}};
 const CONF=c=>c>=0.9?(TH()?'มั่นใจมาก':'very sure'):c>=0.75?(TH()?'ค่อนข้างมั่นใจ':'fairly sure'):(TH()?'ไม่แน่ใจ':'not sure');
 
 function gotPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=1280;let w=img.width,h=img.height;const sc=Math.min(1,max/Math.max(w,h));w=Math.round(w*sc);h=Math.round(h*sc);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);const d=c.toDataURL('image/jpeg',0.82);b64=d.split(',')[1];$('preview').src=d;$('shot').style.display='block';$('shotTag').textContent=attempt>1?(TH()?'รูปที่ 2 · 1 ชิ้น':'Photo 2 · one piece'):(TH()?'รูปของคุณ':'Your photo');$('start').style.display='none';$('result').className='result';$('actions').innerHTML='';send();};img.src=e.target.result;};r.readAsDataURL(f);}
