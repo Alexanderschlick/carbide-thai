@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เช็คคาร์ไบด์ด้วยรูปถ่าย · Carbide photo check · ThaiCarbide</title>
+<meta name="description" content="Take a photo of your used carbide inserts or drills and see in seconds whether ThaiCarbide buys it and what we pay per kg. ถ่ายรูปคาร์ไบด์ รู้ราคาทันที">
+<link rel="canonical" href="https://thaicarbide.com/scan.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RNXH6EX220"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-RNXH6EX220');</script>
+<style>
+:root{--bg:#0f1b2d;--card:#162338;--gold:#d4a73a;--text:#eef2f7;--muted:#8a94a6;--green:#22c55e;--red:#ef4444;--border:#243247}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 70px;position:relative}
+h1{font-size:24px;margin:0 0 6px;color:var(--gold)}
+h2{font-size:18px;margin:0 0 8px;color:var(--gold)}
+.sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.camBtn{display:block;width:100%;padding:24px;border-radius:14px;background:var(--gold);color:#0f1b2d;font-weight:800;font-size:22px;text-align:center;cursor:pointer}
+#preview{width:100%;max-height:340px;object-fit:contain;border-radius:12px;background:var(--bg);display:none;margin-top:10px}
+input{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:18px}
+button{width:100%;padding:15px;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;background:var(--gold);color:#0f1b2d;margin-top:12px}
+button:disabled{opacity:.45}
+.ghost{background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:500;font-size:14px}
+.spin{display:none;text-align:center;color:var(--muted);padding:14px}
+.verdict{border-radius:14px;padding:16px;margin-top:12px;display:none}
+.verdict.accepted{display:block;background:rgba(34,197,94,.14);border:2px solid var(--green)}
+.verdict.rejected{display:block;background:rgba(239,68,68,.14);border:2px solid var(--red)}
+.verdict.unsure{display:block;background:rgba(212,167,58,.14);border:2px solid var(--gold)}
+.verdict h3{margin:0 0 6px;font-size:24px}
+.a{color:var(--green)}.r{color:var(--red)}.u{color:var(--gold)}
+.price{font-size:34px;font-weight:800;color:var(--gold);margin:6px 0 2px}
+.small{font-size:13px;color:var(--muted)}
+.kgrow{display:flex;gap:10px;align-items:center;margin-top:12px}
+.kgrow input{font-size:22px;font-weight:700;text-align:center}
+.total{font-size:26px;font-weight:800;margin-top:8px}
+.lang{position:absolute;right:16px;top:16px;display:flex;gap:4px}
+.lang span{padding:4px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted)}
+.lang span.on{background:var(--gold);color:#0f1b2d;border-color:var(--gold)}
+.th,.en{display:none}body.lang-th .th{display:block}body.lang-en .en{display:block}
+span.th,span.en{display:none}body.lang-th span.th{display:inline}body.lang-en span.en{display:inline}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:16px}.top a{color:var(--muted);text-decoration:none;font-size:13px}
+a.line{display:inline-block;margin-top:10px;background:#06c755;color:#fff;padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:700}
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
+.foot a{color:var(--gold)}
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.ex img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
+</style>
+</head>
+<body class="lang-th">
+<div class="wrap">
+  <div class="lang"><span id="l-th" class="on" onclick="setLang('th')">ไทย</span><span id="l-en" onclick="setLang('en')">EN</span></div>
+  <div class="top"><a href="/">← ThaiCarbide</a></div>
+  <h1><span class="th">ถ่ายรูป รู้ราคาทันที</span><span class="en">Photo → instant price</span></h1>
+  <p class="sub"><span class="th">ถ่ายรูปเม็ดมีด (อินเสิร์ท) หรือดอกสว่าน/เอ็นมิลคาร์ไบด์ของคุณ ระบบบอกภายในไม่กี่วินาทีว่าเรารับซื้อไหม และจ่ายกิโลละเท่าไร</span><span class="en">Take a photo of your used carbide inserts or solid drills / end mills. In seconds you see whether we buy it and what we pay per kg.</span></p>
+
+  <div class="card" id="scanCard">
+    <label class="camBtn" for="camInput">📷 <span class="th">ถ่ายรูปคาร์ไบด์</span><span class="en">Take a photo</span></label>
+    <input id="camInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="gotPhoto(this)">
+    <img id="preview" alt="">
+    <div id="wrow" style="display:none;margin-top:10px"><label class="small"><span class="th">น้ำหนักบนตาชั่ง (กรัม) ถ้ามี</span><span class="en">Weight on scale (grams), if you have one</span></label><input id="scanW" inputmode="numeric" placeholder="g"></div>
+    <button id="scanBtn" onclick="sendScan()" disabled><span class="th">เช็คเลย</span><span class="en">Check now</span></button>
+    <div class="spin" id="scanSpin"><span class="th">กำลังวิเคราะห์รูป…</span><span class="en">Analysing photo…</span></div>
+
+    <div class="verdict" id="verdict">
+      <h3 id="vTitle"></h3>
+      <div id="vReason"></div>
+      <div id="vPrice" style="display:none">
+        <div class="price" id="ppk"></div>
+        <div class="small" id="ptier"></div>
+        <div class="kgrow"><span class="th">มีกี่กิโล?</span><span class="en">How many kg?</span><input id="kg" inputmode="decimal" placeholder="kg" oninput="calcTotal()" style="max-width:120px"></div>
+        <div class="total" id="total"></div>
+        <button id="sellBtn" onclick="goSell()"><span class="th">ขายเลยในราคานี้ →</span><span class="en">Sell now at this price →</span></button>
+        <div class="small" style="margin-top:8px"><span class="th">ล็อกราคาได้ 48 ชม. · ชั่งต่อหน้าคุณ · จ่ายทันทีผ่าน PromptPay · ส่งพัสดุฟรีหรือมาส่งเอง</span><span class="en">Price locked for 48 h · weighed in front of you · paid on the spot by PromptPay · free parcel or self-delivery</span></div>
+      </div>
+      <div id="vLine" style="display:none"><a class="line" href="https://line.me/R/ti/p/@280uqpab" target="_blank" rel="noopener">💬 <span class="th">ส่งรูปให้ทีมงานทาง LINE</span><span class="en">Send the photo to our team on LINE</span></a></div>
+    </div>
+    <button class="ghost" id="againBtn" style="display:none" onclick="resetScan()"><span class="th">ถ่ายรูปใหม่</span><span class="en">Take another photo</span></button>
+  </div>
+
+  <div class="card">
+    <h2><span class="th">เรารับซื้ออะไร</span><span class="en">What we buy</span></h2>
+    <div class="ex">
+      <div><img src="/img/identify_bulk_inserts.jpg" loading="lazy" alt="Carbide inserts"><div class="small"><span class="th">อินเสิร์ท (เม็ดมีด)</span><span class="en">Inserts</span></div></div>
+      <div><img src="/img/identify_bulk_drills.jpg" loading="lazy" alt="Carbide drills"><div class="small"><span class="th">ดอกสว่าน / เอ็นมิล / ก้านคาร์ไบด์</span><span class="en">Solid carbide drills / end mills / rods</span></div></div>
+    </div>
+    <p class="small" style="margin:10px 0 0"><span class="th">ยังไม่รับ: คาร์ไบด์ผสม แซนด์ริล ชิ้นส่วนสึกหรอ (แหวน ดาย) เหล็ก/HSS และเครื่องมือเหล็กที่มีปลายคาร์ไบด์บัดกรี · ขั้นต่ำ 1 กก.</span><span class="en">Not accepted at the moment: mixed carbide, sand rills, wear parts (rings, dies), steel/HSS and steel tools with brazed carbide tips · minimum 1 kg</span></p>
+  </div>
+
+  <div class="foot">ThaiCarbide · LINE @280uqpab · <a href="/sell.html"><span class="th">ขายคาร์ไบด์</span><span class="en">Sell carbide</span></a> · <a href="/privacy.html">Privacy</a></div>
+</div>
+<script>
+const API='https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/scan-api';
+let b64=null, attempt=1, result=null;
+function setLang(l){document.body.className='lang-'+l;document.getElementById('l-th').classList.toggle('on',l==='th');document.getElementById('l-en').classList.toggle('on',l==='en');if(result)showVerdict(result);}
+if(/^en/i.test(navigator.language||'')&&!/th/i.test(navigator.language||''))setLang('en');
+const L=()=>document.body.className==='lang-th';
+const fmt=n=>'฿'+Number(n).toLocaleString('en-US');
+function gotPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=1280;let w=img.width,h=img.height;const sc=Math.min(1,max/Math.max(w,h));w=Math.round(w*sc);h=Math.round(h*sc);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);const d=c.toDataURL('image/jpeg',0.82);b64=d.split(',')[1];const pv=document.getElementById('preview');pv.src=d;pv.style.display='block';document.getElementById('wrow').style.display='block';document.getElementById('scanBtn').disabled=false;document.getElementById('verdict').className='verdict';document.getElementById('againBtn').style.display='none';};img.src=e.target.result;};r.readAsDataURL(f);}
+function tier(p,kg){return kg<=10?p.tier_under10:kg<=30?p.tier_10_30:p.tier_30_50;}
+function showVerdict(v){result=v;const box=document.getElementById('verdict');let state=v.verdict;const th=L();
+  const titles={accepted:th?'🟢 รับซื้อครับ!':'🟢 Yes, we buy this!',rejected:th?'🔴 ตอนนี้ยังไม่รับ':'🔴 Not accepted at the moment',unsure:(v.status==='retry')?(th?'🟡 ยังไม่ชัด – ถ่ายอีกรูป':'🟡 Not clear – one more photo'):(th?'🟡 ให้ทีมงานดูให้':'🟡 Let our team check')};
+  box.className='verdict '+state;
+  document.getElementById('vTitle').innerHTML='<span class="'+state[0]+'">'+titles[state]+'</span>';
+  let reason=(th?v.reason_th:v.reason_en)||'';
+  if(v.status==='retry')reason+=(th?' — วางของ 1 ชิ้นบนตาชั่ง ถ่ายใกล้ๆ ให้เห็นตัวเลขน้ำหนัก แล้วกรอกกรัม':' — put ONE piece on a scale, photo close-up with the weight display, enter the grams.');
+  document.getElementById('vReason').textContent=reason;
+  const pr=document.getElementById('vPrice'),ln=document.getElementById('vLine');
+  if(state==='accepted'&&v.price){pr.style.display='block';ln.style.display='none';const p=v.price;document.getElementById('ppk').textContent=fmt(p.tier_under10)+'–'+fmt(p.tier_30_50)+' /kg';document.getElementById('ptier').textContent=(th?p.name_th:p.name_en)+' · '+(th?'≤10 กก. / 10–30 / 30–50 กก.':'≤10 kg / 10–30 / 30–50 kg')+': '+fmt(p.tier_under10)+' / '+fmt(p.tier_10_30)+' / '+fmt(p.tier_30_50);calcTotal();}
+  else{pr.style.display='none';ln.style.display=(state==='rejected'||v.status!=='retry')?'block':'none';}
+  document.getElementById('againBtn').style.display='block';
+  try{gtag('event','scan_result',{verdict:state,category:v.category});}catch(e){}
+}
+function calcTotal(){if(!result||!result.price)return;const kg=parseFloat(document.getElementById('kg').value);const t=document.getElementById('total');if(!kg||kg<=0){t.textContent='';return;}const ppk=tier(result.price,kg);t.textContent=(L()?'ประมาณ ':'≈ ')+fmt(Math.round(kg*ppk))+' ('+fmt(ppk)+'/kg)';}
+function goSell(){const kg=parseFloat(document.getElementById('kg').value)||'';try{gtag('event','begin_checkout',{method:'scan'});}catch(e){}location.href='/sell.html?m='+encodeURIComponent(result.price.key)+(kg?'&kg='+kg:'');}
+async function sendScan(){if(!b64)return;const btn=document.getElementById('scanBtn');btn.disabled=true;document.getElementById('scanSpin').style.display='block';document.getElementById('verdict').className='verdict';
+  try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({public:true,image:b64,weight_g:document.getElementById('scanW').value,attempt,single_piece:attempt>1})});const d=await r.json();document.getElementById('scanSpin').style.display='none';if(d.error){alert('Error: '+d.error);btn.disabled=false;return;}showVerdict(d);if(d.status==='retry'){attempt=2;document.getElementById('camInput').value='';document.getElementById('scanBtn').disabled=true;}}
+  catch(e){document.getElementById('scanSpin').style.display='none';alert(L()?'ส่งไม่สำเร็จ ลองใหม่':'Could not send, retry');btn.disabled=false;}}
+function resetScan(){b64=null;attempt=1;result=null;document.getElementById('camInput').value='';document.getElementById('preview').style.display='none';document.getElementById('wrow').style.display='none';document.getElementById('verdict').className='verdict';document.getElementById('againBtn').style.display='none';document.getElementById('scanBtn').disabled=true;document.getElementById('scanW').value='';document.getElementById('kg').value='';window.scrollTo(0,0);}
+</script>
+</body>
+</html>
