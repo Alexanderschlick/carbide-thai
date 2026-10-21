@@ -49,6 +49,15 @@ span.th,span.en{display:none}body.lang-th span.th{display:inline}body.lang-en sp
 .pane{display:none}.pane.on{display:block}
 a{color:var(--gold)}
 .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.gal figure{margin:0;background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden}.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}.gal figcaption{font-size:12px;padding:6px 8px;color:var(--muted)}.gal figcaption b{color:var(--gold);font-size:14px;display:block}.gal2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.gal2 figure{margin:0;background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden}.gal2 img{width:100%;aspect-ratio:1;object-fit:cover;display:block}.gal2 figcaption{font-size:13px;padding:8px;color:var(--text);font-weight:600}
+.verdict{border-radius:14px;padding:16px;margin-top:12px;display:none}
+.verdict.accepted{display:block;background:rgba(34,197,94,.14);border:2px solid var(--green)}
+.verdict.rejected{display:block;background:rgba(239,68,68,.14);border:2px solid var(--red)}
+.verdict.unsure{display:block;background:rgba(212,167,58,.14);border:2px solid var(--gold)}
+.verdict h3{margin:0 0 6px;font-size:22px}
+.verdict .accepted-t{color:var(--green)}.verdict .rejected-t{color:var(--red)}.verdict .unsure-t{color:var(--gold)}
+#preview{width:100%;max-height:320px;object-fit:contain;border-radius:12px;background:var(--bg);display:none;margin-top:10px}
+.camBtn{display:block;width:100%;padding:22px;border-radius:14px;background:var(--gold);color:#0f1b2d;font-weight:800;font-size:20px;text-align:center;cursor:pointer}
+.spin{display:none;text-align:center;color:var(--muted);padding:14px}
 </style>
 </head>
 <body class="lang-th">
@@ -71,7 +80,8 @@ a{color:var(--gold)}
     <div class="tabs">
       <div class="tab on" data-p="tut" onclick="tab('tut')"><span class="th">เริ่มต้น</span><span class="en">Start here</span></div>
       <div class="tab" data-p="sop" onclick="tab('sop')"><span class="th">วิธีรับของ</span><span class="en">How to receive</span></div>
-      <div class="tab" data-p="price" onclick="tab('price')"><span class="th">ราคาวันนี้</span><span class="en">Today's prices</span></div>
+      <div class="tab" data-p="scan" onclick="tab('scan')">📷 <span class="th">สแกน</span><span class="en">Scan</span></div>
+      <div class="tab" data-p="price" onclick="tab('price')"><span class="th">ราคา</span><span class="en">Prices</span></div>
     </div>
 
     <!-- TUTORIAL -->
@@ -149,6 +159,34 @@ a{color:var(--gold)}
       <div class="big"><span class="th">ชั่ง → ถ่ายรูป → กลุ่ม LINE → รอ OK → จ่าย → สลิป</span><span class="en">Weigh → photos → LINE group → wait for OK → pay → slip</span></div>
     </div>
 
+    <!-- SCAN -->
+    <div class="pane" id="p-scan">
+      <div class="card">
+        <h2 style="margin-top:0"><span class="th">สแกนวัสดุ: รับได้หรือไม่?</span><span class="en">Scan material: can we take it?</span></h2>
+        <div class="rule" style="margin:0 0 12px"><span class="th">ถ่ายรูปของบนตาชั่งให้ใกล้และชัด ระบบจะบอกทันทีว่า รับ / ไม่รับ / ต้องตรวจสอบ ถ้าต้องตรวจสอบ Alexander จะได้รับแจ้งและยืนยันกลับมาที่หน้านี้</span><span class="en">Take a close, clear photo of the material on the scale. You get an instant answer: accept / reject / check. If it needs checking, Alexander is notified and his decision appears here.</span></div>
+        <label class="camBtn" for="camInput">📷 <span class="th">ถ่ายรูป</span><span class="en">Take photo</span></label>
+        <input id="camInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="gotPhoto(this)">
+        <img id="preview" alt="">
+        <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+          <div><label class="rule" style="margin:0 0 4px"><span class="th">หมายเลขอ้างอิง</span><span class="en">Reference no.</span></label><input id="scanRef" placeholder="TC-XXXXXXXX" autocapitalize="characters"></div>
+          <div><label class="rule" style="margin:0 0 4px"><span class="th">น้ำหนักบนตาชั่ง (กรัม)</span><span class="en">Weight on scale (g)</span></label><input id="scanW" inputmode="numeric" placeholder="g"></div>
+        </div>
+        <div class="btns"><button class="gold" id="scanBtn" onclick="sendScan()" disabled><span class="th">ตรวจสอบ</span><span class="en">Check</span></button></div>
+        <div class="spin" id="scanSpin"><span class="th">กำลังวิเคราะห์…</span><span class="en">Analysing…</span></div>
+        <div class="verdict" id="verdict">
+          <h3 id="vTitle"></h3>
+          <div id="vReason"></div>
+          <div id="vNext" class="rule" style="margin-top:8px"></div>
+        </div>
+        <div class="btns" id="againBtn" style="display:none"><button onclick="resetScan()"><span class="th">สแกนชิ้นถัดไป</span><span class="en">Scan next item</span></button></div>
+      </div>
+      <div class="card">
+        <div class="rule" style="margin:0"><b><span class="th">กฎ</span><span class="en">Rule</span></b><br>
+          <span class="th">🟢 รับ = ชั่ง ถ่ายรูป ส่งกลุ่ม LINE ตามขั้นตอนปกติ<br>🔴 ไม่รับ = ไม่รับของ ไม่จ่ายเงิน บอกผู้ขายว่า "ThaiCarbide ไม่รับวัสดุนี้ กรุณาติดต่อ LINE @280uqpab"<br>🟡 ต้องตรวจสอบ = รอคำตอบในหน้านี้ (ปกติไม่กี่นาที) ห้ามจ่ายก่อนได้รับการยืนยัน</span>
+          <span class="en">🟢 Accept = weigh, photos, LINE group as usual<br>🔴 Reject = do not take it, do not pay, tell the seller "ThaiCarbide does not take this material, please contact LINE @280uqpab"<br>🟡 Check = wait for the answer on this page (usually a few minutes). Never pay before confirmation.</span></div>
+      </div>
+    </div>
+
     <!-- PRICES -->
     <div class="pane" id="p-price">
       <div class="card">
@@ -222,6 +260,12 @@ async function decide(action){
     else{status('status','err','Error: '+(d.error||''));btn.disabled=false;}
   }catch(e){status('status','err','Could not send, retry');btn.disabled=false;}
 }
+const SCAN_API='https://ltupwgytuayzopnsdvpc.supabase.co/functions/v1/scan-api';
+let scanB64=null, pollTimer=null;
+function gotPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=1280;let w=img.width,h=img.height;const sc=Math.min(1,max/Math.max(w,h));w=Math.round(w*sc);h=Math.round(h*sc);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);const d=c.toDataURL('image/jpeg',0.82);scanB64=d.split(',')[1];const pv=document.getElementById('preview');pv.src=d;pv.style.display='block';document.getElementById('scanBtn').disabled=false;document.getElementById('verdict').className='verdict';document.getElementById('againBtn').style.display='none';};img.src=e.target.result;};r.readAsDataURL(f);}
+function showVerdict(v){const box=document.getElementById('verdict');const L=document.body.className==='lang-th';const t={accepted:L?'🟢 รับได้':'🟢 ACCEPT',rejected:L?'🔴 ไม่รับ':'🔴 REJECT',unsure:L?'🟡 ต้องตรวจสอบ':'🟡 CHECK'};const nx={accepted:L?'ชั่ง ถ่ายรูป ส่งกลุ่ม LINE ตามขั้นตอนปกติ':'Weigh, photos, LINE group as usual.',rejected:L?'ไม่รับของ ไม่จ่ายเงิน แจ้งผู้ขายให้ติดต่อ LINE @280uqpab':'Do not take it, do not pay. Seller: contact LINE @280uqpab.',unsure:L?'ส่งให้ Alexander แล้ว รอคำตอบที่นี่…':'Sent to Alexander, waiting for his answer here…'};let state=v.verdict;if(v.status==='confirmed')state='accepted';if(v.status==='rejected'&&v.decision)state='rejected';box.className='verdict '+state;document.getElementById('vTitle').innerHTML='<span class="'+state+'-t">'+t[state]+(v.decision?(L?' (ยืนยันโดย Alexander)':' (confirmed by Alexander)'):'')+'</span>';document.getElementById('vReason').textContent=(L?v.ai_reason_th||v.reason_th:v.ai_reason_en||v.reason_en)||'';document.getElementById('vNext').textContent=nx[state];document.getElementById('againBtn').style.display='flex';}
+async function sendScan(){if(!scanB64)return;const btn=document.getElementById('scanBtn');btn.disabled=true;document.getElementById('scanSpin').style.display='block';try{const r=await fetch(SCAN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:T,image:scanB64,ref:document.getElementById('scanRef').value,weight_g:document.getElementById('scanW').value})});const d=await r.json();document.getElementById('scanSpin').style.display='none';if(d.error){alert('Error: '+d.error);btn.disabled=false;return;}showVerdict(d);if(d.status==='pending'){clearInterval(pollTimer);pollTimer=setInterval(async()=>{try{const q=await fetch(SCAN_API+'?scan='+d.id+'&t='+encodeURIComponent(T));const s=await q.json();if(s.decision){clearInterval(pollTimer);showVerdict(s);}}catch(e){}},8000);}}catch(e){document.getElementById('scanSpin').style.display='none';alert('Could not send, retry');btn.disabled=false;}}
+function resetScan(){clearInterval(pollTimer);scanB64=null;document.getElementById('camInput').value='';document.getElementById('preview').style.display='none';document.getElementById('verdict').className='verdict';document.getElementById('againBtn').style.display='none';document.getElementById('scanBtn').disabled=true;document.getElementById('scanRef').value='';document.getElementById('scanW').value='';window.scrollTo(0,0);}
 load();
 </script>
 </body>
