@@ -294,7 +294,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
         <th style="color:var(--blue)">Best EU €/kg</th>
         <th style="color:var(--blue)">EU in THB</th>
         <th>Target disc.</th>
-        <th>Our price vs EU</th>
+        <th>Margin vs EU</th>
       </tr></thead>
       <tbody id="benchmarkTable"></tbody></table>
       <div id="benchMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
@@ -767,7 +767,7 @@ async function loadAll(){
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · Policy v12: price = Facebook street (Carbide Trading) + ฿50/100/150 per tier, never above the EU benchmark (hartmetallschrott24.de) · "Our price vs EU": − = we pay less than Europe`;
+    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · Policy v12: price = Facebook street (Carbide Trading) + ฿50/100/150 per tier, never above the EU benchmark (hartmetallschrott24.de) · "Margin vs EU": + green = we pay that much LESS than the German buyer (our export margin), − red = we pay MORE than Europe`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
