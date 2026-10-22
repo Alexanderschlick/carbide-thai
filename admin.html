@@ -282,7 +282,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">
         <h2 style="margin:0;border:0;padding:0;">ThaiCarbide vs European Benchmarks</h2>
         <div style="display:flex;gap:6px;">
-          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate from EU</button>
+          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate (street +50/100/150)</button>
         </div>
       </div>
       <table><thead><tr>
@@ -767,7 +767,7 @@ async function loadAll(){
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · "Our price vs EU": + = we buy cheaper than Europe (margin), − = we pay more than Europe · Best EU = hartmetallschrott24.de`;
+    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · Policy v12: price = Facebook street (Carbide Trading) + ฿50/100/150 per tier, never above the EU benchmark (hartmetallschrott24.de) · "Our price vs EU": − = we pay less than Europe`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
@@ -942,50 +942,12 @@ async function loadAnalytics(lineChats){
 }
 
 async function recalcFromBenchmarks(){
-  if(!confirm('Recalculate ThaiCarbide prices from European benchmarks at configured discount?\n\nThis will update all prices keeping the current discount % below EU level.'))return;
-  const btn=document.getElementById('recalcBtn');
-  btn.disabled=true;btn.textContent='Calculating...';
+  const btn=document.getElementById('recalcBtn');btn.disabled=true;btn.textContent='Recalculating…';
   try{
-    const benchmarks=window._benchmarks||[];
-    const prices=window._prices||[];
-    const rate=window._rate||38.43;
-    // Group benchmarks by price_key
-    const bmByKey={};
-    for(const b of benchmarks){
-      if(!bmByKey[b.price_key])bmByKey[b.price_key]={sources:[],discount:Number(b.discount_pct)||50};
-      bmByKey[b.price_key].sources.push(b);
-    }
-    let updates=[];
-    for(const p of prices){
-      const bm=bmByKey[p.key];
-      if(!bm)continue;
-      const avgEur=bm.sources.reduce((a,b)=>a+Number(b.benchmark_eur_kg),0)/bm.sources.length;
-      const euThb=avgEur*rate;
-      const disc=bm.discount/100;
-      // Apply discount: price = EU_THB * (1 - discount)
-      // discount=50 means halfway between 0 and EU price
-      const newTeaser=Math.round(euThb*(1-disc));
-      // Tiers: under10 = teaser * 0.85, 10_30 = teaser * 0.925, 30_50 = teaser
-      const newU10=Math.round(newTeaser*0.85);
-      const new1030=Math.round(newTeaser*0.925);
-      const new3050=newTeaser;
-      updates.push({key:p.key,teaser:newTeaser,u10:newU10,t1030:new1030,t3050:new3050});
-    }
-    if(!updates.length){alert('No benchmarks found to recalculate from.');btn.disabled=false;btn.textContent='Recalculate from EU';return}
-    // Execute updates via Supabase REST
-    for(const u of updates){
-      await fetch(`${SB}/rest/v1/prices?key=eq.${u.key}`,{
-        method:'PATCH',
-        headers:{apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`,'Content-Type':'application/json',Prefer:'return=minimal'},
-        body:JSON.stringify({teaser_thb:u.teaser,tier_under10:u.u10,tier_10_30:u.t1030,tier_30_50:u.t3050})
-      });
-    }
-    btn.textContent='Done! Reloading...';
-    setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate from EU'},1000);
-  }catch(e){
-    alert('Error: '+e.message);
-    btn.disabled=false;btn.textContent='Recalculate from EU';
-  }
+    const r=await fetch(`${SB}/functions/v1/auto-price-update`);const d=await r.json();
+    if(!d.success)throw new Error(d.error||'engine returned an error');
+    btn.textContent='Done! Reloading...';setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate (street +50/100/150)'},1000);
+  }catch(e){alert('Error: '+e.message);btn.disabled=false;btn.textContent='Recalculate (street +50/100/150)';}
 }
 
 function _thMap(){return {"ก":"k","ข":"kh","ฃ":"kh","ค":"kh","ฅ":"kh","ฆ":"kh","ง":"ng","จ":"ch","ฉ":"ch","ช":"ch","ซ":"s","ฌ":"ch","ญ":"y","ฎ":"d","ฏ":"t","ฐ":"th","ฑ":"th","ฒ":"th","ณ":"n","ด":"d","ต":"t","ถ":"th","ท":"th","ธ":"th","น":"n","บ":"b","ป":"p","ผ":"ph","ฝ":"f","พ":"ph","ฟ":"f","ภ":"ph","ม":"m","ย":"y","ร":"r","ฤ":"rue","ล":"l","ว":"w","ศ":"s","ษ":"s","ส":"s","ห":"h","ฬ":"l","อ":"","ฮ":"h","ะ":"a","ั":"a","า":"a","ำ":"am","ิ":"i","ี":"i","ึ":"ue","ื":"ue","ุ":"u","ู":"u","ฺ":"","เ":"e","แ":"ae","โ":"o","ใ":"ai","ไ":"ai","ๅ":"a","ๆ":"","็":"","่":"","้":"","๊":"","๋":"","์":"","ํ":""};}
