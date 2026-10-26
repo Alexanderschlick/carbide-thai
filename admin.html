@@ -282,7 +282,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">
         <h2 style="margin:0;border:0;padding:0;">ThaiCarbide vs European Benchmarks</h2>
         <div style="display:flex;gap:6px;">
-          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate (street +50/100/150)</button>
+          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate from EU grid</button>
         </div>
       </div>
       <table><thead><tr>
@@ -767,7 +767,7 @@ async function loadAll(){
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · Policy v12: price = Facebook street (Carbide Trading) + ฿50/100/150 per tier, never above the EU benchmark (hartmetallschrott24.de) · "Margin vs EU": + green = we pay that much LESS than the German buyer (our export margin), − red = we pay MORE than Europe`;
+    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · Policy v16: our price per tier = hartmetallschrott24.de live retail price (≤10 / 10–30 / >30 kg) × EUR/THB, 1:1. Thai street price is logged for information only · "Margin vs EU": + green = we pay that much LESS than the German buyer (our export margin), − red = we pay MORE than Europe`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
@@ -946,8 +946,8 @@ async function recalcFromBenchmarks(){
   try{
     const r=await fetch(`${SB}/functions/v1/auto-price-update`);const d=await r.json();
     if(!d.success)throw new Error(d.error||'engine returned an error');
-    btn.textContent='Done! Reloading...';setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate (street +50/100/150)'},1000);
-  }catch(e){alert('Error: '+e.message);btn.disabled=false;btn.textContent='Recalculate (street +50/100/150)';}
+    btn.textContent='Done! Reloading...';setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate from EU grid'},1000);
+  }catch(e){alert('Error: '+e.message);btn.disabled=false;btn.textContent='Recalculate from EU grid';}
 }
 
 function _thMap(){return {"ก":"k","ข":"kh","ฃ":"kh","ค":"kh","ฅ":"kh","ฆ":"kh","ง":"ng","จ":"ch","ฉ":"ch","ช":"ch","ซ":"s","ฌ":"ch","ญ":"y","ฎ":"d","ฏ":"t","ฐ":"th","ฑ":"th","ฒ":"th","ณ":"n","ด":"d","ต":"t","ถ":"th","ท":"th","ธ":"th","น":"n","บ":"b","ป":"p","ผ":"ph","ฝ":"f","พ":"ph","ฟ":"f","ภ":"ph","ม":"m","ย":"y","ร":"r","ฤ":"rue","ล":"l","ว":"w","ศ":"s","ษ":"s","ส":"s","ห":"h","ฬ":"l","อ":"","ฮ":"h","ะ":"a","ั":"a","า":"a","ำ":"am","ิ":"i","ี":"i","ึ":"ue","ื":"ue","ุ":"u","ู":"u","ฺ":"","เ":"e","แ":"ae","โ":"o","ใ":"ai","ไ":"ai","ๅ":"a","ๆ":"","็":"","่":"","้":"","๊":"","๋":"","์":"","ํ":""};}
