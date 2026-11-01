@@ -282,13 +282,14 @@ tr:hover { background: rgba(200,168,78,0.04); }
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">
         <h2 style="margin:0;border:0;padding:0;">ThaiCarbide vs European Benchmarks</h2>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-          <span style="font-size:11px;color:var(--muted)">Sale reference €/kg</span>
-          <input id="sellEur" type="number" step="0.5" min="0" style="width:64px;padding:4px 6px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;">
-          <span style="font-size:11px;color:var(--muted)">from</span>
-          <input id="sellTon" type="number" step="0.5" min="0" style="width:48px;padding:4px 6px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;">
-          <span style="font-size:11px;color:var(--muted)">t</span>
-          <button class="btn-sm btn-outline" onclick="saveSellRef()" id="sellSaveBtn">Save</button>
-          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate from EU grid</button>
+          <span style="font-size:11px;color:var(--muted)">Sale factor ×HM24</span>
+          <input id="p17factor" type="number" step="0.01" min="1" style="width:58px;padding:4px 6px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;">
+          <span style="font-size:11px;color:var(--muted)">Cost €/kg</span>
+          <input id="p17cost" type="number" step="0.5" min="0" style="width:50px;padding:4px 6px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;">
+          <span style="font-size:11px;color:var(--muted)">Margin %</span>
+          <input id="p17margin" type="number" step="0.5" min="0" style="width:50px;padding:4px 6px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;">
+          <button class="btn-sm btn-outline" onclick="saveP17()" id="p17SaveBtn">Save &amp; recalc</button>
+          <button class="btn-sm btn-gold" onclick="recalcFromBenchmarks()" id="recalcBtn">Recalculate now</button>
         </div>
       </div>
       <table><thead><tr>
@@ -302,6 +303,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
         <th>HM24 grid ≤10 / 10–30 / &gt;30</th>
         <th>Margin vs EU</th>
         <th style="color:#22c55e" id="sellHdr">Margin vs sale</th>
+        <th>Street light</th>
       </tr></thead>
       <tbody id="benchmarkTable"></tbody></table>
       <div id="benchMeta" style="font-size:10px;color:var(--muted);margin-top:8px;"></div>
@@ -655,10 +657,11 @@ async function loadAll(){
       sbGet('user_flags','select=platform_user_id,display_name,user_type,skip_followup,notes&platform=eq.line'),
       sbGet('price_benchmarks','select=id,price_key,source,benchmark_eur_kg,discount_pct,notes,updated_at&order=price_key,source'),
       sbGet('price_history','select=id,price_key,old_teaser,new_teaser,old_tiers,new_tiers,change_source,changed_at&order=changed_at.desc&limit=20'),
-      sbGet('business_settings','select=key,value,updated_at&key=eq.sell_reference').catch(()=>[])
+      sbGet('business_settings','select=key,value,updated_at&key=in.(pricing_v17,sell_reference)').catch(()=>[])
     ]);
-    const sellRef=(Array.isArray(bizSettings)&&bizSettings[0]&&bizSettings[0].value)||{eur_per_kg:60,min_tonnes:2};
-    window._sellRef=sellRef;
+    const _bs={};for(const b of (bizSettings||[]))_bs[b.key]=b.value;
+    const P17=Object.assign({sale_factor:1.30,cost_eur_kg:4,margin_pct:10,tier_step_thb:[100,50,0],street_yellow_thb:200},_bs.pricing_v17||{});
+    window._p17=P17;
     const chats=chatsResult.data;
     const totalMessages=chatsResult.total;
 
@@ -756,6 +759,8 @@ async function loadAll(){
     const bmByKey={};
     for(const k in EU_KEY){const h=hm24[EU_KEY[k]];if(h)bmByKey[k]={avgEur:h.eur,tiers:h.tiers,at:h.at};}
     window._hm24=hm24;
+    const fbLatest={};for(const c of (comp||[])){if(!/^fb:/.test(String(c.source||'')))continue;if(fbLatest[c.material_key])continue;fbLatest[c.material_key]={thb:Number(c.price_thb),at:c.scraped_at};}
+    window._fbLatest=fbLatest;
 
     let bmRows='';
     for(const p of prices){
@@ -766,14 +771,22 @@ async function loadAll(){
       const teaser=Number(p.teaser_thb||0);
       const gap=avgThb?((1-teaser/avgThb)*100).toFixed(1):null;
       const gapColor=gap?(Number(gap)>0?'#22c55e':'#ef4444'):'var(--muted)';
-      // Margin vs our bulk sale price (per tier, before freight/handling)
-      const sellThb=Number(sellRef.eur_per_kg||0)*rate;
+      // v17: sale = HM24 top × factor; margin vs sale per tier; street traffic light
+      const saleEur=avgEur?avgEur*Number(P17.sale_factor):null;
+      const sellThb=saleEur?saleEur*rate:0;
       const sellCell=(()=>{
-        if(!sellThb||p.key==='sand_rills')return '<td style="color:var(--muted)">—</td>';
+        if(!sellThb)return '<td style="color:var(--muted)">—</td>';
         const tiers=[p.tier_under10,p.tier_10_30,p.tier_30_50].map(Number);
-        const parts=tiers.map(t=>{const m=sellThb-t;const e=m/rate;const col=m>=0?'#22c55e':'#ef4444';return `<span style="color:${col}">€${e.toFixed(1)}</span>`;});
-        const worst=sellThb-tiers[2];
-        return `<td style="font-size:11px;white-space:nowrap"><b style="color:${worst>=0?'#22c55e':'#ef4444'}">฿${Math.round(worst).toLocaleString()}</b> <span style="color:var(--muted)">(≥30kg)</span><div style="font-size:10px;color:var(--muted)">${parts.join(' · ')}</div></td>`;
+        const parts=tiers.map(t=>{const m=sellThb-t-Number(P17.cost_eur_kg)*rate;const e=m/rate;const col=m>=0?'#22c55e':'#ef4444';return `<span style="color:${col}">€${e.toFixed(1)}</span>`;});
+        const worst=sellThb-tiers[2]-Number(P17.cost_eur_kg)*rate;
+        return `<td style="font-size:11px;white-space:nowrap"><div style="color:var(--blue)">sale €${saleEur.toFixed(1)}</div><b style="color:${worst>=0?'#22c55e':'#ef4444'}">€${(worst/rate).toFixed(1)}/kg</b> <span style="color:var(--muted)">net (≥30kg)</span><div style="font-size:10px;color:var(--muted)">${parts.join(' · ')}</div></td>`;
+      })();
+      const streetCell=(()=>{
+        const fbKey=window._fbLatest&&window._fbLatest[p.key];
+        if(!fbKey)return '<td style="color:var(--muted)">⚪ n/a</td>';
+        const gap=Number(p.tier_30_50)-fbKey.thb;const y=Number(P17.street_yellow_thb);
+        const icon=gap>=0?'🟢':(gap>=-y?'🟡':'🔴');const col=gap>=0?'#22c55e':(gap>=-y?'#eab308':'#ef4444');
+        return `<td style="white-space:nowrap">${icon} <span style="color:${col};font-weight:600">${gap>=0?'+':''}${gap}</span><div style="font-size:10px;color:var(--muted)">street ฿${fbKey.thb.toLocaleString()} · ${fmtDate(fbKey.at)}</div></td>`;
       })();
       bmRows+=`<tr>
         <td style="font-weight:600">${esc(p.name_en||p.key)}</td>
@@ -786,13 +799,15 @@ async function loadAll(){
         <td style="font-size:10px;color:var(--blue);white-space:nowrap">${disc}<div style="color:var(--muted)">${bm?fmtDate(bm.at):''}</div></td>
         <td style="color:${gapColor};font-weight:600">${gap?gap+'%':'—'}</td>
         ${sellCell}
+        ${streetCell}
       </tr>`;
     }
     document.getElementById('benchmarkTable').innerHTML=bmRows;
-    document.getElementById('sellEur').value=sellRef.eur_per_kg||'';
-    document.getElementById('sellTon').value=sellRef.min_tonnes||'';
-    document.getElementById('sellHdr').textContent=`Margin vs sale €${sellRef.eur_per_kg}`;
-    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · BUY: Policy v16 – our price per tier = hartmetallschrott24.de live RETAIL price (≤10 / 10–30 / >30 kg) × EUR/THB, 1:1 (HM24 is a retail site, so its grid is our buying benchmark). Thai street price is logged for information only · SELL: reference €${sellRef.eur_per_kg}/kg ex-works from ${sellRef.min_tonnes} t (set by Alexander${sellRef.set_on?' '+sellRef.set_on:''}) · "Margin vs sale" = sale − what we pay, per kg, before freight, customs, yard share and Muay; bold = worst case (≥30 kg tier)`;
+    document.getElementById('p17factor').value=P17.sale_factor;
+    document.getElementById('p17cost').value=P17.cost_eur_kg;
+    document.getElementById('p17margin').value=P17.margin_pct;
+    document.getElementById('sellHdr').textContent=`Margin vs sale (×${P17.sale_factor})`;
+    document.getElementById('benchMeta').textContent=`Rate €1 = ฿${rate.toFixed(2)} · POLICY v17 (1 Nov 2026, sale-anchored): sale €/kg = HM24 top tier × ${P17.sale_factor} (international bulk price, Taiwan/Germany, from 2 t) · buy max = sale − cost €${P17.cost_eur_kg} − margin ${P17.margin_pct}% · tiers >30 kg = buy max, 10–30 = −฿${P17.tier_step_thb[1]}, ≤10 = −฿${P17.tier_step_thb[0]} · the Thai street price (Facebook) never moves the price, it only sets the light: 🟢 at/above street, 🟡 up to ฿${P17.street_yellow_thb} below, 🔴 further below (we effectively do not buy that grade) · "Margin vs sale" = sale − our price − cost, before the ${P17.margin_pct}% safety margin is counted`;
 
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
@@ -971,8 +986,8 @@ async function recalcFromBenchmarks(){
   try{
     const r=await fetch(`${SB}/functions/v1/auto-price-update`);const d=await r.json();
     if(!d.success)throw new Error(d.error||'engine returned an error');
-    btn.textContent='Done! Reloading...';setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate from EU grid'},1000);
-  }catch(e){alert('Error: '+e.message);btn.disabled=false;btn.textContent='Recalculate from EU grid';}
+    btn.textContent='Done! Reloading...';setTimeout(()=>{loadAll();btn.disabled=false;btn.textContent='Recalculate now'},1000);
+  }catch(e){alert('Error: '+e.message);btn.disabled=false;btn.textContent='Recalculate now';}
 }
 
 function _thMap(){return {"ก":"k","ข":"kh","ฃ":"kh","ค":"kh","ฅ":"kh","ฆ":"kh","ง":"ng","จ":"ch","ฉ":"ch","ช":"ch","ซ":"s","ฌ":"ch","ญ":"y","ฎ":"d","ฏ":"t","ฐ":"th","ฑ":"th","ฒ":"th","ณ":"n","ด":"d","ต":"t","ถ":"th","ท":"th","ธ":"th","น":"n","บ":"b","ป":"p","ผ":"ph","ฝ":"f","พ":"ph","ฟ":"f","ภ":"ph","ม":"m","ย":"y","ร":"r","ฤ":"rue","ล":"l","ว":"w","ศ":"s","ษ":"s","ส":"s","ห":"h","ฬ":"l","อ":"","ฮ":"h","ะ":"a","ั":"a","า":"a","ำ":"am","ิ":"i","ี":"i","ึ":"ue","ื":"ue","ุ":"u","ู":"u","ฺ":"","เ":"e","แ":"ae","โ":"o","ใ":"ai","ไ":"ai","ๅ":"a","ๆ":"","็":"","่":"","้":"","๊":"","๋":"","์":"","ํ":""};}
@@ -1023,16 +1038,20 @@ async function undoPaid(ref,id){if(!confirm('Undo the paid confirmation for '+(r
 async function voidOrder(ref,id,undo){const msg=undo?('Restore order '+(ref||id)+'?'):('Mark order '+(ref||id)+' as duplicate / void? It will be hidden from totals — reversible with Restore.');if(!confirm(msg))return;try{const r=await fetch(ADMIN_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'void',ref,id,undo:!!undo})});const d=await r.json();if(d.success)loadConversions();else alert('Error: '+(d.error||'failed'));}catch(e){alert('Error: '+e.message);}}
 document.getElementById('paidModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closePaidModal();});
 let _trendChart=null,_trendRows=null,_trendDays=90;
-async function saveSellRef(){
-  const eur=Number(document.getElementById('sellEur').value),ton=Number(document.getElementById('sellTon').value);
-  if(!(eur>0)){alert('Enter a sale price in €/kg');return;}
-  const btn=document.getElementById('sellSaveBtn');btn.disabled=true;btn.textContent='Saving…';
+async function saveP17(){
+  const f=Number(document.getElementById('p17factor').value),c=Number(document.getElementById('p17cost').value),m=Number(document.getElementById('p17margin').value);
+  if(!(f>=1&&f<3)){alert('Sale factor must be between 1 and 3 (e.g. 1.30)');return;}
+  if(!(c>=0&&c<30)||!(m>=0&&m<50)){alert('Check cost (€/kg) and margin (%)');return;}
+  if(m<5&&!confirm('Margin below 5 % — every deal becomes a bet on the market not falling. Continue?'))return;
+  const btn=document.getElementById('p17SaveBtn');btn.disabled=true;btn.textContent='Saving…';
   try{
-    const value={eur_per_kg:eur,min_tonnes:ton||0,set_by:'Alexander',set_on:new Date().toISOString().slice(0,10)};
-    const r=await fetch(`${SB}/rest/v1/business_settings`,{method:'POST',headers:{apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({key:'sell_reference',value,updated_at:new Date().toISOString()})});
+    const value=Object.assign({},window._p17||{},{sale_factor:f,cost_eur_kg:c,margin_pct:m,set_by:'Alexander',set_on:new Date().toISOString().slice(0,10)});
+    const r=await fetch(`${SB}/rest/v1/business_settings`,{method:'POST',headers:{apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({key:'pricing_v17',value,updated_at:new Date().toISOString()})});
     if(!r.ok)throw new Error(await r.text());
-    btn.textContent='Saved';setTimeout(()=>{btn.textContent='Save';btn.disabled=false;loadAll();},800);
-  }catch(e){alert('Error: '+e.message);btn.textContent='Save';btn.disabled=false;}
+    btn.textContent='Recalculating…';
+    await fetch(`${SB}/functions/v1/auto-price-update`);
+    btn.textContent='Done';setTimeout(()=>{btn.textContent='Save & recalc';btn.disabled=false;loadAll();},800);
+  }catch(e){alert('Error: '+e.message);btn.textContent='Save & recalc';btn.disabled=false;}
 }
 async function renderPriceTrend(){
   try{
