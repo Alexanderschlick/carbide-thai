@@ -297,9 +297,9 @@ tr:hover { background: rgba(200,168,78,0.04); }
         <th style="color:var(--gold)">&lt;10kg</th>
         <th style="color:var(--gold)">10-30</th>
         <th style="color:var(--gold)">30-50</th>
-        <th style="color:var(--blue)">Best EU €/kg</th>
+        <th style="color:var(--blue)">HM24 top tier €/kg</th>
         <th style="color:var(--blue)">EU in THB</th>
-        <th>Target disc.</th>
+        <th>HM24 grid ≤10 / 10–30 / &gt;30</th>
         <th>Margin vs EU</th>
         <th style="color:#22c55e" id="sellHdr">Margin vs sale</th>
       </tr></thead>
@@ -311,7 +311,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <div class="grid2">
       <div class="card">
         <h2>Benchmark Sources</h2>
-        <table><thead><tr><th>Material</th><th>Source</th><th>EUR/kg</th><th>Discount</th><th>Updated</th></tr></thead>
+        <table><thead><tr><th>Material</th><th>Source</th><th>Top tier</th><th>Grid / unit</th><th>Updated</th></tr></thead>
         <tbody id="sourceTable"></tbody></table>
       </div>
       <div class="card">
@@ -743,24 +743,26 @@ async function loadAll(){
     const _ers=(comp||[]).map(c=>Number(c.exchange_rate)).filter(x=>x>30&&x<50);const rate=_ers.length?_ers[0]:37.77;
     window._benchmarks=benchmarks;window._prices=prices;window._rate=rate;
 
-    // Group benchmarks by price_key, calculate avg EUR
+    // Live EU benchmark = latest hartmetallschrott24.de row per material (written daily by price-scraper)
+    const EU_KEY={carbide_inserts:'WENDESCHNEIDPLATTEN',carbide_drills:'VHM_BOHRER_FRAESER',mixed_carbide:'HARTMETALL_GEMISCHT',sand_rills:'HARTMETALL_STUECKSCHROTT'};
+    const hm24={};
+    for(const c of (comp||[])){
+      if(String(c.source||'').indexOf('hartmetallschrott24')!==0)continue;
+      if(hm24[c.material_key])continue; // comp is ordered scraped_at desc → first hit is newest
+      let tiers=null;
+      try{const td=typeof c.tier_data==='string'?JSON.parse(c.tier_data):c.tier_data;if(Array.isArray(td)&&td.length){tiers=td.map(t=>Number(t.price)).filter(x=>x>0);}}catch(e){}
+      hm24[c.material_key]={eur:Number(c.price_eur),tiers,at:c.scraped_at,rate:Number(c.exchange_rate)};
+    }
     const bmByKey={};
-    for(const b of benchmarks){
-      if(!bmByKey[b.price_key])bmByKey[b.price_key]={sources:[],avgEur:0,discount:50};
-      bmByKey[b.price_key].sources.push(b);
-      bmByKey[b.price_key].discount=Number(b.discount_pct)||50;
-    }
-    for(const k in bmByKey){
-      const s=bmByKey[k].sources;
-      bmByKey[k].avgEur=s.reduce((a,b)=>a+Number(b.benchmark_eur_kg),0)/s.length;
-    }
+    for(const k in EU_KEY){const h=hm24[EU_KEY[k]];if(h)bmByKey[k]={avgEur:h.eur,tiers:h.tiers,at:h.at};}
+    window._hm24=hm24;
 
     let bmRows='';
     for(const p of prices){
       const bm=bmByKey[p.key];
       const avgEur=bm?bm.avgEur:null;
       const avgThb=avgEur?Math.round(avgEur*rate):null;
-      const disc=bm?bm.discount:50;
+      const disc=bm&&bm.tiers?bm.tiers.map(t=>'€'+t).join(' / '):'—';
       const teaser=Number(p.teaser_thb||0);
       const gap=avgThb?((1-teaser/avgThb)*100).toFixed(1):null;
       const gapColor=gap?(Number(gap)>0?'#22c55e':'#ef4444'):'var(--muted)';
@@ -781,7 +783,7 @@ async function loadAll(){
         <td style="color:var(--gold)">฿${Number(p.tier_30_50||0).toLocaleString()}</td>
         <td style="color:var(--blue)">${avgEur?'€'+avgEur.toFixed(1):'—'}</td>
         <td style="color:var(--blue)">${avgThb?'฿'+avgThb.toLocaleString():'—'}</td>
-        <td><span class="badge ok">${disc}%</span></td>
+        <td style="font-size:10px;color:var(--blue);white-space:nowrap">${disc}<div style="color:var(--muted)">${bm?fmtDate(bm.at):''}</div></td>
         <td style="color:${gapColor};font-weight:600">${gap?gap+'%':'—'}</td>
         ${sellCell}
       </tr>`;
@@ -795,7 +797,7 @@ async function loadAll(){
     // Benchmark Sources table
     const nameMap={carbide_inserts:'Inserts',carbide_drills:'Drills/Endmills',mixed_carbide:'Mixed Carbide',sand_rills:'Sand/Rills'};
     var __fbSeen={};
-var __euRows=benchmarks.map(function(b){return '<tr><td>'+esc(nameMap[b.price_key]||b.price_key)+'</td><td><a href="https://'+esc(b.source)+'" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none">'+esc(b.source)+'</a></td><td style="color:var(--blue)">\u20AC'+Number(b.benchmark_eur_kg).toFixed(1)+'</td><td>'+Number(b.discount_pct)+'%</td><td>'+fmtDate(b.updated_at)+'</td></tr>';}).join('');
+var __euRows=Object.keys(EU_KEY).map(function(k){var h=hm24[EU_KEY[k]];if(!h)return '';var grid=h.tiers?h.tiers.map(function(t){return '\u20AC'+t;}).join(' / '):'';return '<tr><td>'+esc(nameMap[k]||k)+'</td><td><a href="https://hartmetallschrott24.de" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none">hartmetallschrott24.de (live)</a></td><td style="color:var(--blue);font-weight:600">\u20AC'+Number(h.eur).toFixed(1)+'</td><td style="font-size:11px;color:var(--blue)">'+grid+'</td><td>'+fmtDate(h.at)+'</td></tr>';}).join('');
 var __fbRows=(comp||[]).filter(function(c){return /^fb:/.test(String(c.source||''));}).filter(function(c){if(__fbSeen[c.material_key])return false;__fbSeen[c.material_key]=1;return true;}).map(function(c){return '<tr><td>'+esc(nameMap[c.material_key]||c.material_key)+'</td><td><a href="https://www.facebook.com/groups/841296028964646" target="_blank" rel="noopener" style="color:#1877f2;text-decoration:none">Facebook (Carbide Trading)</a></td><td style="color:#1877f2;font-weight:600">\u0E3F'+Number(c.price_thb).toLocaleString()+'</td><td>THB</td><td>'+fmtDate(c.scraped_at)+'</td></tr>';}).join('');
 document.getElementById('sourceTable').innerHTML=(__euRows+__fbRows)||'<tr><td colspan="5" style="color:var(--muted)">No benchmarks configured</td></tr>';
 
