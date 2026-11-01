@@ -14,7 +14,7 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18407290389');</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RNXH6EX220"></script>
 <script>gtag('config','G-RNXH6EX220');</script>
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('track','PageView');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1090212120647738');fbq('track','PageView');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -120,6 +120,7 @@ h2.rt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;text
 .timeline .ti b{color:var(--ink);font-weight:500}
 .timeline .num{width:22px;height:22px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
 </style>
+<script>/* first-touch attribution (v1) */(function(){try{var q=new URLSearchParams(location.search),k=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'],o={},hit=false;k.forEach(function(x){var v=q.get(x);if(v){o[x]=v.slice(0,200);hit=true;}});var prev=null;try{prev=JSON.parse(localStorage.getItem('tc_utm')||'null');}catch(e){}if(hit||!prev){o.landing=location.pathname+(hit?location.search.slice(0,300):'');o.referrer=(document.referrer||'').slice(0,200);o.ts=new Date().toISOString();if(!hit&&!o.referrer){o.utm_source='direct';}else if(!hit&&o.referrer){try{o.utm_source=new URL(o.referrer).hostname.replace(/^www\./,'');o.utm_medium='referral';}catch(e){}}if(hit||!prev)localStorage.setItem('tc_utm',JSON.stringify(o));}window.tcUtm=function(){try{return JSON.parse(localStorage.getItem('tc_utm')||'null');}catch(e){return null;}};}catch(e){window.tcUtm=function(){return null;};}})();</script>
 </head>
 <body class="lang-th">
 
@@ -334,7 +335,7 @@ function showReview(){
   document.getElementById('form').style.display='none';
   document.getElementById('review').style.display='block';
   setStep(2);window.scrollTo(0,0);
-  gtag('event','begin_checkout',{value:total,currency:'THB'});
+  gtag('event','begin_checkout',{value:total,currency:'THB'});try{fbq('track','InitiateCheckout',{value:total||0,currency:'THB'});}catch(_){}
 }
 function editDetails(){document.getElementById('review').style.display='none';document.getElementById('form').style.display='block';setStep(1);window.scrollTo(0,0);}
 async function confirmSale(){
@@ -348,8 +349,8 @@ async function confirmSale(){
   const _sig=[selName,w,(phone||lineId||''),selDeliv].join('|');var _dup=null;try{var _l=JSON.parse(sessionStorage.getItem('tc_lastOrder')||'null');if(_l&&_l.sig===_sig&&(Date.now()-_l.ts)<1800000)_dup=_l.ref;}catch(_e){}
   const ref=_dup||('TC-'+Date.now().toString(36).toUpperCase());
   try{
-    if(!_dup){await fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({line_id:lineId||null,display_name:fullName,phone:phone||null,material_type:selName,weight_kg:w,price_shown:total,quoted_price:total,status:'new',source:'sell-lp',notes:'Ref: '+ref+' | Delivery: '+selDeliv})});
-    await fetch(SB_URL+'/rest/v1/orders',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({name:fullName,phone:phone||null,line_id:lineId,ref:ref,material:selName,weight_ordered:w,price_per_kg:ppk,total_amount:total,status:'neu',delivery_method:selDeliv,parcel_status:selDeliv==='self'?null:'waiting',notes:'Source: sell-lp | Ref: '+ref+' | Delivery: '+selDeliv})});
+    if(!_dup){await fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({line_id:lineId||null,display_name:fullName,phone:phone||null,material_type:selName,weight_kg:w,price_shown:total,quoted_price:total,status:'new',source:'sell-lp',notes:'Ref: '+ref+' | Delivery: '+selDeliv,utm:(window.tcUtm&&tcUtm())||null})});
+    await fetch(SB_URL+'/rest/v1/orders',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({name:fullName,phone:phone||null,line_id:lineId,ref:ref,material:selName,weight_ordered:w,price_per_kg:ppk,total_amount:total,status:'neu',delivery_method:selDeliv,parcel_status:selDeliv==='self'?null:'waiting',notes:'Source: sell-lp | Ref: '+ref+' | Delivery: '+selDeliv,utm:(window.tcUtm&&tcUtm())||null})});
     gtag('event','conversion',{send_to:'AW-18407290389'});gtag('event','purchase',{transaction_id:ref,currency:'THB',value:total||0});if(typeof fbq!=='undefined')fbq('track','Lead',{value:total||0,currency:'THB'});try{sessionStorage.setItem('tc_lastOrder',JSON.stringify({sig:_sig,ref:ref,ts:Date.now()}));}catch(_e){}}
     const tg='🆕 NEUER LEAD\\n👤 '+fullName+'\\n📱 '+(phone||'—')+'\\nLINE: '+(lineId||'—')+'\\n📦 '+selName+' · '+(w||'—')+'kg\\n💰 ฿'+(total!=null?total.toLocaleString():'—')+'\\n🚚 '+selDeliv+'\\n🔗 '+ref;
     fetch('https://api.telegram.org/bot8653052939:AAE1450o0j2JpNsf2sMdIWroLHuKRA6QTqA/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'697775946',text:tg})}).catch(()=>{});
@@ -435,7 +436,7 @@ window.addEventListener("load",()=>setTimeout(prefillFromUrl,600));
 </div>
 </div>
 
-<script>document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a.linetag,a[href*="line.me"],a[href*="280uqpab"]');if(a){try{gtag('event','generate_lead',{method:'LINE'});}catch(_){}}} ,true);</script>
+<script>document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a.linetag,a[href*="line.me"],a[href*="280uqpab"]');if(a){try{fbq('track','Contact',{content_name:'LINE'});}catch(_){}try{gtag('event','generate_lead',{method:'LINE'});}catch(_){}}} ,true);</script>
 <script>
 (function(){var SB='https://ltupwgytuayzopnsdvpc.supabase.co';var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0dXB3Z3l0dWF5em9wbnNkdnBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTg5MzIsImV4cCI6MjA4ODU3NDkzMn0.bwPshMqh_NZc7MBSzbzbezOeMWm3e81iz3rJJSrrZhE';async function applyPromo(){try{var rows=await fetch(SB+'/rest/v1/prices?key=eq.carbide_inserts&select=teaser_thb',{headers:{apikey:K,Authorization:'Bearer '+K}}).then(function(r){return r.json()});var p=rows&&rows[0];var on=p&&Number(p.teaser_thb)>=3000;var s=document.getElementById('d-self'),g=document.getElementById('d-grab'),b=document.getElementById('promoBanner');if(on){if(s)s.style.display='none';if(g)g.style.display='none';if(!b){b=document.createElement('div');b.id='promoBanner';b.style.cssText='margin:14px 0;padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,#c8a84e,#e6c766);color:#0a1628;font-weight:700;text-align:center;font-size:15px;line-height:1.35';b.innerHTML="<span class='th'>\ud83d\udd25 \u0e42\u0e1b\u0e23\u0e1e\u0e34\u0e40\u0e28\u0e29! \u0e23\u0e31\u0e1a\u0e0b\u0e37\u0e49\u0e2d\u0e2d\u0e34\u0e19\u0e40\u0e2a\u0e34\u0e23\u0e4c\u0e17 \u0e3f3,000/kg \u2014 \u0e40\u0e09\u0e1e\u0e32\u0e30\u0e2a\u0e48\u0e07\u0e1e\u0e31\u0e2a\u0e14\u0e38 \u00b7 10 \u0e23\u0e32\u0e22\u0e41\u0e23\u0e01\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19</span><span class='en'>\ud83d\udd25 Special! We pay \u0e3f3,000/kg for inserts \u2014 parcel shipping only \u00b7 first 10 sellers</span>";var a=document.querySelector('.pbox');if(a&&a.parentNode)a.parentNode.insertBefore(b,a);}}else{if(s)s.style.display='';if(g)g.style.display='';if(b&&b.parentNode)b.parentNode.removeChild(b);}}catch(e){}}setTimeout(applyPromo,700);setTimeout(applyPromo,1800);})();
 </script>

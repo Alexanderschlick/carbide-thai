@@ -30,7 +30,7 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18407290389');</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RNXH6EX220"></script>
 <script>gtag('config','G-RNXH6EX220');</script>
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('track','PageView');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1090212120647738');fbq('track','PageView');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -131,6 +131,7 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:24px;padding-top:20px
 @media(max-width:820px){.nav .navlink{display:none}.steps4,.grid,.deliv,.faq{grid-template-columns:1fr 1fr;gap:26px 14px}.st{border-left:0;padding:0}}
 @media(max-width:520px){.steps4,.grid,.deliv,.faq{grid-template-columns:1fr}}
 </style>
+<script>/* first-touch attribution (v1) */(function(){try{var q=new URLSearchParams(location.search),k=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'],o={},hit=false;k.forEach(function(x){var v=q.get(x);if(v){o[x]=v.slice(0,200);hit=true;}});var prev=null;try{prev=JSON.parse(localStorage.getItem('tc_utm')||'null');}catch(e){}if(hit||!prev){o.landing=location.pathname+(hit?location.search.slice(0,300):'');o.referrer=(document.referrer||'').slice(0,200);o.ts=new Date().toISOString();if(!hit&&!o.referrer){o.utm_source='direct';}else if(!hit&&o.referrer){try{o.utm_source=new URL(o.referrer).hostname.replace(/^www\./,'');o.utm_medium='referral';}catch(e){}}if(hit||!prev)localStorage.setItem('tc_utm',JSON.stringify(o));}window.tcUtm=function(){try{return JSON.parse(localStorage.getItem('tc_utm')||'null');}catch(e){return null;}};}catch(e){window.tcUtm=function(){return null;};}})();</script>
 </head>
 <body class="lang-th">
 
@@ -214,12 +215,12 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:24px;padding-top:20px
     <div class="card">
       <img class="ph" src="https://images.weserv.nl/?url=ssl:ltupwgytuayzopnsdvpc.supabase.co/storage/v1/object/public/website/gallery/mixed.jpg&amp;w=760&amp;h=600&amp;fit=cover&amp;q=68&amp;output=jpg" alt="Mixed carbide scrap" loading="lazy">
       <h3 class="gk"><span class="th">คาร์ไบด์ผสม</span><span class="en">Mixed carbide</span></h3>
-      <div class="desc"><span class="th">ทุกชนิดรวมกัน</span><span class="en">All types mixed</span></div>
+      <div class="desc"><span class="th">รับซื้อหลังตรวจรูปถ่ายเท่านั้น 📷</span><span class="en">Bought after photo check only 📷</span></div>
       <div class="price" id="p-mixed">up to ฿2,135/kg</div></div>
     <div class="card">
       <img class="ph" src="https://images.weserv.nl/?url=ssl:ltupwgytuayzopnsdvpc.supabase.co/storage/v1/object/public/website/gallery/wearparts.jpg&amp;w=760&amp;h=600&amp;fit=cover&amp;q=68&amp;output=jpg" alt="Carbide sand rills and wear parts" loading="lazy">
       <h3 class="gk"><span class="th">แซนด์ริล / อะไหล่</span><span class="en">Sand rills / wear parts</span></h3>
-      <div class="desc"><span class="th">แซนด์ริล ผง ชิ้นส่วน</span><span class="en">Dies, wear parts, powder</span></div>
+      <div class="desc"><span class="th">รับซื้อหลังตรวจรูปถ่ายเท่านั้น 📷</span><span class="en">Bought after photo check only 📷</span></div>
       <div class="price" id="p-sand">up to ฿1,995/kg</div></div>
   </div>
 </section>
@@ -266,8 +267,8 @@ footer .legal{font-size:12px;color:var(--muted);margin-top:24px;padding-top:20px
     <select id="calc-type" onchange="calcEstimate()">
       <option value="carbide_inserts">Inserts · อินเสิร์ท</option>
       <option value="carbide_drills">Drills / End mills · ดอกสว่าน</option>
-      <option value="mixed_carbide">Mixed carbide · คาร์ไบด์ผสม</option>
-      <option value="sand_rills">Sand rills / wear parts · แซนด์ริล</option>
+      <option value="mixed_carbide">Mixed carbide · คาร์ไบด์ผสม (photo check)</option>
+      <option value="sand_rills">Sand rills / wear parts · แซนด์ริล (photo check)</option>
     </select>
     <label><span class="th">น้ำหนักโดยประมาณ (กก.)</span><span class="en">Approximate weight (kg)</span></label>
     <input type="number" id="calc-weight" min="1" value="10" oninput="calcEstimate()">
@@ -337,7 +338,7 @@ function submitBiz(){
   var phone=isLine?null:contact, line_id=isLine?contact:null;
   var wkg=parseFloat((volume||'').replace(/[^0-9.]/g,''))||null;
   var notes='Enterprise inquiry'+(company?(' | Company: '+company):'')+(volume?(' | Volume: '+volume):'')+(msg?(' | Msg: '+msg):'');
-  fetch(SB+'/rest/v1/leads',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({display_name:company||name,email:email||null,phone:phone,line_id:line_id,material_type:material||null,weight_kg:wkg,source:'enterprise-lp',status:'new',notes:notes})}).then(function(r){
+  fetch(SB+'/rest/v1/leads',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({display_name:company||name,email:email||null,phone:phone,line_id:line_id,material_type:material||null,weight_kg:wkg,source:'enterprise-lp',status:'new',notes:notes,utm:(window.tcUtm&&tcUtm())||null})}).then(function(r){
     if(!r.ok)throw new Error('insert');
     fetch(SB+'/functions/v1/notify-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'order',record:{name:company||name,email:email||null,phone:phone,line_id:line_id,material:material||null,weight_kg:wkg,notes:notes,status:'new'}})}).catch(function(){});
     document.getElementById('biz-fields').style.display='none';

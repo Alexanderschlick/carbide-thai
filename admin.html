@@ -201,7 +201,7 @@ tr:hover { background: rgba(200,168,78,0.04); }
     <div class="card">
       <h2>Conversions &mdash; Actual Orders</h2>
       <div id="convSummary" style="margin-bottom:12px;color:var(--muted);font-size:13px;"></div>
-      <table><thead><tr><th>Ref</th><th>Name</th><th>Contact</th><th>Material</th><th>Weight</th><th>&#3647;/kg</th><th>Total</th><th>Delivery</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+      <table><thead><tr><th>Ref</th><th>Name</th><th>Contact</th><th>Material</th><th>Weight</th><th>&#3647;/kg</th><th>Total</th><th>Delivery</th><th>Source</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
       <tbody id="convRows"></tbody></table>
     </div>
   </div>
@@ -593,10 +593,10 @@ async function showConversation(uid,name){
 
 async function loadConversions(){
   const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const orders=await sbGet('orders','select=id,ref,name,phone,line_id,line_user_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,paid_at,confirmed_by,created_at&order=created_at.desc&limit=300');
+  const orders=await sbGet('orders','select=id,ref,name,phone,line_id,line_user_id,material,weight_ordered,weight_received,price_per_kg,total_amount,delivery_method,status,parcel_status,paid_at,confirmed_by,created_at,utm&order=created_at.desc&limit=300');
   const tbody=document.getElementById('convRows'); if(!tbody)return;
   const sum=document.getElementById('convSummary');
-  if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="11" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
+  if(!orders||!orders.length){tbody.innerHTML='<tr><td colspan="12" style="color:var(--muted)">No orders yet</td></tr>';if(sum)sum.textContent='';return;}
   let kg=0,thb=0; const weekAgo=Date.now()-7*86400000; let paidCount=0,paidThb=0;
   tbody.innerHTML=orders.map(o=>{
     const isVoid=o.status==='voided';
@@ -622,7 +622,7 @@ async function loadConversions(){
       ?`<button class="btn-sm btn-outline" title="Open LINE conversation" onclick="showConversation('${luid}','${nm.replace(/'/g,"\\'")}')">💬 Chat</button>`
       :`<button class="btn-sm btn-outline" title="No LINE chat linked yet — click to link" style="opacity:0.55" onclick="openLinkChat('${oid}','${rid}','${nm.replace(/'/g,"\\'")}','${esc(o.phone||'')}')">💬 Link</button>`;
     actionCell=chatBtn+' '+actionCell;
-    return `<tr${isVoid?' style="opacity:0.45"':''}><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td>${statusCell}</td><td>${fmtDate(o.created_at)}</td><td>${actionCell}</td></tr>`;
+    return `<tr${isVoid?' style="opacity:0.45"':''}><td style="font-family:monospace;color:var(--gold)">${esc(o.ref||'—')}</td><td>${esc(o.name||'—')}</td><td>${esc(o.phone||o.line_id||'—')}</td><td>${esc(o.material||'—')}</td><td>${wt}</td><td>${o.price_per_kg!=null?'฿'+Number(o.price_per_kg).toLocaleString():'—'}</td><td>${o.total_amount!=null?'฿'+Number(o.total_amount).toLocaleString():'—'}</td><td>${deliv}</td><td style="font-size:10px;white-space:nowrap">${(function(u){if(!u)return '<span style="color:var(--muted)">—</span>';var s=esc(u.utm_source||'?'),c=u.utm_campaign?' / '+esc(u.utm_campaign):'',a=u.utm_content?'<div style="color:var(--muted)">'+esc(u.utm_content)+'</div>':'';return s+c+a;})(o.utm)}</td><td>${statusCell}</td><td>${fmtDate(o.created_at)}</td><td>${actionCell}</td></tr>`;
   }).join('');
   if(sum){
     const invoice=Math.round(paidThb*0.10),commission=paidCount*250;
