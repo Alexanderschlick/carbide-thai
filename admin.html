@@ -120,7 +120,8 @@ tr:hover { background: rgba(200,168,78,0.04); }
   <div class="login-box">
     <h1>ThaiCarbide</h1>
     <p>Admin Backoffice</p>
-    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <input type="text" id="emailInput" placeholder="User (leave empty for admin)" autocomplete="username" autocapitalize="none" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('pwInput').focus()">
+    <input type="password" id="pwInput" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">Login</button>
     <div class="login-error" id="loginErr">Invalid password</div>
   </div>
@@ -404,18 +405,21 @@ function _saveTokens(d){TOKEN=d.access_token;RTOKEN=d.refresh_token||RTOKEN;sess
 
 async function doLogin(){
   const pw=document.getElementById('pwInput').value;
+  let em=(document.getElementById('emailInput').value||'').trim().toLowerCase();
+  if(!em)em=ADMIN_EMAIL; else if(em.indexOf('@')<0)em=em+'@thaicarbide.com';
   try{
-    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:ADMIN_EMAIL,password:pw})});
+    const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw})});
     const d=await r.json();
     if(r.ok&&d.access_token){
       _saveTokens(d);
       document.getElementById('loginErr').style.display='none';
       document.getElementById('loginGate').style.display='none';
       document.getElementById('dashboard').style.display='block';
+      applyRole();
       loadAll();
     } else {
       const err=document.getElementById('loginErr');
-      err.textContent=r.status===429?'Too many login attempts — wait 5 minutes and try again':'Invalid password';
+      err.textContent=r.status===429?'Too many login attempts — wait 5 minutes and try again':'Invalid user or password';
       err.style.display='block';
     }
   }catch(e){ const err=document.getElementById('loginErr');err.textContent='Login failed — network error';err.style.display='block'; }
@@ -445,7 +449,18 @@ async function _refreshTokenOnce(){
   }catch(e){}
   return false;
 }
-function checkAuth(){if(sessionStorage.getItem('tc_auth')&&TOKEN){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';loadAll()}}
+// Roles: admin (full) vs ops (Muay: overview, leads, conversions, chats). Enforced in the database too (RLS is_tc_admin()).
+const OPS_HIDDEN_TABS=['analytics','ads','prices','systems'];
+function tcClaims(){try{const p=TOKEN.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');return JSON.parse(decodeURIComponent(escape(atob(p))));}catch(e){return {};}}
+function isAdmin(){const c=tcClaims();return (c.app_metadata&&c.app_metadata.role==='admin')||c.email===ADMIN_EMAIL;}
+function applyRole(){
+  const admin=isAdmin();window._isAdmin=admin;
+  OPS_HIDDEN_TABS.forEach(function(n){
+    const b=document.querySelector('.tab[data-tab="'+n+'"]');if(b)b.style.display=admin?'':'none';
+    const c=document.getElementById('tab-'+n);if(c&&!admin){c.style.display='none';}
+  });
+}
+function checkAuth(){if(sessionStorage.getItem('tc_auth')&&TOKEN){document.getElementById('loginGate').style.display='none';document.getElementById('dashboard').style.display='block';applyRole();loadAll()}}
 
 async function sbGet(tbl,params=''){
   const hdr=()=>({apikey:KEY,Authorization:`Bearer ${TOKEN||KEY}`});
@@ -471,6 +486,7 @@ function esc(s){return(s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;'
 function fmtDate(d){return d?new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Bangkok'}):''}
 
 function showTab(name,el){
+  if(window._isAdmin===false&&OPS_HIDDEN_TABS.indexOf(name)>=0)return;
   document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).style.display='block';
@@ -660,7 +676,8 @@ async function loadAll(){
       sbGet('business_settings','select=key,value,updated_at&key=in.(pricing_v17,sell_reference)').catch(()=>[])
     ]);
     const _bs={};for(const b of (bizSettings||[]))_bs[b.key]=b.value;
-    const P17=Object.assign({sale_factor:1.30,cost_eur_kg:4,margin_pct:10,tier_step_thb:[100,50,0],street_yellow_thb:200},_bs.pricing_v17||{});
+    // no numeric defaults here on purpose: this file is public, the parameters come only from the DB (admin-only RLS)
+    const P17=Object.assign({sale_factor:null,cost_eur_kg:null,margin_pct:null,tier_step_thb:[0,0,0],street_yellow_thb:200},_bs.pricing_v17||{});
     window._p17=P17;
     const chats=chatsResult.data;
     const totalMessages=chatsResult.total;
@@ -772,7 +789,7 @@ async function loadAll(){
       const gap=avgThb?((1-teaser/avgThb)*100).toFixed(1):null;
       const gapColor=gap?(Number(gap)>0?'#22c55e':'#ef4444'):'var(--muted)';
       // v17: sale = HM24 top × factor; margin vs sale per tier; street traffic light
-      const saleEur=avgEur?avgEur*Number(P17.sale_factor):null;
+      const saleEur=(avgEur&&P17.sale_factor)?avgEur*Number(P17.sale_factor):null;
       const sellThb=saleEur?saleEur*rate:0;
       const sellCell=(()=>{
         if(!sellThb)return '<td style="color:var(--muted)">—</td>';
@@ -1040,7 +1057,7 @@ document.getElementById('paidModal').addEventListener('click',e=>{if(e.target===
 let _trendChart=null,_trendRows=null,_trendDays=90;
 async function saveP17(){
   const f=Number(document.getElementById('p17factor').value),c=Number(document.getElementById('p17cost').value),m=Number(document.getElementById('p17margin').value);
-  if(!(f>=1&&f<3)){alert('Sale factor must be between 1 and 3 (e.g. 1.30)');return;}
+  if(!(f>=1&&f<3)){alert('Sale factor must be between 1 and 3');return;}
   if(!(c>=0&&c<30)||!(m>=0&&m<50)){alert('Check cost (€/kg) and margin (%)');return;}
   if(m<5&&!confirm('Margin below 5 % — every deal becomes a bet on the market not falling. Continue?'))return;
   const btn=document.getElementById('p17SaveBtn');btn.disabled=true;btn.textContent='Saving…';
